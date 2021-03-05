@@ -1,6 +1,6 @@
 # MultiBench
 
-Large Scale Benchmarks forMultimodal Representation Learning
+Large Scale Benchmarks for Multimodal Representation Learning
 
 
 ## Contributors
