@@ -3,12 +3,12 @@ from torch.utils.data import DataLoader
 import random
 import pickle
 #task: integer between -1 and 19 inclusive, -1 means mortality task, 0-19 means icd9 task
-def get_dataloader(task,batch_size=40,num_workers=8,train_shuffle=True,imputed_path='im.pk',flatten_time_series=False):
-  f=open(imputed_path,'rb')
-  datafile=pickle.load(f)
+def get_dataloader(task,batch_size=40, num_workers=8, train_shuffle=True, imputed_path='im.pk', flatten_time_series=False):
+  f = open(imputed_path,'rb')
+  datafile = pickle.load(f)
   f.close()
-  X_t=datafile['ep_tdata']
-  X_s=datafile['adm_features_all']
+  X_t = datafile['ep_tdata']
+  X_s = datafile['adm_features_all']
   
   X_t[np.isinf(X_t)]=0
   X_t[np.isnan(X_t)]=0
@@ -57,7 +57,7 @@ def get_dataloader(task,batch_size=40,num_workers=8,train_shuffle=True,imputed_p
   random.shuffle(datasets)
 
 
-  valids = DataLoader(datasets[0:le//10],shuffle=False,num_workers=num_workers,batch_size=batch_size)
-  tests = DataLoader(datasets[le//10:le//5],shuffle=False,num_workers=num_workers,batch_size=batch_size)
-  trains = DataLoader(datasets[le//5:],shuffle=train_shuffle,num_workers=num_workers,batch_size=batch_size)
+  valids = DataLoader(datasets[0:le//10], shuffle=False, num_workers=num_workers, batch_size=batch_size)
+  tests = DataLoader(datasets[le//10:le//5], shuffle=False, num_workers=num_workers, batch_size=batch_size)
+  trains = DataLoader(datasets[le//5:], shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
   return trains,valids,tests
