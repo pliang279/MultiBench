@@ -7,18 +7,19 @@ from datasets.mimic.get_data import get_dataloader
 from unimodals.common_models import MLP_dropout,GRU_dropout
 from torch import nn
 import torch
+
 #get dataloader for icd9 classification task 7
-traindata,validdata,testdata=get_dataloader(7,imputed_path='datasets/mimic/im.pk')
+traindata, validdata, testdata = get_dataloader(7, imputed_path='datasets/mimic/im.pk')
 
 #build encoders, head and fusion layer
-encoders=[MLP_dropout(5,10,10).cuda(),GRU_dropout(12,30).cuda()]
-head=MLP_dropout(730,40,2).cuda()
-fusion=Concat().cuda()
+encoders = [MLP_dropout(5, 10, 10).cuda(), GRU_dropout(12, 30).cuda()]
+head = MLP_dropout(730, 40, 2).cuda()
+fusion = Concat().cuda()
 
 #train
-train(encoders,fusion,head,traindata,validdata,20,auprc=True)
+train(encoders, fusion, head, traindata, validdata, 20, auprc=True)
 
 #test
 print("Testing: ")
-model=torch.load('best.pt').cuda()
-test(model,testdata,auprc=True)
+model = torch.load('best.pt').cuda()
+test(model, testdata, auprc=True)
