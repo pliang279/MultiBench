@@ -4,7 +4,7 @@ sys.path.append(os.getcwd())
 from training_structures.Simple_Late_Fusion import train, test
 from fusions.common_fusions import Concat
 from datasets.mimic.get_data import get_dataloader
-from unimodals.common_models import MLP_dropout, GRU_dropout
+from unimodals.common_models import MLP, GRU
 from torch import nn
 import torch
 
@@ -12,8 +12,8 @@ import torch
 traindata, validdata, testdata = get_dataloader(7, imputed_path='datasets/mimic/im.pk')
 
 #build encoders, head and fusion layer
-encoders = [MLP_dropout(5, 10, 10).cuda(), GRU_dropout(12, 30).cuda()]
-head = MLP_dropout(730, 40, 2).cuda()
+encoders = [MLP(5, 10, 10,dropout=True).cuda(), GRU(12, 30,dropout=True).cuda()]
+head = MLP(730, 40, 2, dropout=True).cuda()
 fusion = Concat().cuda()
 
 #train
