@@ -1,10 +1,10 @@
 import sys
 import os
 sys.path.append(os.getcwd())
-from training_structures.Simple_Late_Fusion import train,test
+from training_structures.Simple_Late_Fusion import train, test
 from fusions.common_fusions import Concat
 from datasets.mimic.get_data import get_dataloader
-from unimodals.common_models import MLP_dropout,GRU_dropout
+from unimodals.common_models import MLP_dropout, GRU_dropout
 from torch import nn
 import torch
 
