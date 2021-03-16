@@ -6,7 +6,7 @@ Large Scale Benchmarks for Multimodal Representation Learning
 
 Correspondence to: 
   - [Paul Pu Liang](http://www.cs.cmu.edu/~pliang/) (pliang@cs.cmu.edu)
-  - Yiwei Lyu (ylyu1@cs.cmu.edu)
+  - Yiwei Lyu (ylyu1@andrew.cmu.edu)
 
 ## Datasets supported
 
