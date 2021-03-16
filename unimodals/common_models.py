@@ -3,39 +3,29 @@ from torch import nn
 from torch.nn import functional as F
 
 class MLP(torch.nn.Module):
-  def __init__(self, indim, hiddim, outdim):
-    super(MLP, self).__init__()
-    self.fc = nn.Linear(indim,hiddim)
-    self.fc2 = nn.Linear(hiddim,outdim)
-  def forward(self, x, training=True):
-    output = self.fc(x)
-    output = F.relu(output)
-    output = self.fc2(output)
-    return output
+    def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1):
+        super(MLP, self).__init__()
+        self.fc = nn.Linear(indim,hiddim)
+        self.fc2 = nn.Linear(hiddim,outdim)
+        self.dropoutp = dropoutp
+        self.dropout = dropout
+    def forward(self, x, training=True):
+        output = self.fc(x)
+        output = F.dropout(F.relu(output),p=self.dropout,training=training)
+        output = self.fc2(output)
+        if self.dropout:
+            output = F.dropout(output,p=self.dropoutp,training=training)
+        return output
 
-class MLP_dropout(torch.nn.Module):
-  def __init__(self, indim, hiddim, outdim, dropout=0.1):
-    super(MLP_dropout, self).__init__()
-    self.fc = nn.Linear(indim,hiddim)
-    self.fc2 = nn.Linear(hiddim,outdim)
-    self.dropout=dropout
-  def forward(self, x, training=True):
-    output = self.fc(x)
-    output = F.dropout(F.relu(output),p=self.dropout,training=training)
-    output = self.fc2(output)
-    return F.dropout(output,p=self.dropout,training=training)
 
 class GRU(torch.nn.Module):
-    def __init__(self,indim,hiddim):
+    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1):
         super(GRU,self).__init__()
         self.gru=nn.GRU(indim,hiddim)
-    def forward(self,x,training=True):
-        return self.gru(x)[0]
-
-class GRU_dropout(torch.nn.Module):
-    def __init__(self,indim,hiddim,dropout=0.1):
-        super(GRU_dropout,self).__init__()
-        self.gru=nn.GRU(indim,hiddim)
+        self.dropoutp=dropoutp
         self.dropout=dropout
     def forward(self,x,training=True):
-        return F.dropout(self.gru(x)[0],p=self.dropout,training=training)
+        out=self.gru(x)[0]
+        if self.dropout:
+            out = F.dropout(out,p=self.dropoutp,training=training)
+        return out
