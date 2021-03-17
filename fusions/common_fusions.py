@@ -26,23 +26,15 @@ class ConcatWithLinear(nn.Module):
 
 class TensorFusion(nn.Module):
 	# # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
-	    def __init__(self, input_dims, hidden_dims, text_out, dropouts, post_fusion_dim):
+	    def __init__(self, input_dims, output_dim):
         '''
         Args:
-            input_dims - a length-3 tuple, contains (audio_dim, video_dim, text_dim)
-            hidden_dims - another length-3 tuple, similar to input_dims
-            text_out - int, specifying the resulting dimensions of the text subnetwork
-            dropouts - a length-4 tuple, contains (audio_dropout, video_dropout, text_dropout, post_fusion_dropout)
-            post_fusion_dim - int, specifying the size of the sub-networks after tensorfusion
+            TODO
         Output:
-            (return value in forward) a scalar value between -3 and 3
+            TODO
         '''
-        super(TFN, self).__init__()
-
-        # dimensions are specified in the order of audio, video and text
         super(TensorFusion, self).__init__()
 
-		# dimensions are specified in the order of audio, video and text
 		self.input_dims = input_dims
 		self.output_dim = output_dim
 
@@ -55,6 +47,7 @@ class TensorFusion(nn.Module):
         batch_size = modalities[0].shape[0]
 
 		# next we perform "tensor fusion", which is essentially appending 1s to the tensors and take Kronecker product
+		fused_tensor = torch.ones(batch_size, 1).type(modality.dtype)
 		for modality in modalities:
 			modality_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modality), dim=1)
 			torch.matmul(modality_withones, factor)
@@ -63,21 +56,14 @@ class TensorFusion(nn.Module):
         # we want to perform outer product between the two batch, hence we unsqueenze them to get
         # (batch_size, audio_in + 1, 1) X (batch_size, 1, video_in + 1)
         # fusion_tensor will have shape (batch_size, audio_in + 1, video_in + 1)
-        fusion_tensor = torch.bmm(_audio_h.unsqueeze(2), _video_h.unsqueeze(1))
+        fused_tensor = torch.bmm(_audio_h.unsqueeze(2), _video_h.unsqueeze(1))
         
         # next we do kronecker product between fusion_tensor and _text_h. This is even trickier
         # we have to reshape the fusion tensor during the computation
         # in the end we don't keep the 3-D tensor, instead we flatten it
-        fusion_tensor = fusion_tensor.view(-1, (self.audio_hidden + 1) * (self.video_hidden + 1), 1)
-        fusion_tensor = torch.bmm(fusion_tensor, _text_h.unsqueeze(1)).view(batch_size, -1)
-
-        post_fusion_dropped = self.post_fusion_dropout(fusion_tensor)
-        post_fusion_y_1 = F.relu(self.post_fusion_layer_1(post_fusion_dropped))
-        post_fusion_y_2 = F.relu(self.post_fusion_layer_2(post_fusion_y_1))
-        post_fusion_y_3 = F.sigmoid(self.post_fusion_layer_3(post_fusion_y_2))
-        output = post_fusion_y_3 * self.output_range + self.output_shift
-
-        return output
+        fused_tensor = fused_tensor.view(-1, (self.audio_hidden + 1) * (self.video_hidden + 1), 1)
+        fused_tensor = torch.bmm(fused_tensor, _text_h.unsqueeze(1)).view(batch_size, -1)
+        return fused_tensor
 
 
 class LowRankTensorFusion(nn.Module):
@@ -121,11 +107,11 @@ class LowRankTensorFusion(nn.Module):
 		# next we perform low-rank multimodal fusion
 		# here is a more efficient implementation than the one the paper describes
 		# basically swapping the order of summation and elementwise product
+		fused_tensor = torch.ones(batch_size, 1).type(modality.dtype)
 		for (modality, factor) in zip(modalities, self.factors):
 			modality_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modality), dim=1)
-			torch.matmul(modality_withones, factor)
-
-		fused_tensor = fusion_audio * fusion_video * fusion_text
+			modality_factor = torch.matmul(modality_withones, factor)
+			fused_tensor = fused_tensor * modality_factor
 
 		output = torch.matmul(self.fusion_weights, fused_tensor.permute(1, 0, 2)).squeeze() + self.fusion_bias
 		output = output.view(-1, self.output_dim)
