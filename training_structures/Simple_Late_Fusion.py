@@ -10,16 +10,16 @@ softmax = nn.Softmax()
 class MMDL(nn.Module):
     def __init__(self,encoders,fusion,head):
         super(MMDL,self).__init__()
-        self.encoders=nn.ModuleList(encoders)
-        self.fuse=fusion
-        self.head=head
+        self.encoders = nn.ModuleList(encoders)
+        self.fuse = fusion
+        self.head = head
     
     def forward(self,inputs,training=False):
-        outs=[]
+        outs = []
         for i in range(len(inputs)):
-            outs.append(self.encoders[i](inputs[i],training=training))
-        out=self.fuse(outs,training=training)
-        return self.head(out,training=training)
+            outs.append(self.encoders[i](inputs[i], training=training))
+        out = self.fuse(outs, training=training)
+        return self.head(out, training=training)
 
 def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,criterion=nn.CrossEntropyLoss(),auprc=False,save='best.pt'):
     model = MMDL(encoders,fusion,head).cuda()
