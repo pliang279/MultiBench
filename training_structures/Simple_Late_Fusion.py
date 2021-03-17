@@ -38,22 +38,22 @@ def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,op
             op.step()
         print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
         with torch.no_grad():
-            totalloss=0.0
-            totals=0
-            correct=0
-            pts=[]
+            totalloss = 0.0
+            totals = 0
+            correct = 0
+            pts = []
             for j in valid_dataloader:
-                out=model([i.float().cuda() for i in j[:-1]])
-                loss=criterion(out,j[-1].cuda())
-                totalloss+=loss*len(j[-1])
+                out = model([i.float().cuda() for i in j[:-1]])
+                loss = criterion(out,j[-1].cuda())
+                totalloss += loss*len(j[-1])
                 for i in range(len(j[-1])):
                     totals += 1
-                    if torch.argmax(out[i]).item()==j[-1][i].item():
+                    if torch.argmax(out[i]).item() == j[-1][i].item():
                         correct += 1
                     if auprc:
                         pdb.set_trace()
                         sm=softmax(out[i])
-                        pts.append((sm[1].item(),j[-1][i].item()))
+                        pts.append((sm[1].item(), j[-1][i].item()))
         valloss=totalloss/totals
         print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+" acc: "+str(float(correct)/totals))
         if auprc:
