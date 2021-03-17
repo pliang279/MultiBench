@@ -40,30 +40,12 @@ class TensorFusion(nn.Module):
         super(TFN, self).__init__()
 
         # dimensions are specified in the order of audio, video and text
-        self.audio_in = input_dims[0]
-        self.video_in = input_dims[1]
-        self.text_in = input_dims[2]
+        super(TensorFusion, self).__init__()
 
-        self.audio_hidden = hidden_dims[0]
-        self.video_hidden = hidden_dims[1]
-        self.text_hidden = hidden_dims[2]
+		# dimensions are specified in the order of audio, video and text
+		self.input_dims = input_dims
+		self.output_dim = output_dim
 
-        self.post_fusion_dim = post_fusion_dim
-
-
-
- 
-
-        # define the post_fusion layers
-        self.post_fusion_dropout = nn.Dropout(p=self.post_fusion_prob)
-        self.post_fusion_layer_1 = nn.Linear((self.text_out + 1) * (self.video_hidden + 1) * (self.audio_hidden + 1), self.post_fusion_dim)
-        self.post_fusion_layer_2 = nn.Linear(self.post_fusion_dim, self.post_fusion_dim)
-        self.post_fusion_layer_3 = nn.Linear(self.post_fusion_dim, 1)
-
-        # in TFN we are doing a regression with constrained output range: (-3, 3), hence we'll apply sigmoid to output
-        # shrink it to (0, 1), and scale\shift it back to range (-3, 3)
-        self.output_range = Parameter(torch.FloatTensor([6]), requires_grad=False)
-        self.output_shift = Parameter(torch.FloatTensor([-3]), requires_grad=False)
 
     def forward(self, modalities, training=False):
         '''
@@ -73,7 +55,7 @@ class TensorFusion(nn.Module):
         batch_size = modalities[0].shape[0]
 
 		# next we perform "tensor fusion", which is essentially appending 1s to the tensors and take Kronecker product
-		for (modality, factor) in zip(modalities, self.factors):
+		for modality in modalities:
 			modality_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modality), dim=1)
 			torch.matmul(modality_withones, factor)
 
@@ -101,7 +83,7 @@ class TensorFusion(nn.Module):
 class LowRankTensorFusion(nn.Module):
 	# https://github.com/Justin1904/Low-rank-Multimodal-Fusion
 
-	def __init__(self, input_dims, output_dim, text_out, dropout, output_dim, rank, use_softmax=False):
+	def __init__(self, input_dims, output_dim, rank):
 		'''
 		Args:
 			TODO
@@ -114,9 +96,6 @@ class LowRankTensorFusion(nn.Module):
 		self.input_dims = input_dims
 		self.output_dim = output_dim
 		self.rank = rank
-
-		# define the post_fusion layers
-		self.post_fusion_dropout = nn.Dropout(p=dropout)
 
 		# low-rank factors
 		self.factors = []
