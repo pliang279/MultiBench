@@ -16,21 +16,141 @@ class Concat(nn.Module):
 
 
 class ConcatWithLinear(nn.Module):
-	def __init__(self, indim, outdim):
+	def __init__(self, input_dims, output_dim):
 		super(Concat,self).__init__()
-		self.fc = nn.Linear(indim, outdim)
+		self.fc = nn.Linear(input_dims, output_dim)
 	
 	def forward(self, modalities, training=False):
 		return self.fc(torch.cat(modalities, dim=1))
 
 
-class Tensor(nn.Module):
-	def __init__(self, indim, outdim):
-		super(Concat,self).__init__()
-		self.fc = nn.Linear(indim, outdim)
-	
+class TensorFusion(nn.Module):
+	# # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
+	    def __init__(self, input_dims, hidden_dims, text_out, dropouts, post_fusion_dim):
+        '''
+        Args:
+            input_dims - a length-3 tuple, contains (audio_dim, video_dim, text_dim)
+            hidden_dims - another length-3 tuple, similar to input_dims
+            text_out - int, specifying the resulting dimensions of the text subnetwork
+            dropouts - a length-4 tuple, contains (audio_dropout, video_dropout, text_dropout, post_fusion_dropout)
+            post_fusion_dim - int, specifying the size of the sub-networks after tensorfusion
+        Output:
+            (return value in forward) a scalar value between -3 and 3
+        '''
+        super(TFN, self).__init__()
+
+        # dimensions are specified in the order of audio, video and text
+        self.audio_in = input_dims[0]
+        self.video_in = input_dims[1]
+        self.text_in = input_dims[2]
+
+        self.audio_hidden = hidden_dims[0]
+        self.video_hidden = hidden_dims[1]
+        self.text_hidden = hidden_dims[2]
+
+        self.post_fusion_dim = post_fusion_dim
+
+
+
+ 
+
+        # define the post_fusion layers
+        self.post_fusion_dropout = nn.Dropout(p=self.post_fusion_prob)
+        self.post_fusion_layer_1 = nn.Linear((self.text_out + 1) * (self.video_hidden + 1) * (self.audio_hidden + 1), self.post_fusion_dim)
+        self.post_fusion_layer_2 = nn.Linear(self.post_fusion_dim, self.post_fusion_dim)
+        self.post_fusion_layer_3 = nn.Linear(self.post_fusion_dim, 1)
+
+        # in TFN we are doing a regression with constrained output range: (-3, 3), hence we'll apply sigmoid to output
+        # shrink it to (0, 1), and scale\shift it back to range (-3, 3)
+        self.output_range = Parameter(torch.FloatTensor([6]), requires_grad=False)
+        self.output_shift = Parameter(torch.FloatTensor([-3]), requires_grad=False)
+
+    def forward(self, modalities, training=False):
+        '''
+        Args:
+            TODO
+        '''
+        batch_size = modalities[0].shape[0]
+
+		# next we perform "tensor fusion", which is essentially appending 1s to the tensors and take Kronecker product
+		for (modality, factor) in zip(modalities, self.factors):
+			modality_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modality), dim=1)
+			torch.matmul(modality_withones, factor)
+
+        # _audio_h has shape (batch_size, audio_in + 1), _video_h has shape (batch_size, _video_in + 1)
+        # we want to perform outer product between the two batch, hence we unsqueenze them to get
+        # (batch_size, audio_in + 1, 1) X (batch_size, 1, video_in + 1)
+        # fusion_tensor will have shape (batch_size, audio_in + 1, video_in + 1)
+        fusion_tensor = torch.bmm(_audio_h.unsqueeze(2), _video_h.unsqueeze(1))
+        
+        # next we do kronecker product between fusion_tensor and _text_h. This is even trickier
+        # we have to reshape the fusion tensor during the computation
+        # in the end we don't keep the 3-D tensor, instead we flatten it
+        fusion_tensor = fusion_tensor.view(-1, (self.audio_hidden + 1) * (self.video_hidden + 1), 1)
+        fusion_tensor = torch.bmm(fusion_tensor, _text_h.unsqueeze(1)).view(batch_size, -1)
+
+        post_fusion_dropped = self.post_fusion_dropout(fusion_tensor)
+        post_fusion_y_1 = F.relu(self.post_fusion_layer_1(post_fusion_dropped))
+        post_fusion_y_2 = F.relu(self.post_fusion_layer_2(post_fusion_y_1))
+        post_fusion_y_3 = F.sigmoid(self.post_fusion_layer_3(post_fusion_y_2))
+        output = post_fusion_y_3 * self.output_range + self.output_shift
+
+        return output
+
+
+class LowRankTensorFusion(nn.Module):
+	# https://github.com/Justin1904/Low-rank-Multimodal-Fusion
+
+	def __init__(self, input_dims, output_dim, text_out, dropout, output_dim, rank, use_softmax=False):
+		'''
+		Args:
+			TODO
+		Output:
+			TODO
+		'''
+		super(LowRankTensorFusion, self).__init__()
+
+		# dimensions are specified in the order of audio, video and text
+		self.input_dims = input_dims
+		self.output_dim = output_dim
+		self.rank = rank
+
+		# define the post_fusion layers
+		self.post_fusion_dropout = nn.Dropout(p=dropout)
+
+		# low-rank factors
+		self.factors = []
+		for input_dim in range(input_dims):
+			factor = nn.Parameter(torch.Tensor(self.rank, input_dim+1, self.output_dim))
+			nn.init.xavier_normal(factor)
+			self.factors.append(factor)
+
+		self.fusion_weights = nn.Parameter(torch.Tensor(1, self.rank))
+		self.fusion_bias = nn.Parameter(torch.Tensor(1, self.output_dim))
+
+		# init the fusion weights
+		nn.init.xavier_normal(self.fusion_weights)
+		self.fusion_bias.data.fill_(0)
+
 	def forward(self, modalities, training=False):
-		return self.fc(torch.cat(modalities, dim=1))
+		'''
+		Args:
+			TODO
+		'''
+		batch_size = modalities[0].shape[0]
+
+		# next we perform low-rank multimodal fusion
+		# here is a more efficient implementation than the one the paper describes
+		# basically swapping the order of summation and elementwise product
+		for (modality, factor) in zip(modalities, self.factors):
+			modality_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modality), dim=1)
+			torch.matmul(modality_withones, factor)
+
+		fused_tensor = fusion_audio * fusion_video * fusion_text
+
+		output = torch.matmul(self.fusion_weights, fused_tensor.permute(1, 0, 2)).squeeze() + self.fusion_bias
+		output = output.view(-1, self.output_dim)
+		return output
 
 
 class NLgate(torch.nn.Module):
