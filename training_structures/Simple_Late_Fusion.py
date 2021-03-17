@@ -3,8 +3,9 @@ from torch import nn
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from utils.AUPRC import AUPRC
+import pdb
 
-softmax=nn.Softmax()
+softmax = nn.Softmax()
 
 class MMDL(nn.Module):
     def __init__(self,encoders,fusion,head):
@@ -12,6 +13,7 @@ class MMDL(nn.Module):
         self.encoders=nn.ModuleList(encoders)
         self.fuse=fusion
         self.head=head
+    
     def forward(self,inputs,training=False):
         outs=[]
         for i in range(len(inputs)):
@@ -20,12 +22,12 @@ class MMDL(nn.Module):
         return self.head(out,training=training)
 
 def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,criterion=nn.CrossEntropyLoss(),auprc=False,save='best.pt'):
-    model=MMDL(encoders,fusion,head).cuda()
-    op=optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
-    bestvalloss=10000
+    model = MMDL(encoders,fusion,head).cuda()
+    op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
+    bestvalloss = 10000
     for epoch in range(total_epochs):
-        totalloss=0.0
-        totals=0
+        totalloss = 0.0
+        totals = 0
         for j in train_dataloader:
             op.zero_grad()
             out=model([i.float().cuda() for i in j[:-1]])
@@ -49,6 +51,7 @@ def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,op
                     if torch.argmax(out[i]).item()==j[-1][i].item():
                         correct += 1
                     if auprc:
+                        pdb.set_trace()
                         sm=softmax(out[i])
                         pts.append((sm[1].item(),j[-1][i].item()))
         valloss=totalloss/totals

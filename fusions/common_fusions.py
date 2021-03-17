@@ -1,15 +1,17 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+import pdb
 
 
 class Concat(nn.Module):
 	def __init__(self):
 		super(Concat,self).__init__()
-	def forward(self, modals, training=False):
+	
+	def forward(self, modalities, training=False):
 		flattened = []
-		for modal in modals:
-			flattened.append(torch.flatten(modal, start_dim=1))
+		for modality in modalities:
+			flattened.append(torch.flatten(modality, start_dim=1))
 		return torch.cat(flattened, dim=1)
 
 
@@ -17,8 +19,18 @@ class ConcatWithLinear(nn.Module):
 	def __init__(self, indim, outdim):
 		super(Concat,self).__init__()
 		self.fc = nn.Linear(indim, outdim)
-	def forward(self, modals, training=False):
-		return self.fc(torch.cat(modals,dim=1))
+	
+	def forward(self, modalities, training=False):
+		return self.fc(torch.cat(modalities, dim=1))
+
+
+class Tensor(nn.Module):
+	def __init__(self, indim, outdim):
+		super(Concat,self).__init__()
+		self.fc = nn.Linear(indim, outdim)
+	
+	def forward(self, modalities, training=False):
+		return self.fc(torch.cat(modalities, dim=1))
 
 
 class NLgate(torch.nn.Module):
