@@ -3,7 +3,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from utils.AUPRC import AUPRC
-import pdb
+#import pdb
 
 softmax = nn.Softmax()
 
@@ -51,7 +51,7 @@ def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,op
                     if torch.argmax(out[i]).item() == j[-1][i].item():
                         correct += 1
                     if auprc:
-                        pdb.set_trace()
+                        #pdb.set_trace()
                         sm=softmax(out[i])
                         pts.append((sm[1].item(), j[-1][i].item()))
         valloss=totalloss/totals

@@ -36,7 +36,7 @@ class MVAE(nn.Module):
         recons=[]
         for i in range(len(inputs)):
             recons.append(self.decoders[i](z,training=training));
-        return recons, mu, logvar
+        return z, recons, mu, logvar
 
     def infer(self, inputs,training=False): 
         #print(inputs)
@@ -71,12 +71,12 @@ def train_MVAE(encoders,decoders,head,fusion_method,train_dataloader,valid_datal
     for j in train_dataloader:
       optim.zero_grad()
       trains=[x.float().cuda() for x in j[:-1]]
-      reconsjoint,mujoint,varjoint=mvae(trains,training=True)
+      _,reconsjoint,mujoint,varjoint=mvae(trains,training=True)
       recons=[]
       mus=[]
       vars=[]
       for i in range(len(trains)):
-        recon,mu,var=mvae(allnonebuti(i,trains[i]),training=True)
+        _,recon,mu,var=mvae(allnonebuti(i,trains[i]),training=True)
         recons.append(recon[i])
         mus.append(mu)
         vars.append(var)
@@ -93,7 +93,7 @@ def train_MVAE(encoders,decoders,head,fusion_method,train_dataloader,valid_datal
       with torch.no_grad():
         for j in train_dataloader:
           trains=[x.float().cuda() for x in j[:-1]]
-          recon,mu,var=mvae(trains,training=False)
+          _,recon,mu,var=mvae(trains,training=False)
           for i in range(len(trains[0])):
             allpairs.append((mu[i].cpu(),j[-1][i]))
       finetune_dataloader=DataLoader(allpairs,shuffle=True,num_workers=8,batch_size=finetune_batch_size)
@@ -137,7 +137,7 @@ def test_MVAE(mvae,head,test_dataloader,auprc=False):
     xes=[x.float().cuda() for x in j[:-1]]
     y_batch=j[-1].cuda()
     with torch.no_grad():
-      _,mu,var = mvae(xes,training=False)
+      _,_,mu,var = mvae(xes,training=False)
       outs=head(mu,training=False)
       a=nn.Softmax()(outs)
     for ii in range(len(outs)):
