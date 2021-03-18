@@ -32,3 +32,11 @@ def elbo_loss(modal_loss_funcs,weights,annealing=1.0):
         totalloss += weights[i]*modal_loss_funcs[i](recons[i],origs[i])
     return torch.mean(totalloss+annealing*kld)
   return actualfunc
+
+def recon_weighted_sum(modal_loss_funcs,weights):
+    def actualfunc(recons,origs):
+        totalloss=0.0
+        for i in range(len(recons)):
+            totalloss += modal_loss_funcs[i](recons[i],origs[i])*weights[i]
+        return torch.mean(totalloss)
+    return actualfunc
