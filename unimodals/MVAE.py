@@ -19,19 +19,26 @@ class MLPEncoder(torch.nn.Module):
     return output[:,:self.outdim],output[:,self.outdim:]
 
 class TSEncoder(torch.nn.Module):
-  def __init__(self,indim,outdim,finaldim,timestep):
+  def __init__(self,indim,outdim,finaldim,timestep,returnvar=True):
     super(TSEncoder,self).__init__()
     self.gru=nn.GRU(input_size=indim,hidden_size=outdim)
     self.indim=indim
     self.ts=timestep
     self.finaldim=finaldim
-    self.linear=nn.Linear(outdim*timestep,2*finaldim)
-  def forward(self,x,training=False):
+    if returnvar:
+        self.linear=nn.Linear(outdim*timestep,2*finaldim)
+    else:
+        self.linear=nn.Linear(outdim*timestep,finaldim)
+    self.returnvar=returnvar
+        
+  def forward(self,x,training=False,muvar=True):
     batch=len(x)
     input = x.reshape(batch,self.ts,self.indim).transpose(0,1)
     output= self.gru(input)[0].transpose(0,1)
     output= self.linear(output.flatten(start_dim=1))
-    return output[:,:self.finaldim],output[:,self.finaldim:]
+    if self.returnvar:
+        return output[:,:self.finaldim],output[:,self.finaldim:]
+    return output
 
 class TSDecoder(torch.nn.Module):
   def __init__(self,indim,outdim,finaldim,timestep):

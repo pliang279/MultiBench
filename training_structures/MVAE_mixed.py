@@ -91,5 +91,6 @@ def test_MVAE(mvae,head,test_dataloader,auprc=False):
 
 
   print((float(correct)/total))
-  print(AUPRC(pts))
+  if(auprc):
+    print(AUPRC(pts))
 
