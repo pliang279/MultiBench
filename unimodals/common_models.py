@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torchvision import models as tmodels
 
 class MLP(torch.nn.Module):
     def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1):
@@ -30,6 +31,7 @@ class GRU(torch.nn.Module):
         if self.dropout:
             out = F.dropout(out,p=self.dropoutp,training=training)
         return out
+
 
 #adapted from centralnet code https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py
 class LeNet(nn.Module):
@@ -74,6 +76,86 @@ class LeNet(nn.Module):
         return out
 
 
+class VGG(nn.Module):
+    def __init__(self, num_outputs):
+        super(VGG, self).__init__()
+
+        # self.vgg = tmodels.vgg19(pretrained='imagenet')
+        vgg = list(tmodels.vgg19(pretrained='imagenet').features)
+        self.vgg = nn.ModuleList(vgg)
+        self.gp1 = GlobalPooling2D()
+        self.gp2 = GlobalPooling2D()
+        self.gp3 = GlobalPooling2D()
+        self.gp4 = GlobalPooling2D()
+
+        self.bn4 = nn.BatchNorm1d(512)  # only used for classifier
+
+        self.classifier = nn.Linear(512, num_outputs)
+
+    def forward(self, x):
+
+        for i_l, layer in enumerate(self.vgg):
+
+            x = layer(x)
+
+            if i_l == 20:
+                out_1 = self.gp1(x)
+
+            if i_l == 26:
+                out_2 = self.gp2(x)
+
+            if i_l == 33:
+                out_3 = self.gp3(x)
+
+            if i_l == 36:
+                out_4 = self.gp4(x)
+                bn_4 = self.bn4(out_4)
+
+        out = self.classifier(bn_4)
+
+        # print()
+        # print(out_4, out)
+
+        return out_1, out_2, out_3, out_4, out
+
+
+class Maxout(nn.Module):
+    def __init__(self, d, m, k):
+        super(Maxout, self).__init__()
+        self.d_in, self.d_out, self.pool_size = d, m, k
+        self.lin = nn.Linear(d, m * k)
+
+    def forward(self, inputs):
+        shape = list(inputs.size())
+        shape[-1] = self.d_out
+        shape.append(self.pool_size)
+        max_dim = len(shape) - 1
+        out = self.lin(inputs)
+        m, i = out.view(*shape).max(dim=max_dim)
+        return m
+
+
+class MaxOut_MLP(nn.Module):
+
+    def __init__(self, num_outputs, first_hidden=64, number_input_feats=300):
+        super(MaxOut_MLP, self).__init__()
+
+        self.op1 = Maxout(number_input_feats, first_hidden, 5)
+        self.op2 = nn.Sequential(nn.BatchNorm1d(first_hidden), nn.Dropout(0.5))
+        self.op3 = Maxout(first_hidden, first_hidden * 2, 5)
+        self.op4 = nn.Sequential(nn.BatchNorm1d(first_hidden * 2), nn.Dropout(0.5))
+
+        # The linear layer that maps from hidden state space to output space
+        self.hid2val = nn.Linear(first_hidden * 2, num_outputs)
+
+    def forward(self, x):
+        o1 = self.op1(x)
+        o2 = self.op2(o1)
+        o3 = self.op3(o2)
+        o4 = self.op4(o3)
+        o5 = self.hid2val(o4)
+
+        return o1, o3, o5
 
 
 class GlobalPooling2D(nn.Module):
