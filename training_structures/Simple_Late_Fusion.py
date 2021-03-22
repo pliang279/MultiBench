@@ -30,7 +30,8 @@ def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,op
         totals = 0
         for j in train_dataloader:
             op.zero_grad()
-            out=model([i.float().cuda() for i in j[:-1]])
+            out=model([i.float().cuda() for i in j[:-1]],training=True)
+            #print(j[-1])
             loss=criterion(out,j[-1].cuda())
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
@@ -43,7 +44,7 @@ def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,op
             correct = 0
             pts = []
             for j in valid_dataloader:
-                out = model([i.float().cuda() for i in j[:-1]])
+                out = model([i.float().cuda() for i in j[:-1]],training=False)
                 loss = criterion(out,j[-1].cuda())
                 totalloss += loss*len(j[-1])
                 for i in range(len(j[-1])):
