@@ -9,12 +9,13 @@ from torch import nn
 import torch
 
 traindata, validdata, testdata = get_dataloader('/data/yiwei/avmnist/_MFAS/avmnist')
+channels=3
+encoders=[LeNet(1,channels,3).cuda(),Constant((40,96)).cuda()]
+head=MLP(channels*40,100,10).cuda()
 
-encoders=[LeNet(1,3,3).cuda(),LeNet(1,3,5).cuda()]
-head=MLP(120,100,10).cuda()
 fusion=Concat().cuda()
 
-train(encoders,fusion,head,traindata,validdata,100,optimtype=torch.optim.SGD,lr=0.01,weight_decay=0.002)
+train(encoders,fusion,head,traindata,validdata,100,optimtype=torch.optim.SGD,lr=0.1,weight_decay=0.0001)
 
 print("Testing:")
 model=torch.load('best.pt').cuda()
