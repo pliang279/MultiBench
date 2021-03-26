@@ -138,7 +138,10 @@ class NLgate(torch.nn.Module):
         self.tf_dim = tf_dim
         self.softmax = nn.Softmax(dim=2)
     
-    def forward(self,q,k,v,training=False):
+    def forward(self,x,training=False):
+        q=x[0]
+        k=x[1]
+        v=x[1]
         if self.qli is None:
           qin = q.view(-1, self.thw_dim, self.c_dim)
         else:
@@ -153,4 +156,4 @@ class NLgate(torch.nn.Module):
           vin = self.vli(v).view(-1, self.tf_dim, self.c_dim)
         matmulled = torch.matmul(qin, kin)
         finalout = torch.matmul(self.softmax(matmulled), vin)
-        return qin + finalout
+        return torch.flatten(qin + finalout,1)
