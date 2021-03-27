@@ -18,7 +18,7 @@ fusion = Concat().cuda()
 unimodal_heads=[MLP(10,20,2).cuda(),MLP(720,40,2).cuda()]
 
 #train
-train(encoders, head, unimodal_heads, fusion, traindata, validdata, 100, lr=0.01, AUPRC=True)
+train(encoders, head, unimodal_heads, fusion, traindata, validdata, 300, lr=0.005, AUPRC=True)
 
 #test
 print("Testing: ")
