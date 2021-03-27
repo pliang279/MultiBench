@@ -21,15 +21,18 @@ class MLP(torch.nn.Module):
 
 
 class GRU(torch.nn.Module):
-    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1):
+    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False):
         super(GRU,self).__init__()
         self.gru=nn.GRU(indim,hiddim)
         self.dropoutp=dropoutp
         self.dropout=dropout
+        self.flatten=flatten
     def forward(self,x,training=True):
         out=self.gru(x)[0]
         if self.dropout:
             out = F.dropout(out,p=self.dropoutp,training=training)
+        if self.flatten:
+            out=torch.flatten(out,1)
         return out
 
 
