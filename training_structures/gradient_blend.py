@@ -5,6 +5,7 @@ import random
 from torch.utils.data import DataLoader
 
 criterion=nn.CrossEntropyLoss()
+delta=False
 
 def getloss(model,head,data,monum,batch_size):
   losses=0.0
@@ -48,10 +49,14 @@ def train_unimodal(model,head,optim,trains,valids,monum,epoch,batch_size):
   print("Final train loss: "+str(ltNn)+" valid loss: "+str(lvNn))
   oNn=lvNn-ltNn
   oN=lvN-ltN
-  oi=oNn-oN
-  g=lvNn-lvN
-  #oi=oNn
-  #g=lvNn
+  if delta:
+    oi=oNn-oN
+    g=lvNn-lvN
+  else:
+    oi=oNn
+    if oi < 0:
+        oi=0.0001
+    g=lvNn
   print("raw: "+str(g/(oi*oi)))
   return abs(g/(oi*oi))
 
@@ -100,10 +105,14 @@ def train_multimodal(models,head,fuse,optim,trains,valids,epoch,batch_size):
   print("Final train loss: "+str(ltNn)+" valid loss: "+str(lvNn))
   oNn=lvNn-ltNn
   oN=lvN-ltN
-  oi=oNn-oN
-  g=lvNn-lvN
-  #oi=oNn
-  #g=lvNn
+  if delta:
+    oi=oNn-oN
+    g=lvNn-lvN
+  else:
+    oi=oNn
+    if oi < 0:
+        oi=0.0001
+    g=lvNn
   print("raw: "+str(g/(oi*oi)))
   return abs(g/(oi*oi))
 
@@ -209,12 +218,13 @@ def train(unimodal_models,  multimodal_classification_head,
         train_x=[x.float().cuda() for x in j[:-1]]
         train_y=j[-1].cuda()
         outs=multimodalcompute(unimodal_models,train_x)
-        for iii in range(len(catout)):
+        for iii in range(len(train_y)):
           aa=[x[iii].cpu() for x in outs]
           #print(aa)
           aa.append(train_y[iii].cpu())
           #print(aa)
           finetunetrains.append(aa)
+    print("Length of ftt_dataloader: "+str(len(finetunetrains)))
     ftt_dataloader = DataLoader(finetunetrains,shuffle=True,num_workers=8,batch_size=train_dataloader.batch_size)
     for jj in range(finetune_epoch):
       totalloss=0.0
