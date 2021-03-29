@@ -17,7 +17,7 @@ class Concat(nn.Module):
 
 class ConcatWithLinear(nn.Module):
     def __init__(self, input_dims, output_dim):
-        super(Concat,self).__init__()
+        super(ConcatWithLinear,self).__init__()
         self.fc = nn.Linear(input_dims, output_dim)
     
     def forward(self, modalities, training=False):

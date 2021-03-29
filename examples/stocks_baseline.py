@@ -1,9 +1,11 @@
 import sys
 import os
 sys.path.append(os.getcwd())
-from datasets.stocks.get_data import get_dataloader
+
 import numpy as np
 import torch
+from datasets.stocks.get_data import get_dataloader
+from fusions.common_fusions import ConcatWithLinear
 from torch import nn
 
 stocks = sorted(['DRI', 'MCD', 'SBUX', 'YUM', 'CPB', 'CAG', 'GIS', 'HSY', 'HRL', 'SJM', 'K', 'MKC', 'TSN'])
@@ -14,7 +16,7 @@ test_loader = test_loader
 
 criterion = nn.MSELoss()
 
-class LSTM(nn.Module):
+class EarlyFusion(nn.Module):
     hidden_size = 128
 
     def __init__(self, n_features):
@@ -31,8 +33,33 @@ class LSTM(nn.Module):
                                self.init_cell.repeat(x.shape[0]).reshape(1, x.shape[0], -1)))
         return self.fnn(h.reshape(-1, self.hidden_size))
 
+class LateFusion(nn.Module):
+    hidden_size = 16
+
+    def __init__(self, n_features):
+        super().__init__()
+
+        self.init_hidden = torch.nn.Parameter(torch.zeros(n_features, self.hidden_size))
+        self.init_cell = torch.nn.Parameter(torch.zeros(n_features, self.hidden_size))
+        lstms = []
+        for i in range(n_features):
+            lstms.append(nn.LSTM(1, self.hidden_size, batch_first=True))
+        self.lstms = nn.ModuleList(lstms)
+        self.fusion = ConcatWithLinear(n_features * self.hidden_size, 1)
+
+    def forward(self, x):
+        hidden = []
+        for i in range(len(self.lstms)):
+            _, (h, _) = self.lstms[i](x[:, :, i:i + 1],
+                                      (self.init_hidden[i].repeat(x.shape[0]).reshape(1, x.shape[0], -1),
+                                       self.init_cell[i].repeat(x.shape[0]).reshape(1, x.shape[0], -1)))
+            hidden.append(h.reshape(x.shape[0], self.hidden_size))
+        return self.fusion(hidden)
+
+Model = EarlyFusion
+
 def do_train():
-    model = LSTM(n_features=train_loader.dataset[0][0].shape[1]).cuda()
+    model = Model(n_features=train_loader.dataset[0][0].shape[1]).cuda()
     model.train()
     opt = torch.optim.Adam(model.parameters(), 1e-3)
     epochs = 40
