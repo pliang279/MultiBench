@@ -11,13 +11,16 @@ from fusions.common_fusions import ConcatWithLinear
 from modules.transformer import TransformerEncoder
 
 
-stocks = sorted(['DRI', 'MCD', 'SBUX', 'YUM', 'CPB', 'CAG', 'GIS', 'HSY', 'HRL', 'SJM', 'K', 'MKC', 'TSN'])
+stocks = sorted(['MCD', 'SBUX', 'HSY', 'HRL'])
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, ['MCD'])
 train_loader = train_loader
 val_loader = val_loader
 test_loader = test_loader
 
 criterion = nn.MSELoss()
+
+print('Baseline val MSE loss: ' + str(float(nn.MSELoss()(torch.ones_like(val_loader.dataset.Y) * torch.mean(val_loader.dataset.Y), val_loader.dataset.Y))))
+print('Baseline test MSE loss: ' + str(float(nn.MSELoss()(torch.ones_like(test_loader.dataset.Y) * torch.mean(test_loader.dataset.Y), test_loader.dataset.Y))))
 
 class EarlyFusion(nn.Module):
     hidden_size = 128
@@ -196,7 +199,7 @@ def do_train():
 
 #train
 best = 9999
-for i in range(10):
+for i in range(5):
     model, loss = do_train()
     if loss < best:
         best = loss
