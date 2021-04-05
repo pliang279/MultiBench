@@ -3,6 +3,7 @@ from torch import nn
 from torch.nn import functional as F
 from torch.utils.data import DataLoader
 from utils.AUPRC import AUPRC
+from objective_functions.regularization import RegularizationLoss
 #import pdb
 
 softmax = nn.Softmax()
@@ -21,10 +22,16 @@ class MMDL(nn.Module):
         out = self.fuse(outs, training=training)
         return self.head(out, training=training)
 
-def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,criterion=nn.CrossEntropyLoss(),auprc=False,save='best.pt'):
+def train(
+    encoders,fusion,head,train_dataloader,valid_dataloader,
+    total_epochs,optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
+    criterion=nn.CrossEntropyLoss(),regularization=False,auprc=False,save='best.pt'):
+    
     model = MMDL(encoders,fusion,head).cuda()
     op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
     bestvalloss = 10000
+    if regularization:
+        regularize = RegularizationLoss(criterion, model)
     for epoch in range(total_epochs):
         totalloss = 0.0
         totals = 0
@@ -33,9 +40,14 @@ def train(encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,op
             out=model([i.float().cuda() for i in j[:-1]],training=True)
             #print(j[-1])
             loss=criterion(out,j[-1].cuda())
+            if regularization:
+                loss += regularize(out, [i.float().cuda() for i in j[:-1]])
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
-            loss.backward()
+            if regularization:
+                loss.backward(retain_graph=True)
+            else:
+                loss.backward()
             op.step()
         print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
         with torch.no_grad():
