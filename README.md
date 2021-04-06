@@ -28,7 +28,7 @@ To add a new dataset:
 ## Algorithms supported
 
 1. unimodals: LSTM, Transformer, FCN, Random Forest
-3. fusions:
+3. fusions: early/late concatenation, attention, tensors
 4. objective_functions:
 5. training_structures:
 
