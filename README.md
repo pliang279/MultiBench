@@ -10,4 +10,16 @@ Correspondence to:
 
 ## Datasets supported
 
+To add a new dataset:
+
+1. 
+
 ## Algorithms supported
+
+To add a new algorithm:
+
+1. Figure out which subfolder to add it into:
+- unimodals/
+- fusions/
+- objective_functions/
+- training_structures/
