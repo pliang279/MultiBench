@@ -23,9 +23,9 @@ To add a new dataset:
 To add a new algorithm:
 
 1. Figure out which subfolder to add it into:
-- unimodals/
-- fusions/
-- objective_functions/
-- training_structures/
+- unimodals/ : unimodal architectures
+- fusions/ : multimodal fusion architectures
+- objective_functions/ : objective functions in addition to supervised training loss (e.g., VAE loss, contrastive loss)
+- training_structures/ 
 2. see examples/ and write an example training python file following the existing examples
 3. check that calling the added functions and running a simple training script works
