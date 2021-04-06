@@ -41,3 +41,7 @@ To add a new algorithm:
 - training_structures/ : training algorithms excluding objective functions (e.g., balancing generalization, architecture search outer RL loop)
 2. see examples/ and write an example training python file following the existing examples
 3. check that calling the added functions and running a simple training script works
+
+## Experiments
+
+## References
