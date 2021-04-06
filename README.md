@@ -12,7 +12,11 @@ Correspondence to:
 
 To add a new dataset:
 
-1. 
+1. see datasets/
+2. add a new folder if appropriate
+3. write a dataloader python file following the existing examples
+4. see examples/ and write an example training python file following the existing examples
+5. check that calling the dataloader and running a simple training script works
 
 ## Algorithms supported
 
@@ -23,3 +27,5 @@ To add a new algorithm:
 - fusions/
 - objective_functions/
 - training_structures/
+2. see examples/ and write an example training python file following the existing examples
+3. check that calling the added functions and running a simple training script works
