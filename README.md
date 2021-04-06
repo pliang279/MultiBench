@@ -10,7 +10,7 @@ Correspondence to:
 
 ## Datasets supported
 
-1. Affective computing: CMU-MOSI
+1. Affective computing: CMU-MOSI, CMU-MOSEI, POM, UR-FUNNY, Deception
 2. Healthcare: MIMIC
 3. Multimedia: AV-MNIST, MMIMDB
 4. Finance: stocks
