@@ -10,6 +10,10 @@ Correspondence to:
 
 ## Datasets supported
 
+1. Affective computing
+2. Healthcare: MIMIC
+3. Multimedia: 
+
 To add a new dataset:
 
 1. see datasets/
