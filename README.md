@@ -10,7 +10,7 @@ Correspondence to:
 
 ## Datasets supported
 
-1. Affective computing: CMU-MOSI, CMU-MOSEI, POM, UR-FUNNY, Deception
+1. Affective computing: CMU-MOSI, CMU-MOSEI, POM, UR-FUNNY, Deception, MUStARD
 2. Healthcare: MIMIC
 3. Multimedia: AV-MNIST, MMIMDB
 4. Finance: stocks
@@ -26,10 +26,10 @@ To add a new dataset:
 
 ## Algorithms supported
 
-1. unimodals:
-2. fusions:
-3. objective_functions:
-4. training_structures:
+1. unimodals: LSTM, Transformer, FCN, Random Forest
+3. fusions:
+4. objective_functions:
+5. training_structures:
 
 To add a new algorithm:
 
