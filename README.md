@@ -10,9 +10,11 @@ Correspondence to:
 
 ## Datasets supported
 
-1. Affective computing
+1. Affective computing: CMU-MOSI
 2. Healthcare: MIMIC
-3. Multimedia: 
+3. Multimedia: AV-MNIST, MMIMDB
+4. Finance: stocks
+5. HCI: 
 
 To add a new dataset:
 
