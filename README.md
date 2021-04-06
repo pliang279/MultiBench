@@ -29,8 +29,8 @@ To add a new dataset:
 
 1. unimodals: LSTM, Transformer, FCN, Random Forest
 3. fusions: early/late concatenation, attention, tensors
-4. objective_functions:
-5. training_structures:
+4. objective_functions: VAE, contrastive learning, max MI, CCA
+5. training_structures: balancing generalization, architecture search
 
 To add a new algorithm:
 
