@@ -26,6 +26,11 @@ To add a new dataset:
 
 ## Algorithms supported
 
+1. unimodals:
+2. fusions:
+3. objective_functions:
+4. training_structures:
+
 To add a new algorithm:
 
 1. Figure out which subfolder to add it into:
