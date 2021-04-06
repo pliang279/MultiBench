@@ -12,9 +12,9 @@ Correspondence to:
 
 1. Affective computing: CMU-MOSI, CMU-MOSEI, POM, UR-FUNNY, Deception, MUStARD
 2. Healthcare: MIMIC
-3. Multimedia: AV-MNIST, MMIMDB
-4. Finance: stocks
-5. HCI: 
+3. Multimedia: AV-MNIST, MMIMDB, Kinetics (size issue?)
+4. Finance: Stocks-food, Stocks-tech, Stocks-healthcare
+TODO: add HCI and Robotics
 
 To add a new dataset:
 
