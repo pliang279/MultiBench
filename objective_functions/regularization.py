@@ -45,7 +45,10 @@ class Perturbation:
         tens_dim[0] *= n_samples
 
         tens = tens.view(*tens_dim)
-        tens.requires_grad_()
+        try:
+            tens.requires_grad_()
+        except:
+            pass
 
         return tens
 
@@ -216,20 +219,24 @@ class RegParameters(object):
 
 class RegularizationLoss(torch.nn.Module):
 
-    def __init__(self, loss: torch.nn.Module, model: torch.nn.Module) -> None:
+    def __init__(self, loss: torch.nn.Module, model: torch.nn.Module, delta: float=1e-10) -> None:
+        super(RegularizationLoss, self).__init__()
         self.reg_params = RegParameters()
         self.criterion = loss
         self.model = model
+        self.delta = delta
 
     def forward(self, logits, inputs):
 
         expanded_logits = Perturbation.get_expanded_logits(logits, self.reg_params.n_samples)
 
         inf_inputs = []
-        for i in inputs:
+        inf_inputs_len = []
+        for ind, i in enumerate(inputs[0]):
             inf_inputs.append(Perturbation.perturb_tensor(i, self.reg_params.n_samples).float().cuda())
+            inf_inputs_len.append(Perturbation.perturb_tensor(inputs[1][ind], self.reg_params.n_samples,False))
 
-        inf_output = self.model(inf_inputs)
+        inf_output = self.model([inf_inputs, inf_inputs_len], training=True)
         inf_loss = torch.nn.functional.binary_cross_entropy_with_logits(inf_output, expanded_logits)
 
         gradients = torch.autograd.grad(inf_loss, inf_inputs, create_graph=True)
@@ -240,4 +247,4 @@ class RegularizationLoss(torch.nn.Module):
         reg_term = Regularization.get_regularization_term(inf_scores, norm=self.reg_params.norm,
                                                         optim_method=self.reg_params.optim_method)
 
-        return self.reg_params.delta * reg_term
+        return self.delta * reg_term
