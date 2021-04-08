@@ -1,7 +1,9 @@
+from tqdm import tqdm
+
 import torch
 from torch import nn
 from torch.nn import functional as F
-from torch.utils.data import DataLoader
+from torch.optim.lr_scheduler import ExponentialLR
 from utils.AUPRC import AUPRC
 from objective_functions.regularization import RegularizationLoss
 #import pdb
@@ -29,29 +31,35 @@ class MMDL(nn.Module):
 
 
 def train(
-    encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,
-    task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
+    encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
+    early_stop=False,task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
     criterion=nn.CrossEntropyLoss(),regularization=False,auprc=False,save='best.pt'):
     
-    model = MMDL(encoders,fusion,head,regularization).cuda()
+    model = MMDL(encoders,fusion,head,is_packed).cuda()
     op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
+    scheduler = ExponentialLR(op, 0.9)
     bestvalloss = 10000
+    patience = 0
     
     if regularization:
-        regularize = RegularizationLoss(criterion, model)
+        regularize = RegularizationLoss(criterion, model, 1e-11)
     
     for epoch in range(total_epochs):
         totalloss = 0.0
+        totalloss1 = 0.0
+        totalloss2 = 0.0
         totals = 0
         model.train()
         for j in train_dataloader:
             #print([i for i in j[:-1]])
             op.zero_grad()
-            if regularization:
+            if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
                     out=model([[i.cuda() for i in j[0]], j[1]],training=True)
                     #print(j[-1])
-                    loss=criterion(out,j[-1].cuda()) + regularize(out, [[i.cuda() for i in j[0]], j[1]])
+                    loss1=criterion(out,j[-1].cuda())
+                    loss2=regularize(out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
+                    loss = loss1+loss2
             else:
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
                 #print(j[-1])
@@ -59,11 +67,16 @@ def train(
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             if regularization:
+                totalloss1 += loss1 * len(j[-1])
+                totalloss2 += loss2 * len(j[-1])
                 loss.backward(retain_graph=True)
             else:
                 loss.backward()
             op.step()
-        print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
+        if regularization:
+            print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" reg loss: "+str(totalloss2/totals))
+        else:
+            print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
         
         model.eval()
         with torch.no_grad():
@@ -72,7 +85,7 @@ def train(
             correct = 0
             pts = []
             for j in valid_dataloader:
-                if regularization:
+                if is_packed:
                     out=model([[i.cuda() for i in j[0]], j[1]],training=False)
                 else:
                     out = model([i.float().cuda() for i in j[:-1]],training=False)
@@ -95,24 +108,33 @@ def train(
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
         if valloss<bestvalloss:
+            patience = 0
             bestvalloss=valloss
             print("Saving Best")
             torch.save(model,save)
+        else:
+            patience += 1
+        if early_stop and patience > 20:
+            break
+        
+        scheduler.step()
+
 
 def test(
-    model,test_dataloader,criterion=nn.CrossEntropyLoss(),
-    task="classification",regularization=False,auprc=False):
+    model,test_dataloader,is_packed=False,
+    criterion=nn.CrossEntropyLoss(),task="classification",auprc=False):
     with torch.no_grad():
         totals=0
         correct=0
         totalloss = 0.0
         pts=[]
         for j in test_dataloader:
-            if regularization:
+            if is_packed:
                 out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
                 out = model([i.float().cuda() for i in j[:-1]],training=False)
             loss = criterion(out,j[-1].cuda())
+            #print(torch.cat([out,j[-1].cuda()],dim=1))
             totalloss += loss*len(j[-1])
             for i in range(len(j[-1])):
                 totals += 1
