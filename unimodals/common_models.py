@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
+from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import models as tmodels
 
 class Linear(torch.nn.Module):
@@ -28,14 +29,19 @@ class MLP(torch.nn.Module):
 
 
 class GRU(torch.nn.Module):
-    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False):
+    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
         super(GRU,self).__init__()
         self.gru=nn.GRU(indim,hiddim)
         self.dropoutp=dropoutp
         self.dropout=dropout
         self.flatten=flatten
+        self.has_padding=has_padding
     def forward(self,x,training=True):
-        out=self.gru(x)[0]
+        if self.has_padding:
+            x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
+            out=self.gru(x)[1][-1]
+        else:
+            out=self.gru(x)[0]
         if self.dropout:
             out = F.dropout(out,p=self.dropoutp,training=training)
         if self.flatten:
