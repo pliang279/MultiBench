@@ -5,6 +5,14 @@ import pandas_datareader
 import torch
 from torch.utils.data import DataLoader
 
+def running_avg(x, alpha=0.4):
+    avg = x[0]
+    res = []
+    for n in x:
+        avg = (1 - alpha) * avg + alpha * n
+        res.append(avg)
+    return np.array(res)
+
 def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shuffle=True, start_date=datetime.datetime(2000, 6, 1), end_date=datetime.datetime(2021, 2, 28), window_size=500, val_split=3200, test_split=3700):
     stocks = np.array(stocks)
 
@@ -26,7 +34,7 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     X = torch.tensor(list(data['Open'])).view(-1, len(stocks))
     RX = torch.log(X[1:] / X[:-1])
     Y = RX[window_size:, output_stocks]
-    Y = Y * Y
+    Y = running_avg(Y)
 
     RX = RX / torch.std(RX[:window_size + val_split])
     Y = Y / torch.std(Y[:val_split])
