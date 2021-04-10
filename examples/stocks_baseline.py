@@ -189,7 +189,6 @@ def do_train():
     losses = []
     for j, (x, y) in enumerate(val_loader):
         out = model(x)
-        out = out * (out > 0)
         loss = criterion(out, y)
         losses.append(loss.item() * len(out))
 
@@ -211,7 +210,6 @@ model.eval()
 losses = []
 for j, (x, y) in enumerate(test_loader):
     out = model(x)
-    out = out * (out > 0)
     loss = criterion(out, y)
     losses.append(loss.item() * len(out))
 print(f'Test loss: {np.sum(losses) / len(test_loader.dataset)}')
