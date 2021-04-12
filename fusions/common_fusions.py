@@ -24,6 +24,41 @@ class ConcatWithLinear(nn.Module):
         return self.fc(torch.cat(modalities, dim=1))
 
 
+class FiLM(nn.Module):
+    # TODO
+    def __init__(self, input_dims, output_dims):
+        '''
+        Args:
+            TODO
+        Output:
+            TODO
+        '''
+        super(FiLM, self).__init__()
+        self.input_dims = input_dims
+        self.output_dims = output_dims
+
+    def forward(self, modalities, training=False):
+        return
+
+
+class MultiplicativeInteractions(nn.Module):
+    # TODO
+    # see https://openreview.net/pdf?id=rylnK6VtDH
+    def __init__(self, input_dims, output_dims):
+        '''
+        Args:
+            TODO
+        Output:
+            TODO
+        '''
+        super(MultiplicativeInteractions, self).__init__()
+        self.input_dims = input_dims
+        self.output_dims = output_dims
+
+    def forward(self, modalities, training=False):
+        return
+
+
 class TensorFusion(nn.Module):
     # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
     def __init__(self, input_dims):
