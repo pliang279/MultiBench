@@ -34,7 +34,6 @@ class TensorFusion(nn.Module):
             TODO
         '''
         super(TensorFusion, self).__init__()
-
         self.input_dims = input_dims
 
 
