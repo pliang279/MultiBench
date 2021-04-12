@@ -25,7 +25,7 @@ class ConcatWithLinear(nn.Module):
 
 
 class TensorFusion(nn.Module):
-    # # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
+    # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
     def __init__(self, input_dims):
         '''
         Args:
@@ -66,7 +66,6 @@ class TensorFusion(nn.Module):
 
 class LowRankTensorFusion(nn.Module):
     # https://github.com/Justin1904/Low-rank-Multimodal-Fusion
-
     def __init__(self, input_dims, output_dim, rank):
         '''
         Args:
