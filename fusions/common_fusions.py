@@ -26,7 +26,7 @@ class ConcatWithLinear(nn.Module):
 
 class TensorFusion(nn.Module):
     # # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
-    def __init__(self, input_dims, output_dim):
+    def __init__(self, input_dims):
         '''
         Args:
             TODO
@@ -36,7 +36,6 @@ class TensorFusion(nn.Module):
         super(TensorFusion, self).__init__()
 
         self.input_dims = input_dims
-        self.output_dim = output_dim
 
 
     def forward(self, modalities, training=False):
@@ -45,24 +44,24 @@ class TensorFusion(nn.Module):
             TODO
         '''
         batch_size = modalities[0].shape[0]
-
-        # next we perform "tensor fusion", which is essentially appending 1s to the tensors and take Kronecker product
-        fused_tensor = torch.ones(batch_size, 1).type(modality.dtype)
-        for modality in modalities:
-            modality_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modality), dim=1)
-            torch.matmul(modality_withones, factor)
-
-        # _audio_h has shape (batch_size, audio_in + 1), _video_h has shape (batch_size, _video_in + 1)
-        # we want to perform outer product between the two batch, hence we unsqueenze them to get
-        # (batch_size, audio_in + 1, 1) X (batch_size, 1, video_in + 1)
-        # fusion_tensor will have shape (batch_size, audio_in + 1, video_in + 1)
-        fused_tensor = torch.bmm(_audio_h.unsqueeze(2), _video_h.unsqueeze(1))
         
-        # next we do kronecker product between fusion_tensor and _text_h. This is even trickier
-        # we have to reshape the fusion tensor during the computation
-        # in the end we don't keep the 3-D tensor, instead we flatten it
-        fused_tensor = fused_tensor.view(-1, (self.audio_hidden + 1) * (self.video_hidden + 1), 1)
-        fused_tensor = torch.bmm(fused_tensor, _text_h.unsqueeze(1)).view(batch_size, -1)
+        if len(modalities) == 1:
+            fused_tensor = modalities[0]
+
+        if len(modalities) == 2:
+            m1_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modalities[0]), dim=1)
+            m2_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modalities[1]), dim=1)
+            fused_tensor = torch.bmm(m1_withones.unsqueeze(2), m2_withones.unsqueeze(1))
+            fused_tensor = fused_tensor.view(batch_size, -1)
+
+        if len(modalities) == 3:
+            m1_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modalities[0]), dim=1)
+            m2_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modalities[1]), dim=1)
+            m3_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modalities[2]), dim=1)
+            fused_tensor = torch.bmm(m1_withones.unsqueeze(2), m2_withones.unsqueeze(1))
+            fused_tensor = fused_tensor.view(-1, (self.input_dims[0] + 1) * (self.input_dims[1] + 1), 1)
+            fused_tensor = torch.bmm(fused_tensor, m3_withones.unsqueeze(1)).view(batch_size, -1)
+
         return fused_tensor
 
 
