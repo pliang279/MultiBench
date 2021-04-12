@@ -121,7 +121,7 @@ class NLgate(torch.nn.Module):
     # is inputted for each of these 3 arguments
     # See section F4 of "What makes training MM classification networks hard for details"
     def __init__(self, thw_dim, c_dim, tf_dim, q_linear=None, k_linear=None, v_linear=None):
-        super(NLgate,self).__init__()
+        super(NLgate, self).__init__()
         self.qli = None
         if q_linear is not None:
           self.qli = nn.Linear(q_linear[0], q_linear[1])
@@ -136,10 +136,10 @@ class NLgate(torch.nn.Module):
         self.tf_dim = tf_dim
         self.softmax = nn.Softmax(dim=2)
     
-    def forward(self,x,training=False):
-        q=x[0]
-        k=x[1]
-        v=x[1]
+    def forward(self, x, training=False):
+        q = x[0]
+        k = x[1]
+        v = x[1]
         if self.qli is None:
           qin = q.view(-1, self.thw_dim, self.c_dim)
         else:
