@@ -44,7 +44,7 @@ class FiLM(nn.Module):
 class MultiplicativeInteractions(nn.Module):
     # TODO
     # see https://openreview.net/pdf?id=rylnK6VtDH
-    def __init__(self, input_dims, output_dims):
+    def __init__(self, input_dims, output_dim):
         '''
         Args:
             TODO
@@ -52,10 +52,24 @@ class MultiplicativeInteractions(nn.Module):
             TODO
         '''
         super(MultiplicativeInteractions, self).__init__()
-        self.input_dims = input_dims
-        self.output_dims = output_dims
+        self.input_dims = input_dims 
+        self.output_dim = output_dim
+
+        W_dims = self.input_dims + [output_dim]
+        self.W = nn.Parameter(torch.Tensor(W_dims))
+        nn.init.xavier_normal(self.W)
+        self.U = nn.Parameter(torch.Tensor(self.input_dims[0], output_dim))
+        nn.init.xavier_normal(self.U)
+        self.V = nn.Parameter(torch.Tensor(self.input_dims[1], output_dim))
+        nn.init.xavier_normal(self.V)
+        self.b = nn.Parameter(torch.Tensor(self.output_dim))
+
 
     def forward(self, modalities, training=False):
+
+        # TODO: extend to more than 2 modalities
+        m1 = modalities[0]
+        m2 = modalities[1]
         return
 
 
