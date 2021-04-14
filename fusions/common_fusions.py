@@ -44,58 +44,72 @@ class FiLM(nn.Module):
 class MultiplicativeInteractions(nn.Module):
     # TODO
     # see https://openreview.net/pdf?id=rylnK6VtDH
-    def __init__(self, input_dims, output_dim):
+    def __init__(self, input_dims, output_dim, output):
         '''
         Args:
             TODO
+            output in 'scalar', 'vector', 'matrix'
         Output:
             TODO
         '''
         super(MultiplicativeInteractions, self).__init__()
         self.input_dims = input_dims 
         self.output_dim = output_dim
+        self.output = output
 
         # most general Hypernetworks as Multiplicative Interactions.
-        W_dims = self.input_dims + [output_dim]
-        self.W = nn.Parameter(torch.Tensor(W_dims))
-        nn.init.xavier_normal(self.W)
-        self.U = nn.Parameter(torch.Tensor(self.input_dims[0], output_dim))
-        nn.init.xavier_normal(self.U)
-        self.V = nn.Parameter(torch.Tensor(self.input_dims[1], output_dim))
-        nn.init.xavier_normal(self.V)
-        self.b = nn.Parameter(torch.Tensor(self.output_dim))
-
+        if output == 'matrix':
+            W_dims = self.input_dims + [output_dim]
+            self.W = nn.Parameter(torch.Tensor(W_dims))
+            nn.init.xavier_normal(self.W)
+            self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim))
+            nn.init.xavier_normal(self.U)
+            self.V = nn.Parameter(torch.Tensor(input_dims[1], output_dim))
+            nn.init.xavier_normal(self.V)
+            self.b = nn.Parameter(torch.Tensor(output_dim))
         # Diagonal Forms and Gating Mechanisms.
-        self.avec = nn.Parameter(torch.Tensor(self.input_dims[0]))
-
+        elif output == 'vector':
+            
+       
         # Scales and Biases.
-        self.a = nn.Parameter(torch.Tensor(1))
-
+        if output == 'scalar':
+            W_dims = self.input_dims
+            self.W = nn.Parameter(torch.Tensor(W_dims))
+            nn.init.xavier_normal(self.W)
+            self.U = nn.Parameter(torch.Tensor(W_dims))
+            nn.init.xavier_normal(self.U)
+            self.V = nn.Parameter(torch.Tensor(self.input_dims[1]))
+            nn.init.xavier_normal(self.V)
+            self.b = nn.Parameter(torch.Tensor(self.input_dims[1]))
 
 
     def forward(self, modalities, training=False):
-        if len(modalities) == 1:
-            return modalities[0]
-        elif len(modalities) == 2:
-            m1 = modalities[0]
-            m2 = modalities[1]
-            t1 = torch.einsum('bn, nmd -> bmd', m1, self.W)
-            t1 = torch.einsum('bmd, bm -> bd', t1, m2)
-            t2 = torch.einsum('bn, nd -> bd', m1, self.U)
-            t3 = torch.einsum('bm, md -> bd', m2, self.V)
-            return t1 + t2 + t3 + self.b
-        # TODO: extend to more than 2 modalities
-        else:
-            assert False
-
-        # more general forms:
         # Hypernetworks as Multiplicative Interactions.
-        Wprime = torch.einsum('bn, nmd -> bmd', m1, self.W) + self.V    # bmd
-        bprime = torch.einsum('bn, nd -> bd', m1, self.U) + self.b      # bd
-        output = torch.einsum('bmd, bm -> bd', Wprime, m2) + bprime     # bd
-        return output
+        if self.type == 'matrix:'
+            if len(modalities) == 1:
+                return modalities[0]
+            elif len(modalities) == 2:
+                m1 = modalities[0]
+                m2 = modalities[1]
+                Wprime = torch.einsum('bn, nmd -> bmd', m1, self.W) + self.V    # bmd
+                bprime = torch.einsum('bn, nd -> bd', m1, self.U) + self.b      # bd
+                output = torch.einsum('bmd, bm -> bd', Wprime, m2) + bprime     # bd
+                return output
+            # TODO: extend to more than 2 modalities
+            else:
+                assert False
 
         # Diagonal Forms and Gating Mechanisms.
+        elif self.output == 'vector':
+            
+
+        elif self.output == 'scalar':
+            Wprime = torch.einsum('bn, nm -> bm', m1, self.W) + self.V      # bm
+            bprime = torch.einsum('bn, nm -> bm', m1, self.U) + self.b      # bm
+            output = torch.mul(Wprime, m2) + bprime                         # bm
+            return output
+
+        
 
 
 class TensorFusion(nn.Module):
