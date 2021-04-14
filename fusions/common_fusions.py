@@ -66,11 +66,20 @@ class MultiplicativeInteractions(nn.Module):
 
 
     def forward(self, modalities, training=False):
-
+        if len(modalities) == 1:
+            return modalities[0]
+        elif len(modalities) == 2:
+            m1 = modalities[0]
+            m2 = modalities[1]
+            t1 = torch.einsum('bn, nmd -> bmd', m1, self.W)
+            t1 = torch.einsum('bmd, bm -> bd', t1, m2)
+            t2 = torch.einsum('bn, nd -> bd', m1, self.U)
+            t3 = torch.einsum('bm, md -> bd', m2, self.V)
+            return t1 + t2 + t3 + self.b
         # TODO: extend to more than 2 modalities
-        m1 = modalities[0]
-        m2 = modalities[1]
-        return
+        else:
+            assert False
+
 
 
 class TensorFusion(nn.Module):
