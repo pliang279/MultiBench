@@ -211,8 +211,8 @@ class LowRankTensorFusion(nn.Module):
 
 
 class NLgate(torch.nn.Module):
-	# q_linear,k_liear,v_linear are none of no linear layer applied before q,k,v; otherwise, a tuple of (indim,outdim)
-	# is inputted for each of these 3 arguments
+	# q_linear, k_linear, v_linear are none of no linear layer applied before q,k,v;
+	# otherwise, a tuple of (indim,outdim) is inputted for each of these 3 arguments
 	# See section F4 of "What makes training MM classification networks hard for details"
 	def __init__(self, thw_dim, c_dim, tf_dim, q_linear=None, k_linear=None, v_linear=None):
 		super(NLgate, self).__init__()
