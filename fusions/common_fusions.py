@@ -55,6 +55,7 @@ class MultiplicativeInteractions(nn.Module):
         self.input_dims = input_dims 
         self.output_dim = output_dim
 
+        # most general Hypernetworks as Multiplicative Interactions.
         W_dims = self.input_dims + [output_dim]
         self.W = nn.Parameter(torch.Tensor(W_dims))
         nn.init.xavier_normal(self.W)
@@ -63,6 +64,13 @@ class MultiplicativeInteractions(nn.Module):
         self.V = nn.Parameter(torch.Tensor(self.input_dims[1], output_dim))
         nn.init.xavier_normal(self.V)
         self.b = nn.Parameter(torch.Tensor(self.output_dim))
+
+        # Diagonal Forms and Gating Mechanisms.
+        self.avec = nn.Parameter(torch.Tensor(self.input_dims[0]))
+
+        # Scales and Biases.
+        self.a = nn.Parameter(torch.Tensor(1))
+
 
 
     def forward(self, modalities, training=False):
@@ -88,7 +96,7 @@ class MultiplicativeInteractions(nn.Module):
         return output
 
         # Diagonal Forms and Gating Mechanisms.
-        
+
 
 class TensorFusion(nn.Module):
     # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
