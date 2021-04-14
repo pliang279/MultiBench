@@ -67,12 +67,20 @@ class MultiplicativeInteractions(nn.Module):
 			self.V = nn.Parameter(torch.Tensor(input_dims[1], output_dim))
 			nn.init.xavier_normal(self.V)
 			self.b = nn.Parameter(torch.Tensor(output_dim))
+		
 		# Diagonal Forms and Gating Mechanisms.
 		elif output == 'vector':
+			W_dims = self.input_dims
+			self.W = nn.Parameter(torch.Tensor(W_dims))
+			nn.init.xavier_normal(self.W)
+			self.U = nn.Parameter(torch.Tensor(W_dims))
+			nn.init.xavier_normal(self.U)
+			self.V = nn.Parameter(torch.Tensor(self.input_dims[1]))
+			nn.init.xavier_normal(self.V)
+			self.b = nn.Parameter(torch.Tensor(self.input_dims[1]))
 			
-	   
 		# Scales and Biases.
-		if output == 'scalar':
+		elif output == 'scalar':
 			W_dims = self.input_dims
 			self.W = nn.Parameter(torch.Tensor(W_dims))
 			nn.init.xavier_normal(self.W)
@@ -100,8 +108,11 @@ class MultiplicativeInteractions(nn.Module):
 
 		# Diagonal Forms and Gating Mechanisms.
 		elif self.output == 'vector':
+			Wprime = torch.einsum('bn, nm -> bm', m1, self.W) + self.V      # bm
+			bprime = torch.einsum('bn, nm -> bm', m1, self.U) + self.b      # bm
+			output = torch.mul(Wprime, m2) + bprime                         # bm
 			
-
+		# Scales and Biases.
 		elif self.output == 'scalar':
 			Wprime = torch.einsum('bn, nm -> bm', m1, self.W) + self.V      # bm
 			bprime = torch.einsum('bn, nm -> bm', m1, self.U) + self.b      # bm
