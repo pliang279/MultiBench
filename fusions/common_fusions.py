@@ -80,7 +80,15 @@ class MultiplicativeInteractions(nn.Module):
         else:
             assert False
 
+        # more general forms:
+        # Hypernetworks as Multiplicative Interactions.
+        Wprime = torch.einsum('bn, nmd -> bmd', m1, self.W) + self.V    # bmd
+        bprime = torch.einsum('bn, nd -> bd', m1, self.U) + self.b      # bd
+        output = torch.einsum('bmd, bm -> bd', Wprime, m2) + bprime     # bd
+        return output
 
+        # Diagonal Forms and Gating Mechanisms.
+        
 
 class TensorFusion(nn.Module):
     # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
