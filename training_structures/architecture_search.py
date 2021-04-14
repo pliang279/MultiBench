@@ -22,7 +22,7 @@ def train(unimodal_files,rep_size,classes,sub_sizes, train_data, valid_data,surr
     s_data=searcher.search(surrogate,
             use_weightsharing, unimodal_files, rep_size, classes, sub_sizes, batch_size, epochs,max_labels,
             eta_max,eta_min, Ti, Tm)
-    print(s_data)
+    return s_data
 
 
 

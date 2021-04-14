@@ -9,10 +9,10 @@ from torch import nn
 import torch
 import utils.surrogate as surr
 
-traindata, validdata, testdata = get_dataloader('/data/yiwei/avmnist/_MFAS/avmnist')
+traindata, validdata, testdata = get_dataloader('/data/yiwei/avmnist/_MFAS/avmnist',batch_size=32)
 
-train(['pretrained/avmnist/image_encoder.pt','pretrained/avmnist/audio_encoder.pt'],16,10,[(6,12,24),(6,12,24,48,96)],
-        traindata,validdata,surr.SimpleRecurrentSurrogate().cuda(),(3,5,2))
+s_data=train(['pretrained/avmnist/image_encoder.pt','pretrained/avmnist/audio_encoder.pt'],16,10,[(6,12,24),(6,12,24,48,96)],
+        traindata,validdata,surr.SimpleRecurrentSurrogate().cuda(),(3,5,2),epochs=6)
 
 """
 print("Testing:")
