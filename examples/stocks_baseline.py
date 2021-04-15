@@ -13,9 +13,6 @@ from modules.transformer import TransformerEncoder
 
 stocks = sorted(['MCD', 'SBUX', 'HSY', 'HRL'])
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, ['MCD'])
-train_loader = train_loader
-val_loader = val_loader
-test_loader = test_loader
 
 criterion = nn.MSELoss()
 
