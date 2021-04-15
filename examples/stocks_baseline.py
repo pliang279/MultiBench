@@ -17,6 +17,9 @@ parser.add_argument('--input-stocks', metavar='input', help='input stocks')
 parser.add_argument('--target-stock', metavar='target', help='target stock')
 parser.add_argument('--model', metavar='model', help='model')
 args = parser.parse_args()
+print('Input: ' + args.input_stocks)
+print('Target: ' + args.target_stock)
+print('Model: ' + args.model)
 
 
 stocks = sorted(args.input_stocks.split(' '))
