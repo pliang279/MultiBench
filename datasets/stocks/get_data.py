@@ -11,7 +11,7 @@ def running_avg(x, alpha=0.4):
     for n in x:
         avg = (1 - alpha) * avg + alpha * n
         res.append(avg)
-    return torch.tensor(res)
+    return torch.stack(res)
 
 def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shuffle=True, start_date=datetime.datetime(2000, 6, 1), end_date=datetime.datetime(2021, 2, 28), window_size=500, val_split=3200, test_split=3700, modality_first=False, cuda=True):
     stocks = np.array(stocks)
@@ -71,6 +71,8 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
             else:
                 if len(x.shape) == 2:
                     x = x.permute([1, 0])
+                    x = list(x)
+                    x.append(y)
                     return x
                 else:
                     x = x.permute([0, 2, 1])
