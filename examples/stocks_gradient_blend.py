@@ -2,6 +2,7 @@ import sys
 import os
 sys.path.append(os.getcwd())
 
+import argparse
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -12,8 +13,16 @@ from modules.transformer import TransformerEncoder
 from training_structures.gradient_blend import train, test
 
 
-stocks = sorted(['MCD', 'SBUX', 'HSY', 'HRL'])
-train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, ['MCD'], modality_first=True, cuda=False)
+parser = argparse.ArgumentParser()
+parser.add_argument('--input-stocks', metavar='input',
+                    help='input stocks')
+parser.add_argument('--target-stock', metavar='input',
+                    help='target stock')
+args = parser.parse_args()
+
+
+stocks = sorted(args.input_stocks.split(' '))
+train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], modality_first=True, cuda=False)
 
 criterion = nn.MSELoss()
 
