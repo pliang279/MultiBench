@@ -17,6 +17,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--input-stocks', metavar='input', help='input stocks')
 parser.add_argument('--target-stock', metavar='target', help='target stock')
 args = parser.parse_args()
+print('Input: ' + args.input_stocks)
+print('Target: ' + args.target_stock)
 
 
 stocks = sorted(args.input_stocks.split(' '))
