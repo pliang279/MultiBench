@@ -13,10 +13,9 @@ from modules.transformer import TransformerEncoder
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input-stocks', metavar='input',
-                    help='input stocks')
-parser.add_argument('--target-stock', metavar='input',
-                    help='target stock')
+parser.add_argument('--input-stocks', metavar='input', help='input stocks')
+parser.add_argument('--target-stock', metavar='target', help='target stock')
+parser.add_argument('--model', metavar='model', help='model')
 args = parser.parse_args()
 
 
@@ -25,8 +24,16 @@ train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.tar
 
 criterion = nn.MSELoss()
 
-print('Baseline val MSE loss: ' + str(float(nn.MSELoss()(torch.ones_like(val_loader.dataset.Y) * torch.mean(val_loader.dataset.Y), val_loader.dataset.Y))))
-print('Baseline test MSE loss: ' + str(float(nn.MSELoss()(torch.ones_like(test_loader.dataset.Y) * torch.mean(test_loader.dataset.Y), test_loader.dataset.Y))))
+def trivial_baselines():
+    def best_constant(y_prev, y):
+        return float(nn.MSELoss()(torch.ones_like(y) * torch.mean(y), y))
+    def copy_last(y_prev, y):
+        return nn.MSELoss()(torch.cat(y_prev[-1:], y[:-1]), y)
+    print('Best constant val MSE loss: ' + str(best_constant(train_loader.dataset.Y, val_loader.dataset.Y)))
+    print('Best constant test MSE loss: ' + str(best_constant(val_loader.dataset.Y, test_loader.dataset.Y)))
+    print('Copy-last val MSE loss: ' + str(copy_last(train_loader.dataset.Y, val_loader.dataset.Y)))
+    print('Copy-last test MSE loss: ' + str(copy_last(val_loader.dataset.Y, test_loader.dataset.Y)))
+trivial_baselines()
 
 class EarlyFusion(nn.Module):
     hidden_size = 128
@@ -171,12 +178,16 @@ class MULTModel(nn.Module):
         return output
 
 Model = EarlyFusion
+if args.model == 'late_fusion':
+    Model = LateFusion
+elif args.model == 'mult':
+    Model = MULTModel
 
 def do_train():
     model = Model(train_loader.dataset[0][0].shape[1]).cuda()
     model.train()
     opt = torch.optim.Adam(model.parameters(), 1e-3)
-    epochs = 40
+    epochs = 2
 
     for i in range(epochs):
         losses = []

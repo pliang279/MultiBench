@@ -14,10 +14,8 @@ from training_structures.gradient_blend import train, test
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--input-stocks', metavar='input',
-                    help='input stocks')
-parser.add_argument('--target-stock', metavar='input',
-                    help='target stock')
+parser.add_argument('--input-stocks', metavar='input', help='input stocks')
+parser.add_argument('--target-stock', metavar='target', help='target stock')
 args = parser.parse_args()
 
 
@@ -25,9 +23,6 @@ stocks = sorted(args.input_stocks.split(' '))
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], modality_first=True, cuda=False)
 
 criterion = nn.MSELoss()
-
-print('Baseline val MSE loss: ' + str(float(nn.MSELoss()(torch.ones_like(val_loader.dataset.Y) * torch.mean(val_loader.dataset.Y), val_loader.dataset.Y))))
-print('Baseline test MSE loss: ' + str(float(nn.MSELoss()(torch.ones_like(test_loader.dataset.Y) * torch.mean(test_loader.dataset.Y), test_loader.dataset.Y))))
 
 class EarlyFusion(nn.Module):
     hidden_size = 128
