@@ -2,6 +2,7 @@ import sys
 import os
 sys.path.append(os.getcwd())
 
+import argparse
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -11,8 +12,16 @@ from fusions.common_fusions import ConcatWithLinear
 from modules.transformer import TransformerEncoder
 
 
-stocks = sorted(['MCD', 'SBUX', 'HSY', 'HRL'])
-train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, ['MCD'])
+parser = argparse.ArgumentParser()
+parser.add_argument('--input-stocks', metavar='input',
+                    help='input stocks')
+parser.add_argument('--target-stock', metavar='input',
+                    help='target stock')
+args = parser.parse_args()
+
+
+stocks = sorted(args.input_stocks.split(' '))
+train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock])
 
 criterion = nn.MSELoss()
 
