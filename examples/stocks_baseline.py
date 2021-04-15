@@ -31,7 +31,7 @@ def trivial_baselines():
     def best_constant(y_prev, y):
         return float(nn.MSELoss()(torch.ones_like(y) * torch.mean(y), y))
     def copy_last(y_prev, y):
-        return nn.MSELoss()(torch.cat(y_prev[-1:], y[:-1]), y)
+        return nn.MSELoss()(torch.cat([y_prev[-1:], y[:-1]]), y)
     print('Best constant val MSE loss: ' + str(best_constant(train_loader.dataset.Y, val_loader.dataset.Y)))
     print('Best constant test MSE loss: ' + str(best_constant(val_loader.dataset.Y, test_loader.dataset.Y)))
     print('Copy-last val MSE loss: ' + str(copy_last(train_loader.dataset.Y, val_loader.dataset.Y)))
