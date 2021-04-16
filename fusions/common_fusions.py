@@ -39,6 +39,7 @@ class FiLM(nn.Module):
         beta = self.b_net(modalities[self.bgen_modal])
         return gamma * modalities[self.base_modal] + beta
 
+
 class MultiplicativeInteractions3Modal(nn.Module):
     def __init__(self,input_dims, output_dim):
         super(MultiplicativeInteractions3Modal, self).__init__()
@@ -48,8 +49,6 @@ class MultiplicativeInteractions3Modal(nn.Module):
                 output_dim,'matrix')
     def forward(self, modalities, training=False):
         return torch.matmul(modalities[2],self.a(modalities[0:2]))+self.b(modalities[0:2])
-
-
 
 
 class MultiplicativeInteractions2Modal(nn.Module):
@@ -62,19 +61,19 @@ class MultiplicativeInteractions2Modal(nn.Module):
         if output == 'matrix3D':
             self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1], output_dim[0],output_dim[1]))
             nn.init.xavier_normal(self.W)
-            self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim[0],output_dim[1]))
+            self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim[0], output_dim[1]))
             nn.init.xavier_normal(self.U)
-            self.V = nn.Parameter(torch.Tensor(input_dims[1], output_dim[0],output_dim[1]))
+            self.V = nn.Parameter(torch.Tensor(input_dims[1], output_dim[0], output_dim[1]))
             nn.init.xavier_normal(self.V)
-            self.b = nn.Parameter(torch.Tensor(output_dim[0],output_dim[1]))
+            self.b = nn.Parameter(torch.Tensor(output_dim[0], output_dim[1]))
         
         # most general Hypernetworks as Multiplicative Interactions.
         elif output == 'matrix':
             self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1],output_dim))
             nn.init.xavier_normal(self.W)
-            self.U = nn.Parameter(torch.Tensor(input_dims[0],output_dim))
+            self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim))
             nn.init.xavier_normal(self.U)
-            self.V = nn.Parameter(torch.Tensor(self.input_dims[1],output_dim))
+            self.V = nn.Parameter(torch.Tensor(self.input_dims[1], output_dim))
             nn.init.xavier_normal(self.V)
             self.b = nn.Parameter(torch.Tensor(output_dim))
             
@@ -139,7 +138,6 @@ class TensorFusion(nn.Module):
         super(TensorFusion, self).__init__()
         self.input_dims = input_dims
 
-
     def forward(self, modalities, training=False):
         batch_size = modalities[0].shape[0]
         
@@ -159,7 +157,6 @@ class TensorFusion(nn.Module):
             fused_tensor = torch.bmm(m1_withones.unsqueeze(2), m2_withones.unsqueeze(1))
             fused_tensor = fused_tensor.view(-1, (self.input_dims[0] + 1) * (self.input_dims[1] + 1), 1)
             fused_tensor = torch.bmm(fused_tensor, m3_withones.unsqueeze(1)).view(batch_size, -1)
-
         return fused_tensor
 
 
