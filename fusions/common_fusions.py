@@ -40,24 +40,14 @@ class FiLM(nn.Module):
         return gamma * modalities[self.base_modal] + beta
 
 class MultiplicativeInteractions3Modal(nn.Module):
-    def __init__(self,input_dims, output_dim, output):
+    def __init__(self,input_dims, output_dim):
         super(MultiplicativeInteractions3Modal, self).__init__()
-        if output == 'vector':
-            self.a = MultiplicativeInteractions2Modal([input_dims[0],input_dims[1]],
-                    [input_dims[2],output_dim],'matrix')
-            self.b = MultiplicativeInteractions2Modal([input_dims[0],input_dims[1]],
-                    output_dim,'vector')
-        elif output == 'scalar':
-            self.a = MultiplicativeInteractions2Modal([input_dims[0],input_dims[1]],
-                    input_dims[2],'vector')
-            self.b = MultiplicativeInteractions2Modal([input_dims[0],input_dims[1]],
-                    1,'scalar')
-        self.output = output
+        self.a = MultiplicativeInteractions2Modal([input_dims[0],input_dims[1]],
+                [input_dims[2],output_dim],'matrix3D')
+        self.b = MultiplicativeInteractions2Modal([input_dims[0],input_dims[1]],
+                output_dim,'matrix')
     def forward(self, modalities, training=False):
-        if self.output == 'vector':
-            return torch.matmul(modalities[2],self.a(modalities[0:2]))+self.b(modalities[0:2])
-        elif self.output == 'scalar':
-            return torch.sum(modalities[2]*self.a(modalities[0:2]),dim=1)+self.b(modalities[0:2])
+        return torch.matmul(modalities[2],self.a(modalities[0:2]))+self.b(modalities[0:2])
 
 
 
@@ -69,8 +59,7 @@ class MultiplicativeInteractions2Modal(nn.Module):
         self.output_dim = output_dim
         self.output = output
 
-        # most general Hypernetworks as Multiplicative Interactions.
-        if output == 'matrix':
+        if output == 'matrix3D':
             self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1], output_dim[0],output_dim[1]))
             nn.init.xavier_normal(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim[0],output_dim[1]))
@@ -79,8 +68,8 @@ class MultiplicativeInteractions2Modal(nn.Module):
             nn.init.xavier_normal(self.V)
             self.b = nn.Parameter(torch.Tensor(output_dim[0],output_dim[1]))
         
-        # Diagonal Forms and Gating Mechanisms.
-        elif output == 'vector':
+        # most general Hypernetworks as Multiplicative Interactions.
+        elif output == 'matrix':
             self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1],output_dim))
             nn.init.xavier_normal(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0],output_dim))
@@ -89,16 +78,24 @@ class MultiplicativeInteractions2Modal(nn.Module):
             nn.init.xavier_normal(self.V)
             self.b = nn.Parameter(torch.Tensor(output_dim))
             
-        # Scales and Biases.
-        elif output == 'scalar':
+        # Diagonal Forms and Gating Mechanisms.
+        elif output == 'vector':
             self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1]))
             nn.init.xavier_normal(self.W)
-            self.U = nn.Parameter(torch.Tensor(self.input_dims[0]))
+            self.U = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1]))
             nn.init.normal_(self.U)
             self.V = nn.Parameter(torch.Tensor(self.input_dims[1]))
             nn.init.normal_(self.V)
+            self.b = nn.Parameter(torch.Tensor(self.input_dims[1]))
+        # Scales and Biases.
+        elif output == 'scalar':
+            self.W = nn.Parameter(torch.Tensor(self.input_dims[0]))
+            nn.init.normal_(self.W)
+            self.U = nn.Parameter(torch.Tensor(self.input_dims[0]))
+            nn.init.normal_(self.U)
+            self.V = nn.Parameter(torch.Tensor(1))
+            nn.init.normal_(self.V)
             self.b = nn.Parameter(torch.Tensor(1))
-
 
     def forward(self, modalities, training=False):
         if len(modalities) == 1:
@@ -108,24 +105,32 @@ class MultiplicativeInteractions2Modal(nn.Module):
         m1 = modalities[0]
         m2 = modalities[1]
 
-        # Hypernetworks as Multiplicative Interactions.
-        if self.output == 'matrix':
+        if self.output == 'matrix3D':
             Wprime = torch.einsum('bn, nmpq -> bmpq', m1, self.W) + self.V    # bmpq
             bprime = torch.einsum('bn, npq -> bpq', m1, self.U) + self.b      # bpq
             output = torch.einsum('bm, bmpq -> bpq', m2, Wprime) + bprime     # bpq
 
-        # Diagonal Forms and Gating Mechanisms.
-        elif self.output == 'vector':
+        # Hypernetworks as Multiplicative Interactions.
+        elif self.output == 'matrix':
             Wprime = torch.einsum('bn, nmd -> bmd', m1, self.W) + self.V      # bmd
             bprime = torch.einsum('bn, nd -> bd', m1, self.U) + self.b      # bmd
             output = torch.einsum('bm, bmd -> bd',m2, Wprime) + bprime             # bmd
             
+        # Diagonal Forms and Gating Mechanisms.
+        elif self.output == 'vector':
+            Wprime = torch.einsum('bn, nm -> bm', m1, self.W) + self.V      # bm
+            bprime = torch.einsum('bn, nm -> bm', m1, self.U) + self.b      # b
+            output = Wprime*m2 + bprime             # bm
+
         # Scales and Biases.
         elif self.output == 'scalar':
-            Wprime = torch.einsum('bn, nm -> bm', m1, self.W) + self.V      # bm
-            bprime = torch.einsum('bn, n -> b', m1, self.U) + self.b      # b
-            output = torch.einsum('bm, bm -> b',Wprime, m2) + bprime             # bm
+            Wprime = torch.einsum('bn, n -> b', m1, self.W) + self.V
+            bprime = torch.einsum('bn, n -> b', m1, self.U) + self.b
+            output = repeatHorizontally(Wprime,self.input_dims[1])* m2 + repeatHorizontally(bprime,self.input_dims[1])
         return output
+
+def repeatHorizontally(tensor,dim):
+    return tensor.repeat(dim).view(dim,-1).transpose(0,1)
 
 class TensorFusion(nn.Module):
     # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
