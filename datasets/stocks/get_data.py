@@ -22,6 +22,7 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     data = []
     for stock in stocks:
         fetch = fetch_finance_data(stock, start_date, end_date)
+        print(stock + ' length: ' + str(len(fetch)))
         fetch.insert(0, 'Symbol', stock)
         data.append(fetch)
 
