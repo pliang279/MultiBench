@@ -43,12 +43,12 @@ class FiLM(nn.Module):
 class MultiplicativeInteractions3Modal(nn.Module):
     def __init__(self,input_dims, output_dim):
         super(MultiplicativeInteractions3Modal, self).__init__()
-        self.a = MultiplicativeInteractions2Modal([input_dims[0],input_dims[1]],
-                [input_dims[2],output_dim],'matrix3D')
-        self.b = MultiplicativeInteractions2Modal([input_dims[0],input_dims[1]],
-                output_dim,'matrix')
+        self.a = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
+                [input_dims[2], output_dim], 'matrix3D')
+        self.b = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
+                output_dim, 'matrix')
     def forward(self, modalities, training=False):
-        return torch.matmul(modalities[2],self.a(modalities[0:2]))+self.b(modalities[0:2])
+        return torch.matmul(modalities[2],self.a(modalities[0:2])) + self.b(modalities[0:2])
 
 
 class MultiplicativeInteractions2Modal(nn.Module):
@@ -59,7 +59,7 @@ class MultiplicativeInteractions2Modal(nn.Module):
         self.output = output
 
         if output == 'matrix3D':
-            self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1], output_dim[0],output_dim[1]))
+            self.W = nn.Parameter(torch.Tensor(self.input_dims[0], self.input_dims[1], output_dim[0], output_dim[1]))
             nn.init.xavier_normal(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim[0], output_dim[1]))
             nn.init.xavier_normal(self.U)
@@ -69,7 +69,7 @@ class MultiplicativeInteractions2Modal(nn.Module):
         
         # most general Hypernetworks as Multiplicative Interactions.
         elif output == 'matrix':
-            self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1],output_dim))
+            self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1], output_dim))
             nn.init.xavier_normal(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim))
             nn.init.xavier_normal(self.U)
@@ -79,9 +79,9 @@ class MultiplicativeInteractions2Modal(nn.Module):
             
         # Diagonal Forms and Gating Mechanisms.
         elif output == 'vector':
-            self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1]))
+            self.W = nn.Parameter(torch.Tensor(self.input_dims[0], self.input_dims[1]))
             nn.init.xavier_normal(self.W)
-            self.U = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1]))
+            self.U = nn.Parameter(torch.Tensor(self.input_dims[0], self.input_dims[1]))
             nn.init.normal_(self.U)
             self.V = nn.Parameter(torch.Tensor(self.input_dims[1]))
             nn.init.normal_(self.V)
@@ -105,15 +105,15 @@ class MultiplicativeInteractions2Modal(nn.Module):
         m2 = modalities[1]
 
         if self.output == 'matrix3D':
-            Wprime = torch.einsum('bn, nmpq -> bmpq', m1, self.W) + self.V    # bmpq
-            bprime = torch.einsum('bn, npq -> bpq', m1, self.U) + self.b      # bpq
-            output = torch.einsum('bm, bmpq -> bpq', m2, Wprime) + bprime     # bpq
+            Wprime = torch.einsum('bn, nmpq -> bmpq', m1, self.W) + self.V  # bmpq
+            bprime = torch.einsum('bn, npq -> bpq', m1, self.U) + self.b    # bpq
+            output = torch.einsum('bm, bmpq -> bpq', m2, Wprime) + bprime   # bpq
 
         # Hypernetworks as Multiplicative Interactions.
         elif self.output == 'matrix':
-            Wprime = torch.einsum('bn, nmd -> bmd', m1, self.W) + self.V      # bmd
+            Wprime = torch.einsum('bn, nmd -> bmd', m1, self.W) + self.V    # bmd
             bprime = torch.einsum('bn, nd -> bd', m1, self.U) + self.b      # bmd
-            output = torch.einsum('bm, bmd -> bd',m2, Wprime) + bprime             # bmd
+            output = torch.einsum('bm, bmd -> bd', m2, Wprime) + bprime     # bmd
             
         # Diagonal Forms and Gating Mechanisms.
         elif self.output == 'vector':
@@ -125,11 +125,11 @@ class MultiplicativeInteractions2Modal(nn.Module):
         elif self.output == 'scalar':
             Wprime = torch.einsum('bn, n -> b', m1, self.W) + self.V
             bprime = torch.einsum('bn, n -> b', m1, self.U) + self.b
-            output = repeatHorizontally(Wprime,self.input_dims[1])* m2 + repeatHorizontally(bprime,self.input_dims[1])
+            output = repeatHorizontally(Wprime, self.input_dims[1])* m2 + repeatHorizontally(bprime, self.input_dims[1])
         return output
 
 def repeatHorizontally(tensor,dim):
-    return tensor.repeat(dim).view(dim,-1).transpose(0,1)
+    return tensor.repeat(dim).view(dim, -1).transpose(0, 1)
 
 class TensorFusion(nn.Module):
     # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
