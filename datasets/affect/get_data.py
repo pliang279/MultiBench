@@ -9,10 +9,11 @@ from torch.utils.data import DataLoader, Dataset
 
 class Affectdataset(Dataset):
     
-    def __init__(self, data:Dict, flatten_time_series:bool, aligned:bool=True) -> None:
+    def __init__(self, data:Dict, flatten_time_series:bool, aligned:bool=True, task:str=None) -> None:
         self.dataset = data
         self.flatten = flatten_time_series
         self.aligned = aligned
+        self.task = task
 
     def __getitem__(self, ind):
         vision = torch.tensor(self.dataset['vision'][ind])
@@ -27,12 +28,13 @@ class Affectdataset(Dataset):
             vision = vision[vision.nonzero()[0][0]:].float()
             audio = audio[audio.nonzero()[0][0]:].float()
             text = text[text.nonzero()[0][0]:].float()
-
+        label = torch.tensor(self.dataset['labels'][ind]).float().round() if self.task == "classification" else\
+            torch.tensor(self.dataset['labels'][ind]).float()
         if self.flatten:
-            return [vision.flatten(), audio.flatten(), text.flatten(),\
-                    torch.tensor(self.dataset['labels'][ind]).float().flatten(),]
+            return [vision.flatten(), audio.flatten(), text.flatten(), ind,\
+                    torch.tensor(self.dataset['labels'][ind]).float()]
         else:
-            return [vision, audio, text, torch.tensor(self.dataset['labels'][ind]).float(),]
+            return [vision, audio, text, ind, torch.tensor(self.dataset['labels'][ind]).float()]
 
     def __len__(self):
         return self.dataset['id'].shape[0]
@@ -61,9 +63,10 @@ def get_dataloader(
 def process(inputs:List):
     processed_input = []
     processed_input_lengths = []
+    inds = []
     labels = []
     
-    for i in range(len(inputs[0])-1):
+    for i in range(len(inputs[0])-2):
         feature = []
         for sample in inputs:
             feature.append(sample[i])
@@ -71,6 +74,8 @@ def process(inputs:List):
         processed_input.append(pad_sequence(feature, batch_first=True))
     
     for sample in inputs:
+        inds.append(sample[-2])
         labels.append(sample[-1])
 
-    return processed_input, processed_input_lengths, torch.tensor(labels).view(len(inputs), 1)
+    return processed_input, processed_input_lengths, \
+        torch.tensor(inds).view(len(inputs), 1), torch.tensor(labels).view(len(inputs), 1)
