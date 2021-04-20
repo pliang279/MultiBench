@@ -59,7 +59,7 @@ class MultiplicativeInteractions2Modal(nn.Module):
         self.output = output
 
         if output == 'matrix3D':
-            self.W = nn.Parameter(torch.Tensor(self.input_dims[0], self.input_dims[1], output_dim[0], output_dim[1]))
+            self.W = nn.Parameter(torch.Tensor(input_dims[0], input_dims[1], output_dim[0], output_dim[1]))
             nn.init.xavier_normal(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim[0], output_dim[1]))
             nn.init.xavier_normal(self.U)
@@ -69,28 +69,28 @@ class MultiplicativeInteractions2Modal(nn.Module):
         
         # most general Hypernetworks as Multiplicative Interactions.
         elif output == 'matrix':
-            self.W = nn.Parameter(torch.Tensor(self.input_dims[0],self.input_dims[1], output_dim))
+            self.W = nn.Parameter(torch.Tensor(input_dims[0], input_dims[1], output_dim))
             nn.init.xavier_normal(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0], output_dim))
             nn.init.xavier_normal(self.U)
-            self.V = nn.Parameter(torch.Tensor(self.input_dims[1], output_dim))
+            self.V = nn.Parameter(torch.Tensor(input_dims[1], output_dim))
             nn.init.xavier_normal(self.V)
             self.b = nn.Parameter(torch.Tensor(output_dim))
             
         # Diagonal Forms and Gating Mechanisms.
         elif output == 'vector':
-            self.W = nn.Parameter(torch.Tensor(self.input_dims[0], self.input_dims[1]))
+            self.W = nn.Parameter(torch.Tensor(input_dims[0], input_dims[1]))
             nn.init.xavier_normal(self.W)
-            self.U = nn.Parameter(torch.Tensor(self.input_dims[0], self.input_dims[1]))
+            self.U = nn.Parameter(torch.Tensor(input_dims[0], input_dims[1]))
             nn.init.normal_(self.U)
-            self.V = nn.Parameter(torch.Tensor(self.input_dims[1]))
+            self.V = nn.Parameter(torch.Tensor(input_dims[1]))
             nn.init.normal_(self.V)
-            self.b = nn.Parameter(torch.Tensor(self.input_dims[1]))
+            self.b = nn.Parameter(torch.Tensor(input_dims[1]))
         # Scales and Biases.
         elif output == 'scalar':
-            self.W = nn.Parameter(torch.Tensor(self.input_dims[0]))
+            self.W = nn.Parameter(torch.Tensor(input_dims[0]))
             nn.init.normal_(self.W)
-            self.U = nn.Parameter(torch.Tensor(self.input_dims[0]))
+            self.U = nn.Parameter(torch.Tensor(input_dims[0]))
             nn.init.normal_(self.U)
             self.V = nn.Parameter(torch.Tensor(1))
             nn.init.normal_(self.V)
