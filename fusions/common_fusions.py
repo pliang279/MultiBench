@@ -48,7 +48,7 @@ class MultiplicativeInteractions3Modal(nn.Module):
         self.b = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
                 output_dim, 'matrix')
     def forward(self, modalities, training=False):
-        return torch.matmul(modalities[2],self.a(modalities[0:2])) + self.b(modalities[0:2])
+        return torch.matmul(modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
 
 
 class MultiplicativeInteractions2Modal(nn.Module):
@@ -82,18 +82,18 @@ class MultiplicativeInteractions2Modal(nn.Module):
             self.W = nn.Parameter(torch.Tensor(input_dims[0], input_dims[1]))
             nn.init.xavier_normal(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0], input_dims[1]))
-            nn.init.normal_(self.U)
+            nn.init.xavier_normal(self.U)
             self.V = nn.Parameter(torch.Tensor(input_dims[1]))
-            nn.init.normal_(self.V)
+            nn.init.xavier_normal(self.V)
             self.b = nn.Parameter(torch.Tensor(input_dims[1]))
         # Scales and Biases.
         elif output == 'scalar':
             self.W = nn.Parameter(torch.Tensor(input_dims[0]))
-            nn.init.normal_(self.W)
+            nn.init.xavier_normal(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0]))
-            nn.init.normal_(self.U)
+            nn.init.xavier_normal(self.U)
             self.V = nn.Parameter(torch.Tensor(1))
-            nn.init.normal_(self.V)
+            nn.init.xavier_normal(self.V)
             self.b = nn.Parameter(torch.Tensor(1))
             
     def repeatHorizontally(self, tensor, dim):
