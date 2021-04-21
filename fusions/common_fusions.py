@@ -95,6 +95,9 @@ class MultiplicativeInteractions2Modal(nn.Module):
             self.V = nn.Parameter(torch.Tensor(1))
             nn.init.normal_(self.V)
             self.b = nn.Parameter(torch.Tensor(1))
+            
+    def repeatHorizontally(self, tensor, dim):
+        return tensor.repeat(dim).view(dim, -1).transpose(0, 1)
 
     def forward(self, modalities, training=False):
         if len(modalities) == 1:
@@ -112,24 +115,24 @@ class MultiplicativeInteractions2Modal(nn.Module):
         # Hypernetworks as Multiplicative Interactions.
         elif self.output == 'matrix':
             Wprime = torch.einsum('bn, nmd -> bmd', m1, self.W) + self.V    # bmd
-            bprime = torch.einsum('bn, nd -> bd', m1, self.U) + self.b      # bmd
-            output = torch.einsum('bm, bmd -> bd', m2, Wprime) + bprime     # bmd
+            bprime = torch.einsum('bn, nd -> bd', m1, self.U) + self.b      # bd
+            output = torch.einsum('bm, bmd -> bd', m2, Wprime) + bprime     # bd
             
         # Diagonal Forms and Gating Mechanisms.
         elif self.output == 'vector':
             Wprime = torch.einsum('bn, nm -> bm', m1, self.W) + self.V      # bm
-            bprime = torch.einsum('bn, nm -> bm', m1, self.U) + self.b      # b
-            output = Wprime*m2 + bprime             # bm
+            bprime = torch.einsum('bn, nm -> bm', m1, self.U) + self.b      # bm
+            output = Wprime*m2 + bprime                                     # bm
 
         # Scales and Biases.
         elif self.output == 'scalar':
             Wprime = torch.einsum('bn, n -> b', m1, self.W) + self.V
             bprime = torch.einsum('bn, n -> b', m1, self.U) + self.b
-            output = repeatHorizontally(Wprime, self.input_dims[1])* m2 + repeatHorizontally(bprime, self.input_dims[1])
+            output = self.repeatHorizontally(Wprime, self.input_dims[1])* m2
+            output += self.repeatHorizontally(bprime, self.input_dims[1])
         return output
 
-def repeatHorizontally(tensor,dim):
-    return tensor.repeat(dim).view(dim, -1).transpose(0, 1)
+
 
 class TensorFusion(nn.Module):
     # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
