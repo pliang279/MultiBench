@@ -66,6 +66,7 @@ class MultiplicativeInteractions2Modal(nn.Module):
             self.V = nn.Parameter(torch.Tensor(input_dims[1], output_dim[0], output_dim[1]))
             nn.init.xavier_normal(self.V)
             self.b = nn.Parameter(torch.Tensor(output_dim[0], output_dim[1]))
+            nn.init.xavier_normal(self.b)
         
         # most general Hypernetworks as Multiplicative Interactions.
         elif output == 'matrix':
@@ -84,16 +85,16 @@ class MultiplicativeInteractions2Modal(nn.Module):
             self.U = nn.Parameter(torch.Tensor(input_dims[0], input_dims[1]))
             nn.init.xavier_normal(self.U)
             self.V = nn.Parameter(torch.Tensor(input_dims[1]))
-            nn.init.xavier_normal(self.V)
+            nn.init.normal_(self.V)
             self.b = nn.Parameter(torch.Tensor(input_dims[1]))
         # Scales and Biases.
         elif output == 'scalar':
             self.W = nn.Parameter(torch.Tensor(input_dims[0]))
-            nn.init.xavier_normal(self.W)
+            nn.init.normal_(self.W)
             self.U = nn.Parameter(torch.Tensor(input_dims[0]))
-            nn.init.xavier_normal(self.U)
+            nn.init.normal_(self.U)
             self.V = nn.Parameter(torch.Tensor(1))
-            nn.init.xavier_normal(self.V)
+            nn.init.normal_(self.V)
             self.b = nn.Parameter(torch.Tensor(1))
             
     def repeatHorizontally(self, tensor, dim):
