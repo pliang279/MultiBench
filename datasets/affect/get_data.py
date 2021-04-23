@@ -28,13 +28,13 @@ class Affectdataset(Dataset):
             vision = vision[vision.nonzero()[0][0]:].float()
             audio = audio[audio.nonzero()[0][0]:].float()
             text = text[text.nonzero()[0][0]:].float()
-        label = torch.tensor(self.dataset['labels'][ind]).float().round() if self.task == "classification" else\
+        label = torch.tensor(self.dataset['labels'][ind]).round().long()+3 if self.task == "classification" else\
             torch.tensor(self.dataset['labels'][ind]).float()
         if self.flatten:
             return [vision.flatten(), audio.flatten(), text.flatten(), ind,\
-                    torch.tensor(self.dataset['labels'][ind]).float()]
+                    label]
         else:
-            return [vision, audio, text, ind, torch.tensor(self.dataset['labels'][ind]).float()]
+            return [vision, audio, text, ind, label]
 
     def __len__(self):
         return self.dataset['id'].shape[0]
@@ -42,18 +42,18 @@ class Affectdataset(Dataset):
 
 def get_dataloader(
     filepath:str, batch_size:int=40, train_shuffle:bool=True,
-    num_workers:int=8, flatten_time_series:bool=False)->DataLoader:
+    num_workers:int=8, flatten_time_series:bool=False,task=None)->DataLoader:
 
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
 
-    train = DataLoader(Affectdataset(alldata['train'], flatten_time_series), \
+    train = DataLoader(Affectdataset(alldata['train'], flatten_time_series, task=task), \
         shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size, \
         collate_fn=process)
-    valid = DataLoader(Affectdataset(alldata['valid'], flatten_time_series), \
+    valid = DataLoader(Affectdataset(alldata['valid'], flatten_time_series, task=task), \
         shuffle=False, num_workers=num_workers, batch_size=batch_size, \
         collate_fn=process)
-    test = DataLoader(Affectdataset(alldata['test'], flatten_time_series), \
+    test = DataLoader(Affectdataset(alldata['test'], flatten_time_series, task=task), \
         shuffle=False, num_workers=num_workers, batch_size=batch_size, \
         collate_fn=process)
 
