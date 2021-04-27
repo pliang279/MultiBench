@@ -37,7 +37,7 @@ def train(
     
     model = MMDL(encoders,fusion,head,is_packed).cuda()
     op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
-    scheduler = ExponentialLR(op, 0.9)
+    #scheduler = ExponentialLR(op, 0.9)
     bestvalloss = 10000
     patience = 0
     
@@ -117,7 +117,7 @@ def train(
         if early_stop and patience > 20:
             break
         
-        scheduler.step()
+        #scheduler.step()
 
 
 def test(
