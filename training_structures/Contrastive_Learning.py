@@ -42,7 +42,7 @@ class MMDL(nn.Module):
 def train(
     encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
     early_stop=False,optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
-    criterion=nn.CrossEntropyLoss(),auprc=False,save='best.pt'):
+    criterion=nn.L1Loss(),auprc=False,save='best.pt'):
     
     n_data = len(train_dataloader.dataset)
     model = MMDL(encoders,fusion,head,n_data,is_packed).cuda()
@@ -97,7 +97,7 @@ def train(
             break
     
     patience = 0
-    bestvalacc = 0
+    bestvalloss = 10000
     for epoch in range(total_epochs):
         totalloss = 0.0
         totals = 0
@@ -109,63 +109,59 @@ def train(
                 with torch.backends.cudnn.flags(enabled=False):
                     out=model(
                         [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=True)
-                    #print(j[-1].shape)
-                    loss=criterion(out,j[-1].view(-1).cuda())
+                    #print(j[-1])
             else:
-                out=model([i.float().cuda() for i in j[:-1]],True,training=True)
+                out=model([i.float().cuda() for i in j[:-1]],training=True)
                 #print(j[-1])
-                loss=criterion(out,j[-1].view(-1).cuda())
+            loss=criterion(out,j[-1].cuda())
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             
             loss.backward()
             op.step()
         print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
+        
         model.eval()
         with torch.no_grad():
             totalloss = 0.0
             totals = 0
-            correct = 0
             pts = []
             for j in valid_dataloader:
                 if is_packed:
                     out=model(
-                        [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False,)
+                        [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False)
                 else:
-                    out = model([i.float().cuda() for i in j[:-1]],True,training=False)
-                loss = criterion(out,j[-1].view(-1).cuda())
+                    out = model([i.float().cuda() for i in j[:-1]],training=False)
+                loss = criterion(out,j[-1].cuda())
                 totalloss += loss*len(j[-1])
                 for i in range(len(j[-1])):
                     totals += 1
-                    if torch.argmax(out[i]).item() == j[-1][i].item():
-                        correct += 1
                     if auprc:
                         #pdb.set_trace()
                         sm=softmax(out[i])
                         pts.append((sm[1].item(), j[-1][i].item()))
         valloss=totalloss/totals
-        acc = float(correct)/totals
-        print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+" acc: "+str(acc))
+        print("Epoch "+str(epoch)+" valid loss: "+str(valloss))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
-        if acc>bestvalacc:
+        if valloss<bestvalloss:
             patience = 0
-            bestvalacc=acc
+            bestvalloss=valloss
             print("Saving Best")
             torch.save(model,save)
         else:
             patience += 1
-        if early_stop and patience > 7:
+        if early_stop and patience > 20:
             break
         
         scheduler.step()
 
 
 def test(
-    model,test_dataloader,is_packed=False,criterion=nn.CrossEntropyLoss(), auprc=False):
+    model,test_dataloader,is_packed=False,
+    criterion=nn.L1Loss(),auprc=False):
     with torch.no_grad():
         totals=0
-        correct=0
         totalloss = 0.0
         pts=[]
         for j in test_dataloader:
@@ -174,18 +170,15 @@ def test(
                     [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False)
             else:
                 out = model([i.float().cuda() for i in j[:-1]],training=False)
-            loss = criterion(out,j[-1].view(-1).cuda())
+            loss = criterion(out,j[-1].cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
             totalloss += loss*len(j[-1])
             for i in range(len(j[-1])):
                 totals += 1
-                if torch.argmax(out[i]).item()==j[-1][i].item():
-                    correct += 1
                 if auprc:
                     sm=softmax(out[i])
                     pts.append((sm[1].item(),j[-1][i].item()))
         testloss=totalloss/totals
-        print("acc: "+str(float(correct)/totals))
+        print("mse: "+str(testloss))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
-

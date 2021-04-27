@@ -11,7 +11,7 @@ from unimodals.common_models import GRU, MLP
 
 
 traindata, validdata, testdata = get_dataloader(
-    '../affect/processed/mosi_data.pkl',100,task="classification")
+    '../affect/processed/mosi_data.pkl',100,)
 
 '''
 encoders=[GRU(20,50,dropout=True,has_padding=True).cuda(), \
@@ -20,7 +20,7 @@ encoders=[GRU(20,50,dropout=True,has_padding=True).cuda(), \
 '''
 encoders=[GRU(20,40,dropout=True,has_padding=True).cuda(), \
     GRU(5,40,dropout=True,has_padding=True).cuda()]
-head=MLP(80,40,7).cuda()
+head=MLP(80,40,1).cuda()
 fusion=Concat().cuda()
 
 train(encoders,fusion,head,traindata,validdata,1000,True,True, \
