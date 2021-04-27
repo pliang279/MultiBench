@@ -14,13 +14,13 @@ softmax = nn.Softmax()
 
 
 class MMDL(nn.Module):
-    def __init__(self,encoders,fusion,head,has_padding=False):
+    def __init__(self,encoders,fusion,head,n_data,has_padding=False):
         super(MMDL,self).__init__()
         self.encoders = nn.ModuleList(encoders)
         self.fuse = fusion
         self.head = head
         self.has_padding=has_padding
-        self.contrast = NCEAverage(50, 600, 7, 16384)
+        self.contrast = NCEAverage(40, n_data, 16384)
     
     def forward(self,inputs,classifier=False,training=False):
         outs = []
@@ -30,7 +30,7 @@ class MMDL(nn.Module):
         else:
             for i in range(len(inputs)):
                 outs.append(self.encoders[i](inputs[i], training=training))
-        
+
         if classifier:
             out = self.fuse(outs, training=training)
             return self.head(out, training=training)
@@ -40,20 +40,20 @@ class MMDL(nn.Module):
         
 
 def train(
-    encoders,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
+    encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
     early_stop=False,optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
     criterion=nn.CrossEntropyLoss(),auprc=False,save='best.pt'):
     
-    model = MMDL(encoders,is_packed).cuda()
+    n_data = len(train_dataloader.dataset)
+    model = MMDL(encoders,fusion,head,n_data,is_packed).cuda()
     op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
     scheduler = ExponentialLR(op, 0.9)
-    bestvalloss = 10000
-    patience = 0
-    contrast_criterion = NCECriterion(len(train_dataloader))
+    contrast_criterion = NCECriterion(n_data)
 
-    for epoch in range(total_epochs):
+    bestloss = 0.0
+    patience = 0
+    for epoch in range(10000):
         totalloss = 0.0
-        lastloss = 0.0
         totals = 0
         model.train()
         
@@ -64,7 +64,7 @@ def train(
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
                     out1, out2=model(
-                        [[j[0][0].cuda(), j[0][-1].cuda()], j[1], j[2].cuda()],training=True)
+                        [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],training=True)
                     #print(j[-1])
                     loss1=contrast_criterion(out1)
                     loss2=contrast_criterion(out2)
@@ -82,23 +82,24 @@ def train(
         train_loss = totalloss/totals
         print("Epoch "+str(epoch)+" train loss: "+str(train_loss))
 
-        if lastloss == 0.0:
-            lastloss = train_loss
+        if bestloss == 0.0:
+            bestloss = train_loss
             continue
 
-        if (lastloss-train_loss)/lastloss < 1e-6:
+        if (bestloss-train_loss)/bestloss < 1e-6:
             patience += 1
+            print(patience)
         else:
+            bestloss = train_loss
             patience = 0
-        if patience > 7:
+        if patience > 20:
             print("Early Stop!")
             break
-
-        lastloss = train_loss
-        
+    
+    patience = 0
+    bestvalacc = 0
     for epoch in range(total_epochs):
         totalloss = 0.0
-        lastloss = 0.0
         totals = 0
         model.train()
         for j in train_dataloader:
@@ -106,13 +107,14 @@ def train(
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
-                    out=model([[i.cuda() for i in j[0]], j[1]],True,training=True)
-                    #print(j[-1])
-                    loss=criterion(out,j[-1].cuda())
+                    out=model(
+                        [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=True)
+                    #print(j[-1].shape)
+                    loss=criterion(out,j[-1].view(-1).cuda())
             else:
                 out=model([i.float().cuda() for i in j[:-1]],True,training=True)
                 #print(j[-1])
-                loss=criterion(out,j[-1].cuda())
+                loss=criterion(out,j[-1].view(-1).cuda())
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             
@@ -127,10 +129,11 @@ def train(
             pts = []
             for j in valid_dataloader:
                 if is_packed:
-                    out=model([[i.cuda() for i in j[0]], j[1]],True,training=False)
+                    out=model(
+                        [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False,)
                 else:
                     out = model([i.float().cuda() for i in j[:-1]],True,training=False)
-                loss = criterion(out,j[-1].cuda())
+                loss = criterion(out,j[-1].view(-1).cuda())
                 totalloss += loss*len(j[-1])
                 for i in range(len(j[-1])):
                     totals += 1
@@ -141,17 +144,18 @@ def train(
                         sm=softmax(out[i])
                         pts.append((sm[1].item(), j[-1][i].item()))
         valloss=totalloss/totals
-        print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+" acc: "+str(float(correct)/totals))
+        acc = float(correct)/totals
+        print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+" acc: "+str(acc))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
-        if valloss<bestvalloss:
+        if acc>bestvalacc:
             patience = 0
-            bestvalloss=valloss
+            bestvalacc=acc
             print("Saving Best")
             torch.save(model,save)
         else:
             patience += 1
-        if early_stop and patience > 20:
+        if early_stop and patience > 7:
             break
         
         scheduler.step()
@@ -166,10 +170,11 @@ def test(
         pts=[]
         for j in test_dataloader:
             if is_packed:
-                out=model([[i.cuda() for i in j[0]], j[1]],training=False)
+                out=model(
+                    [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False)
             else:
                 out = model([i.float().cuda() for i in j[:-1]],training=False)
-            loss = criterion(out,j[-1].cuda())
+            loss = criterion(out,j[-1].view(-1).cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
             totalloss += loss*len(j[-1])
             for i in range(len(j[-1])):
