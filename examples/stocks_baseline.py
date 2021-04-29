@@ -233,12 +233,11 @@ for i in range(5):
         best = loss
         torch.save(model, 'best.pt')
 
-#test
-model = torch.load('best.pt').cuda()
-model.eval()
-losses = []
-for j, (x, y) in enumerate(test_loader):
-    out = model(x)
-    loss = criterion(out, y)
-    losses.append(loss.item() * len(out))
-print(f'Test loss: {np.sum(losses) / len(test_loader.dataset)}')
+    #test
+    model.eval()
+    losses = []
+    for j, (x, y) in enumerate(test_loader):
+        out = model(x)
+        loss = criterion(out, y)
+        losses.append(loss.item() * len(out))
+    print(f'Test loss: {np.sum(losses) / len(test_loader.dataset)}')

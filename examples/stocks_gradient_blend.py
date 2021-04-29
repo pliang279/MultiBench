@@ -71,9 +71,10 @@ def do_train():
           classification=False, gb_epoch=2, num_epoch=4, lr=0.001, optimtype=torch.optim.Adam)
 
 #train
-do_train()
+for i in range(5):
+    do_train()
 
-#test
-model = torch.load('best.pt').cuda()
-model.eval()
-test(model, test_loader, classification=False)
+    #test
+    model = torch.load('best.pt').cuda()
+    model.eval()
+    test(model, test_loader, classification=False)
