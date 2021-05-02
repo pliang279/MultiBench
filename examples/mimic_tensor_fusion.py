@@ -2,7 +2,7 @@ import sys
 import os
 sys.path.append(os.getcwd())
 from training_structures.Simple_Late_Fusion import train, test
-from fusions.common_fusions import Concat
+from fusions.common_fusions import MultiplicativeInteractions2Modal
 from datasets.mimic.get_data import get_dataloader
 from unimodals.common_models import MLP, GRU
 from torch import nn
@@ -13,11 +13,11 @@ traindata, validdata, testdata = get_dataloader(7, imputed_path='datasets/mimic/
 
 #build encoders, head and fusion layer
 encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False).cuda()]
-head = MLP(730, 40, 2, dropout=False).cuda()
-fusion = Concat().cuda()
+head = MLP(100, 40, 2, dropout=False).cuda()
+fusion = MultiplicativeInteractions2Modal([10,720],100,'matrix',flatten=True).cuda()
 
 #train
-train(encoders, fusion, head, traindata, validdata, 20, auprc=True)
+train(encoders, fusion, head, traindata, validdata, 20, lr=0.0001, auprc=True)
 
 #test
 print("Testing: ")
