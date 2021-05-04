@@ -30,13 +30,19 @@ class MMDL(nn.Module):
         else:
             for i in range(len(inputs)):
                 outs.append(self.encoders[i](inputs[i], training=training))
-
+        '''
         if classifier:
             out = self.fuse(outs, training=training)
             return self.head(out, training=training)
         else:
             out1, out2 = self.contrast(outs[0], outs[1], inputs[2])
             return out1, out2 
+        '''
+
+        out = self.fuse(outs, training=training)
+        out1, out2 = self.contrast(outs[0], outs[1], inputs[2])
+
+        return self.head(out, training=training), out1, out2    
         
 
 def train(
@@ -52,6 +58,7 @@ def train(
 
     bestloss = 0.0
     patience = 0
+    '''
     for epoch in range(10000):
         totalloss = 0.0
         totals = 0
@@ -95,11 +102,13 @@ def train(
         if patience > 20:
             print("Early Stop!")
             break
-    
+    '''
     patience = 0
     bestvalloss = 10000
     for epoch in range(total_epochs):
         totalloss = 0.0
+        total_reg_loss = 0.0
+        total_contrast_loss = 0.0
         totals = 0
         model.train()
         for j in train_dataloader:
@@ -107,19 +116,28 @@ def train(
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
-                    out=model(
+                    #out=model(
+                    #    [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=True)
+                    out, out1, out2=model(
                         [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=True)
                     #print(j[-1])
             else:
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
                 #print(j[-1])
-            loss=criterion(out,j[-1].cuda())
+            reg_loss=criterion(out,j[-1].cuda())
+            loss1=contrast_criterion(out1)
+            loss2=contrast_criterion(out2)
+            contrast_loss = loss1 + loss2
+            loss = reg_loss+0.1*contrast_loss
+            total_reg_loss += reg_loss * len(j[-1])
+            total_contrast_loss += contrast_loss * len(j[-1])
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             
             loss.backward()
             op.step()
-        print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
+        #print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
+        print("Epoch "+str(epoch)+" train loss: "+str(total_reg_loss/totals)+" contrast loss: "+str(total_contrast_loss/totals))
         
         model.eval()
         with torch.no_grad():
@@ -128,7 +146,9 @@ def train(
             pts = []
             for j in valid_dataloader:
                 if is_packed:
-                    out=model(
+                    #out=model(
+                    #    [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False)
+                    out, _, _=model(
                         [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False)
                 else:
                     out = model([i.float().cuda() for i in j[:-1]],training=False)
@@ -166,7 +186,9 @@ def test(
         pts=[]
         for j in test_dataloader:
             if is_packed:
-                out=model(
+                #out=model(
+                #    [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False)
+                out, _, _=model(
                     [[j[0][0].cuda(), j[0][1].cuda()], j[1], j[2].cuda()],True,training=False)
             else:
                 out = model([i.float().cuda() for i in j[:-1]],training=False)
