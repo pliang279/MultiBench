@@ -49,6 +49,27 @@ class GRU(torch.nn.Module):
         return out
 
 
+class GRUWithLinear(torch.nn.Module):
+    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+        super(GRU,self).__init__()
+        self.gru=nn.GRU(indim,hiddim)
+        self.linear = nn.Linear(hiddim,outdim)
+        self.dropoutp=dropoutp
+        self.dropout=dropout
+        self.flatten=flatten
+        self.has_padding=has_padding
+    def forward(self,x,training=True):
+        if self.has_padding:
+            x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
+            hidden=self.gru(x)[1][-1]
+        else:
+            hidden=self.gru(x)[0]
+        if self.dropout:
+            hidden = F.dropout(hidden,p=self.dropoutp,training=training)
+        out = self.linear(hidden)
+        return out
+
+
 #adapted from centralnet code https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py
 class LeNet(nn.Module):
     def __init__(self,in_channels,args_channels,additional_layers,output_each_layer=False,linear=None,squeeze_output=True):
