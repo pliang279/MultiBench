@@ -8,9 +8,6 @@ from torch.utils.data import DataLoader
 def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shuffle=True, start_date=datetime.datetime(2000, 6, 1), end_date=datetime.datetime(2021, 2, 28), window_size=500, val_split=3200, test_split=3700):
     stocks = np.array(stocks)
 
-    input_stocks = np.array([np.where(stocks == x)[0][0] for x in input_stocks])
-    output_stocks = np.array([np.where(stocks == x)[0][0] for x in output_stocks])
-
     def fetch_finance_data(symbol, start, end):
         return pandas_datareader.data.DataReader(symbol, 'yahoo', start, end)
 
@@ -23,13 +20,17 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     data = pd.concat(data)
     data = data.sort_values(by=['Date', 'Symbol'])
 
+    input_stocks = np.array([np.where(data['Symbol'] == x)[0][0] for x in input_stocks])
+    output_stocks = np.array([np.where(data['Symbol'] == x)[0][0] for x in output_stocks])
+
     X = torch.tensor(list(data['Open'])).view(-1, len(stocks))
     RX = torch.log(X[1:] / X[:-1])
-    SRX = RX * RX
-    RX = RX / torch.std(RX[:window_size + val_split])
-    SRX = SRX / torch.std(SRX[:window_size + val_split])
+    Y = RX[window_size:, output_stocks]
+    Y = Y * Y
 
-    Y = SRX[window_size:, output_stocks]
+    RX = RX / torch.std(RX[:window_size + val_split])
+    Y = Y / torch.std(Y[:val_split])
+
     X = [RX[i:i + window_size, input_stocks].reshape(1, window_size, -1) for i in range(len(RX) - window_size)]
     X = torch.cat(X)
 
