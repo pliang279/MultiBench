@@ -4,12 +4,14 @@ from torch.nn import functional as F
 from torch.nn.utils.rnn import pack_padded_sequence
 from torchvision import models as tmodels
 
+
 class Linear(torch.nn.Module):
     def __init__(self,indim,outdim):
         super(Linear, self).__init__()
         self.fc = nn.Linear(indim,outdim)
     def forward(self,x,training=False):
         return self.fc(x)
+
 
 class MLP(torch.nn.Module):
     def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1):
@@ -51,7 +53,7 @@ class GRU(torch.nn.Module):
 
 class GRUWithLinear(torch.nn.Module):
     def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
-        super(GRU,self).__init__()
+        super(GRUWithLinear,self).__init__()
         self.gru=nn.GRU(indim,hiddim)
         self.linear = nn.Linear(hiddim,outdim)
         self.dropoutp=dropoutp
