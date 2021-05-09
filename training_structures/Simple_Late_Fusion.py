@@ -1,9 +1,8 @@
-from tqdm import tqdm
-
+from sklearn.metrics import accuracy_score, f1_score
 import torch
 from torch import nn
-from torch.nn import functional as F
 from torch.optim.lr_scheduler import ExponentialLR
+
 from utils.AUPRC import AUPRC
 from objective_functions.regularization import RegularizationLoss
 #import pdb
@@ -39,6 +38,8 @@ def train(
     op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
     bestvalloss = 10000
+    bestacc = 0
+    bestf1 = 0
     patience = 0
     
     if regularization:
@@ -62,8 +63,8 @@ def train(
                     loss = loss1+loss2
             else:
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
-                #print(j[-1])
-                loss=criterion(out,j[-1].cuda())
+                #print(out, j[-1])
+                loss=criterion(out,j[-1].float().cuda())
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             if regularization:
@@ -81,41 +82,70 @@ def train(
         model.eval()
         with torch.no_grad():
             totalloss = 0.0
-            totals = 0
-            correct = 0
+            pred = []
+            true = []
             pts = []
             for j in valid_dataloader:
                 if is_packed:
                     out=model([[i.cuda() for i in j[0]], j[1]],training=False)
                 else:
                     out = model([i.float().cuda() for i in j[:-1]],training=False)
-                loss = criterion(out,j[-1].cuda())
+                loss = criterion(out,j[-1].float().cuda())
                 totalloss += loss*len(j[-1])
-                for i in range(len(j[-1])):
-                    totals += 1
-                    if task == "classification":
-                        if torch.argmax(out[i]).item() == j[-1][i].item():
-                            correct += 1
-                    if auprc:
-                        #pdb.set_trace()
-                        sm=softmax(out[i])
-                        pts.append((sm[1].item(), j[-1][i].item()))
+                if task == "classification":
+                    pred.append(torch.argmax(out, 1))
+                elif task == "multilabel":
+                    pred.append(torch.sigmoid(out).round())
+                true.append(j[-1])
+                if auprc:
+                    #pdb.set_trace()
+                    sm=softmax(out, 1)
+                    pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+        if pred:
+            pred = torch.cat(pred, 0).cpu().numpy()
+        true = torch.cat(true, 0).cpu().numpy()
+        totals = true.shape[0]
         valloss=totalloss/totals
         if task == "classification":
-            print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+" acc: "+str(float(correct)/totals))
+            acc = accuracy_score(true, pred)
+            print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
+                " acc: "+str(acc))
+            if acc>bestacc:
+                patience = 0
+                bestacc=acc
+                print("Saving Best")
+                torch.save(model,save)
+            else:
+                patience += 1
+            if early_stop and patience > 20:
+                break
+        elif task == "multilabel":
+            f1_micro = f1_score(true, pred, average="micro")
+            f1_macro = f1_score(true, pred, average="macro")
+            print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
+                " f1_micro: "+str(f1_micro)+" f1_macro: "+str(f1_macro))
+            if f1_macro>bestf1:
+                patience = 0
+                bestf1=f1_macro
+                print("Saving Best")
+                torch.save(model,save)
+            else:
+                patience += 1
+            if early_stop and patience > 20:
+                break
         elif task == "regression":
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss))
+            if valloss<bestvalloss:
+                patience = 0
+                bestvalloss=valloss
+                print("Saving Best")
+                torch.save(model,save)
+            else:
+                patience += 1
+            if early_stop and patience > 20:
+                break
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
-        if valloss<bestvalloss:
-            patience = 0
-            bestvalloss=valloss
-            print("Saving Best")
-            torch.save(model,save)
-        else:
-            patience += 1
-        if early_stop and patience > 20:
-            break
         
         #scheduler.step()
 
@@ -124,29 +154,37 @@ def test(
     model,test_dataloader,is_packed=False,
     criterion=nn.CrossEntropyLoss(),task="classification",auprc=False):
     with torch.no_grad():
-        totals=0
-        correct=0
         totalloss = 0.0
+        pred=[]
+        true=[]
         pts=[]
         for j in test_dataloader:
             if is_packed:
                 out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
                 out = model([i.float().cuda() for i in j[:-1]],training=False)
-            loss = criterion(out,j[-1].cuda())
+            loss = criterion(out,j[-1].float().cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
             totalloss += loss*len(j[-1])
-            for i in range(len(j[-1])):
-                totals += 1
-                if task == "classification":
-                    if torch.argmax(out[i]).item()==j[-1][i].item():
-                        correct += 1
-                if auprc:
-                    sm=softmax(out[i])
-                    pts.append((sm[1].item(),j[-1][i].item()))
+            if task == "classification":
+                pred.append(torch.argmax(out, 1))
+            elif task == "multilabel":
+                pred.append(torch.sigmoid(out).round())
+            true.append(j[-1])
+            if auprc:
+                #pdb.set_trace()
+                sm=softmax(out, 1)
+                pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+        if pred:
+            pred = torch.cat(pred, 0).cpu().numpy()
+        true = torch.cat(true, 0).cpu().numpy()
+        totals = true.shape[0]
         testloss=totalloss/totals
         if task == "classification":
-            print("acc: "+str(float(correct)/totals))
+            print("acc: "+str(accuracy_score(true, pred)))
+        elif task == "multilabel":
+            print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
+                " f1_macro: "+str(f1_score(true, pred, average="macro")))
         elif task == "regression":
             print("mse: "+str(testloss))
         if auprc:
