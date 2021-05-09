@@ -104,8 +104,9 @@ def train(
                     #pdb.set_trace()
                     sm=softmax(out, 1)
                     pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+        if pred:
+            pred = torch.cat(pred, 0).cpu().numpy()
         true = torch.cat(true, 0).cpu().numpy()
-        pred = torch.cat(pred, 0).cpu().numpy()
         totals = true.shape[0]
         valloss=totalloss/totals
         if task == "classification":
@@ -177,8 +178,9 @@ def test(
                 #pdb.set_trace()
                 sm=softmax(out, 1)
                 pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+        if pred:
+            pred = torch.cat(pred, 0).cpu().numpy()
         true = torch.cat(true, 0).cpu().numpy()
-        pred = torch.cat(pred, 0).cpu().numpy()
         totals = true.shape[0]
         testloss=totalloss/totals
         if task == "classification":
