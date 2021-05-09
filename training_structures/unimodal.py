@@ -1,5 +1,7 @@
 import torch
 from torch import nn
+from utils.AUPRC import AUPRC
+softmax = nn.Softmax()
 
 def train(encoder,head,train_dataloader,valid_dataloader,total_epochs,optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,criterion=nn.CrossEntropyLoss(),auprc=False,save_encoder='encoder.pt',save_head='head.pt',modalnum=0):
     model = nn.Sequential(encoder,head)
