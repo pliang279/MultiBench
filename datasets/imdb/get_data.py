@@ -5,42 +5,35 @@ import torch
 from torch.utils.data import Dataset, DataLoader, random_split
 
 
-def get_dataloader(
-    path:str, num_workers:int=8, train_shuffle:bool=True, batch_size:int=40)->Tuple(DataLoader):
+class IMDBDataset(Dataset):
     
-    f = h5py.File(path, 'r')
-    dataset = IMDBdataset(f)
-
-    size = len(dataset)
-    train_dataset, val_dataset, test_dataset = random_split(dataset, \
-        [size//10, size//10, size-2*(size//10)], generator=torch.Generator().manual_seed(42))
-    
-    train_dataloader = DataLoader(train_dataset, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
-    val_dataloader = DataLoader(val_dataset, shuffle=False, num_workers=num_workers, batch_size=batch_size)
-    test_dataloader = DataLoader(test_dataset, shuffle=False, num_workers=num_workers, batch_size=batch_size)
-
-    return train_dataloader, val_dataloader, test_dataloader
-
-
-class IMDBdataset(Dataset):
-    
-    def __init__(self, file:h5py.File, ) -> None:
-        self.dataset = file
-        self.modals = list(file.keys())
-        self.index = list(self.modals[0].keys())
+    def __init__(self, file:h5py.File, start_ind:int, end_ind:int) -> None:
+        self.file = file
+        self.start_ind = start_ind
+        self.size = end_ind-start_ind
 
     def __getitem__(self, ind):
-        item_index = self.index[ind]
-        features = []
+        if not hasattr(self, 'dataset'):
+            self.dataset = h5py.File(self.file, 'r')
+        text = self.dataset["features"][ind+self.start_ind]
+        image = self.dataset["vgg_features"][ind+self.start_ind]
+        label = self.dataset["genres"][ind+self.start_ind]
 
-        for modal in self.modals:
-            if 'label' not in modal.lower() and modal != 'words':
-                features.append(torch.tensor(self.dataset[modal][item_index]['features']))
-            else:
-                label = self.dataset[modal][item_index]['features'][0][0]
-
-        return features, label
+        return text, image, label
 
     def __len__(self):
-        return len(self.index)
+        return self.size
+
+
+def get_dataloader(
+    path:str, num_workers:int=8, train_shuffle:bool=True, batch_size:int=40)->Tuple[DataLoader]:
+    
+    train_dataloader = DataLoader(IMDBDataset(path, 0, 15552), \
+        shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
+    val_dataloader = DataLoader(IMDBDataset(path, 15552, 18160), \
+        shuffle=False, num_workers=num_workers, batch_size=batch_size)
+    test_dataloader = DataLoader(IMDBDataset(path, 18160, 25959), \
+        shuffle=False, num_workers=num_workers, batch_size=batch_size)
+
+    return train_dataloader, val_dataloader, test_dataloader
 
