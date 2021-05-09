@@ -59,6 +59,8 @@ def train_sampled_models(sampled_configurations, searchable_type, dataloaders,
     else:
         return real_accuracies
 
+ultrabest = 0.0
+
 def train_track_acc(model, criteria, optimizer, scheduler, dataloaders, dataset_sizes,
                             device=None, num_epochs=200, verbose=False, multitask=False):
     best_model_sd = copy.deepcopy(model.state_dict())
@@ -122,9 +124,14 @@ def train_track_acc(model, criteria, optimizer, scheduler, dataloaders, dataset_
             if phase == 'dev' and epoch_acc > best_acc:
                 best_acc = epoch_acc
                 best_model_sd = copy.deepcopy(model.state_dict())
+                if best_acc > ultrabest:
+                    ultrabest = best_acc
 
     model.load_state_dict(best_model_sd)
     model.train(False)
+    if ultrabest == best_acc:
+        print('new ultrabest: '+ultrabest)
+        torch.save(model,'best.pt')
 
     return best_acc
 
