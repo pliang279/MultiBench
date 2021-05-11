@@ -64,7 +64,7 @@ def train(
             else:
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
                 #print(out, j[-1])
-                loss=criterion(out,j[-1].float().cuda())
+                loss=criterion(out,j[-1].cuda())
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             if regularization:
@@ -90,7 +90,7 @@ def train(
                     out=model([[i.cuda() for i in j[0]], j[1]],training=False)
                 else:
                     out = model([i.float().cuda() for i in j[:-1]],training=False)
-                loss = criterion(out,j[-1].float().cuda())
+                loss = criterion(out,j[-1].cuda())
                 totalloss += loss*len(j[-1])
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
@@ -163,7 +163,7 @@ def test(
                 out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
                 out = model([i.float().cuda() for i in j[:-1]],training=False)
-            loss = criterion(out,j[-1].float().cuda())
+            loss = criterion(out,j[-1].cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
             totalloss += loss*len(j[-1])
             if task == "classification":
