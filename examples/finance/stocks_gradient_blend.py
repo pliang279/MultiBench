@@ -26,22 +26,14 @@ train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.tar
 
 criterion = nn.MSELoss()
 
-def do_train():
-    unimodal_models = [nn.Identity().cuda() for x in stocks]
-    multimodal_classification_head = EarlyFusion(len(stocks), single_output=True).cuda()
-    unimodal_classification_heads = [EarlyFusion(1, single_output=True).cuda() for x in stocks]
-    fuse = EarlyFusionFuse().cuda()
-    training_structures.gradient_blend.criterion = criterion
+unimodal_models = [nn.Identity().cuda() for x in stocks]
+multimodal_classification_head = EarlyFusion(len(stocks), single_output=True).cuda()
+unimodal_classification_heads = [EarlyFusion(1, single_output=True).cuda() for x in stocks]
+fuse = EarlyFusionFuse().cuda()
+training_structures.gradient_blend.criterion = criterion
 
-    train(unimodal_models,  multimodal_classification_head,
-          unimodal_classification_heads, fuse, train_dataloader=train_loader, valid_dataloader=val_loader,
-          classification=False, gb_epoch=2, num_epoch=4, lr=0.001, optimtype=torch.optim.Adam)
+train(unimodal_models,  multimodal_classification_head,
+      unimodal_classification_heads, fuse, train_dataloader=train_loader, valid_dataloader=val_loader,
+      classification=False, gb_epoch=2, num_epoch=4, lr=0.001, optimtype=torch.optim.Adam)
 
-#train
-for i in range(5):
-    do_train()
-
-    #test
-    model = torch.load('best.pt').cuda()
-    model.eval()
-    test(model, test_loader, classification=False)
+test(torch.load('best.pt').cuda(), test_loader, classification=False)
