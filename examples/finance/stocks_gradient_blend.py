@@ -9,8 +9,7 @@ import torch.nn.functional as F
 import training_structures.gradient_blend
 from torch import nn
 from datasets.stocks.get_data import get_dataloader
-from fusions.common_fusions import ConcatWithLinear
-from modules.transformer import TransformerEncoder
+from fusions.finance.early_fusion import EarlyFusion, EarlyFusionFuse
 from training_structures.gradient_blend import train, test
 
 
@@ -27,42 +26,10 @@ train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.tar
 
 criterion = nn.MSELoss()
 
-class EarlyFusion(nn.Module):
-    hidden_size = 128
-
-    def __init__(self, n_features):
-        super().__init__()
-
-        self.init_hidden = torch.nn.Parameter(torch.zeros(self.hidden_size))
-        self.init_cell = torch.nn.Parameter(torch.zeros(self.hidden_size))
-        self.lstm = nn.LSTM(n_features, self.hidden_size, batch_first=True)
-        self.fnn = nn.Linear(self.hidden_size, 1)
-
-    def forward(self, x, training=True):
-        if len(x.shape) == 2:
-            # unimodal
-            x = x.reshape([x.shape[0], x.shape[1], 1])
-
-        _, (h, _) = self.lstm(x,
-                              (self.init_hidden.repeat(x.shape[0]).reshape(1, x.shape[0], -1),
-                               self.init_cell.repeat(x.shape[0]).reshape(1, x.shape[0], -1)))
-        out = self.fnn(h.reshape(-1, self.hidden_size))
-        out = out.reshape(out.shape[:1])
-        return out
-
-class EarlyFusionFuse(nn.Module):
-    def __init__(self):
-        super().__init__()
-
-    def forward(self, x, training=True):
-        x = torch.stack(x)
-        x = x.permute([1, 2, 0])
-        return x
-
 def do_train():
     unimodal_models = [nn.Identity().cuda() for x in stocks]
-    multimodal_classification_head = EarlyFusion(len(stocks)).cuda()
-    unimodal_classification_heads = [EarlyFusion(1).cuda() for x in stocks]
+    multimodal_classification_head = EarlyFusion(len(stocks), single_output=True).cuda()
+    unimodal_classification_heads = [EarlyFusion(1, single_output=True).cuda() for x in stocks]
     fuse = EarlyFusionFuse().cuda()
     training_structures.gradient_blend.criterion = criterion
 
