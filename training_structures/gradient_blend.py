@@ -166,7 +166,7 @@ def calcAUPRC(pts):
 def train(unimodal_models,  multimodal_classification_head, 
                                  unimodal_classification_heads, fuse, train_dataloader, valid_dataloader, 
                                  num_epoch, lr, gb_epoch=20,v_rate=0.08, weight_decay=0.0, optimtype=torch.optim.SGD, 
-                                 finetune_epoch=25,AUPRC=False, savedir='best.pt'):
+                                 finetune_epoch=25,classification=True,AUPRC=False, savedir='best.pt'):
   params=[]
   for model in unimodal_models:
     params.extend(model.parameters())
@@ -256,10 +256,11 @@ def train(unimodal_models,  multimodal_classification_head,
             if AUPRC:
               predictval=softmax(predicts[ii])
               auprclist.append((predictval[1].item(),valid_y[ii].item()))
-            if predictlist[ii].index(max(predictlist[ii]))==valid_y[ii]:
-              corrects+=1
+            if classification:
+              if predictlist[ii].index(max(predictlist[ii]))==valid_y[ii]:
+                corrects+=1
         valoss=totalloss/total
-        print("epoch "+str((i+1)*gb_epoch-1)+" valid loss: "+str(totalloss/total)+" acc: "+str(float(corrects)/total))
+        print("epoch "+str((i+1)*gb_epoch-1)+" valid loss: "+str(totalloss/total)+((" acc: "+str(float(corrects)/total)) if classification else ''))
         if AUPRC:
           print("With AUPRC: "+str(calcAUPRC(auprclist)))
         if valoss<bestvalloss:
@@ -267,7 +268,7 @@ def train(unimodal_models,  multimodal_classification_head,
             print("Saving best")
             torch.save(completeModule(unimodal_models,fusehead,finetunehead),savedir)
 
-def test(model,test_dataloader,auprc=False):
+def test(model,test_dataloader,auprc=False,classification=True):
     with torch.no_grad():
       totalloss=0.0
       total=0
@@ -285,9 +286,10 @@ def test(model,test_dataloader,auprc=False):
           if auprc:
             predictval=softmax(predicts[ii])
             auprclist.append((predictval[1].item(),valid_y[ii].item()))
-          if predictlist[ii].index(max(predictlist[ii]))==valid_y[ii]:
-            corrects+=1
-      print("test loss: "+str(totalloss/total)+" acc: "+str(float(corrects)/total))
+          if classification:
+            if predictlist[ii].index(max(predictlist[ii]))==valid_y[ii]:
+              corrects+=1
+      print("test loss: "+str(totalloss/total)+((" acc: "+str(float(corrects)/total)) if classification else ''))
       if auprc:
         print("With AUPRC: "+str(calcAUPRC(auprclist)))
 

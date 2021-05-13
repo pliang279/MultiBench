@@ -2,6 +2,8 @@ from sklearn.metrics import accuracy_score, f1_score
 
 import torch
 from torch import nn
+from utils.AUPRC import AUPRC
+softmax = nn.Softmax()
 
 
 def train(
