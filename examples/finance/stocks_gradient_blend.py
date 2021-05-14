@@ -8,8 +8,9 @@ import torch
 import torch.nn.functional as F
 import training_structures.gradient_blend
 from torch import nn
+from fusions.common_fusions import Stack
+from unimodels.common_models import LSTMWithLinear
 from datasets.stocks.get_data import get_dataloader
-from fusions.finance.early_fusion import EarlyFusion, EarlyFusionFuse
 from training_structures.gradient_blend import train, test
 
 
@@ -22,15 +23,13 @@ print('Target: ' + args.target_stock)
 
 
 stocks = sorted(args.input_stocks.split(' '))
-train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], modality_first=True, cuda=False)
-
-criterion = nn.MSELoss()
+train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], cuda=False)
 
 unimodal_models = [nn.Identity().cuda() for x in stocks]
-multimodal_classification_head = EarlyFusion(len(stocks), single_output=True).cuda()
-unimodal_classification_heads = [EarlyFusion(1, single_output=True).cuda() for x in stocks]
-fuse = EarlyFusionFuse().cuda()
-training_structures.gradient_blend.criterion = criterion
+multimodal_classification_head = LSTMWithLinear(len(stocks), 128, 1).cuda()
+unimodal_classification_heads = [LSTMWithLinear(1, 128, 1).cuda() for x in stocks]
+fuse = Stack().cuda()
+training_structures.gradient_blend.criterion = nn.MSELoss()
 
 train(unimodal_models,  multimodal_classification_head,
       unimodal_classification_heads, fuse, train_dataloader=train_loader, valid_dataloader=val_loader,
