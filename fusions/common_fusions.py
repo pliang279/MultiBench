@@ -15,6 +15,17 @@ class Concat(nn.Module):
         return torch.cat(flattened, dim=1)
 
 
+class Stack(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, modalities, training=False):
+        flattened = []
+        for modality in modalities:
+            flattened.append(torch.flatten(modality, start_dim=1))
+        return torch.stack(flattened, dim=2)
+
+
 class ConcatWithLinear(nn.Module):
     def __init__(self, input_dims, output_dim):
         super(ConcatWithLinear,self).__init__()

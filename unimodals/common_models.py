@@ -82,7 +82,46 @@ class GRUWithLinear(torch.nn.Module):
         return out
 
 
+class LSTM(torch.nn.Module):
+    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+        super(LSTM,self).__init__()
+        self.lstm=nn.LSTM(indim,hiddim,batch_first=True)
+        self.dropoutp=dropoutp
+        self.dropout=dropout
+        self.flatten=flatten
+        self.has_padding=has_padding
+    def forward(self,x,training=True):
+        if self.has_padding:
+            x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
+            out=self.lstm(x)[1][-1]
+        else:
+            out=self.lstm(x)[0]
+        if self.dropout:
+            out = F.dropout(out,p=self.dropoutp,training=training)
+        if self.flatten:
+            out=torch.flatten(out,1)
+        return out
 
+
+class LSTMWithLinear(torch.nn.Module):
+    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+        super(LSTMWithLinear,self).__init__()
+        self.lstm = nn.LSTM(indim, hiddim, batch_first=True)
+        self.linear = nn.Linear(hiddim, outdim)
+        self.dropoutp=dropoutp
+        self.dropout=dropout
+        self.flatten=flatten
+        self.has_padding=has_padding
+    def forward(self,x,training=True):
+        if self.has_padding:
+            x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
+            hidden=self.lstm(x)[1][-1]
+        else:
+            hidden=self.lstm(x)[0]
+        if self.dropout:
+            hidden = F.dropout(hidden,p=self.dropoutp,training=training)
+        out = self.linear(hidden)
+        return out
 
 
 #adapted from centralnet code https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py
@@ -127,6 +166,26 @@ class LeNet(nn.Module):
             return out.squeeze()
         return out
 
+
+class VGG16(nn.Module):
+    def __init__(self, hiddim):
+        super(VGG16, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg16_bn()
+        self.model.classifier[6] = nn.Linear(4096, hiddim)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
+class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers in classifier
+    def __init__(self, hiddim):
+        super(VGG16Slim, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg16_bn()
+        self.model.classifier = nn.Linear(512 * 7 * 7, hiddim)
+
+    def forward(self, x, training=False):
+        return self.model(x)
 
 class VGG(nn.Module):
     def __init__(self, num_outputs):
@@ -229,3 +288,46 @@ class Constant(nn.Module):
         self.out_dim=out_dim
     def forward(self,x,training=False):
         return torch.zeros(self.out_dim).cuda()
+
+
+# deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
+# deep sets: https://arxiv.org/abs/1703.06114
+class DAN(torch.nn.Module):
+    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=1, has_padding=False):
+        super(DAN, self).__init__()
+        self.dropoutp = dropoutp
+        self.dropout = dropout
+        self.nlayers = nlayers
+        self.has_padding = has_padding
+
+        self.embedding = nn.Linear(indim, hiddim)
+
+        mlp = []
+        for _ in range(nlayers):
+            mlp.append(nn.Linear(hiddim, hiddim))
+        self.mlp = nn.ModuleList(mlp)
+
+    def forward(self, x, training=True):
+        # x_vals: B x S x P
+        if self.has_padding:
+            x_vals = x[0]
+            x_lens = x[1]
+        else:
+            x_vals = x
+        # embedded: B x S x H
+        embedded = self.embedding(x_vals)
+        if self.dropout:
+            embedded = F.dropout(embedded, p=self.dropoutp, training=training)
+        if self.has_padding:
+            # mask out padded values
+            # mask: B x S
+            mask = torch.arange(embedded.shape[1], device=embedded.device).repeat(embedded.shape[0], 1) < x_lens.repeat(-1, 1).repeat(1, embedded.shape[1])
+            embedded[~mask] = 0
+        # sum pooling
+        # pool: B x H
+        pooled = embedded.sum(dim=1)
+        for layer in self.mlp:
+            pooled = layer(pooled)
+            if self.dropout:
+                pooled = F.dropout(pooled, p=self.dropoutp, training=training)
+        return pooled
