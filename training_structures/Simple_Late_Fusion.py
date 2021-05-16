@@ -109,7 +109,7 @@ def train(
                 true.append(j[-1])
                 if auprc:
                     #pdb.set_trace()
-                    sm=softmax(out, 1)
+                    sm=softmax(out)
                     pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
@@ -120,9 +120,9 @@ def train(
             acc = accuracy_score(true, pred)
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
                 " acc: "+str(acc))
-            if acc>bestacc:
+            if valloss<bestvalloss:
                 patience = 0
-                bestacc=acc
+                bestvalloss=valloss
                 print("Saving Best")
                 torch.save(model,save)
             else:
@@ -186,7 +186,7 @@ def test(
             true.append(j[-1])
             if auprc:
                 #pdb.set_trace()
-                sm=softmax(out, 1)
+                sm=softmax(out)
                 pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
