@@ -9,7 +9,7 @@ import torch.nn.functional as F
 import training_structures.gradient_blend
 from torch import nn
 from fusions.common_fusions import Stack
-from unimodels.common_models import LSTMWithLinear
+from unimodals.common_models import LSTMWithLinear
 from datasets.stocks.get_data import get_dataloader
 from training_structures.gradient_blend import train, test
 

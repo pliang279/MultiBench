@@ -9,7 +9,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import Stack
-from unimodels.common_models import LSTMWithLinear
+from unimodals.common_models import LSTMWithLinear
 from datasets.stocks.get_data import get_dataloader
 from training_structures.unimodal import train, test
 
