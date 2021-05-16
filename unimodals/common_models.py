@@ -125,6 +125,16 @@ class VGG16(nn.Module):
     def forward(self, x, training=False):
         return self.model(x)
 
+class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers in classifier
+    def __init__(self, hiddim):
+        super(VGG16Slim, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg16_bn()
+        self.model.classifier = nn.Linear(512 * 7 * 7, hiddim)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
 class VGG(nn.Module):
     def __init__(self, num_outputs):
         super(VGG, self).__init__()
