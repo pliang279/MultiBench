@@ -9,7 +9,7 @@ import torch
 
 modalnum=1
 traindata, validdata, testdata = get_dataloader('/data/yiwei/avmnist/_MFAS/avmnist')
-channels=3
+channels=6
 #encoders=[LeNet(1,channels,3).cuda(),LeNet(1,channels,5).cuda()]
 encoder = LeNet(1,channels,5).cuda()
 head=MLP(channels*32,100,10).cuda()

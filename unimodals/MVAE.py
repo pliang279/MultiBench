@@ -56,3 +56,47 @@ class TSDecoder(torch.nn.Module):
       next,hidden=self.gru(next,hidden)
       nexts.append(next.squeeze(0))
     return torch.cat(nexts,1)
+
+class DeLeNet(nn.Module):
+    def __init__(self,in_channels,arg_channels,additional_layers,latent):
+        super(DeLeNet,self).__init__()
+        self.linear = nn.Linear(latent,arg_channels*(2**(additional_layers)))
+        self.deconvs=[]
+        self.bns = []
+        for i in range(additional_layers):
+            self.deconvs.append(nn.ConvTranspose2d(arg_channels*(2**(additional_layers-i)),arg_channels*(2**(additional_layers-i-1)),kernel_size=4,stride=2,padding=1,bias=False))
+            self.bns.append(nn.BatchNorm2d(arg_channels*(2**(additional_layers-i-1))))
+        self.deconvs.append(nn.ConvTranspose2d(arg_channels,in_channels,kernel_size=8,stride=4,padding=1,bias=False))
+        self.deconvs=nn.ModuleList(self.deconvs)
+        self.bns=nn.ModuleList(self.bns)
+
+    def forward(self,x,training=False):
+        out = self.linear(x).unsqueeze(2).unsqueeze(3)
+        for i in range(len(self.deconvs)):
+            out = self.deconvs[i](out)
+            #print(out.size())
+            if i < len(self.deconvs)-1:
+                out = self.bns[i](out)
+        return out
+
+from unimodals.common_models import LeNet
+
+class LeNetEncoder(nn.Module):
+    def __init__(self,in_channels,arg_channels,additional_layers,latent,twooutput=True):
+        super(LeNetEncoder,self).__init__()
+        self.latent = latent
+        self.lenet = LeNet(in_channels,arg_channels,additional_layers)
+        if twooutput:
+            self.linear = nn.Linear(arg_channels*(2**additional_layers),latent*2)
+        else:
+            self.linear = nn.Linear(arg_channels*(2**additional_layers),latent)
+
+        self.twoout=twooutput
+    def forward(self,x,training=False):
+        out = self.lenet(x)
+        out = self.linear(out)
+        if self.twoout:
+            return out[:,:self.latent],out[:,self.latent:]
+        return out
+
+

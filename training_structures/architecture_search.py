@@ -146,3 +146,27 @@ class ModelSearcher():
 
         return s_data
 
+from utils.AUPRC import AUPRC
+
+
+def test(model,test_dataloader,auprc=False):
+    total = 0
+    corrects = 0
+    pts=[]
+    with torch.no_grad():
+        for j in test_dataloader:
+            x = [y.float().cuda() for y in j[:-1]]
+            out = model(x)
+            outs=torch.nn.Softmax()(out)
+            for ii in range(len(outs)):
+                total += 1
+                if outs[ii].tolist().index(max(outs[ii]))==j[-1][ii].item():
+                    corrects += 1
+                pts.append([outs[ii][1],j[-1][ii].item()])
+    print('test acc: '+str(float(corrects)/total))
+    if auprc:
+        print("AUPRC: "+str(AUPRC(pts)))
+
+
+
+
