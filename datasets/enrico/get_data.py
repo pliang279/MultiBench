@@ -25,7 +25,7 @@ def add_screen_elements(tree, element_list):
             element_list.append(node)
 
 class EnricoDataset(Dataset):
-    def __init__(self, data_dir, mode="train", img_dim=224, random_seed=42, train_split=0.7, val_split=0.15, test_split=0.15, normalize_image=True, seq_len=64):
+    def __init__(self, data_dir, mode="train", img_dim=256, random_seed=42, train_split=0.7, val_split=0.15, test_split=0.15, normalize_image=True, seq_len=64):
         super(EnricoDataset, self).__init__()
         self.img_dim = img_dim
         self.seq_len = seq_len
@@ -96,13 +96,14 @@ class EnricoDataset(Dataset):
 
         self.idx2Label = idx2Label
         self.label2Idx = label2Idx
+        self.ui_types = UI_TYPES
 
     def __len__(self):
-        return len(keys)
+        return len(self.keys)
 
     def featurizeElement(self, element):
         bounds, label = element
-        labelOneHot = [0 for _ in range(len(self.label2Idx))]
+        labelOneHot = [0 for _ in range(len(self.ui_types))]
         labelOneHot[self.label2Idx[label]] = 1
         return bounds, labelOneHot
 
@@ -114,7 +115,7 @@ class EnricoDataset(Dataset):
         screenImg = self.img_transforms(screenImg)
         # wireframe modalities
         treePath = os.path.join(self.hierarchy_dir, screenId + ".json")
-        with open(treePath, "r") as f:
+        with open(treePath, "r", errors="ignore", encoding="utf-8") as f:
             tree = json.load(f)
         treeElements = []
         add_screen_elements(tree, treeElements)
@@ -125,23 +126,23 @@ class EnricoDataset(Dataset):
             b, l = self.featurizeElement(e)
             elements.append(torch.tensor(b))
             labels.append(torch.tensor(l))
-        screenWireframeBounds = torch.stack(elements, dim=0)
-        screenWireframeBoundsPadded = torch.zeros(self.seq_len, screenWireframeBounds.shape[-1])
-        padLen = min(self.seq_len, screenWireframeBounds.shape[0])
-        screenWireframeBoundsPadded[:padLen, :] = screenWireframeBounds[:padLen, :]
-        screenWireframeLabels = torch.stack(labels, dim=0)
-        screenWireframeLabelsPadded = torch.zeros(self.seq_len, screenWireframeLabels.shape[-1])
-        screenWireframeLabelsPadded[:padLen, :] = screenWireframeLabels[:padLen, :]
+        
+        screenWireframeBoundsPadded = torch.zeros(self.seq_len, 4)
+        screenWireframeLabelsPadded = torch.zeros(self.seq_len, len(self.ui_types))
+        if len(elements) > 0:
+            screenWireframeBounds = torch.stack(elements, dim=0)
+            padLen = min(self.seq_len, screenWireframeBounds.shape[0])
+            screenWireframeBoundsPadded[:padLen, :] = screenWireframeBounds[:padLen, :]
+            screenWireframeLabels = torch.stack(labels, dim=0)
+            screenWireframeLabelsPadded[:padLen, :] = screenWireframeLabels[:padLen, :]
         # label
         screenLabel = self.topic2Idx[example['topic']]
         # return a list where each index is a modality
-        return [screenImg, (screenWireframeBoundsPadded, padLen), (screenWireframeLabelsPadded, padLen), screenLabel]
+        # return [screenImg, (screenWireframeBoundsPadded, padLen), (screenWireframeLabelsPadded, padLen), screenLabel]
+        # return [screenImg, screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
+        return [screenImg, screenLabel]
 
-def get_dataloader(data_dir, batch_size=32, num_workers=8, train_shuffle=True, normalize_image=True):
-
-    
-    return None
-
+def get_dataloader(data_dir, batch_size=16, num_workers=0, train_shuffle=True, normalize_image=True):
     ds_train = EnricoDataset(data_dir, mode="train")
     ds_val = EnricoDataset(data_dir, mode="val")
     ds_test = EnricoDataset(data_dir, mode="test")

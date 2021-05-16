@@ -20,7 +20,11 @@ class Affectdataset(Dataset):
         audio = torch.tensor(self.dataset['audio'][ind])
         text = torch.tensor(self.dataset['text'][ind])
         if self.aligned:
-            start = text.nonzero()[0][0]
+            try:
+                start = text.nonzero()[0][0]
+            except:
+                print(text,ind)
+                exit()
             vision = vision[start:].float()
             audio = audio[start:].float()
             text = text[start:].float()
@@ -37,7 +41,7 @@ class Affectdataset(Dataset):
             return [vision, audio, text, ind, label]
 
     def __len__(self):
-        return self.dataset['id'].shape[0]
+        return self.dataset['vision'].shape[0]
 
 
 def get_dataloader(
@@ -46,6 +50,16 @@ def get_dataloader(
 
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
+    
+    for dataset in alldata:
+        drop = []
+        for ind, k in enumerate(alldata[dataset]["text"]):
+            if k.sum() == 0:
+                drop.append(ind)
+        alldata[dataset]["text"] = np.delete(alldata[dataset]["text"], drop, 0)
+        alldata[dataset]["vision"] = np.delete(alldata[dataset]["vision"], drop, 0)
+        alldata[dataset]["audio"] = np.delete(alldata[dataset]["audio"], drop, 0)
+        alldata[dataset]["labels"] = np.delete(alldata[dataset]["labels"], drop, 0)
 
     train = DataLoader(Affectdataset(alldata['train'], flatten_time_series, task=task), \
         shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size, \
@@ -75,7 +89,10 @@ def process(inputs:List):
     
     for sample in inputs:
         inds.append(sample[-2])
-        labels.append(sample[-1])
+        if len(sample[-1].shape) > 1:
+            labels.append(torch.where(sample[-1][:,1]==1)[0])
+        else:
+            labels.append(sample[-1])
 
     return processed_input, processed_input_lengths, \
-        torch.tensor(inds).view(len(inputs), 1), torch.tensor(labels).view(len(inputs), 1)
+        torch.tensor(inds).view(len(inputs), 1), torch.tensor(labels).view(len(inputs))
