@@ -26,6 +26,7 @@ class MMDL(nn.Module):
             for i in range(len(inputs)):
                 outs.append(self.encoders[i](inputs[i], training=training))
         out = self.fuse(outs, training=training)
+        #print(out) 
         return self.head(out, training=training)
 
 
@@ -58,13 +59,18 @@ def train(
                 with torch.backends.cudnn.flags(enabled=False):
                     out=model([[i.cuda() for i in j[0]], j[1]],training=True)
                     #print(j[-1])
+                    #print(out)
                     loss1=criterion(out,j[-1].cuda())
                     loss2=regularize(out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
                     loss = loss1+loss2
             else:
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
                 #print(out, j[-1])
-                loss=criterion(out,j[-1].cuda())
+                if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
+                    loss=criterion(out, j[-1].float().cuda())
+                else:
+                    loss=criterion(out, j[-1].cuda())
+            #print(loss)
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             if regularization:
@@ -73,6 +79,7 @@ def train(
                 loss.backward(retain_graph=True)
             else:
                 loss.backward()
+            #torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
             op.step()
         if regularization:
             print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" reg loss: "+str(totalloss2/totals))
@@ -90,7 +97,10 @@ def train(
                     out=model([[i.cuda() for i in j[0]], j[1]],training=False)
                 else:
                     out = model([i.float().cuda() for i in j[:-1]],training=False)
-                loss = criterion(out,j[-1].cuda())
+                if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
+                    loss=criterion(out, j[-1].float().cuda())
+                else:
+                    loss=criterion(out, j[-1].cuda())
                 totalloss += loss*len(j[-1])
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
@@ -117,7 +127,7 @@ def train(
                 torch.save(model,save)
             else:
                 patience += 1
-            if early_stop and patience > 20:
+            if early_stop and patience > 7:
                 break
         elif task == "multilabel":
             f1_micro = f1_score(true, pred, average="micro")
@@ -131,7 +141,7 @@ def train(
                 torch.save(model,save)
             else:
                 patience += 1
-            if early_stop and patience > 20:
+            if early_stop and patience > 7:
                 break
         elif task == "regression":
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss))
@@ -142,7 +152,7 @@ def train(
                 torch.save(model,save)
             else:
                 patience += 1
-            if early_stop and patience > 20:
+            if early_stop and patience > 7:
                 break
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
@@ -163,7 +173,10 @@ def test(
                 out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
                 out = model([i.float().cuda() for i in j[:-1]],training=False)
-            loss = criterion(out,j[-1].cuda())
+            if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
+                loss=criterion(out, j[-1].float().cuda())
+            else:
+                loss=criterion(out, j[-1].cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
             totalloss += loss*len(j[-1])
             if task == "classification":
