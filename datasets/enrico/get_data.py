@@ -25,7 +25,7 @@ def add_screen_elements(tree, element_list):
             element_list.append(node)
 
 class EnricoDataset(Dataset):
-    def __init__(self, data_dir, mode="train", img_dim=224, random_seed=42, train_split=0.7, val_split=0.15, test_split=0.15, normalize_image=True, seq_len=64):
+    def __init__(self, data_dir, mode="train", img_dim=256, random_seed=42, train_split=0.7, val_split=0.15, test_split=0.15, normalize_image=True, seq_len=64):
         super(EnricoDataset, self).__init__()
         self.img_dim = img_dim
         self.seq_len = seq_len
@@ -139,9 +139,10 @@ class EnricoDataset(Dataset):
         screenLabel = self.topic2Idx[example['topic']]
         # return a list where each index is a modality
         # return [screenImg, (screenWireframeBoundsPadded, padLen), (screenWireframeLabelsPadded, padLen), screenLabel]
-        return [screenImg, screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
+        # return [screenImg, screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
+        return [screenImg, screenLabel]
 
-def get_dataloader(data_dir, batch_size=8, num_workers=0, train_shuffle=True, normalize_image=True):
+def get_dataloader(data_dir, batch_size=16, num_workers=0, train_shuffle=True, normalize_image=True):
     ds_train = EnricoDataset(data_dir, mode="train")
     ds_val = EnricoDataset(data_dir, mode="val")
     ds_test = EnricoDataset(data_dir, mode="test")
