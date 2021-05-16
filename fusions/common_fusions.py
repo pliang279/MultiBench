@@ -182,37 +182,40 @@ class TensorFusion(nn.Module):
 
 class LowRankTensorFusion(nn.Module):
     # https://github.com/Justin1904/Low-rank-Multimodal-Fusion
-    def __init__(self, input_dims, output_dim, rank):
+    def __init__(self, input_dims, output_dim, rank, flatten=True):
         super(LowRankTensorFusion, self).__init__()
 
         # dimensions are specified in the order of audio, video and text
         self.input_dims = input_dims
         self.output_dim = output_dim
         self.rank = rank
+        self.flatten = flatten
 
         # low-rank factors
         self.factors = []
         for input_dim in input_dims:
-            factor = nn.Parameter(torch.Tensor(self.rank, input_dim+1, self.output_dim))
+            factor = nn.Parameter(torch.Tensor(self.rank, input_dim+1, self.output_dim)).cuda()
             nn.init.xavier_normal(factor)
             self.factors.append(factor)
 
-        self.fusion_weights = nn.Parameter(torch.Tensor(1, self.rank))
-        self.fusion_bias = nn.Parameter(torch.Tensor(1, self.output_dim))
-
+        self.fusion_weights = nn.Parameter(torch.Tensor(1, self.rank)).cuda()
+        self.fusion_bias = nn.Parameter(torch.Tensor(1, self.output_dim)).cuda()
         # init the fusion weights
         nn.init.xavier_normal(self.fusion_weights)
         self.fusion_bias.data.fill_(0)
 
     def forward(self, modalities, training=False):
         batch_size = modalities[0].shape[0]
-
         # next we perform low-rank multimodal fusion
         # here is a more efficient implementation than the one the paper describes
         # basically swapping the order of summation and elementwise product
         fused_tensor = 1
         for (modality, factor) in zip(modalities, self.factors):
-            modality_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False), modality), dim=1)
+            ones = Variable(torch.ones(batch_size, 1).type(modality.dtype), requires_grad=False).cuda()
+            if self.flatten:
+                modality_withones = torch.cat((ones, torch.flatten(modality,start_dim=1)), dim=1)
+            else:
+                modality_withones = torch.cat((ones, modality), dim=1)
             modality_factor = torch.matmul(modality_withones, factor)
             fused_tensor = fused_tensor * modality_factor
 
