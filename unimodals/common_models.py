@@ -14,20 +14,24 @@ class Linear(torch.nn.Module):
 
 
 class MLP(torch.nn.Module):
-    def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1):
+    def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1,output_each_layer=False):
         super(MLP, self).__init__()
         self.fc = nn.Linear(indim,hiddim)
         self.fc2 = nn.Linear(hiddim,outdim)
         self.dropoutp = dropoutp
         self.dropout = dropout
+        self.output_each_layer = output_each_layer
+        self.lklu = nn.LeakyReLU(0.2)
     def forward(self, x, training=True):
         output = F.relu(self.fc(x))
         if self.dropout:
             output = F.dropout(output,p=self.dropout,training=training)
-        output = self.fc2(output)
+        output2 = self.fc2(output)
         if self.dropout:
-            output = F.dropout(output,p=self.dropoutp,training=training)
-        return output
+            output2 = F.dropout(output,p=self.dropoutp,training=training)
+        if self.output_each_layer:
+            return [0,x,output,self.lklu(output2)]
+        return output2
 
 
 class GRU(torch.nn.Module):
@@ -52,7 +56,7 @@ class GRU(torch.nn.Module):
 
 
 class GRUWithLinear(torch.nn.Module):
-    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False,output_each_layer=False):
         super(GRUWithLinear,self).__init__()
         self.gru=nn.GRU(indim,hiddim)
         self.linear = nn.Linear(hiddim,outdim)
@@ -60,6 +64,8 @@ class GRUWithLinear(torch.nn.Module):
         self.dropout=dropout
         self.flatten=flatten
         self.has_padding=has_padding
+        self.output_each_layer = output_each_layer
+        self.lklu = nn.LeakyReLU(0.2)
     def forward(self,x,training=True):
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
@@ -69,7 +75,14 @@ class GRUWithLinear(torch.nn.Module):
         if self.dropout:
             hidden = F.dropout(hidden,p=self.dropoutp,training=training)
         out = self.linear(hidden)
+        if self.flatten:
+            out=torch.flatten(out,1)
+        if self.output_each_layer:
+            return [0,torch.flatten(x,1),torch.flatten(hidden,1),self.lklu(out)]
         return out
+
+
+
 
 
 #adapted from centralnet code https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py

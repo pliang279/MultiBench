@@ -9,7 +9,6 @@ from utils.AUPRC import AUPRC
 from training_structures.MVAE_finetune import MVAE
 
 
-
 criterion=nn.CrossEntropyLoss()
 
 def train_MVAE(encoders,decoders,head,fusion_method,train_dataloader,valid_dataloader,backbone_objective,total_epochs,backbone_optimtype=torch.optim.Adam,
@@ -38,7 +37,12 @@ def train_MVAE(encoders,decoders,head,fusion_method,train_dataloader,valid_datal
         recons.append(recon[i])
         mus.append(mu)
         vars.append(var)
+        #print(mu)
+        #print(var)
+      #exit(0)
       total_loss=backbone_objective(reconsjoint,trains,mujoint,varjoint)
+      #print(total_loss)
+
       for i in range(len(trains)):
         total_loss += (backbone_objective(allnonebuti(i,recons[i]),allnonebuti(i,trains[i]),mus[i],vars[i]))
       ceout=head(z)

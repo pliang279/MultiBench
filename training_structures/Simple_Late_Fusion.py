@@ -64,7 +64,7 @@ def train(
             else:
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
                 #print(out, j[-1])
-                loss=criterion(out,j[-1].float().cuda())
+                loss=criterion(out,j[-1].cuda())
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             if regularization:
@@ -90,7 +90,7 @@ def train(
                     out=model([[i.cuda() for i in j[0]], j[1]],training=False)
                 else:
                     out = model([i.float().cuda() for i in j[:-1]],training=False)
-                loss = criterion(out,j[-1].float().cuda())
+                loss = criterion(out,j[-1].cuda())
                 totalloss += loss*len(j[-1])
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
@@ -99,7 +99,7 @@ def train(
                 true.append(j[-1])
                 if auprc:
                     #pdb.set_trace()
-                    sm=softmax(out, 1)
+                    sm=softmax(out)
                     pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
@@ -110,9 +110,9 @@ def train(
             acc = accuracy_score(true, pred)
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
                 " acc: "+str(acc))
-            if acc>bestacc:
+            if valloss<bestvalloss:
                 patience = 0
-                bestacc=acc
+                bestvalloss=valloss
                 print("Saving Best")
                 torch.save(model,save)
             else:
@@ -163,7 +163,7 @@ def test(
                 out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
                 out = model([i.float().cuda() for i in j[:-1]],training=False)
-            loss = criterion(out,j[-1].float().cuda())
+            loss = criterion(out,j[-1].cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
             totalloss += loss*len(j[-1])
             if task == "classification":
@@ -173,7 +173,7 @@ def test(
             true.append(j[-1])
             if auprc:
                 #pdb.set_trace()
-                sm=softmax(out, 1)
+                sm=softmax(out)
                 pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
