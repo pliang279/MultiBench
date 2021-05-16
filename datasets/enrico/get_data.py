@@ -1,8 +1,9 @@
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 import random
 import csv
 import os
 import json
+from collections import Counter
 
 import torch
 from torchvision import transforms
@@ -147,7 +148,21 @@ def get_dataloader(data_dir, batch_size=16, num_workers=0, train_shuffle=True, n
     ds_val = EnricoDataset(data_dir, mode="val")
     ds_test = EnricoDataset(data_dir, mode="test")
 
-    dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
+    targets = []
+    class_counter = Counter()
+    for i in range(len(ds_train)):
+        example_topic = ds_train.example_list[ds_train.keys[i]]['topic']
+        targets.append(example_topic)
+        class_counter[example_topic] += 1
+
+    weights = []
+    for t in targets:
+        weights.append(1 / class_counter[t])
+
+    weights = torch.tensor(weights, dtype=torch.float)
+    sampler = WeightedRandomSampler(weights, len(targets))
+
+    dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
     dl_val = DataLoader(ds_val, shuffle=False, num_workers=num_workers, batch_size=batch_size)
     dl_test = DataLoader(ds_test, shuffle=False, num_workers=num_workers, batch_size=batch_size)
 

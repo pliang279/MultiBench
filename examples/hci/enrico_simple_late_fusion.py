@@ -12,7 +12,7 @@ traindata, validdata, testdata = get_dataloader('datasets/enrico/dataset')
 channels=3
 # encoders=[VGG16Slim(64).cuda(), DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
 # head = Linear(96, 20)
-encoders=[VGG16(128).cuda()]
+encoders=[VGG16Slim(128).cuda()]
 head = Linear(128, 20)
 
 fusion=Concat().cuda()
