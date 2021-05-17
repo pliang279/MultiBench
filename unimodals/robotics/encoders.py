@@ -66,6 +66,7 @@ class ImageEncoder(nn.Module):
         """
         super().__init__()
         self.z_dim = z_dim
+        self.alpha = alpha
 
         self.img_conv1 = conv2d(3, 16, kernel_size=7, stride=2)
         self.img_conv2 = conv2d(16, 32, kernel_size=5, stride=2)
