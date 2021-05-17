@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from models_utils import init_weights
-from layers import (
+from .models_utils import init_weights
+from .layers import (
     conv2d,
     predict_flow,
     deconv,

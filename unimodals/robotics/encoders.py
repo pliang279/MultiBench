@@ -1,6 +1,6 @@
 import torch.nn as nn
-from models_utils import init_weights
-from layers import CausalConv1D, Flatten, conv2d
+from .models_utils import init_weights
+from .layers import CausalConv1D, Flatten, conv2d
 
 
 class ProprioEncoder(nn.Module):
