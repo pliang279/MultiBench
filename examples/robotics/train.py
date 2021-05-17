@@ -42,9 +42,9 @@ class selfsupervised:
 
         self.encoders = [
             ImageEncoder(configs['zdim'], alpha=configs['vision']),
-            DepthEncoder(configs['zdim'], alpha=configs['depth']),
-            ProprioEncoder(configs['zdim'], alpha=configs['proprio']),
             ForceEncoder(configs['zdim'], alpha=configs['force']),
+            ProprioEncoder(configs['zdim'], alpha=configs['proprio']),
+            DepthEncoder(configs['zdim'], alpha=configs['depth']),
             ActionEncoder(configs['action_dim']),
         ]
         self.fusion = SensorFusionSelfSupervised(

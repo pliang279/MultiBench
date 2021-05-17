@@ -17,9 +17,9 @@ from torchvision import transforms
 def combine_modalities(data):
     return [
         data['image'],
-        data['depth'].transpose(0, 2).transpose(1, 2),
-        data['proprio'],
         data['force'],
+        data['proprio'],
+        data['depth'].transpose(0, 2).transpose(1, 2),
         data['action'],
         data['contact_next'],
     ]
