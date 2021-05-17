@@ -6,14 +6,7 @@ import torch.optim as optim
 import os
 from tqdm import tqdm
 
-from utils import (
-    kl_normal,
-    realEPE,
-    compute_accuracy,
-    flow2rgb,
-    set_seeds,
-    augment_val,
-)
+from .utils import augment_val
 
 from datasets.robotics import ProcessForce, ToTensor
 from datasets.robotics import MultimodalManipulationDataset

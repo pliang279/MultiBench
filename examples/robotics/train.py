@@ -19,14 +19,7 @@ from unimodals.robotics.encoders import (
 )
 from unimodals.robotics.decoders import Decoder
 from training_structures.Simple_Late_Fusion import train, test
-from robotics_utils import (
-    kl_normal,
-    realEPE,
-    compute_accuracy,
-    flow2rgb,
-    set_seeds,
-    augment_val,
-)
+from robotics_utils import set_seeds
 
 from datasets.robotics.data_loader import get_data
 from torch.utils.data import DataLoader
