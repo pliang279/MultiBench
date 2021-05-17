@@ -18,6 +18,7 @@ from unimodals.robotics.encoders import (
     ProprioEncoder, ForceEncoder, ImageEncoder, DepthEncoder, ActionEncoder,
 )
 from unimodals.robotics.decoders import Decoder
+from training_structures.Simple_Late_Fusion import train, test
 from utils import (
     kl_normal,
     realEPE,
