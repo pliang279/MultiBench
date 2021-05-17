@@ -11,7 +11,7 @@ from torch import nn
 from fusions.common_fusions import ConcatWithLinear
 from fusions.finance.late_fusion import LateFusionTransformer
 from datasets.stocks.get_data import get_dataloader
-from training_structures.unimodal import train, test
+from training_structures.Simple_Late_Fusion import train, test
 
 
 parser = argparse.ArgumentParser()
