@@ -21,6 +21,7 @@ def combine_modalities(data):
         data['proprio'],
         data['force'],
         data['action'],
+        data['contact_next'],
     ]
 
 def get_data(device, configs):
