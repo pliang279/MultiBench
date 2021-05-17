@@ -26,9 +26,10 @@ def add_screen_elements(tree, element_list):
             element_list.append(node)
 
 class EnricoDataset(Dataset):
-    def __init__(self, data_dir, mode="train", img_dim=256, random_seed=42, train_split=0.7, val_split=0.15, test_split=0.15, normalize_image=True, seq_len=64):
+    def __init__(self, data_dir, mode="train", img_dim_x=128, img_dim_y=256, random_seed=42, train_split=0.65, val_split=0.15, test_split=0.2, normalize_image=True, seq_len=64):
         super(EnricoDataset, self).__init__()
-        self.img_dim = img_dim
+        self.img_dim_x = img_dim_x
+        self.img_dim_y = img_dim_y
         self.seq_len = seq_len
         csv_file = os.path.join(data_dir, "design_topics.csv")
         self.img_dir = os.path.join(data_dir, "screenshots")
@@ -61,7 +62,7 @@ class EnricoDataset(Dataset):
         self.keys = keys
 
         img_transforms = [
-            transforms.Resize((img_dim, img_dim)),
+            transforms.Resize((img_dim_y, img_dim_x)),
             transforms.ToTensor()
         ]
         if normalize_image:
@@ -143,10 +144,12 @@ class EnricoDataset(Dataset):
         # return [screenImg, screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
         return [screenImg, screenLabel]
 
-def get_dataloader(data_dir, batch_size=16, num_workers=0, train_shuffle=True, normalize_image=True):
+def get_dataloader(data_dir, batch_size=8, num_workers=0, train_shuffle=True, return_class_weights=True):
     ds_train = EnricoDataset(data_dir, mode="train")
     ds_val = EnricoDataset(data_dir, mode="val")
     ds_test = EnricoDataset(data_dir, mode="test")
+
+
 
     targets = []
     class_counter = Counter()
@@ -162,8 +165,30 @@ def get_dataloader(data_dir, batch_size=16, num_workers=0, train_shuffle=True, n
     weights = torch.tensor(weights, dtype=torch.float)
     sampler = WeightedRandomSampler(weights, len(targets))
 
-    dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
+    if return_class_weights:
+        class_counter = Counter()
+        for i in range(len(ds_train)):
+            example_topic = ds_train.example_list[ds_train.keys[i]]['topic']
+            class_counter[ds_train.topic2Idx[example_topic]] += 1
+        weights = []
+        for i in range(len(ds_train.topic2Idx)):
+            weights.append(class_counter[i])
+        
+        weights2 = []
+        for w in weights:
+            weights2.append(1 / (w / sum(weights)))
+        weights3 = []
+        for w in weights2:
+            weights3.append(w / sum(weights2))
+        weights = weights3
+
+    # dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
+    dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
     dl_val = DataLoader(ds_val, shuffle=False, num_workers=num_workers, batch_size=batch_size)
     dl_test = DataLoader(ds_test, shuffle=False, num_workers=num_workers, batch_size=batch_size)
-
-    return dl_train, dl_val, dl_test
+    
+    dls = tuple([dl_train, dl_val, dl_test])
+    if return_class_weights:
+        return dls, weights
+    else:
+        return dls
