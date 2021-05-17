@@ -15,7 +15,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
 
 def combine_modalities(data):
-    return [data['input'], data['depth'], data['proprio'], data['force'], data['action']]
+    return [data['image'], data['depth'], data['proprio'], data['force'], data['action']]
 
 def get_data(device, configs):
     filename_list = []
