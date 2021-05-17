@@ -23,7 +23,7 @@ from utils import (
     augment_val,
 )
 
-from datasets.robotics.get_data import get_data
+from datasets.robotics.data_loader import get_data
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
@@ -75,7 +75,7 @@ class selfsupervised:
               self.configs['max_epoch'],
               optimtype=self.optimtype)
 
-with open('training_default.yaml') as f:
+with open('examples/robotics/training_default.yaml') as f:
     configs = yaml.load(f)
 
 selfsupervised(configs).train()
