@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from models_utils import (
+from .models_utils import (
     duplicate,
     gaussian_parameters,
     rescaleImage,
