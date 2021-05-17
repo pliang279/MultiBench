@@ -3,10 +3,8 @@ import torch.nn as nn
 from .models_utils import (
     duplicate,
     gaussian_parameters,
-    rescaleImage,
     product_of_experts,
     sample_gaussian,
-    filter_depth,
 )
 
 
