@@ -19,7 +19,7 @@ from unimodals.robotics.encoders import (
 )
 from unimodals.robotics.decoders import Decoder
 from training_structures.Simple_Late_Fusion import train, test
-from utils import (
+from robotics_utils import (
     kl_normal,
     realEPE,
     compute_accuracy,
