@@ -17,7 +17,7 @@ from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised
 from unimodals.robotics.encoders import (
     ProprioEncoder, ForceEncoder, ImageEncoder, DepthEncoder, ActionEncoder,
 )
-from unimodals.robotics.decoders import Decoder
+from unimodals.robotics.decoders import ContactDecoder
 from training_structures.Simple_Late_Fusion import train, test
 from robotics_utils import set_seeds
 
@@ -53,7 +53,7 @@ class selfsupervised:
             deterministic=configs["deterministic"],
             z_dim=configs["zdim"],
         ).to(self.device)
-        self.head = Decoder(deterministic=configs["deterministic"])
+        self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"])
 
         self.optimtype = optim.Adam
 
