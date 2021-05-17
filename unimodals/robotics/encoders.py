@@ -1,5 +1,5 @@
 import torch.nn as nn
-from .models_utils import init_weights
+from .models_utils import filter_depth, init_weights, rescaleImage
 from .layers import CausalConv1D, Flatten, conv2d
 
 
@@ -80,7 +80,9 @@ class ImageEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, image, training=False):
+    def forward(self, vis_in, training=False):
+        image = rescaleImage(vis_in)
+
         # image encoding layers
         out_img_conv1 = self.img_conv1(self.alpha * image)
         out_img_conv2 = self.img_conv2(out_img_conv1)
@@ -127,7 +129,9 @@ class DepthEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, depth, training=False):
+    def forward(self, depth_in, training=False):
+        depth = filter_depth(depth_in)
+
         # depth encoding layers
         out_depth_conv1 = self.depth_conv1(self.alpha * depth)
         out_depth_conv2 = self.depth_conv2(out_depth_conv1)
