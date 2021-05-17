@@ -15,8 +15,8 @@ from utils import (
     augment_val,
 )
 
-from dataloaders import ProcessForce, ToTensor
-from dataloaders import MultimodalManipulationDataset
+from datasets.robotics import ProcessForce, ToTensor
+from datasets.robotics import MultimodalManipulationDataset
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
