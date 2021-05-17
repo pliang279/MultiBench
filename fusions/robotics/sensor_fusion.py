@@ -165,7 +165,7 @@ class SensorFusionSelfSupervised(SensorFusion):
 
         self.deterministic = deterministic
 
-    def forward(self, input):
+    def forward(self, input, training=False):
         img_encoded, frc_encoded, proprio_encoded, depth_encoded, action_encoded = input
 
         if self.encoder_bool:

@@ -139,7 +139,7 @@ class Decoder(nn.Module):
 
         self.deterministic = deterministic
 
-    def forward(self, input):
+    def forward(self, input, training=False):
         if self.deterministic:
             z, mm_act_feat, tiled_feat, img_out_convs = input
         else:
