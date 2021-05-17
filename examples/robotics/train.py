@@ -58,12 +58,7 @@ class selfsupervised:
         self.optimtype = optim.Adam
 
         # losses
-        self.loss_ee_pos = nn.MSELoss()
         self.loss_contact_next = nn.BCEWithLogitsLoss()
-        self.loss_optical_flow_mask = nn.BCEWithLogitsLoss()
-        self.loss_reward_prediction = nn.MSELoss()
-        self.loss_is_paired = nn.BCEWithLogitsLoss()
-        self.loss_dynamics = nn.MSELoss()
 
         self.train_loader, self.val_loader = get_data(self.device, self.configs)
 
@@ -71,7 +66,9 @@ class selfsupervised:
         train(self.encoders, self.fusion, self.head,
               self.train_loader, self.val_loader,
               self.configs['max_epoch'],
-              optimtype=self.optimtype)
+              optimtype=self.optimtype,
+              lr=self.configs['lr'],
+              criterion=self.loss_contact_next)
 
 with open('examples/robotics/training_default.yaml') as f:
     configs = yaml.load(f)
