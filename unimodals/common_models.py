@@ -196,6 +196,25 @@ class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers i
     def forward(self, x, training=False):
         return self.model(x)
 
+class VGG11Slim(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
+    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
+        super(VGG11Slim, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg11_bn(pretrained=pretrained)
+        self.model.classifier = nn.Linear(512 * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
 class VGG(nn.Module):
     def __init__(self, num_outputs):
         super(VGG, self).__init__()
