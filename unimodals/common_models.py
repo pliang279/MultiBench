@@ -321,7 +321,7 @@ class Constant(nn.Module):
 # deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
 # deep sets: https://arxiv.org/abs/1703.06114
 class DAN(torch.nn.Module):
-    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=1, has_padding=False):
+    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=3, has_padding=False):
         super(DAN, self).__init__()
         self.dropoutp = dropoutp
         self.dropout = dropout
