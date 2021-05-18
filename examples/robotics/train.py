@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.getcwd())
+
 import time
 
 import numpy as np
@@ -13,17 +17,11 @@ from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised
 from unimodals.robotics.encoders import (
     ProprioEncoder, ForceEncoder, ImageEncoder, DepthEncoder, ActionEncoder,
 )
-from unimodals.robotics.decoders import Decoder
-from utils import (
-    kl_normal,
-    realEPE,
-    compute_accuracy,
-    flow2rgb,
-    set_seeds,
-    augment_val,
-)
+from unimodals.robotics.decoders import ContactDecoder
+from training_structures.Simple_Late_Fusion import train, test
+from robotics_utils import set_seeds
 
-from datasets.robotics.get_data import get_data
+from datasets.robotics.data_loader import get_data
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
@@ -44,9 +42,9 @@ class selfsupervised:
 
         self.encoders = [
             ImageEncoder(configs['zdim'], alpha=configs['vision']),
-            DepthEncoder(configs['zdim'], alpha=configs['depth']),
-            ProprioEncoder(configs['zdim'], alpha=configs['proprio']),
             ForceEncoder(configs['zdim'], alpha=configs['force']),
+            ProprioEncoder(configs['zdim'], alpha=configs['proprio']),
+            DepthEncoder(configs['zdim'], alpha=configs['depth']),
             ActionEncoder(configs['action_dim']),
         ]
         self.fusion = SensorFusionSelfSupervised(
@@ -55,17 +53,12 @@ class selfsupervised:
             deterministic=configs["deterministic"],
             z_dim=configs["zdim"],
         ).to(self.device)
-        self.head = Decoder(deterministic=configs["deterministic"])
+        self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"])
 
         self.optimtype = optim.Adam
 
         # losses
-        self.loss_ee_pos = nn.MSELoss()
         self.loss_contact_next = nn.BCEWithLogitsLoss()
-        self.loss_optical_flow_mask = nn.BCEWithLogitsLoss()
-        self.loss_reward_prediction = nn.MSELoss()
-        self.loss_is_paired = nn.BCEWithLogitsLoss()
-        self.loss_dynamics = nn.MSELoss()
 
         self.train_loader, self.val_loader = get_data(self.device, self.configs)
 
@@ -73,9 +66,11 @@ class selfsupervised:
         train(self.encoders, self.fusion, self.head,
               self.train_loader, self.val_loader,
               self.configs['max_epoch'],
-              optimtype=self.optimtype)
+              optimtype=self.optimtype,
+              lr=self.configs['lr'],
+              criterion=self.loss_contact_next)
 
-with open('training_default.yaml') as f:
+with open('examples/robotics/training_default.yaml') as f:
     configs = yaml.load(f)
 
 selfsupervised(configs).train()

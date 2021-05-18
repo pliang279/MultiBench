@@ -1,6 +1,6 @@
 import torch.nn as nn
-from models_utils import init_weights
-from layers import CausalConv1D, Flatten, conv2d
+from .models_utils import filter_depth, init_weights, rescaleImage
+from .layers import CausalConv1D, Flatten, conv2d
 
 
 class ProprioEncoder(nn.Module):
@@ -26,7 +26,7 @@ class ProprioEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, proprio):
+    def forward(self, proprio, training=False):
         return self.proprio_encoder(self.alpha * proprio).unsqueeze(2)
 
 
@@ -55,7 +55,7 @@ class ForceEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, force):
+    def forward(self, force, training=False):
         return self.frc_encoder(self.alpha * force)
 
 
@@ -66,6 +66,7 @@ class ImageEncoder(nn.Module):
         """
         super().__init__()
         self.z_dim = z_dim
+        self.alpha = alpha
 
         self.img_conv1 = conv2d(3, 16, kernel_size=7, stride=2)
         self.img_conv2 = conv2d(16, 32, kernel_size=5, stride=2)
@@ -79,7 +80,9 @@ class ImageEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, image):
+    def forward(self, vis_in, training=False):
+        image = rescaleImage(vis_in)
+
         # image encoding layers
         out_img_conv1 = self.img_conv1(self.alpha * image)
         out_img_conv2 = self.img_conv2(out_img_conv1)
@@ -126,7 +129,9 @@ class DepthEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, depth):
+    def forward(self, depth_in, training=False):
+        depth = filter_depth(depth_in)
+
         # depth encoding layers
         out_depth_conv1 = self.depth_conv1(self.alpha * depth)
         out_depth_conv2 = self.depth_conv2(out_depth_conv1)
@@ -164,7 +169,7 @@ class ActionEncoder(nn.Module):
             nn.LeakyReLU(0.1, inplace=True),
         )
 
-    def forward(self, action):
+    def forward(self, action, training=False):
         if action is None:
             return None
         return self.action_encoder(action)

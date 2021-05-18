@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
-from models_utils import init_weights
-from layers import (
+from .models_utils import init_weights
+from .layers import (
     conv2d,
     predict_flow,
     deconv,
@@ -130,54 +130,22 @@ class EeDeltaDecoder(nn.Module):
     def forward(self, mm_act_feat):
         return self.ee_delta_decoder(mm_act_feat)
 
-class Decoder(nn.Module):
-    def __init__(self, deterministic):
+class ContactDecoder(nn.Module):
+    def __init__(self, z_dim, deterministic):
         '''
         Decodes everything
         '''
         super().__init__()
 
         self.deterministic = deterministic
+        self.contact_fc = nn.Sequential(nn.Linear(z_dim, 1))
 
-    def forward(self, input):
+    def forward(self, input, training=False):
         if self.deterministic:
             z, mm_act_feat, tiled_feat, img_out_convs = input
         else:
             z, mm_act_feat, tiled_feat, img_out_convs, mu_z, var_z, mu_prior, var_prior = input
 
-        # -------------------------------------#
-        # Pairing / Contact / EE Delta Decoder #
-        # -------------------------------------#
-        pair_out = self.pair_fc(z)
         contact_out = self.contact_fc(mm_act_feat)
-        ee_delta_out = self.ee_delta_decoder(mm_act_feat)
 
-        # -------------------------#
-        # Optical Flow Prediction #
-        # -------------------------#
-        optical_flow2, optical_flow2_mask = self.optical_flow_decoder(
-            tiled_feat, img_out_convs
-        )
-
-        if self.deterministic:
-            return (
-                pair_out,
-                contact_out,
-                optical_flow2,
-                optical_flow2_mask,
-                ee_delta_out,
-                z,
-            )
-        else:
-            return (
-                pair_out,
-                contact_out,
-                optical_flow2,
-                optical_flow2_mask,
-                ee_delta_out,
-                z,
-                mu_z,
-                var_z,
-                mu_prior,
-                var_prior,
-            )
+        return contact_out
