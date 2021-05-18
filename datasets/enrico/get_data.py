@@ -33,10 +33,14 @@ class EnricoDataset(Dataset):
         self.seq_len = seq_len
         csv_file = os.path.join(data_dir, "design_topics.csv")
         self.img_dir = os.path.join(data_dir, "screenshots")
+        self.wireframe_dir = os.path.join(data_dir, "wireframes")
         self.hierarchy_dir = os.path.join(data_dir, "hierarchies")
         with open(csv_file, "r") as f:
             reader = csv.DictReader(f)
             example_list = list(reader)
+
+        IGNORES = set(["50105", "50109"]) # the wireframe files are corrupted for these files
+        example_list = [e for e in example_list if e['screen_id'] not in IGNORES]
 
         self.example_list = example_list
 
@@ -113,8 +117,11 @@ class EnricoDataset(Dataset):
         example = self.example_list[self.keys[idx]]
         screenId = example['screen_id']
         # image modality
-        screenImg = Image.open(os.path.join(self.img_dir, screenId + ".jpg"))
+        screenImg = Image.open(os.path.join(self.img_dir, screenId + ".jpg")).convert("RGB")
         screenImg = self.img_transforms(screenImg)
+        # wireframe image modality
+        screenWireframeImg = Image.open(os.path.join(self.wireframe_dir, screenId + ".png")).convert("RGB")
+        screenWireframeImg = self.img_transforms(screenWireframeImg)
         # wireframe modalities
         treePath = os.path.join(self.hierarchy_dir, screenId + ".json")
         with open(treePath, "r", errors="ignore", encoding="utf-8") as f:
@@ -143,6 +150,8 @@ class EnricoDataset(Dataset):
         # return [screenImg, (screenWireframeBoundsPadded, padLen), (screenWireframeLabelsPadded, padLen), screenLabel]
         # return [screenImg, screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
         return [screenImg, screenLabel]
+        # return [screenWireframeImg, screenLabel]
+        # return [screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
 
 def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, return_class_weights=True):
     ds_train = EnricoDataset(data_dir, mode="train")
