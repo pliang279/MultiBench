@@ -12,6 +12,7 @@ from fusions.common_fusions import Stack
 from unimodals.common_models import LSTMWithLinear
 from datasets.stocks.get_data import get_dataloader
 from training_structures.gradient_blend import train, test
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 
 
 parser = argparse.ArgumentParser()
@@ -29,10 +30,17 @@ unimodal_models = [nn.Identity().cuda() for x in stocks]
 multimodal_classification_head = LSTMWithLinear(len(stocks), 128, 1).cuda()
 unimodal_classification_heads = [LSTMWithLinear(1, 128, 1).cuda() for x in stocks]
 fuse = Stack().cuda()
+allmodules = [*unimodal_models, multimodal_classification_head, *unimodal_classification_heads, fuse]
+
 training_structures.gradient_blend.criterion = nn.MSELoss()
 
-train(unimodal_models,  multimodal_classification_head,
-      unimodal_classification_heads, fuse, train_dataloader=train_loader, valid_dataloader=val_loader,
-      classification=False, gb_epoch=2, num_epoch=4, lr=0.001, optimtype=torch.optim.Adam)
+def trainprocess():
+    train(unimodal_models,  multimodal_classification_head,
+          unimodal_classification_heads, fuse, train_dataloader=train_loader, valid_dataloader=val_loader,
+          classification=False, gb_epoch=2, num_epoch=4, lr=0.001, optimtype=torch.optim.Adam)
+all_in_one_train(trainprocess, allmodules)
 
-test(torch.load('best.pt').cuda(), test_loader, classification=False)
+model = torch.load('best.pt').cuda()
+def testprocess():
+    test(model, test_loader, classification=False)
+all_in_one_test(testprocess, [model])
