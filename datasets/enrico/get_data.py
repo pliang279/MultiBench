@@ -149,8 +149,8 @@ class EnricoDataset(Dataset):
         # return a list where each index is a modality
         # return [screenImg, (screenWireframeBoundsPadded, padLen), (screenWireframeLabelsPadded, padLen), screenLabel]
         # return [screenImg, screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
-        return [screenImg, screenLabel]
-        # return [screenWireframeImg, screenLabel]
+        # return [screenImg, screenLabel]
+        return [screenImg, screenWireframeImg, screenLabel]
         # return [screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
 
 def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, return_class_weights=True):
@@ -189,8 +189,8 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
             weights3.append(w / sum(weights2))
         weights = weights3
 
-    # dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
-    dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
+    dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
+    # dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
     dl_val = DataLoader(ds_val, shuffle=False, num_workers=num_workers, batch_size=batch_size)
     # dl_val = DataLoader(ds_val, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
     dl_test = DataLoader(ds_test, shuffle=False, num_workers=num_workers, batch_size=batch_size)
