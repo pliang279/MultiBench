@@ -14,20 +14,24 @@ class Linear(torch.nn.Module):
 
 
 class MLP(torch.nn.Module):
-    def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1):
+    def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1,output_each_layer=False):
         super(MLP, self).__init__()
         self.fc = nn.Linear(indim,hiddim)
         self.fc2 = nn.Linear(hiddim,outdim)
         self.dropoutp = dropoutp
         self.dropout = dropout
+        self.output_each_layer = output_each_layer
+        self.lklu = nn.LeakyReLU(0.2)
     def forward(self, x, training=True):
         output = F.relu(self.fc(x))
         if self.dropout:
             output = F.dropout(output,p=self.dropout,training=training)
-        output = self.fc2(output)
+        output2 = self.fc2(output)
         if self.dropout:
-            output = F.dropout(output,p=self.dropoutp,training=training)
-        return output
+            output2 = F.dropout(output,p=self.dropoutp,training=training)
+        if self.output_each_layer:
+            return [0,x,output,self.lklu(output2)]
+        return output2
 
 
 class GRU(torch.nn.Module):
@@ -52,7 +56,7 @@ class GRU(torch.nn.Module):
 
 
 class GRUWithLinear(torch.nn.Module):
-    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False,output_each_layer=False):
         super(GRUWithLinear,self).__init__()
         self.gru=nn.GRU(indim,hiddim)
         self.linear = nn.Linear(hiddim,outdim)
@@ -60,12 +64,60 @@ class GRUWithLinear(torch.nn.Module):
         self.dropout=dropout
         self.flatten=flatten
         self.has_padding=has_padding
+        self.output_each_layer = output_each_layer
+        self.lklu = nn.LeakyReLU(0.2)
     def forward(self,x,training=True):
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
             hidden=self.gru(x)[1][-1]
         else:
             hidden=self.gru(x)[0]
+        if self.dropout:
+            hidden = F.dropout(hidden,p=self.dropoutp,training=training)
+        out = self.linear(hidden)
+        if self.flatten:
+            out=torch.flatten(out,1)
+        if self.output_each_layer:
+            return [0,torch.flatten(x,1),torch.flatten(hidden,1),self.lklu(out)]
+        return out
+
+
+class LSTM(torch.nn.Module):
+    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+        super(LSTM,self).__init__()
+        self.lstm=nn.LSTM(indim,hiddim,batch_first=True)
+        self.dropoutp=dropoutp
+        self.dropout=dropout
+        self.flatten=flatten
+        self.has_padding=has_padding
+    def forward(self,x,training=True):
+        if self.has_padding:
+            x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
+            out=self.lstm(x)[1][-1]
+        else:
+            out=self.lstm(x)[0]
+        if self.dropout:
+            out = F.dropout(out,p=self.dropoutp,training=training)
+        if self.flatten:
+            out=torch.flatten(out,1)
+        return out
+
+
+class LSTMWithLinear(torch.nn.Module):
+    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+        super(LSTMWithLinear,self).__init__()
+        self.lstm = nn.LSTM(indim, hiddim, batch_first=True)
+        self.linear = nn.Linear(hiddim, outdim)
+        self.dropoutp=dropoutp
+        self.dropout=dropout
+        self.flatten=flatten
+        self.has_padding=has_padding
+    def forward(self,x,training=True):
+        if self.has_padding:
+            x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
+            hidden=self.lstm(x)[1][-1]
+        else:
+            hidden=self.lstm(x)[0]
         if self.dropout:
             hidden = F.dropout(hidden,p=self.dropoutp,training=training)
         out = self.linear(hidden)
@@ -116,11 +168,49 @@ class LeNet(nn.Module):
 
 
 class VGG16(nn.Module):
-    def __init__(self, hiddim):
+    def __init__(self, hiddim, pretrained=True):
         super(VGG16, self).__init__()
         self.hiddim = hiddim
-        self.model = tmodels.vgg16_bn()
+        self.model = tmodels.vgg16_bn(pretrained=pretrained)
         self.model.classifier[6] = nn.Linear(4096, hiddim)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
+class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers in classifier
+    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
+        super(VGG16Slim, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg16_bn(pretrained=pretrained)
+        self.model.classifier = nn.Linear(512 * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
+class VGG11Slim(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
+    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
+        super(VGG11Slim, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg11_bn(pretrained=pretrained)
+        self.model.classifier = nn.Linear(512 * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
 
     def forward(self, x, training=False):
         return self.model(x)
@@ -231,7 +321,7 @@ class Constant(nn.Module):
 # deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
 # deep sets: https://arxiv.org/abs/1703.06114
 class DAN(torch.nn.Module):
-    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=1, has_padding=False):
+    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=3, has_padding=False):
         super(DAN, self).__init__()
         self.dropoutp = dropoutp
         self.dropout = dropout
