@@ -5,7 +5,7 @@ import pandas_datareader
 import torch
 from torch.utils.data import DataLoader
 
-def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shuffle=True, start_date=datetime.datetime(2000, 6, 1), end_date=datetime.datetime(2021, 2, 28), window_size=500, val_split=3200, test_split=3700, modality_first=False, cuda=True):
+def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shuffle=True, start_date=datetime.datetime(2000, 6, 1), end_date=datetime.datetime(2021, 2, 28), window_size=500, val_split=3200, test_split=3700, modality_first=True, cuda=True):
     stocks = np.array(stocks)
 
     def fetch_finance_data(symbol, start, end):
