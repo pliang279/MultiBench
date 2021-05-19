@@ -110,9 +110,9 @@ def train(
                     loss_cl=criterion(out[0], j[-1].cuda())
                 loss_contrast = contrast_criterion(out[1], j[-1].cuda())
                 loss_self = 0
-                for i in range(len(j[:-1])):
-                    loss_self += ss_criterion(out[2][i], j[i].float().cuda(), \
-                        torch.ones(out[2][i].size(0)).cuda())
+                #for i in range(len(j[:-1])):
+                    #loss_self += ss_criterion(out[2][i], j[i].float().cuda(), \
+                    #    torch.ones(out[2][i].size(0)).cuda())
                 loss = loss_cl+0.1*loss_contrast+0.1*loss_self
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
