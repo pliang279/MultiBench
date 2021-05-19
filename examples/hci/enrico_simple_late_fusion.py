@@ -20,7 +20,7 @@ head = Linear(32, 20)
 
 fusion=Concat().cuda()
 
-train(encoders,fusion,head,traindata,validdata,20,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
+train(encoders,fusion,head,traindata,validdata,20,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0,criterion=criterion)
 
 print("Testing:")
 model=torch.load('best.pt').cuda()
