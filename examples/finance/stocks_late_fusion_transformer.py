@@ -11,7 +11,8 @@ from torch import nn
 from fusions.common_fusions import ConcatWithLinear
 from fusions.finance.late_fusion import LateFusionTransformer
 from datasets.stocks.get_data import get_dataloader
-from training_structures.unimodal import train, test
+from training_structures.Simple_Late_Fusion import train, test
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 
 
 parser = argparse.ArgumentParser()
@@ -29,8 +30,14 @@ n_modalities = train_loader.dataset[0][0].size(0)
 encoders = [LateFusionTransformer(embed_dim=9).cuda() for _ in range(n_modalities)]
 fusion = ConcatWithLinear(n_modalities * 9).cuda()
 head = nn.Identity().cuda()
+allmodules = [*encoders, fusion, head]
 
-train(encoders, fusion, head, train_loader, val_loader, total_epochs=4,
-      task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss())
+def trainprocess():
+    train(encoders, fusion, head, train_loader, val_loader, total_epochs=4,
+          task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss())
+all_in_one_train(trainprocess, allmodules)
 
-test(torch.load('best.pt').cuda(), test_loader, task='regression')
+model = torch.load('best.pt').cuda()
+def testprocess():
+    test(model, test_loader, task='regression')
+all_in_one_test(testprocess, [model])
