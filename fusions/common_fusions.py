@@ -15,6 +15,14 @@ class Concat(nn.Module):
         return torch.cat(flattened, dim=1)
 
 
+class ConcatEarly(torch.nn.Module):
+    def __init__(self):
+        super(ConcatEarly, self).__init__()
+
+    def forward(self, modalities, training=False):
+        return torch.cat(modalities, dim=2)
+
+
 class Stack(nn.Module):
     def __init__(self):
         super().__init__()

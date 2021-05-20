@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-from torch.nn.utils.rnn import pack_padded_sequence
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torchvision import models as tmodels
 
 
@@ -100,6 +100,40 @@ class LSTM(torch.nn.Module):
             out = F.dropout(out,p=self.dropoutp,training=training)
         if self.flatten:
             out=torch.flatten(out,1)
+        return out
+
+
+class TwoLayersLSTM(torch.nn.Module):
+    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False,
+                 LayNorm=True, isBidirectional=True):
+        super(TwoLayersLSTM, self).__init__()
+        self.lstm_0 = nn.LSTM(indim, hiddim, batch_first=True, bidirectional=isBidirectional)
+        self.lstm_1 = nn.LSTM(2*indim, hiddim, batch_first=True, bidirectional=isBidirectional)
+        self.layer_norm = nn.LayerNorm(2*hiddim)
+        self.dropoutp = dropoutp
+        self.dropout = dropout
+        self.flatten = flatten
+        self.has_padding = has_padding
+        self.LayerNorm = LayNorm
+
+    def forward(self, x, training=True):
+        if self.has_padding:
+            x = pack_padded_sequence(x[0], x[1], batch_first=True, enforce_sorted=False)
+            out = self.lstm(x)[1][-1]
+
+            packed_sequence = pack_padded_sequence(x[0], x[1])
+            packed_h1, (final_h1, _) = self.lstm_0(packed_sequence)
+            padded_h1, _ = pad_packed_sequence(packed_h1)
+            normed_h1 = self.layer_norm(padded_h1)
+            packed_normed_h1 = pack_padded_sequence(normed_h1, x[1])
+            _, (out, _) = self.lstm_1(packed_normed_h1)
+        else:
+            out = self.lstm_0(x)[0]
+            out = self.lstm_1(out)[0]
+        if self.dropout:
+            out = F.dropout(out, p=self.dropoutp, training=training)
+        if self.flatten:
+            out = torch.flatten(out, 1)
         return out
 
 
