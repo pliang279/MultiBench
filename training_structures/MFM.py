@@ -90,11 +90,11 @@ def test_MFM(model,test_dataloader,auprc=False):
     with torch.no_grad():
       _,outs = model(xes,training=False)
       a=nn.Softmax()(outs)
-    for ii in range(batchsize):
+    for ii in range(len(outs)):
       total += 1
       if outs[ii].tolist().index(max(outs[ii]))==y_batch[ii]:
         correct += 1
-      pts.append([outs[ii][1],y_batch[ii]])
+      pts.append([a[ii][1],y_batch[ii]])
   print((float(correct)/total))
   if auprc:
     print(AUPRC(pts))
