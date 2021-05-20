@@ -4,20 +4,20 @@ sys.path.append(os.getcwd())
 
 import torch
 
-from training_structures.Simple_Late_Fusion import train, test
+from training_structures.unimodal import train, test
 from fusions.common_fusions import Concat
 from datasets.affect.get_data import get_dataloader
 from unimodals.common_models import GRU, MLP
 
-#Support mosi/mosi_unaligned/mosei/mosei_unaligned/iemocap/iemocap_unaligned
+# Support mosi/mosi_unaligned/mosei/mosei_unaligned/iemocap/iemocap_unaligned
 traindata, validdata, testdata = get_dataloader('../affect/processed/mosi_data.pkl')
 
-#mosi
+# mosi
 encoders=GRU(20,50,dropout=True,has_padding=True).cuda()
-#encoders=GRU(5,15,dropout=True,has_padding=True).cuda()
-#encoders=GRU(300,600,dropout=True,has_padding=True).cuda()
+# encoders=GRU(5,15,dropout=True,has_padding=True).cuda()
+# encoders=GRU(300,600,dropout=True,has_padding=True).cuda()
 head=MLP(50,50,1).cuda()
-#mosei/iemocap
+# mosei/iemocap
 '''
 encoders=GRU(35,70,dropout=True,has_padding=True).cuda()
 encoders=GRU(74,150,dropout=True,has_padding=True).cuda()
@@ -25,12 +25,12 @@ encoders=GRU(300,600,dropout=True,has_padding=True).cuda()
 head=MLP(820,400,1).cuda()
 '''
 
-#Support simple late_fusion and late_fusion with removing bias
-#Simply change regularization=True
-#mosi/mosei
-train(encoders,head,traindata,validdata,1000,True,True,task="regression",\
-    optimtype=torch.optim.AdamW,lr=1e-4,weight_decay=0.01,criterion=torch.nn.L1Loss(),modalnum=0)
-#iemocap
+# Support simple late_fusion and late_fusion with removing bias
+# Simply change regularization=True
+# mosi/mosei
+train(encoders, head, traindata, validdata, 1000, True, True, task="regression",\
+    optimtype=torch.optim.AdamW, lr=1e-4, weight_decay=0.01, criterion=torch.nn.L1Loss(), modalnum=0)
+# iemocap
 '''
 train(encoders,head,traindata,validdata,1000,True,True,\
     optimtype=torch.optim.AdamW,lr=1e-4,weight_decay=0.01,modalnum=0)
