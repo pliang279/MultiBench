@@ -168,21 +168,49 @@ class LeNet(nn.Module):
 
 
 class VGG16(nn.Module):
-    def __init__(self, hiddim):
+    def __init__(self, hiddim, pretrained=True):
         super(VGG16, self).__init__()
         self.hiddim = hiddim
-        self.model = tmodels.vgg16_bn()
+        self.model = tmodels.vgg16_bn(pretrained=pretrained)
         self.model.classifier[6] = nn.Linear(4096, hiddim)
 
     def forward(self, x, training=False):
         return self.model(x)
 
 class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers in classifier
-    def __init__(self, hiddim):
+    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
         super(VGG16Slim, self).__init__()
         self.hiddim = hiddim
-        self.model = tmodels.vgg16_bn()
+        self.model = tmodels.vgg16_bn(pretrained=pretrained)
         self.model.classifier = nn.Linear(512 * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
+class VGG11Slim(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
+    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
+        super(VGG11Slim, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg11_bn(pretrained=pretrained)
+        self.model.classifier = nn.Linear(512 * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
 
     def forward(self, x, training=False):
         return self.model(x)
@@ -293,7 +321,7 @@ class Constant(nn.Module):
 # deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
 # deep sets: https://arxiv.org/abs/1703.06114
 class DAN(torch.nn.Module):
-    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=1, has_padding=False):
+    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=3, has_padding=False):
         super(DAN, self).__init__()
         self.dropoutp = dropoutp
         self.dropout = dropout

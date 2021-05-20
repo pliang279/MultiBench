@@ -6,23 +6,23 @@ import torch.optim as optim
 import os
 from tqdm import tqdm
 
-from utils import (
-    kl_normal,
-    realEPE,
-    compute_accuracy,
-    flow2rgb,
-    set_seeds,
-    augment_val,
-)
+from .utils import augment_val
 
-from dataloaders import ProcessForce, ToTensor
-from dataloaders import MultimodalManipulationDataset
+from datasets.robotics import ProcessForce, ToTensor
+from datasets.robotics import MultimodalManipulationDataset
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
 
 def combine_modalities(data):
-    return [data['input'], data['depth'], data['proprio'], data['force'], data['action']]
+    return [
+        data['image'],
+        data['force'],
+        data['proprio'],
+        data['depth'].transpose(0, 2).transpose(1, 2),
+        data['action'],
+        data['contact_next'],
+    ]
 
 def get_data(device, configs):
     filename_list = []

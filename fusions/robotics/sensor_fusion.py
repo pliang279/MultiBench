@@ -1,12 +1,10 @@
 import torch
 import torch.nn as nn
-from models_utils import (
+from .models_utils import (
     duplicate,
     gaussian_parameters,
-    rescaleImage,
     product_of_experts,
     sample_gaussian,
-    filter_depth,
 )
 
 
@@ -165,7 +163,7 @@ class SensorFusionSelfSupervised(SensorFusion):
 
         self.deterministic = deterministic
 
-    def forward(self, input):
+    def forward(self, input, training=False):
         img_encoded, frc_encoded, proprio_encoded, depth_encoded, action_encoded = input
 
         if self.encoder_bool:
