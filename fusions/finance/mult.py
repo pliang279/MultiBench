@@ -73,7 +73,7 @@ class MULTModel(nn.Module):
                                   embed_dropout=self.embed_dropout,
                                   attn_mask=self.attn_mask)
 
-    def forward(self, x):
+    def forward(self, x, training=False):
         """
         x: [batch_size, seq_len, n_modalities]
         """
