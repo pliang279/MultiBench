@@ -95,6 +95,8 @@ class LSTM(torch.nn.Module):
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
             out=self.lstm(x)[1][0]
         else:
+            if len(x.size()) == 2:
+                x = x.unsqueeze(2)
             out=self.lstm(x)[1][0]
         out = out.permute([1, 2, 0])
         out = out.reshape([out.size()[0], -1])
@@ -153,6 +155,8 @@ class LSTMWithLinear(torch.nn.Module):
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
             hidden=self.lstm(x)[1][0]
         else:
+            if len(x.size()) == 2:
+                x = x.unsqueeze(2)
             hidden=self.lstm(x)[1][0]
         hidden = hidden.permute([1, 2, 0])
         hidden = hidden.reshape([hidden.size()[0], -1])
