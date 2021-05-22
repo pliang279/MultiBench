@@ -352,6 +352,14 @@ class Constant(nn.Module):
         return torch.zeros(self.out_dim).cuda()
 
 
+class Identity(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x, training=False):
+        return x
+
+
 # deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
 # deep sets: https://arxiv.org/abs/1703.06114
 class DAN(torch.nn.Module):

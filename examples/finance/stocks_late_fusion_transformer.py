@@ -8,6 +8,7 @@ import pmdarima
 import torch
 import torch.nn.functional as F
 from torch import nn
+from unimodals.common_models import Identity
 from fusions.common_fusions import ConcatWithLinear
 from fusions.finance.late_fusion import LateFusionTransformer
 from datasets.stocks.get_data import get_dataloader
@@ -29,7 +30,7 @@ train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.tar
 n_modalities = train_loader.dataset[0][0].size(0)
 encoders = [LateFusionTransformer(embed_dim=9).cuda() for _ in range(n_modalities)]
 fusion = ConcatWithLinear(n_modalities * 9).cuda()
-head = nn.Identity().cuda()
+head = Identity().cuda()
 allmodules = [*encoders, fusion, head]
 
 def trainprocess():
