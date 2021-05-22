@@ -26,7 +26,7 @@ print('Target: ' + args.target_stock)
 stocks = sorted(args.input_stocks.split(' '))
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock])
 
-n_modalities = train_loader.dataset[0][0].size(0)
+n_modalities = len(train_loader.dataset[0]) - 1
 encoders = [Identity().cuda()] * n_modalities
 fusion = Stack().cuda()
 head = LSTMWithLinear(n_modalities, 128, 1).cuda()
