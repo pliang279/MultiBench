@@ -39,5 +39,5 @@ all_in_one_train(trainprocess, allmodules)
 encoder = torch.load('encoder.pt').cuda()
 head = torch.load('head.pt').cuda()
 def testprocess():
-    test(encoder, head, test_loader, task='regression')
+    test(encoder, head, test_loader, task='regression', criterion=nn.MSELoss())
 all_in_one_test(testprocess, [encoder, head])
