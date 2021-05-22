@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 from torch import nn
-from modules.transformer import TransformerEncoder
+from .modules.transformer import TransformerEncoder
 
 class MULTModel(nn.Module):
     # https://github.com/yaohungt/Multimodal-Transformer
