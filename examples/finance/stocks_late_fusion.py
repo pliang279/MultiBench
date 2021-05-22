@@ -9,7 +9,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import ConcatWithLinear
-from unimodals.common_models import LSTM
+from unimodals.common_models import LSTM, Identity
 from datasets.stocks.get_data import get_dataloader
 from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
@@ -29,7 +29,7 @@ train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.tar
 n_modalities = train_loader.dataset[0][0].size(0)
 encoders = [LSTM(1, 16).cuda() for _ in range(n_modalities)]
 fusion = ConcatWithLinear(n_modalities * 16).cuda()
-head = nn.Identity().cuda()
+head = Identity().cuda()
 allmodules = [*encoders, fusion, head]
 
 def trainprocess():

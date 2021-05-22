@@ -8,6 +8,7 @@ import pmdarima
 import torch
 import torch.nn.functional as F
 from torch import nn
+from unimodals.common_models import Identity
 from fusions.finance.mult import MULTModel
 from datasets.stocks.get_data import get_dataloader
 from training_structures.unimodal import train, test
@@ -26,7 +27,7 @@ stocks = sorted(args.input_stocks.split(' '))
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], modality_first=False)
 
 model = MULTModel(train_loader.dataset[0][0].shape[1]).cuda()
-identity = nn.Identity()
+identity = Identity()
 allmodules = [model, identity]
 
 def trainprocess():
