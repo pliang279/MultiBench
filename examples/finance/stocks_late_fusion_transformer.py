@@ -29,7 +29,7 @@ train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.tar
 
 n_modalities = len(train_loader.dataset[0]) - 1
 encoders = [LateFusionTransformer(embed_dim=9).cuda() for _ in range(n_modalities)]
-fusion = ConcatWithLinear(n_modalities * 9).cuda()
+fusion = ConcatWithLinear(n_modalities * 9, 1).cuda()
 head = Identity().cuda()
 allmodules = [*encoders, fusion, head]
 

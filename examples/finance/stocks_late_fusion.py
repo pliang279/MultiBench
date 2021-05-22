@@ -28,7 +28,7 @@ train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.tar
 
 n_modalities = len(train_loader.dataset[0]) - 1
 encoders = [LSTM(1, 16).cuda() for _ in range(n_modalities)]
-fusion = ConcatWithLinear(n_modalities * 16).cuda()
+fusion = ConcatWithLinear(n_modalities * 16, 1).cuda()
 head = Identity().cuda()
 allmodules = [*encoders, fusion, head]
 
