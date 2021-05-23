@@ -202,4 +202,5 @@ def test(
             print("mse: "+str(testloss))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
+    return accuracy_score(true, pred)
 
