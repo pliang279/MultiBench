@@ -93,9 +93,13 @@ class LSTM(torch.nn.Module):
     def forward(self,x,training=True):
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
-            out=self.lstm(x)[1][-1]
+            out=self.lstm(x)[1][0]
         else:
-            out=self.lstm(x)[0]
+            if len(x.size()) == 2:
+                x = x.unsqueeze(2)
+            out=self.lstm(x)[1][0]
+        out = out.permute([1, 2, 0])
+        out = out.reshape([out.size()[0], -1])
         if self.dropout:
             out = F.dropout(out,p=self.dropoutp,training=training)
         if self.flatten:
@@ -149,9 +153,13 @@ class LSTMWithLinear(torch.nn.Module):
     def forward(self,x,training=True):
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
-            hidden=self.lstm(x)[1][-1]
+            hidden=self.lstm(x)[1][0]
         else:
-            hidden=self.lstm(x)[0]
+            if len(x.size()) == 2:
+                x = x.unsqueeze(2)
+            hidden=self.lstm(x)[1][0]
+        hidden = hidden.permute([1, 2, 0])
+        hidden = hidden.reshape([hidden.size()[0], -1])
         if self.dropout:
             hidden = F.dropout(hidden,p=self.dropoutp,training=training)
         out = self.linear(hidden)
@@ -350,6 +358,14 @@ class Constant(nn.Module):
         self.out_dim=out_dim
     def forward(self,x,training=False):
         return torch.zeros(self.out_dim).cuda()
+
+
+class Identity(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x, training=False):
+        return x
 
 
 # deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
