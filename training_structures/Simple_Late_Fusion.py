@@ -69,7 +69,9 @@ def train(
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss=criterion(out, j[-1].float().cuda())
                 else:
-                    loss=criterion(out, j[-1].cuda())
+                    if len(j[-1].size())>1:
+                        j[-1] = j[-1].squeeze()
+                    loss=criterion(out, j[-1].long().cuda())
             #print(loss)
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
@@ -100,9 +102,11 @@ def train(
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss=criterion(out, j[-1].float().cuda())
                 else:
-                    loss=criterion(out, j[-1].cuda())
+                    if len(j[-1].size())>1:
+                        j[-1] = j[-1].squeeze()
+                    loss=criterion(out, j[-1].long().cuda())
                 totalloss += loss*len(j[-1])
-                print(totalloss)
+                #print(totalloss)
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
                 elif task == "multilabel":

@@ -36,7 +36,7 @@ logging_folder: logging/
 
 
 # path to dataset hdf5 file'
-dataset: "datasets/robotics/triangle_real_data/"
+dataset: "/home/pliang/multibench/MultiBench-robotics/datasets/robotics/triangle_real_data/"
 
 val_ratio: 0.20
 cuda: True
