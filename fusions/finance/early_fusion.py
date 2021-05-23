@@ -13,7 +13,7 @@ class EarlyFusionTransformer(nn.Module):
         self.transformer = nn.TransformerEncoder(layer, num_layers=3)
         self.linear = nn.Linear(self.embed_dim, 1)
 
-    def forward(self, x):
+    def forward(self, x, training=False):
         x = self.conv(x.permute([0, 2, 1]))
         x = x.permute([2, 0, 1])
         x = self.transformer(x)[-1]
