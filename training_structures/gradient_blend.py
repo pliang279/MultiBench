@@ -314,5 +314,8 @@ def test(model, test_dataloader, auprc=False, classification=True):
             ((" acc: "+str(float(corrects)/total)) if classification else ''))
       if auprc:
         print("With AUPRC: "+str(calcAUPRC(auprclist)))
-    return float(corrects)/total
+    if classification:
+      return float(corrects)/total
+    else:
+      return (totalloss/total).item()
 

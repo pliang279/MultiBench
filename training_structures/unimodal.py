@@ -79,5 +79,8 @@ def test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classifi
         print("acc: "+str(float(correct)/totals))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
-    return float(correct)/totals
+    if task == 'classification':
+        return float(correct)/totals
+    else:
+        return (totalloss / totals).item()
 
