@@ -16,7 +16,8 @@ class MultimodalManipulationDataset(Dataset):
         training_type="selfsupervised",
         n_time_steps=1,
         action_dim=4,
-        pairing_tolerance=0.06
+        pairing_tolerance=0.06,
+        filedirprefix=""
     ):
         """
         Args:
@@ -24,6 +25,7 @@ class MultimodalManipulationDataset(Dataset):
             transform (callable, optional): Optional transform to be applied
                 on a sample.
         """
+        #self.dataset_path = [(filedirprefix + ff) for ff in filename_list]
         self.dataset_path = filename_list
         self.transform = transform
         self.episode_length = episode_length

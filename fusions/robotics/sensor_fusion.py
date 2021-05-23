@@ -200,3 +200,19 @@ class SensorFusionSelfSupervised(SensorFusion):
             return z, mm_act_feat, tiled_feat, img_out_convs
         else:
             return z, mm_act_feat, tiled_feat, img_out_convs, mu_z, var_z, mu_prior, var_prior
+
+class roboticsConcat(nn.Module):
+    def __init__(self,name=None):
+        super(roboticsConcat,self).__init__()
+        self.name=name
+    def forward(self,x,training=False):
+        #print(x[0][0].size())
+        #print(x[1].size())
+        #print(x[2].size())
+        #print(x[3][0].size())
+        #print(x[4].size())
+        if self.name=="image":
+            return torch.cat([x[0][0].squeeze(),x[1][0].squeeze(),x[2]],1)
+        if self.name=="simple":
+            return torch.cat([x[0].squeeze(),x[1]],1)
+        return torch.cat([x[0][0].squeeze(),x[1].squeeze(),x[2].squeeze(),x[3][0].squeeze(),x[4]],1)
