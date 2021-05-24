@@ -5,7 +5,7 @@ sys.path.append(os.getcwd())
 from training_structures.Simple_Late_Fusion import train, test
 from fusions.common_fusions import Concat
 from datasets.enrico.get_data import get_dataloader
-from unimodals.common_models import VGG16, VGG16Slim,DAN,Linear,MLP, VGG11Slim
+from unimodals.common_models import VGG16, VGG16Slim,DAN,Linear,MLP, VGG11Slim, VGG11Pruned
 
 import torch
 
@@ -14,13 +14,13 @@ traindata, validdata, testdata = dls
 criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights)).cuda()
 # encoders=[VGG16Slim(64).cuda(), DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
 # head = Linear(96, 20)
-encoders=[VGG11Slim(16, dropout=True, dropoutp=0.2).cuda(), VGG11Slim(16, dropout=True, dropoutp=0.2).cuda()]
+encoders=[VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).cuda(), VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).cuda()]
 # encoders = [DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
-head = Linear(32, 20)
+head = Linear(32, 20).cuda()
 
 fusion=Concat().cuda()
 
-train(encoders,fusion,head,traindata,validdata,20,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0,criterion=criterion)
+train(encoders,fusion,head,traindata,validdata,50,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
 
 print("Testing:")
 model=torch.load('best.pt').cuda()

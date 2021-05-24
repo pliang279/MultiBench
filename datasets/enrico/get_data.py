@@ -122,36 +122,9 @@ class EnricoDataset(Dataset):
         # wireframe image modality
         screenWireframeImg = Image.open(os.path.join(self.wireframe_dir, screenId + ".png")).convert("RGB")
         screenWireframeImg = self.img_transforms(screenWireframeImg)
-        # wireframe modalities
-        treePath = os.path.join(self.hierarchy_dir, screenId + ".json")
-        with open(treePath, "r", errors="ignore", encoding="utf-8") as f:
-            tree = json.load(f)
-        treeElements = []
-        add_screen_elements(tree, treeElements)
-        random.shuffle(treeElements)
-        elements = []
-        labels = []
-        for e in treeElements:
-            b, l = self.featurizeElement(e)
-            elements.append(torch.tensor(b))
-            labels.append(torch.tensor(l))
-        
-        screenWireframeBoundsPadded = torch.zeros(self.seq_len, 4)
-        screenWireframeLabelsPadded = torch.zeros(self.seq_len, len(self.ui_types))
-        if len(elements) > 0:
-            screenWireframeBounds = torch.stack(elements, dim=0)
-            padLen = min(self.seq_len, screenWireframeBounds.shape[0])
-            screenWireframeBoundsPadded[:padLen, :] = screenWireframeBounds[:padLen, :]
-            screenWireframeLabels = torch.stack(labels, dim=0)
-            screenWireframeLabelsPadded[:padLen, :] = screenWireframeLabels[:padLen, :]
         # label
         screenLabel = self.topic2Idx[example['topic']]
-        # return a list where each index is a modality
-        # return [screenImg, (screenWireframeBoundsPadded, padLen), (screenWireframeLabelsPadded, padLen), screenLabel]
-        # return [screenImg, screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
-        # return [screenImg, screenLabel]
         return [screenImg, screenWireframeImg, screenLabel]
-        # return [screenWireframeBoundsPadded, screenWireframeLabelsPadded, screenLabel]
 
 def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, return_class_weights=True):
     ds_train = EnricoDataset(data_dir, mode="train")
@@ -189,8 +162,8 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
             weights3.append(w / sum(weights2))
         weights = weights3
 
-    # dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
-    dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
+    dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
+    # dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
     dl_val = DataLoader(ds_val, shuffle=False, num_workers=num_workers, batch_size=batch_size)
     # dl_val = DataLoader(ds_val, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
     dl_test = DataLoader(ds_test, shuffle=False, num_workers=num_workers, batch_size=batch_size)
