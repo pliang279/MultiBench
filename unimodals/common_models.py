@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-from torch.nn.utils.rnn import pack_padded_sequence
+from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torchvision import models as tmodels
 
 
@@ -11,6 +11,18 @@ class Linear(torch.nn.Module):
         self.fc = nn.Linear(indim,outdim)
     def forward(self,x,training=False):
         return self.fc(x)
+
+
+class Squeeze(torch.nn.Module):
+    def __init__(self, dim=None):
+        super().__init__()
+        self.dim = dim
+
+    def forward(self, x, training=False):
+        if self.dim is None:
+            return torch.squeeze(x)
+        else:
+            return torch.squeeze(x, self.dim)
 
 
 class MLP(torch.nn.Module):
@@ -93,13 +105,51 @@ class LSTM(torch.nn.Module):
     def forward(self,x,training=True):
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
-            out=self.lstm(x)[1][-1]
+            out=self.lstm(x)[1][0]
         else:
-            out=self.lstm(x)[0]
+            if len(x.size()) == 2:
+                x = x.unsqueeze(2)
+            out=self.lstm(x)[1][0]
+        out = out.permute([1, 2, 0])
+        out = out.reshape([out.size()[0], -1])
         if self.dropout:
             out = F.dropout(out,p=self.dropoutp,training=training)
         if self.flatten:
             out=torch.flatten(out,1)
+        return out
+
+
+class TwoLayersLSTM(torch.nn.Module):
+    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False,
+                 LayNorm=True, isBidirectional=True):
+        super(TwoLayersLSTM, self).__init__()
+        self.lstm_0 = nn.LSTM(indim, hiddim, batch_first=True, bidirectional=isBidirectional)
+        self.lstm_1 = nn.LSTM(2*indim, hiddim, batch_first=True, bidirectional=isBidirectional)
+        self.layer_norm = nn.LayerNorm(2*hiddim)
+        self.dropoutp = dropoutp
+        self.dropout = dropout
+        self.flatten = flatten
+        self.has_padding = has_padding
+        self.LayerNorm = LayNorm
+
+    def forward(self, x, training=True):
+        if self.has_padding:
+            x = pack_padded_sequence(x[0], x[1], batch_first=True, enforce_sorted=False)
+            out = self.lstm(x)[1][-1]
+
+            packed_sequence = pack_padded_sequence(x[0], x[1])
+            packed_h1, (final_h1, _) = self.lstm_0(packed_sequence)
+            padded_h1, _ = pad_packed_sequence(packed_h1)
+            normed_h1 = self.layer_norm(padded_h1)
+            packed_normed_h1 = pack_padded_sequence(normed_h1, x[1])
+            _, (out, _) = self.lstm_1(packed_normed_h1)
+        else:
+            out = self.lstm_0(x)[0]
+            out = self.lstm_1(out)[0]
+        if self.dropout:
+            out = F.dropout(out, p=self.dropoutp, training=training)
+        if self.flatten:
+            out = torch.flatten(out, 1)
         return out
 
 
@@ -115,9 +165,13 @@ class LSTMWithLinear(torch.nn.Module):
     def forward(self,x,training=True):
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
-            hidden=self.lstm(x)[1][-1]
+            hidden=self.lstm(x)[1][0]
         else:
-            hidden=self.lstm(x)[0]
+            if len(x.size()) == 2:
+                x = x.unsqueeze(2)
+            hidden=self.lstm(x)[1][0]
+        hidden = hidden.permute([1, 2, 0])
+        hidden = hidden.reshape([hidden.size()[0], -1])
         if self.dropout:
             hidden = F.dropout(hidden,p=self.dropoutp,training=training)
         out = self.linear(hidden)
@@ -376,6 +430,14 @@ class Constant(nn.Module):
         self.out_dim=out_dim
     def forward(self,x,training=False):
         return torch.zeros(self.out_dim).cuda()
+
+
+class Identity(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x, training=False):
+        return x
 
 
 # deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf

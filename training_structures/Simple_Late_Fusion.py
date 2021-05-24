@@ -102,6 +102,7 @@ def train(
                 else:
                     loss=criterion(out, j[-1].cuda())
                 totalloss += loss*len(j[-1])
+                print(totalloss)
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
                 elif task == "multilabel":
@@ -202,4 +203,5 @@ def test(
             print("mse: "+str(testloss))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
+    return accuracy_score(true, pred)
 

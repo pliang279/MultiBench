@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 from torch import nn
-from modules.transformer import TransformerEncoder
+from .modules.transformer import TransformerEncoder
 
 class MULTModel(nn.Module):
     # https://github.com/yaohungt/Multimodal-Transformer
@@ -73,7 +73,7 @@ class MULTModel(nn.Module):
                                   embed_dropout=self.embed_dropout,
                                   attn_mask=self.attn_mask)
 
-    def forward(self, x):
+    def forward(self, x, training=False):
         """
         x: [batch_size, seq_len, n_modalities]
         """

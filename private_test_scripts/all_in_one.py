@@ -24,3 +24,4 @@ def all_in_one_test(testprocess,testmodules):
     testend = time.time()
     print("Inference Time: "+str(testend-teststart))
     print("Inference Params: "+str(getallparams(testmodules)))
+    
