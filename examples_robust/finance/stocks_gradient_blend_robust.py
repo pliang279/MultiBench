@@ -13,7 +13,7 @@ from unimodals.common_models import LSTMWithLinear
 sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 from get_data_robust import get_dataloader
 from training_structures.gradient_blend import train, test
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test_robust
+from robustness.all_in_one import stocks_train, stocks_test
 
 
 parser = argparse.ArgumentParser()
@@ -35,20 +35,12 @@ allmodules = [*unimodal_models, multimodal_classification_head, *unimodal_classi
 
 training_structures.gradient_blend.criterion = nn.MSELoss()
 
-filename = 'stocks_gradient_blend_best.pt'
-def trainprocess():
-    train(unimodal_models,  multimodal_classification_head,
-          unimodal_classification_heads, fuse, train_dataloader=train_loader, valid_dataloader=val_loader,
-          classification=False, gb_epoch=2, num_epoch=4, lr=0.001, optimtype=torch.optim.Adam, savedir=filename)
-all_in_one_train(trainprocess, allmodules)
+num_training = 5
+def trainprocess(filename):
+    train(unimodal_models,  multimodal_classification_head, unimodal_classification_heads, fuse, train_dataloader=train_loader, valid_dataloader=val_loader, classification=False, gb_epoch=2, num_epoch=4, lr=0.001, optimtype=torch.optim.Adam, savedir=filename)
+filenames = stocks_train(num_training, trainprocess, 'stocks_gradient_blend_best')
 
-model = torch.load(filename).cuda()
-def testprocess(robust_test_loader):
-    return test(model, robust_test_loader, classification=False)
-acc = []
-print("Robustness testing:")
-for noise_level in range(len(test_loader)):
-    print("Noise level {}: ".format(noise_level/10))
-    acc.append(all_in_one_test_robust(testprocess, [model], test_loader[noise_level]))
+def testprocess(model, noise_level):
+    return test(model, test_loader[noise_level], classification=False)
 
-print("Accuracy of different noise levels:", acc)
+stocks_test(num_training, filenames, len(test_loader), testprocess)
