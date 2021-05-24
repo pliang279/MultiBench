@@ -3,7 +3,7 @@ import torch
 from torch import nn
 import copy
 import random
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 
 criterion = nn.CrossEntropyLoss()
 delta = False
@@ -188,8 +188,13 @@ def train(unimodal_models,  multimodal_classification_head,
   optim = optimtype(params, lr=lr, weight_decay=weight_decay)
   train_datas = train_dataloader.dataset
   splitloc = int(len(train_datas)*v_rate)
-  train_data = train_datas[splitloc:]
-  v_data = train_datas[0:splitloc]
+  inds = list(range(len(train_datas)))
+  train_inds = inds[splitloc:]
+  v_inds = inds[0:splitloc]
+  # train_data = train_datas[splitloc:]
+  # v_data = train_datas[0:splitloc]
+  train_data = Subset(train_datas, train_inds)
+  v_data = Subset(train_datas, v_inds)
   train_dataloader = DataLoader(
       train_data, shuffle=True, num_workers=8, batch_size=train_dataloader.batch_size)
   tv_dataloader = DataLoader(
