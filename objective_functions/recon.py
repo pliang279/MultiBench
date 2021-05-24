@@ -64,8 +64,8 @@ def elbo_loss(modal_loss_funcs,weights,annealing=1.0):
         #print(recons[i])
         totalloss += weights[i]*modal_loss_funcs[i](recons[i],origs[i])
         #print(totalloss)
-        if math.isnan(torch.sum(totalloss).item()):
-            exit(0)
+        #if math.isnan(torch.sum(totalloss).item()):
+            #exit(0)
     return torch.mean(totalloss+annealing*kld)
   return actualfunc
 

@@ -8,9 +8,11 @@ import pmdarima
 import torch
 import torch.nn.functional as F
 from torch import nn
+from unimodals.common_models import Identity
 from fusions.finance.mult import MULTModel
 from datasets.stocks.get_data import get_dataloader
 from training_structures.unimodal import train, test
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 
 
 parser = argparse.ArgumentParser()
@@ -24,8 +26,18 @@ print('Target: ' + args.target_stock)
 stocks = sorted(args.input_stocks.split(' '))
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], modality_first=False)
 
-train(MULTModel(train_loader.dataset[0][0].shape[1]).cuda(), nn.Identity(),
-      train_loader, val_loader, total_epochs=4, task='regression',
-      optimtype=torch.optim.Adam, criterion=nn.MSELoss())
+model = MULTModel(train_loader.dataset[0][0].shape[1]).cuda()
+identity = Identity()
+allmodules = [model, identity]
 
-test(torch.load('encoder.pt').cuda(), torch.load('head.pt').cuda(), test_loader, task='regression')
+def trainprocess():
+    train(model, identity,
+          train_loader, val_loader, total_epochs=4, task='regression',
+          optimtype=torch.optim.Adam, criterion=nn.MSELoss())
+all_in_one_train(trainprocess, allmodules)
+
+encoder = torch.load('encoder.pt').cuda()
+head = torch.load('head.pt').cuda()
+def testprocess():
+    test(encoder, head, test_loader, task='regression', criterion=nn.MSELoss())
+all_in_one_test(testprocess, [encoder, head])
