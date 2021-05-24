@@ -36,7 +36,7 @@ def train(
     criterion=nn.CrossEntropyLoss(),regularization=False,auprc=False,save='best.pt'):
     
     model = MMDL(encoders,fusion,head,is_packed).cuda()
-    op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
+    op = optimtype([p for p in model.parameters() if p.requires_grad],lr=lr,weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
     bestvalloss = 10000
     bestacc = 0
