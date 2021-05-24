@@ -13,6 +13,18 @@ class Linear(torch.nn.Module):
         return self.fc(x)
 
 
+class Squeeze(torch.nn.Module):
+    def __init__(self, dim=None):
+        super().__init__()
+        self.dim = dim
+
+    def forward(self, x, training=False):
+        if self.dim is None:
+            return torch.squeeze(x)
+        else:
+            return torch.squeeze(x, self.dim)
+
+
 class MLP(torch.nn.Module):
     def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1,output_each_layer=False):
         super(MLP, self).__init__()
