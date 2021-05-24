@@ -1,4 +1,5 @@
 import datetime
+from posixpath import split
 import numpy as np
 import pandas as pd
 import pandas_datareader
@@ -86,8 +87,8 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     val_ds = MyDataset(X[val_split:test_split], Y[val_split:test_split], modality_first)
     val_loader = torch.utils.data.DataLoader(val_ds, shuffle=False, batch_size=batch_size, drop_last=False)
     test_loader = []
-    for noise_level in range(11):
-        X_robust = torch.tensor(timeseries_robustness(X[test_split:].cpu().numpy(), noise_level=noise_level/10))
+    for noise_level in range(10):
+        X_robust = torch.tensor(timeseries_robustness(X[test_split:].cpu().numpy(), noise_level=noise_level/10), dtype=torch.float32)      
         if cuda:
             X_robust = X_robust.cuda()
         test_ds = MyDataset(X_robust, Y[test_split:], modality_first)
