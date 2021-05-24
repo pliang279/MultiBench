@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path.append(os.getcwd())
+sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 
 import argparse
 import numpy as np
@@ -10,7 +10,8 @@ import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import Stack
 from unimodals.common_models import LSTMWithLinear, Identity
-from datasets.stocks.get_data import get_dataloader
+sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
+from get_data import get_dataloader
 from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 
