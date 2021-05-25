@@ -131,14 +131,14 @@ class EeDeltaDecoder(nn.Module):
         return self.ee_delta_decoder(mm_act_feat)
 
 class ContactDecoder(nn.Module):
-    def __init__(self, z_dim, deterministic):
+    def __init__(self, z_dim, deterministic,head=1):
         '''
         Decodes everything
         '''
         super().__init__()
 
         self.deterministic = deterministic
-        self.contact_fc = nn.Sequential(nn.Linear(z_dim, 1))
+        self.contact_fc = nn.Sequential(nn.Linear(z_dim, head))
 
     def forward(self, input, training=False):
         if self.deterministic:

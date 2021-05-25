@@ -53,7 +53,8 @@ class selfsupervised:
             deterministic=configs["deterministic"],
             z_dim=configs["zdim"],
         ).to(self.device)
-        self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"])
+        self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"],head=2)
+        
 
         self.optimtype = optim.Adam
 
@@ -72,10 +73,9 @@ class selfsupervised:
                 f.write(f'{x}\n')
         train(self.encoders, self.fusion, self.head,
               self.train_loader, self.val_loader,
-              self.configs['max_epoch'],
+              15,
               optimtype=self.optimtype,
-              lr=self.configs['lr'],
-              criterion=self.loss_contact_next)
+              lr=self.configs['lr'])
 
 with open('examples/robotics/training_default.yaml') as f:
     configs = yaml.load(f)
