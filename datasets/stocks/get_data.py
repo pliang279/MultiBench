@@ -3,7 +3,9 @@ import numpy as np
 import pandas as pd
 import pandas_datareader
 import torch
+from torch import nn
 from torch.utils.data import DataLoader
+
 
 def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shuffle=True, start_date=datetime.datetime(2000, 6, 1), end_date=datetime.datetime(2021, 2, 28), window_size=500, val_split=3200, test_split=3700, modality_first=True, cuda=True):
     stocks = np.array(stocks)
@@ -84,3 +86,23 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     test_loader = torch.utils.data.DataLoader(test_ds, shuffle=False, batch_size=batch_size, drop_last=False)
 
     return train_loader, val_loader, test_loader
+
+
+class Grouping(nn.Module):
+    def __init__(self, n_groups):
+        super().__init__()
+        self.n_groups = n_groups
+
+    def forward(self, x, training=False):
+        x = x.permute(2, 0, 1)
+
+        n_modalities = len(x)
+        out = []
+        for i in range(self.n_groups):
+            start_modality = n_modalities * i // self.n_groups
+            end_modality = n_modalities * (i + 1) // self.n_groups
+            sel = list(x[start_modality:end_modality])
+            sel = torch.stack(sel, dim=len(sel[0].size()))
+            out.append(sel)
+
+        return out
