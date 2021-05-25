@@ -22,6 +22,6 @@ decoders=[MLP(n_latent,20,5).cuda(),TSDecoder(series_dim,30,n_latent,timestep).c
 intermediates=[MLP(n_latent,n_latent//2,n_latent//2).cuda(),MLP(n_latent,n_latent//2,n_latent//2).cuda(),MLP(2*n_latent,n_latent,n_latent//2).cuda()]
 head=MLP(n_latent//2,20,classes).cuda()
 recon_loss=recon_weighted_sum([sigmloss1d,sigmloss1d],[1.0,1.0])
-train_MFM(encoders,decoders,head,intermediates,fuse,recon_loss,traindata,validdata,25)
-mvae=torch.load('best.pt')
-test_MFM(model,testdata)
+#train_MFM(encoders,decoders,head,intermediates,fuse,recon_loss,traindata,validdata,25,savedir='bestmfm.pt')
+mvae=torch.load('bestmfm.pt')
+test_MFM(mvae,testdata)

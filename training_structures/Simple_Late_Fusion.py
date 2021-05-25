@@ -36,7 +36,7 @@ def train(
     criterion=nn.CrossEntropyLoss(),regularization=False,auprc=False,save='best.pt'):
     
     model = MMDL(encoders,fusion,head,is_packed).cuda()
-    op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
+    op = optimtype([p for p in model.parameters() if p.requires_grad],lr=lr,weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
     bestvalloss = 10000
     bestacc = 0
@@ -69,7 +69,9 @@ def train(
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss=criterion(out, j[-1].float().cuda())
                 else:
-                    loss=criterion(out, j[-1].cuda())
+                    if len(j[-1].size())>1:
+                        j[-1] = j[-1].squeeze()
+                    loss=criterion(out, j[-1].long().cuda())
             #print(loss)
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
@@ -100,8 +102,11 @@ def train(
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss=criterion(out, j[-1].float().cuda())
                 else:
-                    loss=criterion(out, j[-1].cuda())
+                    if len(j[-1].size())>1:
+                        j[-1] = j[-1].squeeze()
+                    loss=criterion(out, j[-1].long().cuda())
                 totalloss += loss*len(j[-1])
+                #print(totalloss)
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
                 elif task == "multilabel":
@@ -202,4 +207,5 @@ def test(
             print("mse: "+str(testloss))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
+    return accuracy_score(true, pred)
 

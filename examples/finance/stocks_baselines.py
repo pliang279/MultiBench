@@ -22,7 +22,7 @@ print('Target: ' + args.target_stock)
 
 
 stocks = sorted(args.input_stocks.split(' '))
-train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock])
+train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], modality_first=True)
 
 def baselines():
     def best_constant(y_prev, y):

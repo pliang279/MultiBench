@@ -19,7 +19,7 @@ eedelta: 1.0
 # Training parameters
 lr: 0.0001
 beta1: 0.9 
-seed: 1234
+seed: 12224
 max_epoch: 50
 batch_size: 64
 ep_length: 50
@@ -36,7 +36,7 @@ logging_folder: logging/
 
 
 # path to dataset hdf5 file'
-dataset: "datasets/robotics/triangle_real_data/"
+dataset: "/home/pliang/multibench/MultiBench-robotics/datasets/robotics/triangle_real_data/"
 
 val_ratio: 0.20
 cuda: True

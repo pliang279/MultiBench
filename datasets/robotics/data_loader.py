@@ -14,17 +14,25 @@ from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
 
-def combine_modalities(data):
-    return [
-        data['image'],
-        data['force'],
-        data['proprio'],
-        data['depth'].transpose(0, 2).transpose(1, 2),
-        data['action'],
-        data['contact_next'],
-    ]
+def combine_modalitiesbuilder(unimodal,output):
+    def combine_modalities(data):
+        if unimodal=="force":
+            return [data['force'],data['action'],data[output]]
+        if unimodal=="proprio":
+            return [data['proprio'],data['action'],data[output]]
+        if unimodal=="image":
+            return [data['image'],data['depth'].transpose(0, 2).transpose(1, 2),data['action'],data[output]]
+        return [
+            data['image'],
+            data['force'],
+            data['proprio'],
+            data['depth'].transpose(0, 2).transpose(1, 2),
+            data['action'],
+            data[output],
+        ]
+    return combine_modalities
 
-def get_data(device, configs):
+def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next'):
     filename_list = []
     for file in os.listdir(configs['dataset']):
         if file.endswith(".h5"):
@@ -76,13 +84,13 @@ def get_data(device, configs):
                 ProcessForce(32, "force", tanh=True),
                 ProcessForce(32, "unpaired_force", tanh=True),
                 ToTensor(device=device),
-                combine_modalities,
+                combine_modalitiesbuilder(unimodal,output),
             ]
         ),
         episode_length=configs['ep_length'],
         training_type=configs['training_type'],
         action_dim=configs['action_dim'],
-
+        filedirprefix=filedirprefix
     )
 
     datasets["val"] = MultimodalManipulationDataset(
@@ -92,7 +100,7 @@ def get_data(device, configs):
                 ProcessForce(32, "force", tanh=True),
                 ProcessForce(32, "unpaired_force", tanh=True),
                 ToTensor(device=device),
-                combine_modalities,
+                combine_modalitiesbuilder(unimodal,output),
             ]
         ),
         episode_length=configs['ep_length'],

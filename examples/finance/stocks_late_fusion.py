@@ -9,7 +9,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import ConcatWithLinear
-from unimodals.common_models import LSTM
+from unimodals.common_models import LSTM, Identity
 from datasets.stocks.get_data import get_dataloader
 from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
@@ -26,10 +26,10 @@ print('Target: ' + args.target_stock)
 stocks = sorted(args.input_stocks.split(' '))
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock])
 
-n_modalities = train_loader.dataset[0][0].size(0)
+n_modalities = len(train_loader.dataset[0]) - 1
 encoders = [LSTM(1, 16).cuda() for _ in range(n_modalities)]
-fusion = ConcatWithLinear(n_modalities * 16).cuda()
-head = nn.Identity().cuda()
+fusion = ConcatWithLinear(n_modalities * 16, 1).cuda()
+head = Identity().cuda()
 allmodules = [*encoders, fusion, head]
 
 def trainprocess():
@@ -39,5 +39,5 @@ all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best.pt').cuda()
 def testprocess():
-    test(model, test_loader, task='regression')
+    test(model, test_loader, task='regression', criterion=nn.MSELoss())
 all_in_one_test(testprocess, [model])
