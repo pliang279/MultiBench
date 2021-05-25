@@ -40,9 +40,9 @@ class selfsupervised:
         self.device = torch.device("cuda" if use_cuda else "cpu")
 
         set_seeds(configs["seed"], use_cuda)
-
         self.encoders = [
-            ProprioEncoder(configs['zdim'], alpha=configs['proprio']),
+            ImageEncoder(configs['zdim'], alpha=configs['vision']),
+            DepthEncoder(configs['zdim'], alpha=configs['depth']),
             ActionEncoder(configs['action_dim']),
         ]
         """
@@ -53,15 +53,15 @@ class selfsupervised:
             z_dim=configs["zdim"],
         ).to(self.device)
         """
-        self.fusion = roboticsConcat("simple")
+        self.fusion = roboticsConcat("image")
         #self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"])
-        self.head=MLP(288,128,2)
+        self.head=MLP(544,128,2)
         self.optimtype = optim.Adam
 
         # losses
         self.loss_contact_next = nn.BCEWithLogitsLoss()
 
-        self.train_loader, self.val_loader = get_data(self.device, self.configs,"/home/pliang/multibench/MultiBench-robotics/",unimodal="proprio")
+        self.train_loader, self.val_loader = get_data(self.device, self.configs,"/home/pliang/multibench/MultiBench-robotics/",unimodal='image')
 
     def train(self):
         print(len(self.train_loader.dataset), len(self.val_loader.dataset))
@@ -73,11 +73,11 @@ class selfsupervised:
                 f.write(f'{x}\n')
         train(self.encoders, self.fusion, self.head,
               self.train_loader, self.val_loader,
-              25,
+              15,
               optimtype=self.optimtype,
               lr=self.configs['lr'])
 
 with open('examples/robotics/training_default.yaml') as f:
     configs = yaml.load(f)
 
-selfsupervised(configs).train()
+selfsupervised(configs).train() 
