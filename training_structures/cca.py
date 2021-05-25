@@ -1,93 +1,50 @@
 from sklearn.metrics import accuracy_score, f1_score
-
 import torch
 from torch import nn
-from torch.nn import functional as F
 from torch.optim.lr_scheduler import ExponentialLR
 
 from utils.AUPRC import AUPRC
-from objective_functions.contrast import MultiSimilarityLoss
+from objective_functions.cca import CCALoss
 #import pdb
-
 
 softmax = nn.Softmax()
 
-
 class MMDL(nn.Module):
-    def __init__(self,encoders,fusion,refiner,head,has_padding=False):
+    def __init__(self,encoders,fusion,head,has_padding=False):
         super(MMDL,self).__init__()
         self.encoders = nn.ModuleList(encoders)
         self.fuse = fusion
         self.head = head
-        self.refiner = refiner
         self.has_padding=has_padding
     
-    def forward(self,inputs,training=False):
+    def forward(self,inputs,cca=False,training=False):
         outs = []
-        input_num = len(inputs[0]) if self.has_padding else len(inputs)
-        for i in range(input_num):    
-            if self.has_padding:
+        if self.has_padding:
+            for i in range(len(inputs[0])):
                 outs.append(self.encoders[i]([inputs[0][i],inputs[1][i]], training=training))
-            else:
-                outs.append(self.encoders[i](inputs[i], training=training))
-        
-        fuse = self.fuse(outs, training=training)
-        logit = self.head(fuse, training=training)
-        
-        rec_feature = self.refiner(fuse, training=training)
-        rec_features = []
-        for i in range(input_num):
-            if self.has_padding:
-                if i == 0:
-                    rec_features.append(rec_feature[:, :inputs[0][i].size(1)])
-                else:
-                    rec_features.append(rec_feature[:, \
-                        inputs[0][i-1].size(1):inputs[0][i-1].size(1)+inputs[i].size(1)])
-            else:
-                if i == 0:
-                    rec_features.append(rec_feature[:, :inputs[i].size(1)])
-                else:
-                    rec_features.append(rec_feature[:, \
-                        inputs[i-1].size(1):inputs[i-1].size(1)+inputs[i].size(1)])
-            '''
-            if i == 0:
-                rec_features.append(rec_feature[:, :outs[i].size(-1)])
-            else:
-                rec_features.append(rec_feature[:, \
-                    outs[i-1].size(-1):outs[i-1].size(-1)+outs[i].size(-1)])
-            '''
-
-        return [logit, fuse, outs, rec_features]
-
-        '''
-        if classifier:
-            #out = self.fuse(outs, training=training)
-            return self.head(outs[1], training=training)
         else:
-            out1, out2 = self.contrast(outs[0], outs[1], inputs[2])
-            return out1, out2 
-        '''
-        '''
-
+            for i in range(len(inputs)):
+                outs.append(self.encoders[i](inputs[i], training=training))
+        if cca:
+            return outs
         out = self.fuse(outs, training=training)
-        out1, out2 = self.contrast(outs[0], outs[1], inputs[2])
+        #print(out) 
+        return self.head(out, training=training)
 
-        return self.head(out, training=training), out1, out2    
-        '''
 
 def train(
-    encoders,fusion,head,refiner,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
-    early_stop=False,task="multilabel",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
-    criterion=nn.L1Loss(),auprc=False,save='best.pt'):
-    
+    encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
+    early_stop=False,task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
+    criterion=nn.CrossEntropyLoss(),regularization=False,auprc=False,save='best.pt'):
+
     #n_data = len(train_dataloader.dataset)
-    model = MMDL(encoders,fusion,refiner,head,is_packed).cuda()
+    model = MMDL(encoders,fusion,head,is_packed).cuda()
     op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
-    contrast_criterion = MultiSimilarityLoss()
-    ss_criterion = nn.CosineEmbeddingLoss()
+    cca_criterion = CCALoss(device=torch.device("cuda"))
 
     bestvalloss = 10000
+    bestloss = 0
     bestacc = 0
     bestf1 = 0
     patience = 0
@@ -105,22 +62,10 @@ def train(
                     out1, out2=model(
                         [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],training=True)
                     #print(j[-1])
-                    loss1=contrast_criterion(out1)
-                    loss2=contrast_criterion(out2)
-                    loss = loss1+loss2
+                    loss = cca_criterion(out1, out2)
             else:
-                out=model([i.float().cuda() for i in j[:-1]],training=True)
-                #print(j[-1])
-                if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss_cl=criterion(out[0], j[-1].float().cuda())
-                else:
-                    loss_cl=criterion(out[0], j[-1].cuda())
-                loss_contrast = contrast_criterion(out[1], j[-1].cuda())
-                loss_self = 0
-                for i in range(len(out[3])):
-                    loss_self += ss_criterion(out[3][i], j[i].float().cuda(), \
-                        torch.ones(out[3][i].size(0)).cuda())
-                loss = loss_cl+0.1*loss_contrast+0.1*loss_self
+                out=model([i.float().cuda() for i in j[:-1]],cca=True, training=True)
+                loss = cca_criterion(out[0], out[1])
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             
@@ -128,29 +73,25 @@ def train(
             op.step()
         
         train_loss = totalloss/totals
-        print("Epoch "+str(epoch)+" train loss: "+str(train_loss))
-        '''
+        print("Epoch "+str(epoch)+" train cca loss: "+str(train_loss))
+        
         if bestloss == 0.0:
             bestloss = train_loss
             continue
 
         if (bestloss-train_loss)/bestloss < 1e-6:
             patience += 1
-            print(patience)
+            #print(patience)
         else:
             bestloss = train_loss
             patience = 0
-        if patience > 20:
+        if patience > 10:
             print("Early Stop!")
             break
-        
     
     patience = 0
-    bestvalloss = 10000
     for epoch in range(total_epochs):
         totalloss = 0.0
-        total_reg_loss = 0.0
-        total_contrast_loss = 0.0
         totals = 0
         model.train()
         for j in train_dataloader:
@@ -158,30 +99,25 @@ def train(
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
-                    out=model(
-                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],True,training=True)
-                    #out, out1, out2=model(
-                    #    [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],True,training=True)
+                    out=model([[i.cuda() for i in j[0]], j[1]],training=True)
                     #print(j[-1])
+                    #print(out)
+                    loss = criterion(out,j[-1].cuda())
             else:
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
-                #print(j[-1])
-            reg_loss=criterion(out,j[-1].cuda())
-            #loss1=contrast_criterion(out1)
-            #loss2=contrast_criterion(out2)
-            #contrast_loss = loss1 + loss2
-            #loss = reg_loss+0.1*contrast_loss
-            loss = reg_loss
-            total_reg_loss += reg_loss * len(j[-1])
-            #total_contrast_loss += contrast_loss * len(j[-1])
+                #print(out, j[-1])
+                if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
+                    loss=criterion(out, j[-1].float().cuda())
+                else:
+                    loss=criterion(out, j[-1].cuda())
+            
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             
             loss.backward()
             op.step()
         #print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
-        print("Epoch "+str(epoch)+" train loss: "+str(total_reg_loss/totals)+" contrast loss: "+str(total_contrast_loss/totals))
-        '''
+        print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
 
         model.eval()
         with torch.no_grad():
@@ -191,12 +127,9 @@ def train(
             pts = []
             for j in valid_dataloader:
                 if is_packed:
-                    out=model(
-                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],True,training=False)
-                    #out, _, _=model(
-                    #    [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],True,training=False)
+                    out=model([[i.cuda() for i in j[0]], j[1]],training=False)
                 else:
-                    out,_,_,_ = model([i.float().cuda() for i in j[:-1]],training=False)
+                    out = model([i.float().cuda() for i in j[:-1]],training=False)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss=criterion(out, j[-1].float().cuda())
                 else:
@@ -209,8 +142,8 @@ def train(
                 true.append(j[-1])
                 if auprc:
                     #pdb.set_trace()
-                    sm=softmax(out[i])
-                    pts.append((sm[1].item(), j[-1][i].item()))
+                    sm=softmax(out)
+                    pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
         true = torch.cat(true, 0).cpu().numpy()
@@ -220,9 +153,9 @@ def train(
             acc = accuracy_score(true, pred)
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
                 " acc: "+str(acc))
-            if acc>bestacc:
+            if valloss<bestvalloss:
                 patience = 0
-                bestacc=acc
+                bestvalloss=valloss
                 print("Saving Best")
                 torch.save(model,save)
             else:
@@ -262,7 +195,7 @@ def train(
 
 def test(
     model,test_dataloader,is_packed=False,
-    criterion=nn.L1Loss(),task="multilabel",auprc=False):
+    criterion=nn.CrossEntropyLoss(),task="classification",auprc=False):
     with torch.no_grad():
         totalloss = 0.0
         pred=[]
@@ -272,7 +205,7 @@ def test(
             if is_packed:
                 out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
-                out,_,_,_ = model([i.float().cuda() for i in j[:-1]],training=False)
+                out = model([i.float().cuda() for i in j[:-1]],training=False)
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                 loss=criterion(out, j[-1].float().cuda())
             else:
@@ -286,7 +219,7 @@ def test(
             true.append(j[-1])
             if auprc:
                 #pdb.set_trace()
-                sm=softmax(out, 1)
+                sm=softmax(out)
                 pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
@@ -302,3 +235,4 @@ def test(
             print("mse: "+str(testloss))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
+

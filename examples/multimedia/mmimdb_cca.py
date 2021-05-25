@@ -4,7 +4,7 @@ sys.path.append(os.getcwd())
 
 import torch
 
-from training_structures.Simple_Late_Fusion import train, test
+from training_structures.cca import train, test
 from fusions.common_fusions import Concat
 from datasets.imdb.get_data import get_dataloader
 from unimodals.common_models import MLP, VGG16
@@ -17,8 +17,8 @@ head=MLP(1024,512,23).cuda()
 fusion=Concat().cuda()
 
 train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multilabel",\
-    save="best_lf.pt", optimtype=torch.optim.AdamW,lr=5e-5,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
+    save="best_cca.pt", optimtype=torch.optim.RMSprop,lr=1e-5,weight_decay=1e-5, criterion=torch.nn.BCEWithLogitsLoss())
 
 print("Testing:")
-model=torch.load('best_lf.pt').cuda()
+model=torch.load('best_cca.pt').cuda()
 test(model,testdata,criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
