@@ -13,6 +13,18 @@ class Linear(torch.nn.Module):
         return self.fc(x)
 
 
+class Squeeze(torch.nn.Module):
+    def __init__(self, dim=None):
+        super().__init__()
+        self.dim = dim
+
+    def forward(self, x, training=False):
+        if self.dim is None:
+            return torch.squeeze(x)
+        else:
+            return torch.squeeze(x, self.dim)
+
+
 class MLP(torch.nn.Module):
     def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1,output_each_layer=False):
         super(MLP, self).__init__()
@@ -93,9 +105,13 @@ class LSTM(torch.nn.Module):
     def forward(self,x,training=True):
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
-            out=self.lstm(x)[1][-1]
+            out=self.lstm(x)[1][0]
         else:
-            out=self.lstm(x)[0]
+            if len(x.size()) == 2:
+                x = x.unsqueeze(2)
+            out=self.lstm(x)[1][0]
+        out = out.permute([1, 2, 0])
+        out = out.reshape([out.size()[0], -1])
         if self.dropout:
             out = F.dropout(out,p=self.dropoutp,training=training)
         if self.flatten:
@@ -149,9 +165,13 @@ class LSTMWithLinear(torch.nn.Module):
     def forward(self,x,training=True):
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
-            hidden=self.lstm(x)[1][-1]
+            hidden=self.lstm(x)[1][0]
         else:
-            hidden=self.lstm(x)[0]
+            if len(x.size()) == 2:
+                x = x.unsqueeze(2)
+            hidden=self.lstm(x)[1][0]
+        hidden = hidden.permute([1, 2, 0])
+        hidden = hidden.reshape([hidden.size()[0], -1])
         if self.dropout:
             hidden = F.dropout(hidden,p=self.dropoutp,training=training)
         out = self.linear(hidden)
@@ -233,7 +253,7 @@ class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers i
 
 
 class VGG11Slim(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
-    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
+    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True, freeze_features=True):
         super(VGG11Slim, self).__init__()
         self.hiddim = hiddim
         self.model = tmodels.vgg11_bn(pretrained=pretrained)
@@ -243,6 +263,66 @@ class VGG11Slim(nn.Module): # slimmer version of vgg11 model with fewer layers i
             new_feats_list = []
             for feat in feats_list:
                 new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
+        for p in self.model.features.parameters():
+            p.requires_grad = (not freeze_features)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
+class VGG11Pruned(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
+    def __init__(self, hiddim, dropout=True, prune_factor=0.25, dropoutp=0.2):
+        super(VGG11Pruned, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg11_bn(pretrained=False)
+        self.model.classifier = nn.Linear(int(512 * prune_factor) * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                if isinstance(feat, nn.Conv2d):
+                    pruned_feat = nn.Conv2d(int(feat.in_channels * prune_factor) if feat.in_channels != 3 else 3,
+                    int(feat.out_channels * prune_factor),
+                    kernel_size=feat.kernel_size,
+                    padding=feat.padding)
+                    new_feats_list.append(pruned_feat)
+                elif isinstance(feat, nn.BatchNorm2d):
+                    pruned_feat = nn.BatchNorm2d(int(feat.num_features * prune_factor))
+                    new_feats_list.append(pruned_feat)
+                else:
+                    new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
+class VGG16Pruned(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
+    def __init__(self, hiddim, dropout=True, prune_factor=0.25, dropoutp=0.2):
+        super(VGG16Pruned, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg16_bn(pretrained=False)
+        self.model.classifier = nn.Linear(int(512 * prune_factor) * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                if isinstance(feat, nn.Conv2d):
+                    pruned_feat = nn.Conv2d(int(feat.in_channels * prune_factor) if feat.in_channels != 3 else 3,
+                    int(feat.out_channels * prune_factor),
+                    kernel_size=feat.kernel_size,
+                    padding=feat.padding)
+                    new_feats_list.append(pruned_feat)
+                elif isinstance(feat, nn.BatchNorm2d):
+                    pruned_feat = nn.BatchNorm2d(int(feat.num_features * prune_factor))
+                    new_feats_list.append(pruned_feat)
+                else:
+                    new_feats_list.append(feat)
                 if isinstance(feat, nn.ReLU):
                     new_feats_list.append(nn.Dropout(p=dropoutp))
 
@@ -353,6 +433,14 @@ class Constant(nn.Module):
         self.out_dim=out_dim
     def forward(self,x,training=False):
         return torch.zeros(self.out_dim).cuda()
+
+
+class Identity(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x, training=False):
+        return x
 
 
 # deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
