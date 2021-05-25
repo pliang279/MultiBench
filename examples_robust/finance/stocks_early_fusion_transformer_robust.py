@@ -10,9 +10,9 @@ import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import Stack
 from fusions.finance.early_fusion import EarlyFusionTransformer
-from unimodals.common_models import LSTMWithLinear
+from unimodals.common_models import LSTMWithLinear, Identity
 from training_structures.Simple_Late_Fusion import train, test
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test_robust
+from robustness.all_in_one import stocks_train, stocks_test
 sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 from get_data_robust import get_dataloader
 
@@ -28,25 +28,17 @@ print('Target: ' + args.target_stock)
 stocks = sorted(args.input_stocks.split(' '))
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock])
 
-n_modalities = train_loader.dataset[0][0].size(0)
-encoders = [nn.Identity().cuda()] * n_modalities
+n_modalities = len(train_loader.dataset[0]) - 1
+encoders = [Identity().cuda()] * n_modalities
 fusion = Stack().cuda()
 head = EarlyFusionTransformer(n_modalities).cuda()
 allmodules = [*encoders, fusion, head]
 
-filename = 'stocks_early_fusion_transformer_best.pt'
-def trainprocess():
-    train(encoders, fusion, head, train_loader, val_loader, total_epochs=4,
-          task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss(), save=filename)
-all_in_one_train(trainprocess, allmodules)
+num_training = 5
+def trainprocess(filename):
+    train(encoders, fusion, head, train_loader, val_loader, total_epochs=4, task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss(), save=filename)
+filenames = stocks_train(num_training, trainprocess, 'stocks_early_fusion_transformer_best')
 
-model = torch.load(filename).cuda()
-def testprocess():
-    test(model, test_loader, task='regression')
-acc = []
-print("Robustness testing:")
-for noise_level in range(len(test_loader)):
-    print("Noise level {}: ".format(noise_level/10))
-    acc.append(all_in_one_test_robust(testprocess, [model], test_loader[noise_level]))
-
-print("Accuracy of different noise levels:", acc)
+def testprocess(model, noise_level):
+    return test(model, test_loader[noise_level], task='regression')
+stocks_test(num_training, filenames, len(test_loader), testprocess)
