@@ -13,6 +13,18 @@ class Linear(torch.nn.Module):
         return self.fc(x)
 
 
+class Squeeze(torch.nn.Module):
+    def __init__(self, dim=None):
+        super().__init__()
+        self.dim = dim
+
+    def forward(self, x, training=False):
+        if self.dim is None:
+            return torch.squeeze(x)
+        else:
+            return torch.squeeze(x, self.dim)
+
+
 class MLP(torch.nn.Module):
     def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1,output_each_layer=False):
         super(MLP, self).__init__()
@@ -239,7 +251,7 @@ class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers i
         return self.model(x)
 
 class VGG11Slim(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
-    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
+    def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True, freeze_features=True):
         super(VGG11Slim, self).__init__()
         self.hiddim = hiddim
         self.model = tmodels.vgg11_bn(pretrained=pretrained)
@@ -249,6 +261,66 @@ class VGG11Slim(nn.Module): # slimmer version of vgg11 model with fewer layers i
             new_feats_list = []
             for feat in feats_list:
                 new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
+        for p in self.model.features.parameters():
+            p.requires_grad = (not freeze_features)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
+class VGG11Pruned(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
+    def __init__(self, hiddim, dropout=True, prune_factor=0.25, dropoutp=0.2):
+        super(VGG11Pruned, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg11_bn(pretrained=False)
+        self.model.classifier = nn.Linear(int(512 * prune_factor) * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                if isinstance(feat, nn.Conv2d):
+                    pruned_feat = nn.Conv2d(int(feat.in_channels * prune_factor) if feat.in_channels != 3 else 3,
+                    int(feat.out_channels * prune_factor),
+                    kernel_size=feat.kernel_size,
+                    padding=feat.padding)
+                    new_feats_list.append(pruned_feat)
+                elif isinstance(feat, nn.BatchNorm2d):
+                    pruned_feat = nn.BatchNorm2d(int(feat.num_features * prune_factor))
+                    new_feats_list.append(pruned_feat)
+                else:
+                    new_feats_list.append(feat)
+                if isinstance(feat, nn.ReLU):
+                    new_feats_list.append(nn.Dropout(p=dropoutp))
+
+            self.model.features = nn.Sequential(*new_feats_list)
+
+    def forward(self, x, training=False):
+        return self.model(x)
+
+class VGG16Pruned(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
+    def __init__(self, hiddim, dropout=True, prune_factor=0.25, dropoutp=0.2):
+        super(VGG16Pruned, self).__init__()
+        self.hiddim = hiddim
+        self.model = tmodels.vgg16_bn(pretrained=False)
+        self.model.classifier = nn.Linear(int(512 * prune_factor) * 7 * 7, hiddim)
+        if dropout:
+            feats_list = list(self.model.features)
+            new_feats_list = []
+            for feat in feats_list:
+                if isinstance(feat, nn.Conv2d):
+                    pruned_feat = nn.Conv2d(int(feat.in_channels * prune_factor) if feat.in_channels != 3 else 3,
+                    int(feat.out_channels * prune_factor),
+                    kernel_size=feat.kernel_size,
+                    padding=feat.padding)
+                    new_feats_list.append(pruned_feat)
+                elif isinstance(feat, nn.BatchNorm2d):
+                    pruned_feat = nn.BatchNorm2d(int(feat.num_features * prune_factor))
+                    new_feats_list.append(pruned_feat)
+                else:
+                    new_feats_list.append(feat)
                 if isinstance(feat, nn.ReLU):
                     new_feats_list.append(nn.Dropout(p=dropoutp))
 
