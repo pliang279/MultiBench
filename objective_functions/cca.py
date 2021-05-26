@@ -25,8 +25,10 @@ class CCALoss(nn.Module):
         eps = 1e-9
 
         H1, H2 = H1.t(), H2.t()
-        # assert torch.isnan(H1).sum().item() == 0
-        # assert torch.isnan(H2).sum().item() == 0
+        assert torch.isnan(H1).sum().item() == 0
+        assert torch.isnan(H2).sum().item() == 0
+        #print("text:", H1.mean(dim=1), H1.min(dim=1), H1.max(dim=1))
+        #print("image:", H2.mean(dim=1), H2.min(dim=1), H2.max(dim=1))
 
         o1 = o2 = H1.size(0)
 
@@ -35,27 +37,28 @@ class CCALoss(nn.Module):
 
         H1bar = H1 - H1.mean(dim=1).unsqueeze(dim=1)
         H2bar = H2 - H2.mean(dim=1).unsqueeze(dim=1)
-        # assert torch.isnan(H1bar).sum().item() == 0
-        # assert torch.isnan(H2bar).sum().item() == 0
+        assert torch.isnan(H1bar).sum().item() == 0
+        assert torch.isnan(H2bar).sum().item() == 0
 
         SigmaHat12 = (1.0 / (m - 1)) * torch.matmul(H1bar, H2bar.t())
         SigmaHat11 = (1.0 / (m - 1)) * torch.matmul(H1bar,
                                                     H1bar.t()) + r1 * torch.eye(o1, device=self.device)
         SigmaHat22 = (1.0 / (m - 1)) * torch.matmul(H2bar,
                                                     H2bar.t()) + r2 * torch.eye(o2, device=self.device)
-        # assert torch.isnan(SigmaHat11).sum().item() == 0
-        # assert torch.isnan(SigmaHat12).sum().item() == 0
-        # assert torch.isnan(SigmaHat22).sum().item() == 0
+        assert torch.isnan(SigmaHat11).sum().item() == 0
+        assert torch.isnan(SigmaHat12).sum().item() == 0
+        assert torch.isnan(SigmaHat22).sum().item() == 0
         print(SigmaHat11)
         print(SigmaHat22)
         # Calculating the root inverse of covariance matrices by using eigen decomposition
         [D1, V1] = torch.symeig(SigmaHat11, eigenvectors=True)
         [D2, V2] = torch.symeig(SigmaHat22, eigenvectors=True)
-        # assert torch.isnan(D1).sum().item() == 0
-        # assert torch.isnan(D2).sum().item() == 0
-        # assert torch.isnan(V1).sum().item() == 0
-        # assert torch.isnan(V2).sum().item() == 0
-
+        assert torch.isnan(D1).sum().item() == 0
+        assert torch.isnan(D2).sum().item() == 0
+        assert torch.isnan(V1).sum().item() == 0
+        assert torch.isnan(V2).sum().item() == 0
+        #print(D1, V1)
+        #print(D2, V2)
         # Added to increase stability
         posInd1 = torch.gt(D1, eps).nonzero()[:, 0]
         D1 = D1[posInd1]
@@ -63,14 +66,15 @@ class CCALoss(nn.Module):
         posInd2 = torch.gt(D2, eps).nonzero()[:, 0]
         D2 = D2[posInd2]
         V2 = V2[:, posInd2]
-        # print(posInd1.size())
-        # print(posInd2.size())
+        print(posInd1.size())
+        print(posInd2.size())
 
         SigmaHat11RootInv = torch.matmul(
             torch.matmul(V1, torch.diag(D1 ** -0.5)), V1.t())
         SigmaHat22RootInv = torch.matmul(
             torch.matmul(V2, torch.diag(D2 ** -0.5)), V2.t())
-
+        #print(SigmaHat11RootInv)
+        #print(SigmaHat22RootInv)
         Tval = torch.matmul(torch.matmul(SigmaHat11RootInv,
                                          SigmaHat12), SigmaHat22RootInv)
 #         print(Tval.size())
@@ -79,7 +83,7 @@ class CCALoss(nn.Module):
             # all singular values are used to calculate the correlation
             tmp = torch.matmul(Tval.t(), Tval)
             corr = torch.trace(torch.sqrt(tmp))
-            # assert torch.isnan(corr).item() == 0
+            assert torch.isnan(corr).item() == 0
         else:
             # just the top self.outdim_size singular values are used
             trace_TT = torch.matmul(Tval.t(), Tval)

@@ -3,6 +3,7 @@ An implementation of the paper: "Removing Bias in Multi-modal Classifiers: Regul
  Entropies" NeurIPS 2020.
 """
 
+from training_structures.Contrastive_Learning import train
 import torch
 
 
@@ -219,24 +220,29 @@ class RegParameters(object):
 
 class RegularizationLoss(torch.nn.Module):
 
-    def __init__(self, loss: torch.nn.Module, model: torch.nn.Module, delta: float=1e-10) -> None:
+    def __init__(self, loss: torch.nn.Module, model: torch.nn.Module, delta: float=1e-10, is_pack: bool=True) -> None:
         super(RegularizationLoss, self).__init__()
         self.reg_params = RegParameters()
         self.criterion = loss
         self.model = model
         self.delta = delta
+        self.pack = is_pack
 
     def forward(self, logits, inputs):
 
         expanded_logits = Perturbation.get_expanded_logits(logits, self.reg_params.n_samples)
 
         inf_inputs = []
-        inf_inputs_len = []
-        for ind, i in enumerate(inputs[0]):
-            inf_inputs.append(Perturbation.perturb_tensor(i, self.reg_params.n_samples).float().cuda())
-            inf_inputs_len.append(Perturbation.perturb_tensor(inputs[1][ind], self.reg_params.n_samples,False))
-
-        inf_output = self.model([inf_inputs, inf_inputs_len], training=True)
+        if self.pack:
+            inf_inputs_len = []
+            for ind, i in enumerate(inputs[0]):
+                inf_inputs.append(Perturbation.perturb_tensor(i, self.reg_params.n_samples).float().cuda())
+                inf_inputs_len.append(Perturbation.perturb_tensor(inputs[1][ind], self.reg_params.n_samples,False))
+            inf_output = self.model([inf_inputs, inf_inputs_len], training=True)
+        else:
+            for ind, i in enumerate(inputs):
+                inf_inputs.append(Perturbation.perturb_tensor(i, self.reg_params.n_samples).float().cuda())
+            inf_output = self.model(inf_inputs, training=True)
         inf_loss = torch.nn.functional.binary_cross_entropy_with_logits(inf_output, expanded_logits)
 
         gradients = torch.autograd.grad(inf_loss, inf_inputs, create_graph=True)
