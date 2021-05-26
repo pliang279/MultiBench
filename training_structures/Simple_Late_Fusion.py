@@ -44,7 +44,7 @@ def train(
     patience = 0
     
     if regularization:
-        regularize = RegularizationLoss(criterion, model, 1e-11)
+        regularize = RegularizationLoss(criterion, model, 1e-10, is_packed)
     
     for epoch in range(total_epochs):
         totalloss = 0.0
@@ -67,11 +67,13 @@ def train(
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
                 #print(out, j[-1])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss=criterion(out, j[-1].float().cuda())
+                    loss1=criterion(out, j[-1].float().cuda())
                 else:
                     if len(j[-1].size())>1:
                         j[-1] = j[-1].squeeze()
-                    loss=criterion(out, j[-1].long().cuda())
+                    loss1=criterion(out, j[-1].long().cuda())
+                loss2=regularize(out, [i.float().cuda() for i in j[:-1]]) if regularization else 0
+                loss = loss1+loss2
             #print(loss)
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])

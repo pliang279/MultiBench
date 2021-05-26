@@ -68,9 +68,16 @@ def train(
                 loss = cca_criterion(out[0], out[1])
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
-            
+            print(loss)
             loss.backward()
             op.step()
+            '''
+            for parameter in model.encoders[0].parameters():
+                print(parameter)
+            print("------------------------")
+            for parameter in model.encoders[1].parameters():
+                print(parameter)
+            '''
         
         train_loss = totalloss/totals
         print("Epoch "+str(epoch)+" train cca loss: "+str(train_loss))
