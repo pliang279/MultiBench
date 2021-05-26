@@ -211,6 +211,8 @@ class roboticsConcat(nn.Module):
         #print(x[2].size())
         #print(x[3][0].size())
         #print(x[4].size())
+        if self.name=="noconcat":
+            return [x[0][0].squeeze(),x[1].squeeze(),x[2].squeeze(),x[3][0].squeeze(),x[4]]
         if self.name=="image":
             return torch.cat([x[0][0].squeeze(),x[1][0].squeeze(),x[2]],1)
         if self.name=="simple":
