@@ -23,7 +23,8 @@ def process_data(filename, path, labels):
         
         genre = np.zeros(len(labels))
         for label in info["genres"]:
-            genre[labels[label]] = 1
+            if label in labels:
+                genre[labels[label]] = 1
         data["label"] = genre
 
     return data

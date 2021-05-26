@@ -18,7 +18,7 @@ class MULTModel(nn.Module):
         attn_mask = True
         output_dim = 1
 
-    def __init__(self, n_modalities, hyp_params=default_hyp_params):
+    def __init__(self, n_modalities, n_features, hyp_params=default_hyp_params):
         """
         Construct a MulT model.
         """
@@ -40,7 +40,7 @@ class MULTModel(nn.Module):
         output_dim = hyp_params.output_dim        # This is actually not a hyperparameter :-)
 
         # 1. Temporal convolutional layers
-        self.proj = [nn.Conv1d(1, self.embed_dim, kernel_size=1, padding=0, bias=False) for i in range(n_modalities)]
+        self.proj = [nn.Conv1d(n_features[i], self.embed_dim, kernel_size=1, padding=0, bias=False) for i in range(n_modalities)]
         self.proj = nn.ModuleList(self.proj)
 
         # 2. Crossmodal Attentions
@@ -75,15 +75,14 @@ class MULTModel(nn.Module):
 
     def forward(self, x, training=False):
         """
-        x: [batch_size, seq_len, n_modalities]
+        x: n_modalities * [batch_size, seq_len, n_features]
         """
-        x = x.permute(2, 0, 1)
-        x = x.reshape((x.shape[0], x.shape[1], 1, x.shape[2]))
+        x = [v.permute(0, 2, 1) for v in x] # n_modalities * [batch_size, n_features, seq_len]
 
         # Project the textual/visual/audio features
         proj_x = [self.proj[i](x[i]) for i in range(self.n_modalities)]
         proj_x = torch.stack(proj_x)
-        proj_x = proj_x.permute(0, 3, 1, 2)
+        proj_x = proj_x.permute(0, 3, 1, 2) # [n_modalities, seq_len, batch_size, proj]
 
         last_hs = []
         for i in range(self.n_modalities):
