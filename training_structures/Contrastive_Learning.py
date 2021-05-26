@@ -49,8 +49,15 @@ class MMDL(nn.Module):
                 else:
                     rec_features.append(rec_feature[:, \
                         inputs[i-1].size(1):inputs[i-1].size(1)+inputs[i].size(1)])
+            '''
+            if i == 0:
+                rec_features.append(rec_feature[:, :outs[i].size(-1)])
+            else:
+                rec_features.append(rec_feature[:, \
+                    outs[i-1].size(-1):outs[i-1].size(-1)+outs[i].size(-1)])
+            '''
 
-        return [logit, fuse, rec_features]
+        return [logit, fuse, outs, rec_features]
 
         '''
         if classifier:
@@ -110,9 +117,9 @@ def train(
                     loss_cl=criterion(out[0], j[-1].cuda())
                 loss_contrast = contrast_criterion(out[1], j[-1].cuda())
                 loss_self = 0
-                #for i in range(len(j[:-1])):
-                    #loss_self += ss_criterion(out[2][i], j[i].float().cuda(), \
-                    #    torch.ones(out[2][i].size(0)).cuda())
+                for i in range(len(out[3])):
+                    loss_self += ss_criterion(out[3][i], j[i].float().cuda(), \
+                        torch.ones(out[3][i].size(0)).cuda())
                 loss = loss_cl+0.1*loss_contrast+0.1*loss_self
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
@@ -189,7 +196,7 @@ def train(
                     #out, _, _=model(
                     #    [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],True,training=False)
                 else:
-                    out,_,_ = model([i.float().cuda() for i in j[:-1]],training=False)
+                    out,_,_,_ = model([i.float().cuda() for i in j[:-1]],training=False)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss=criterion(out, j[-1].float().cuda())
                 else:
@@ -265,7 +272,7 @@ def test(
             if is_packed:
                 out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
-                out,_,_ = model([i.float().cuda() for i in j[:-1]],training=False)
+                out,_,_,_ = model([i.float().cuda() for i in j[:-1]],training=False)
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                 loss=criterion(out, j[-1].float().cuda())
             else:

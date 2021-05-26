@@ -231,6 +231,7 @@ class VGG16(nn.Module):
     def forward(self, x, training=False):
         return self.model(x)
 
+
 class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers in classifier
     def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
         super(VGG16Slim, self).__init__()
@@ -249,6 +250,7 @@ class VGG16Slim(nn.Module): # slimmer version of vgg16 model with fewer layers i
 
     def forward(self, x, training=False):
         return self.model(x)
+
 
 class VGG11Slim(nn.Module): # slimmer version of vgg11 model with fewer layers in classifier
     def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True, freeze_features=True):
@@ -328,6 +330,7 @@ class VGG16Pruned(nn.Module): # slimmer version of vgg11 model with fewer layers
 
     def forward(self, x, training=False):
         return self.model(x)
+
 
 class VGG(nn.Module):
     def __init__(self, num_outputs):
