@@ -17,43 +17,40 @@ class MMDL(nn.Module):
         self.head = head
         self.has_padding=has_padding
     
-    def forward(self,inputs,cca=False,training=False):
+    def forward(self,inputs,training=False):
         outs = []
         if self.has_padding:
             for i in range(len(inputs[0])):
-                outs.append(self.encoders[i]([inputs[0][i],inputs[1][i]]))
+                outs.append(self.encoders[i]([inputs[0][i],inputs[1][i]], training=training))
         else:
             for i in range(len(inputs)):
-                outs.append(self.encoders[i](inputs[i]))
-        if cca:
-            return outs
+                outs.append(self.encoders[i](inputs[i], training=training))
         out = self.fuse(outs, training=training)
         #print(out) 
-        return self.head(out, training=training)
+        return outs, self.head(out, training=training)
 
 
 def train(
-    encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,outdim=10,
+    encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
     early_stop=False,task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
     criterion=nn.CrossEntropyLoss(),auprc=False,save='best.pt'):
-
-    #n_data = len(train_dataloader.dataset)
-    model = MMDL(encoders,fusion,head,is_packed).double().cuda()
-    op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
+    
+    model = MMDL(encoders,fusion,head,is_packed).cuda()
+    op = optimtype([p for p in model.parameters() if p.requires_grad],lr=lr,weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
-    cca_criterion = CCALoss(outdim, False, device=torch.device("cuda"))
+    cca_criterion = CCALoss(device=torch.device("cuda"))
 
     bestvalloss = 10000
-    bestloss = 0
     bestacc = 0
     bestf1 = 0
     patience = 0
     
     for epoch in range(total_epochs):
         totalloss = 0.0
+        totalloss1 = 0.0
+        totalloss2 = 0.0
         totals = 0
         model.train()
-        
         for j in train_dataloader:
             #print([i for i in j[:-1]])
             op.zero_grad()
@@ -62,62 +59,29 @@ def train(
                     out1, out2=model(
                         [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],training=True)
                     #print(j[-1])
-                    loss = cca_criterion(out1, out2)
+                    loss1=criterion(out2,j[-1].cuda())
+                    loss2=cca_criterion(out1[0], out1[1])
+                    loss = loss1+1e-3*loss2
             else:
-                out=model([i.cuda() for i in j[:-1]],cca=True, training=True)
-                loss = cca_criterion(out[0], out[1])
-            totalloss += loss * len(j[-1])
-            totals+=len(j[-1])
-            loss.backward()
-            op.step()
-        
-        train_loss = totalloss/totals
-        print("Epoch "+str(epoch)+" train cca loss: "+str(train_loss))
-        
-        if bestloss == 0.0:
-            bestloss = train_loss
-            continue
-
-        if (bestloss-train_loss)/bestloss < 1e-6:
-            patience += 1
-            #print(patience)
-        else:
-            bestloss = train_loss
-            patience = 0
-        if patience > 10:
-            print("Early Stop!")
-            break
-    
-    patience = 0
-    for epoch in range(total_epochs):
-        totalloss = 0.0
-        totals = 0
-        model.train()
-        for j in train_dataloader:
-            #print([i for i in j[:-1]])
-            op.zero_grad()
-            if is_packed:
-                with torch.backends.cudnn.flags(enabled=False):
-                    out=model([[i.cuda() for i in j[0]], j[1]],training=True)
-                    #print(j[-1])
-                    #print(out)
-                    loss = criterion(out,j[-1].cuda())
-            else:
-                out=model([i.cuda() for i in j[:-1]],training=True)
-                #print(out, j[-1])
+                out1, out2=model([i.float().cuda() for i in j[:-1]],training=True)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss=criterion(out, j[-1].double().cuda())
+                    loss1=criterion(out2, j[-1].float().cuda())
                 else:
-                    loss=criterion(out, j[-1].cuda())
-            
+                    if len(j[-1].size())>1:
+                        j[-1] = j[-1].squeeze()
+                    loss1=criterion(out2, j[-1].long().cuda())
+                loss2=cca_criterion(out1[0], out1[1])
+                loss = loss1+1e-3*loss2
+            #print(loss)
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
-            
+            totalloss1 += loss1 * len(j[-1])
+            totalloss2 += loss2 * len(j[-1])
             loss.backward()
+            #torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
             op.step()
-        #print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
-        print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
-
+            print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" cca loss: "+str(totalloss2/totals))
+        
         model.eval()
         with torch.no_grad():
             totalloss = 0.0
@@ -126,14 +90,17 @@ def train(
             pts = []
             for j in valid_dataloader:
                 if is_packed:
-                    out=model([[i.cuda() for i in j[0]], j[1]],training=False)
+                    _, out=model([[i.cuda() for i in j[0]], j[1]],training=False)
                 else:
-                    out = model([i.cuda() for i in j[:-1]],training=False)
+                    _, out = model([i.float().cuda() for i in j[:-1]],training=False)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss=criterion(out, j[-1].double().cuda())
+                    loss=criterion(out, j[-1].float().cuda())
                 else:
-                    loss=criterion(out, j[-1].cuda())
+                    if len(j[-1].size())>1:
+                        j[-1] = j[-1].squeeze()
+                    loss=criterion(out, j[-1].long().cuda())
                 totalloss += loss*len(j[-1])
+                #print(totalloss)
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
                 elif task == "multilabel":
@@ -202,11 +169,11 @@ def test(
         pts=[]
         for j in test_dataloader:
             if is_packed:
-                out=model([[i.cuda() for i in j[0]], j[1]],training=False)
+                _, out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
-                out = model([i.cuda() for i in j[:-1]],training=False)
+                _, out = model([i.float().cuda() for i in j[:-1]],training=False)
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                loss=criterion(out, j[-1].double().cuda())
+                loss=criterion(out, j[-1].float().cuda())
             else:
                 loss=criterion(out, j[-1].cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
@@ -234,4 +201,5 @@ def test(
             print("mse: "+str(testloss))
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
+    return accuracy_score(true, pred)
 
