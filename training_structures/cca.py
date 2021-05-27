@@ -38,7 +38,7 @@ def train(
     criterion=nn.CrossEntropyLoss(),auprc=False,save='best.pt'):
 
     #n_data = len(train_dataloader.dataset)
-    model = MMDL(encoders,fusion,head,is_packed).double().cuda()
+    model = MMDL(encoders,fusion,head,is_packed).cuda()
     op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
     cca_criterion = CCALoss(outdim, False, device=torch.device("cuda"))
@@ -78,7 +78,7 @@ def train(
             bestloss = train_loss
             continue
 
-        if (bestloss-train_loss)/bestloss < 1e-6:
+        if (bestloss-train_loss)/abs(bestloss) < 1e-6:
             patience += 1
             #print(patience)
         else:
@@ -106,7 +106,7 @@ def train(
                 out=model([i.cuda() for i in j[:-1]],training=True)
                 #print(out, j[-1])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss=criterion(out, j[-1].double().cuda())
+                    loss=criterion(out, j[-1].float().cuda())
                 else:
                     loss=criterion(out, j[-1].cuda())
             
@@ -130,7 +130,7 @@ def train(
                 else:
                     out = model([i.cuda() for i in j[:-1]],training=False)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss=criterion(out, j[-1].double().cuda())
+                    loss=criterion(out, j[-1].float().cuda())
                 else:
                     loss=criterion(out, j[-1].cuda())
                 totalloss += loss*len(j[-1])
@@ -206,7 +206,7 @@ def test(
             else:
                 out = model([i.cuda() for i in j[:-1]],training=False)
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                loss=criterion(out, j[-1].double().cuda())
+                loss=criterion(out, j[-1].float().cuda())
             else:
                 loss=criterion(out, j[-1].cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
