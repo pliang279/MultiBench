@@ -6,9 +6,9 @@ from torch.utils.data import DataLoader
 
 sys.path.append(os.getcwd())
 from unimodals.common_models import MLP
-#r3d = torchvision.models.video.r3d_18(pretrained=True)
-#model=torch.nn.Sequential(r3d,torch.load('best1.pt')).cuda()
-model=torch.load('best22.pt').cuda()
+r3d = torchvision.models.video.r3d_18(pretrained=True)
+model=torch.nn.Sequential(r3d,MLP(400,200,5)).cuda()
+#odel=torch.load('best22.pt').cuda()
 optim = torch.optim.Adam(model.parameters(),lr=0.0001)
 datas = torch.load('/home/pliang/yiwei/kinetics_small/valid/batch0.pkt')
 criterion = torch.nn.CrossEntropyLoss()
@@ -54,6 +54,7 @@ for ep in range(epochs):
             torch.save(model,'best22.pt')
 
 print('testing')
+model=torch.load('best22.pt')
 valid_dataloader=None
 datas = torch.load('/home/pliang/yiwei/kinetics_small/test/batch0.pkt')
 test_dataloader = DataLoader(datas,shuffle=False,batch_size=5)

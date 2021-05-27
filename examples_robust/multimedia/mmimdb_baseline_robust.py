@@ -6,24 +6,37 @@ import torch
 
 from training_structures.Simple_Late_Fusion import train, test
 from fusions.common_fusions import Concat
-from get_data_robust import get_dataloader
-from unimodals.common_models import LeNet,MLP,VGG,MaxOut_MLP
+from unimodals.common_models import MLP, VGG16, Linear
+# from get_data_robust import get_dataloader, get_dataloader_robust
+from get_data import get_dataloader
+from robustness.all_in_one import general_train, general_test
 
-robustdata = get_dataloader('../../../video/mmimdb')
+# traindata, validdata = get_dataloader('../../../video/multimodal_imdb.hdf5', vgg=True)
+# # robustdata = get_dataloader_robust('../../../video/mmimdb')
 
-# encoders=[MaxOut_MLP(23).cuda(),VGG(23).cuda()]
-# head=MLP(4096,512,23).cuda()
+# encoders=[MLP(300, 512, 512), MLP(4096, 1000, 512)]
+# #encoders=[MLP(300, 512, 512), VGG16(512)]
+# head=MLP(1024,512,23).cuda()
 # fusion=Concat().cuda()
 
-# Train
-# train(encoders,fusion,head,traindata,validdata,100,optimtype=torch.optim.SGD,lr=0.01,weight_decay=0.002, save='mmimdb_baseline_best.pt')
+# def trainprocess(filename):
+#     train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multilabel", regularization=True, save=filename, optimtype=torch.optim.AdamW,lr=5e-5,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
+# filename = general_train(trainprocess, 'mmimdb_baseline')
 
-#test
-model=torch.load('mmimdb_baseline_best.pt').cuda()
-acc = []
-print("Robustness testing:")
-for noise_level in range(len(robustdata)):
-    print("Noise level {}: ".format(noise_level/10))
-    acc.append(test(model, robustdata[noise_level]))
+# def testprocess(model, noise_level):
+#     return test(model,robustdata[noise_level],criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
+# general_test(testprocess, filename, len(robustdata))
 
-print("Accuracy of different noise levels:", acc)
+traindata, validdata, testdata = get_dataloader('../../../video/multimodal_imdb.hdf5', batch_size=1, vgg=True)
+
+encoders=[MLP(300, 512, 512), MLP(4096, 1000, 512)]
+#encoders=[MLP(300, 512, 512), VGG16(512)]
+head=MLP(1024,512,23).cuda()
+fusion=Concat().cuda()
+
+train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multilabel", regularization=True,\
+    save="best_reg.pt", optimtype=torch.optim.AdamW,lr=5e-5,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
+
+print("Testing:")
+model=torch.load('best_reg.pt').cuda()
+test(model,testdata,criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
