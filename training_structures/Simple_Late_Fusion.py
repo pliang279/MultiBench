@@ -134,8 +134,6 @@ def train(
                 torch.save(model,save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
         elif task == "multilabel":
             f1_micro = f1_score(true, pred, average="micro")
             f1_macro = f1_score(true, pred, average="macro")
@@ -148,8 +146,6 @@ def train(
                 torch.save(model,save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
         elif task == "regression":
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss))
             if valloss<bestvalloss:
@@ -159,8 +155,8 @@ def train(
                 torch.save(model,save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
+        if early_stop and patience > 7:
+            break
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
         
