@@ -44,3 +44,35 @@ def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
             loss.append(np.array(loss_tmp))
     print("Standard deviation:", list(np.std(np.array(loss), axis=0)))
     print("Average loss of different noise levels:", list(np.mean(np.array(loss), axis=0)))
+
+
+def general_train(trainprocess, algorithm, encoder=False):
+    if encoder:
+        filename_encoder = "{}_encoder.pt".format(algorithm)
+        filename_head = "{}_head.pt".format(algorithm)
+        trainprocess(filename_encoder, filename_head)
+        return filename_encoder, filename_head
+    else:
+        filename = "{}_best.pt".format(algorithm)
+        trainprocess(filename)
+        return filename
+
+
+def general_test(testprocess, filename, noise_range, encoder=False, multi_measure=False):
+    measure = []
+    if encoder:
+        encoder = torch.load(filename[0]).cuda()
+        head = torch.load(filename[1]).cuda()
+        print("Robustness testing:")
+        for noise_level in range(noise_range):
+            print("Noise level {}: ".format(noise_level/10))
+            measure.append(testprocess(encoder, head, noise_level))
+    else:
+        model = torch.load(filename).cuda()
+        print("Robustness testing:")
+        for noise_level in range(noise_range):
+            print("Noise level {}: ".format(noise_level/10))
+            measure.append(testprocess(model, noise_level))
+    if multi_measure:
+        measure = [[x[0] for x in measure], [x[1] for x in measure]]
+    print("Different noise levels:", measure)
