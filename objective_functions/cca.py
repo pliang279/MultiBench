@@ -81,5 +81,5 @@ class CCALoss(nn.Module):
             U = torch.where(U>eps, U, (torch.ones(U.shape).double()*eps).to(self.device))
             U = U.topk(self.outdim_size)[0]
             corr = torch.sum(torch.sqrt(U))
-        print(corr)
+        #print(corr)
         return -corr

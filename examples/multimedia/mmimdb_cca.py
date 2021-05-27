@@ -7,7 +7,7 @@ import torch
 from training_structures.cca import train, test
 from fusions.common_fusions import Concat
 from datasets.imdb.get_data import get_dataloader
-from unimodals.common_models import MLP, VGG16, Linear,
+from unimodals.common_models import MLP, VGG16, Linear
 
 traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', vgg=True, batch_size=800)
 
