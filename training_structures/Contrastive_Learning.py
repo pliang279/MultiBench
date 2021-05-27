@@ -293,12 +293,15 @@ def test(
         true = torch.cat(true, 0).cpu().numpy()
         totals = true.shape[0]
         testloss=totalloss/totals
+        if auprc:
+            print("AUPRC: "+str(AUPRC(pts)))
         if task == "classification":
             print("acc: "+str(accuracy_score(true, pred)))
+            return accuracy_score(true, pred)
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
+            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro")
         elif task == "regression":
             print("mse: "+str(testloss))
-        if auprc:
-            print("AUPRC: "+str(AUPRC(pts)))
+            return testloss
