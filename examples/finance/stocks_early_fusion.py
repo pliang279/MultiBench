@@ -34,7 +34,7 @@ head = LSTMWithLinear(n_modalities, 128, 1).cuda()
 allmodules = [*encoders, fusion, head]
 
 def trainprocess():
-    train(encoders, fusion, head, train_loader, val_loader, total_epochs=4,
+    train(encoders, fusion, head, train_loader, val_loader, total_epochs=2,
           task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss())
 all_in_one_train(trainprocess, allmodules)
 
