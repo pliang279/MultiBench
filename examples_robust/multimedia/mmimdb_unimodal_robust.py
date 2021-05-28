@@ -23,4 +23,4 @@ filename = general_train(trainprocess, 'mmimdb_unimodal', encoder=True)
 
 def testprocess(encoder, head, noise_level):
     return test(encoder,head,robustdata[noise_level],criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
-general_test(testprocess, filename, len(robustdata), multi_measure=True)
+general_test(testprocess, filename, len(robustdata), multi_measure=True, encoder=True)
