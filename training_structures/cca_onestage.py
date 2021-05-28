@@ -31,14 +31,14 @@ class MMDL(nn.Module):
 
 
 def train(
-    encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
+    encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,outdim=10,
     early_stop=False,task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
     criterion=nn.CrossEntropyLoss(),auprc=False,save='best.pt'):
     
     model = MMDL(encoders,fusion,head,is_packed).cuda()
     op = optimtype([p for p in model.parameters() if p.requires_grad],lr=lr,weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
-    cca_criterion = CCALoss(device=torch.device("cuda"))
+    cca_criterion = CCALoss(outdim, False, device=torch.device("cuda"))
 
     bestvalloss = 10000
     bestacc = 0
@@ -80,7 +80,7 @@ def train(
             loss.backward()
             #torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
             op.step()
-            print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" cca loss: "+str(totalloss2/totals))
+        print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" cca loss: "+str(totalloss2/totals))
         
         model.eval()
         with torch.no_grad():

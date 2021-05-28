@@ -78,7 +78,7 @@ def train(
             bestloss = train_loss
             continue
 
-        if (bestloss-train_loss)/bestloss < 1e-6:
+        if (bestloss-train_loss)/abs(bestloss) < 1e-6:
             patience += 1
             #print(patience)
         else:
@@ -106,7 +106,7 @@ def train(
                 out=model([i.cuda() for i in j[:-1]],training=True)
                 #print(out, j[-1])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss=criterion(out, j[-1].cuda())
+                    loss=criterion(out, j[-1].float().cuda())
                 else:
                     loss=criterion(out, j[-1].cuda())
             
@@ -130,7 +130,7 @@ def train(
                 else:
                     out = model([i.cuda() for i in j[:-1]],training=False)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss=criterion(out, j[-1].cuda())
+                    loss=criterion(out, j[-1].float().cuda())
                 else:
                     loss=criterion(out, j[-1].cuda())
                 totalloss += loss*len(j[-1])
@@ -206,7 +206,7 @@ def test(
             else:
                 out = model([i.cuda() for i in j[:-1]],training=False)
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                loss=criterion(out, j[-1].cuda())
+                loss=criterion(out, j[-1].float().cuda())
             else:
                 loss=criterion(out, j[-1].cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
