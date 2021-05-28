@@ -78,8 +78,8 @@ class CCALoss(nn.Module):
             trace_TT = torch.matmul(Tval.t(), Tval)
             trace_TT = torch.add(trace_TT, (torch.eye(trace_TT.shape[0])*r1).to(self.device)) # regularization for more stability
             U, V = torch.symeig(trace_TT, eigenvectors=True)
-            U = torch.where(U>eps, U, (torch.ones(U.shape)*eps).to(self.device))
+            U = torch.where(U>eps, U, (torch.ones(U.shape).float()*eps).to(self.device))
             U = U.topk(self.outdim_size)[0]
             corr = torch.sum(torch.sqrt(U))
-        print(corr)
+        #print(corr)
         return -corr
