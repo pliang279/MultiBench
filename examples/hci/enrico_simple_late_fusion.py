@@ -23,7 +23,7 @@ head = Linear(32, 20).cuda()
 
 fusion=Concat().cuda()
 
-allmodules = encoders + [head]
+allmodules = encoders + [head, fusion]
 
 def trainprocess():
     train(encoders,fusion,head,traindata,validdata,50,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
