@@ -34,21 +34,22 @@ class MMDL(nn.Module):
         fuse = self.fuse(outs, training=training)
         logit = self.head(fuse, training=training)
         
-        rec_feature = self.refiner(fuse, training=training)
         rec_features = []
-        for i in range(input_num):
-            if self.has_padding:
-                if i == 0:
-                    rec_features.append(rec_feature[:, :inputs[0][i].size(1)])
+        if training:
+            rec_feature = self.refiner(fuse, training=training)
+            for i in range(input_num):
+                if self.has_padding:
+                    if i == 0:
+                        rec_features.append(rec_feature[:, :inputs[0][i].size(1)])
+                    else:
+                        rec_features.append(rec_feature[:, \
+                            inputs[0][i-1].size(1):inputs[0][i-1].size(1)+inputs[i].size(1)])
                 else:
-                    rec_features.append(rec_feature[:, \
-                        inputs[0][i-1].size(1):inputs[0][i-1].size(1)+inputs[i].size(1)])
-            else:
-                if i == 0:
-                    rec_features.append(rec_feature[:, :inputs[i].size(1)])
-                else:
-                    rec_features.append(rec_feature[:, \
-                        inputs[i-1].size(1):inputs[i-1].size(1)+inputs[i].size(1)])
+                    if i == 0:
+                        rec_features.append(rec_feature[:, :inputs[i].size(1)])
+                    else:
+                        rec_features.append(rec_feature[:, \
+                            inputs[i-1].size(1):inputs[i-1].size(1)+inputs[i].size(1)])
             '''
             if i == 0:
                 rec_features.append(rec_feature[:, :outs[i].size(-1)])
