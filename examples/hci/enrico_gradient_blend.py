@@ -24,7 +24,7 @@ uni_head = [Linear(16, 20).cuda(), Linear(16, 20).cuda()]
 fusion=Concat().cuda()
 
 # train(encoders,fusion,head,traindata,validdata,num_epoch=50,gb_epoch=10,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
-allmodules = encoders + [uni_head, mult_head]
+allmodules = encoders + [uni_head, mult_head, fusion]
 def trainprocess():
     train(encoders,mult_head,uni_head,fusion,traindata,validdata,50,gb_epoch=10,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
 
