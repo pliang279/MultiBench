@@ -119,14 +119,16 @@ def test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classifi
             pred = torch.cat(pred, 0).cpu().numpy()
         true = torch.cat(true, 0).cpu().numpy()
         totals = true.shape[0]
+        if auprc:
+            print("AUPRC: "+str(AUPRC(pts)))
         if criterion is not None:
             print("loss: " + str(totalloss / totals))
         if task == "classification":
             print("acc: "+str(accuracy_score(true, pred)))
+            return accuracy_score(true, pred)
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
-        if auprc:
-            print("AUPRC: "+str(AUPRC(pts)))
-    return accuracy_score(true, pred)
-
+            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
+        else:
+            return totalloss / totals

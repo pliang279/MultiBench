@@ -74,5 +74,8 @@ def general_test(testprocess, filename, noise_range, encoder=False, multi_measur
             print("Noise level {}: ".format(noise_level/10))
             measure.append(testprocess(model, noise_level))
     if multi_measure:
-        measure = [[x[0] for x in measure], [x[1] for x in measure]]
+        result = []
+        for i in range(len(measure[0])):
+            result.append([x[i] for x in measure])
+        measure = result
     print("Different noise levels:", measure)
