@@ -4,7 +4,7 @@ from .layers import CausalConv1D, Flatten, conv2d
 
 
 class ProprioEncoder(nn.Module):
-    def __init__(self, z_dim, alpha, initialize_weights=True, input_dim=8):
+    def __init__(self, z_dim, alpha, initialize_weights=True):
         """
         Image encoder taken from selfsupervised code
         """
@@ -13,7 +13,7 @@ class ProprioEncoder(nn.Module):
         self.alpha = alpha
 
         self.proprio_encoder = nn.Sequential(
-            nn.Linear(input_dim, 32),
+            nn.Linear(8, 32),
             nn.LeakyReLU(0.1, inplace=True),
             nn.Linear(32, 64),
             nn.LeakyReLU(0.1, inplace=True),
@@ -107,48 +107,6 @@ class ImageEncoder(nn.Module):
         return img_out, img_out_convs
 
 
-class GentlePushImageEncoder(nn.Module):
-    def __init__(self, z_dim, alpha, initialize_weights=True):
-        """
-        Image encoder taken from Making Sense of Vision and Touch
-        """
-        super().__init__()
-        self.z_dim = z_dim
-        self.alpha = alpha
-
-        self.img_conv1 = conv2d(1, 16, kernel_size=7, stride=2)
-        self.img_conv2 = conv2d(16, 32, kernel_size=5, stride=2)
-        self.img_conv3 = conv2d(32, 64, kernel_size=5, stride=2)
-        self.img_conv4 = conv2d(64, self.z_dim, stride=2)
-        self.img_encoder = nn.Linear(4 * self.z_dim, 2 * self.z_dim)
-        self.flatten = Flatten()
-
-        if initialize_weights:
-            init_weights(self.modules())
-
-    def forward(self, image, training=False):
-        image = image.reshape([image.shape[0], 1, *image.shape[1:]])
-
-        # image encoding layers
-        out_img_conv1 = self.img_conv1(self.alpha * image)
-        out_img_conv2 = self.img_conv2(out_img_conv1)
-        out_img_conv3 = self.img_conv3(out_img_conv2)
-        out_img_conv4 = self.img_conv4(out_img_conv3)
-
-        img_out_convs = (
-            out_img_conv1,
-            out_img_conv2,
-            out_img_conv3,
-            out_img_conv4,
-        )
-
-        # image embedding parameters
-        flattened = self.flatten(out_img_conv4)
-        img_out = self.img_encoder(flattened).unsqueeze(2)
-
-        return img_out
-
-
 class DepthEncoder(nn.Module):
     def __init__(self, z_dim, alpha, initialize_weights=True):
         """
@@ -215,3 +173,72 @@ class ActionEncoder(nn.Module):
         if action is None:
             return None
         return self.action_encoder(action)
+
+
+class GentlePushImageEncoder(nn.Module):
+    def __init__(self, z_dim, alpha, initialize_weights=True):
+        """
+        Image encoder taken from Making Sense of Vision and Touch
+        """
+        super().__init__()
+        self.z_dim = z_dim
+        self.alpha = alpha
+
+        self.img_conv1 = conv2d(1, 16, kernel_size=7, stride=2)
+        self.img_conv2 = conv2d(16, 32, kernel_size=5, stride=2)
+        self.img_conv3 = conv2d(32, 64, kernel_size=5, stride=2)
+        self.img_conv4 = conv2d(64, self.z_dim, stride=2)
+        self.img_encoder = nn.Linear(4 * self.z_dim, 2 * self.z_dim)
+        self.flatten = Flatten()
+
+        if initialize_weights:
+            init_weights(self.modules())
+
+    def forward(self, image, training=False):
+        image = image.reshape([image.shape[0], 1, *image.shape[1:]])
+
+        # image encoding layers
+        out_img_conv1 = self.img_conv1(self.alpha * image)
+        out_img_conv2 = self.img_conv2(out_img_conv1)
+        out_img_conv3 = self.img_conv3(out_img_conv2)
+        out_img_conv4 = self.img_conv4(out_img_conv3)
+
+        img_out_convs = (
+            out_img_conv1,
+            out_img_conv2,
+            out_img_conv3,
+            out_img_conv4,
+        )
+
+        # image embedding parameters
+        flattened = self.flatten(out_img_conv4)
+        img_out = self.img_encoder(flattened).unsqueeze(2)
+
+        return img_out
+
+
+class GentlePushLinearEncoder(nn.Module):
+    def __init__(self, z_dim, alpha, initialize_weights=True, input_dim=8):
+        """
+        Image encoder taken from selfsupervised code
+        """
+        super().__init__()
+        self.z_dim = z_dim
+        self.alpha = alpha
+
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, 32),
+            nn.LeakyReLU(0.1, inplace=True),
+            nn.Linear(32, 64),
+            nn.LeakyReLU(0.1, inplace=True),
+            nn.Linear(64, 128),
+            nn.LeakyReLU(0.1, inplace=True),
+            nn.Linear(128, 2 * self.z_dim),
+            nn.LeakyReLU(0.1, inplace=True),
+        )
+
+        if initialize_weights:
+            init_weights(self.modules())
+
+    def forward(self, input, training=False):
+        return self.encoder(self.alpha * input).unsqueeze(2)

@@ -101,6 +101,19 @@ class PushTask():
         else:
             return _load_trajectories("gentle_push_10.hdf5", **dataset_args)
 
+    @classmethod
+    def get_test_trajectories(
+        cls, **dataset_args
+    ) -> List[TrajectoryNumpy]:
+
+        kloss_dataset = (
+            dataset_args["kloss_dataset"] if "kloss_dataset" in dataset_args else False
+        )
+        if kloss_dataset:
+            raise Exception('No test dataset for kloss')
+        else:
+            return _load_trajectories("gentle_push_300.hdf5", **dataset_args)
+
 
 def _load_trajectories(
     *input_files,
@@ -438,7 +451,7 @@ class Dataset(torch.utils.data.Dataset):
                         fp.utils.SliceWrapper(traj.observations)[t + 1]['gripper_sensors'],
                         fp.utils.SliceWrapper(traj.observations)[t + 1]['image'],
                         fp.utils.SliceWrapper(traj.controls)[t + 1],  # control
-                        traj.states[t + 1],  # state
+                        traj.states[t + 1] - traj.states[t],  # change in state
                     )
                 )
 
