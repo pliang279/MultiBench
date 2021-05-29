@@ -233,7 +233,8 @@ def test(
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
-            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro")
+            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
         elif task == "regression":
             print("mse: "+str(testloss))
+            return testloss
 
