@@ -35,12 +35,13 @@ class Stack(nn.Module):
 
 
 class ConcatWithLinear(nn.Module):
-    def __init__(self, input_dims, output_dim):
+    def __init__(self, input_dims, output_dim, concat_dim=1):
         super(ConcatWithLinear,self).__init__()
+        self.concat_dim = concat_dim
         self.fc = nn.Linear(input_dims, output_dim)
     
     def forward(self, modalities, training=False):
-        return self.fc(torch.cat(modalities, dim=1))
+        return self.fc(torch.cat(modalities, dim=self.concat_dim))
 
 
 class FiLM(nn.Module):
