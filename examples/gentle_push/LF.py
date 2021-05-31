@@ -12,15 +12,14 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+import unimodals.gentle_push.layers as layers
+
 from torch.utils.data import DataLoader
 
-from datasets.gentle_push.data_loader import Dataset, PushTask
-from unimodals.robotics.encoders import (
-    GentlePushImageEncoder, GentlePushLinearEncoder,
-)
-from unimodals.common_models import MLP
-from unimodals.robotics.decoders import ContactDecoder
-from fusions.common_fusions import Concat
+from datasets.gentle_push.data_loader import SubsequenceDataset, PushTask
+from unimodals.common_models import Sequential, Transpose, Reshape, MLP
+from unimodals.gentle_push.head import Head
+from fusions.common_fusions import ConcatWithLinear
 from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 
@@ -40,30 +39,30 @@ val_trajectories = Task.get_eval_trajectories(**dataset_args)
 test_trajectories = Task.get_test_trajectories(**dataset_args)
 
 train_loader = DataLoader(
-    Dataset(train_trajectories),
+    SubsequenceDataset(train_trajectories, 16),
     batch_size=32,
     shuffle=True,
+    drop_last=True,
 )
 val_loader = DataLoader(
-    Dataset(val_trajectories),
+    SubsequenceDataset(val_trajectories, 16),
     batch_size=32,
     shuffle=True,
 )
 test_loader = DataLoader(
-    Dataset(test_trajectories),
+    SubsequenceDataset(test_trajectories, 16),
     batch_size=32,
     shuffle=False,
 )
 
 encoders = [
-    GentlePushLinearEncoder(32, input_dim=2, alpha=1.0),
-    GentlePushLinearEncoder(32, input_dim=3, alpha=1.0),
-    GentlePushLinearEncoder(32, input_dim=7, alpha=1.0),
-    GentlePushImageEncoder(32, alpha=1.0),
-    GentlePushLinearEncoder(32, input_dim=7, alpha=1.0),
+    Sequential(Transpose(0, 1), layers.observation_pos_layers(64)),
+    Sequential(Transpose(0, 1), layers.observation_sensors_layers(64)),
+    Sequential(Transpose(0, 1), Reshape([-1, 1, 32, 32]), layers.observation_image_layers(64), Reshape([16, -1, 64])),
+    Sequential(Transpose(0, 1), layers.control_layers(64)),
 ]
-fusion = Concat()
-head=MLP(320,128,2)
+fusion = ConcatWithLinear(64 * 4, 64, concat_dim=2)
+head = Sequential(Head(), Transpose(0, 1))
 allmodules = [*encoders, fusion, head]
 optimtype = optim.Adam
 loss_state = nn.MSELoss()

@@ -25,6 +25,35 @@ class Squeeze(torch.nn.Module):
             return torch.squeeze(x, self.dim)
 
 
+class Sequential(nn.Sequential):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def forward(self, *args, **kwargs):
+        if 'training' in kwargs:
+            del kwargs['training']
+        return super().forward(*args, **kwargs)
+
+
+class Reshape(nn.Module):
+    def __init__(self, shape):
+        super().__init__()
+        self.shape = shape
+
+    def forward(self, x, training=False):
+        return torch.reshape(x, self.shape)
+
+
+class Transpose(nn.Module):
+    def __init__(self, dim0, dim1):
+        super().__init__()
+        self.dim0 = dim0
+        self.dim1 = dim1
+
+    def forward(self, x, training=False):
+        return torch.transpose(x, self.dim0, self.dim1)
+
+
 class MLP(torch.nn.Module):
     def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1,output_each_layer=False):
         super(MLP, self).__init__()

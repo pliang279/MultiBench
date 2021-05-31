@@ -9,6 +9,8 @@ import fannypack as fp
 import numpy as np
 import torch
 
+from torch.utils.data import Dataset
+
 dataset_urls = {
     # Mujoco URLs
     "gentle_push_10.hdf5": "https://drive.google.com/file/d/1qmBCfsAGu8eew-CQFmV1svodl9VJa6fX/view?usp=sharing",
@@ -436,41 +438,116 @@ def _load_trajectories(
 
     return trajectories
 
-class Dataset(torch.utils.data.Dataset):
-    # https://github.com/stanford-iprl-lab/torchfilter/blob/master/torchfilter/data/_single_step_dataset.py
-    def __init__(self, trajectories):
-        self.samples = []
 
-        for traj in trajectories:
-            T = len(traj.states)
-            for t in range(T - 1):
-                self.samples.append(
+# From https://github.com/stanford-iprl-lab/torchfilter:
+
+def split_trajectories(
+    trajectories: List[TrajectoryNumpy], subsequence_length: int
+):
+    """Helper for splitting a list of trajectories into a list of overlapping
+    subsequences.
+    For each trajectory, assuming a subsequence length of 10, this function
+    includes in its output overlapping subsequences corresponding to
+    timesteps...
+    ```
+        [0:10], [10:20], [20:30], ...
+    ```
+    as well as...
+    ```
+        [5:15], [15:25], [25:30], ...
+    ```
+    Args:
+        trajectories (List[torchfilter.base.TrajectoryNumpy]): List of trajectories.
+        subsequence_length (int): # of timesteps per subsequence.
+    Returns:
+        List[torchfilter.base.TrajectoryNumpy]: List of subsequences.
+    """
+
+    subsequences = []
+
+    for traj in trajectories:
+        # Chop up each trajectory into overlapping subsequences
+        trajectory_length = len(traj.states)
+        assert len(fp.utils.SliceWrapper(traj.observations)) == trajectory_length
+        assert len(fp.utils.SliceWrapper(traj.controls)) == trajectory_length
+
+        # We iterate over two offsets to generate overlapping subsequences
+        for offset in (0, subsequence_length // 2):
+
+            def split_fn(x: np.ndarray) -> np.ndarray:
+                """Helper: splits arrays of shape `(T, ...)` into `(sections,
+                subsequence_length, ...)`, where `sections = orig_length //
+                subsequence_length`."""
+                # Offset our starting point
+                x = x[offset:]
+
+                # Make sure our array is evenly divisible
+                sections = len(x) // subsequence_length
+                new_length = sections * subsequence_length
+                x = x[:new_length]
+
+                # Split & return
+                return np.split(x, sections)
+
+            for s, o, c in zip(
+                # States are always raw arrays
+                split_fn(traj.states),
+                # Observations and controls can be dictionaries, so we have to jump
+                # through some hoops
+                fp.utils.SliceWrapper(
+                    fp.utils.SliceWrapper(traj.observations).map(split_fn)
+                ),
+                fp.utils.SliceWrapper(
+                    fp.utils.SliceWrapper(traj.controls).map(split_fn)
+                ),
+            ):
+                # Add to subsequences
+                subsequences.append(
                     (
-                        traj.states[t],  # previous_state
-                        fp.utils.SliceWrapper(traj.observations)[t + 1]['gripper_pos'],
-                        fp.utils.SliceWrapper(traj.observations)[t + 1]['gripper_sensors'],
-                        fp.utils.SliceWrapper(traj.observations)[t + 1]['image'],
-                        fp.utils.SliceWrapper(traj.controls)[t + 1],  # control
-                        traj.states[t + 1] - traj.states[t],  # change in state
+                        o['gripper_pos'],
+                        o['gripper_sensors'],
+                        o['image'],
+                        c,
+                        s,
                     )
                 )
+    return subsequences
 
-    def __getitem__(
-        self, index: int
+
+class SubsequenceDataset(Dataset):
+    """A data preprocessor for producing training subsequences from
+    a list of trajectories.
+    Thin wrapper around `torchfilter.data.split_trajectories()`.
+    Args:
+        trajectories (list): list of trajectories, where each is a tuple of
+            `(states, observations, controls)`. Each tuple member should be
+            either a numpy array or dict of numpy arrays with shape `(T, ...)`.
+        subsequence_length (int): # of timesteps per subsequence.
+    """
+
+    def __init__(
+        self, trajectories: List[TrajectoryNumpy], subsequence_length: int
     ):
-        """Get a single-step prediction sample from our dataset.
+        # Split trajectory into overlapping subsequences
+        self.subsequences = split_trajectories(
+            trajectories, subsequence_length
+        )
+
+    def __getitem__(self, index: int):
+        """Get a subsequence from our dataset.
         Args:
             index (int): Subsequence number in our dataset.
         Returns:
-            tuple: `(previous_state, state, observation, control)` tuple that
-            contains data for a single subsequence. Each tuple member should be either a
-            numpy array or dict of numpy arrays with shape `(subsequence_length, ...)`.
+            tuple: `(states, observations, controls)` tuple that contains
+            data for a single subsequence. Each tuple member should be either a
+            numpy array or dict of numpy arrays with shape
+            `(subsequence_length, ...)`.
         """
-        return self.samples[index]
+        return self.subsequences[index]
 
     def __len__(self) -> int:
         """Total number of subsequences in the dataset.
         Returns:
             int: Length of dataset.
         """
-        return len(self.samples)
+        return len(self.subsequences)
