@@ -70,7 +70,7 @@ loss_state = nn.MSELoss()
 def trainprocess():
     train(encoders, fusion, head,
           train_loader, val_loader,
-          10,
+          20,
           task='regression',
           optimtype=optimtype,
           criterion=loss_state,
