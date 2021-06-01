@@ -180,11 +180,12 @@ class TensorFusion(nn.Module):
         if len(modalities) == 1:
             return modalities[0]
 
-        nonfeature_size = modalities[0].shape[:-1]
+        mod0 = modalities[0]
+        nonfeature_size = mod0.shape[:-1]
 
-        m = torch.cat((Variable(torch.ones(*nonfeature_size, 1).type(modalities[0].dtype), requires_grad=False), modalities[0]), dim=-1)
+        m = torch.cat((Variable(torch.ones(*nonfeature_size, 1).type(mod0.dtype).to(mod0.device), requires_grad=False), mod0), dim=-1)
         for mod in modalities[1:]:
-            mod = torch.cat((Variable(torch.ones(*nonfeature_size, 1).type(mod.dtype), requires_grad=False), mod), dim=-1)
+            mod = torch.cat((Variable(torch.ones(*nonfeature_size, 1).type(mod.dtype).to(mod.device), requires_grad=False), mod), dim=-1)
             fused = torch.einsum('...i,...j->...ij', m, mod)
             m = fused.reshape([*nonfeature_size, -1])
 
