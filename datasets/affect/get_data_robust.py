@@ -1,16 +1,19 @@
 from typing import *
+import h5py
 import pickle
 import os
 import sys
+import re
+from collections import defaultdict
 
 import numpy as np
 import torch
+import torchtext as text
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader, Dataset
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
-from robustness.visual_robust import visual_robustness
-from robustness.audio_robust import audio_robustness
 from robustness.text_robust import text_robustness
+from robustness.timeseries_robust import timeseries_robustness
 
 
 class Affectdataset(Dataset):
@@ -50,26 +53,155 @@ class Affectdataset(Dataset):
         return self.dataset['vision'].shape[0]
 
 
-def get_dataloader(
-    filepath:str, batch_size:int=40, train_shuffle:bool=True,
-    num_workers:int=8, flatten_time_series:bool=False,task=None)->DataLoader:
+def get_rawtext(path, data_kind, vids):
+    if data_kind == 'pkl' or data_kind == 'sarcasm':
+        f = load_pickle(path)
+    elif data_kind == 'hdf5':
+        f = h5py.File(path, 'r')
+        text_data = []
+        for vid in vids:
+            text = []
+            # print(vid, "!!!!!!")
+            (id, seg) = re.match(r'(\w*)_(\w+)', vid).groups()
+            vid_id = '{}[{}]'.format(id, seg)
+            for word in f['words'][vid_id]['features']:
+                if word[0] != b'sp':
+                    text.append(word[0].decode('utf-8'))
+            text_data.append(' '.join(text))
+        return text_data
+    else:
+        print('Wrong data kind!')
 
+
+def load_pickle(pickle_file:str)->Dict:
+	try:
+		with open(pickle_file, 'rb') as f:
+			pickle_data = pickle.load(f)
+	except UnicodeDecodeError as e:
+		with open(pickle_file, 'rb') as f:
+			pickle_data = pickle.load(f, encoding='latin1')
+	except Exception as e:
+		print('Unable to load data ', pickle_file, ':', e)
+		raise
+	return pickle_data
+
+
+
+def get_word2id(text_data, vids):
+    word2id = defaultdict(lambda: len(word2id))
+    UNK = word2id['unk']
+    data_processed = dict()
+    for i, segment in enumerate(text_data):
+        _words = segment.split()
+        for word in _words:
+            words.append(word2id[word])
+        words = np.asarray(words)
+        data_processed[vids[i]] = words
+    def return_unk():
+        return UNK
+    word2id.default_factory = return_unk
+    return data_processed, word2id
+
+
+def get_word_embeddings(word2id, save=False):
+    if os.path.exists('mosi_word_embedding_vocab.pkl'):
+        with open('mosi_word_embedding_data.pkl', 'rb') as f:
+            data = pickle.load(f)
+            return data['data']
+    else:
+        vec = text.vocab.GloVe(name='840B', dim=300)
+        tokens = []
+        for w, _ in word2id.items():
+            tokens.append(w)
+        # print('Vocab Length: {}'.format(len(tokens)))
+        ret = vec.get_vecs_by_tokens(tokens, lower_case_backup=True)
+        if save:
+            with open('mosi_word_embedding_vocab.pkl', 'wb') as f:
+                # ret_save = ret.numpy()
+                pickle.dump({'data': ret}, f)
+        return ret
+
+
+def glove_embeddings(text_data, vids, paddings=50):
+    data_prod, w2id = get_word2id(text_data, vids)
+    word_embeddings_looks_up = get_word_embeddings(w2id, save=True)
+    looks_up = word_embeddings_looks_up.numpy()
+    embedd_data = []
+    for vid in vids:
+        d = data_prod[vid]
+        tmp = []
+        # Padding with zeros at the front
+        for i in range(paddings-len(d)):
+            tmp.append(np.zeros(300,))
+        for x in d:
+            tmp.append(looks_up[x].numpy())
+        # try:
+        #     tmp = [looks_up[x] for x in d[0]]
+        # except:
+        #     print(d)
+        embedd_data.append(np.array(tmp))
+    return np.array(embedd_data)
+
+
+def get_dataloader(
+    filepath:str, dataFolder:str, dataset:str, batch_size:int=40, train_shuffle:bool=True, num_workers:int=8, flatten_time_series:bool=False,task=None)->DataLoader:
+
+    cmu_data = ['mosi', 'mosi_unalign', 'mosei', 'mosei_unalign', 'pom', 'pom_unalign']
+    pkl_data = ['urfunny', 'deception']
+    print(dataset)
+    
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
-    
-    for dataset in alldata:
-        drop = []
-        for ind, k in enumerate(alldata[dataset]["text"]):
-            if k.sum() == 0:
-                drop.append(ind)
-        alldata[dataset]["text"] = np.delete(alldata[dataset]["text"], drop, 0)
-        alldata[dataset]["vision"] = np.delete(alldata[dataset]["vision"], drop, 0)
-        alldata[dataset]["audio"] = np.delete(alldata[dataset]["audio"], drop, 0)
-        alldata[dataset]["labels"] = np.delete(alldata[dataset]["labels"], drop, 0)
-        if dataset == 'test':
-            alldata[dataset]["text"] = text_robustness(alldata[dataset]["text"])
-            alldata[dataset]["vision"] = visual_robustness(alldata[dataset]["vision"])
-            alldata[dataset]["audio"] = audio_robustness(alldata[dataset]["audio"])
+    if dataset == 'sarcasm':
+        datafile = dataset+'.pkl'
+        file = os.path.join(dataFolder, datafile)
+        rawtext = get_rawtext(file, 'sarcasm')
+    elif dataset in cmu_data:
+        datafile = dataset + '.hdf5'
+        ids = [id[0].decode('UTF-8') for id in alldata['test']['id']]
+        file = os.path.join(dataFolder, datafile)
+        rawtext = get_rawtext(file, 'hdf5', ids)
+    elif dataset in pkl_data:
+        datafile = dataset+'.pkl'
+        file = os.path.join(dataFolder, datafile)
+        rawtext = get_rawtext(file, 'pkl')
+    else:
+        print('Wrong Input!')
+
+    # Add text noises
+    robust_text_tmp = []
+    robust_text = []
+    for split in alldata:
+        drops = []
+        if split == 'test':
+            for i in range(10):
+                drop = []
+                robust_text_tmp.append(glove_embeddings(text_robustness(rawtext), noise_level=i/10))
+                for ind, k in enumerate(robust_text_tmp[-1]):
+                    if k.sum() == 0:
+                        drop.append(ind)
+                drops.append(drop)
+        else:
+            drop = []
+            for ind, k in enumerate(alldata[split]["text"]):
+                if k.sum() == 0:
+                    drop.append(ind)
+            drops.append(drop)
+        # print(drop)
+        for i, drop in enumerate(drops):
+            alldata[split]["vision"] = np.delete(alldata[split]["vision"], drop, 0)
+            alldata[split]["audio"] = np.delete(alldata[split]["audio"], drop, 0)
+            alldata[split]["labels"] = np.delete(alldata[split]["labels"], drop, 0)
+            if split == 'test':
+                robust_text.append(np.delete(robust_text_tmp[i]), drop, 0)
+            else:
+                alldata[split]["text"] = np.delete(alldata[split]["text"], drop, 0)
+
+    # Add timeseries noises
+    test = []
+    for i, text in enumerate(robust_text):
+        alldata_test = timeseries_robustness([alldata['test']['vision'], alldata['test']['audio'], text])
+        test.append(alldata_test)
 
     train = DataLoader(Affectdataset(alldata['train'], flatten_time_series, task=task), \
         shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size, \
@@ -77,11 +209,15 @@ def get_dataloader(
     valid = DataLoader(Affectdataset(alldata['valid'], flatten_time_series, task=task), \
         shuffle=False, num_workers=num_workers, batch_size=batch_size, \
         collate_fn=process)
-    test = DataLoader(Affectdataset(alldata['test'], flatten_time_series, task=task), \
-        shuffle=False, num_workers=num_workers, batch_size=batch_size, \
-        collate_fn=process)
+    robust_test = []
+    for data in test:
+        alldata['test']['vision'] = data[0]
+        alldata['test']['audio'] = data[1]
+        alldata['test']['text'] = data[2]
+        test.append(DataLoader(Affectdataset(alldata['test'], flatten_time_series, task=task), \
+        shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
 
-    return train, valid, test
+    return train, valid, robust_test
 
 
 def process(inputs:List):
