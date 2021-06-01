@@ -9,7 +9,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from unimodals.common_models import Identity
-from fusions.finance.mult import MULTModel
+from fusions.mult import MULTModel
 sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 from get_data_robust import get_dataloader
 from get_data import Grouping

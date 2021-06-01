@@ -9,7 +9,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from unimodals.common_models import Identity
-from fusions.finance.mult import MULTModel
+from fusions.mult import MULTModel
 from datasets.stocks.get_data import get_dataloader, Grouping
 from training_structures.unimodal import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
