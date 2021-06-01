@@ -133,4 +133,4 @@ def test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classifi
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
             return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
         else:
-            return totalloss / totals
+            return (totalloss / totals).item()

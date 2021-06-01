@@ -1,3 +1,8 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
+
+sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 from robustness.all_in_one import stocks_train, stocks_test
 from training_structures.gradient_blend import train, test
 from get_data_robust import get_dataloader
@@ -9,11 +14,6 @@ import torch.nn.functional as F
 import torch
 import numpy as np
 import argparse
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
-
-sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 
 
 parser = argparse.ArgumentParser()

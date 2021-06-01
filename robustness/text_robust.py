@@ -1,4 +1,5 @@
 import numpy as np
+import re
 
 
 ##############################################################################
@@ -18,7 +19,7 @@ def text_robustness(tests, noise_level=0.3, swap=True, rand_mid=True, typo=True,
     robustness_tests = []
     for i in range(len(tests)):
         newtext = []
-        text = tests[i].lower().split()
+        text = normalizeText(tests[i])
         for word in text:
             if last_char(word) > 3 and np.random.sample() <= noise_level:
                 mode = np.random.randint(len(noises))
@@ -27,6 +28,16 @@ def text_robustness(tests, noise_level=0.3, swap=True, rand_mid=True, typo=True,
                 newtext.append(word)
         robustness_tests.append(' '.join(newtext))
     return robustness_tests
+
+
+def normalizeText(text):
+    text = text.lower()
+    text = re.sub(r'<br />', r' ', text).strip()
+    text = re.sub(r'^https?:\/\/.*[\r\n]*', ' L ', text, flags=re.MULTILINE)
+    text = re.sub(r'[\~\*\+\^`_#\[\]|]', r' ', text).strip()
+    text = re.sub(r'[0-9]+', r' N ', text).strip()
+    text = re.sub(r'([/\'\-\.?!\(\)",:;])', r' \1 ', text).strip()
+    return text.split()
 
 
 def last_char(word):
