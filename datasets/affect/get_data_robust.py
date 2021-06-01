@@ -1,3 +1,4 @@
+from types import new_class
 from typing import *
 import h5py
 import pickle
@@ -59,16 +60,22 @@ def get_rawtext(path, data_kind, vids):
     elif data_kind == 'hdf5':
         f = h5py.File(path, 'r')
         text_data = []
+        new_vids = []
+        count = 0
         for vid in vids:
             text = []
-            # print(vid, "!!!!!!")
-            (id, seg) = re.match(r'(\w*)_(\w+)', vid).groups()
+            (id, seg) = re.match(r'([-\w]*)_(\w+)', vid).groups()
             vid_id = '{}[{}]'.format(id, seg)
-            for word in f['words'][vid_id]['features']:
-                if word[0] != b'sp':
-                    text.append(word[0].decode('utf-8'))
-            text_data.append(' '.join(text))
-        return text_data
+            # TODO: fix 31 missing entries
+            try:
+                for word in f['words'][vid_id]['features']:
+                    if word[0] != b'sp':
+                        text.append(word[0].decode('utf-8'))
+                text_data.append(' '.join(text))
+                new_vids.append(vid_id)
+            except:
+                print("missing", vid, vid_id)
+        return text_data, new_vids
     else:
         print('Wrong data kind!')
 
@@ -86,12 +93,12 @@ def load_pickle(pickle_file:str)->Dict:
 	return pickle_data
 
 
-
 def get_word2id(text_data, vids):
     word2id = defaultdict(lambda: len(word2id))
     UNK = word2id['unk']
     data_processed = dict()
     for i, segment in enumerate(text_data):
+        words = []
         _words = segment.split()
         for word in _words:
             words.append(word2id[word])
@@ -104,39 +111,41 @@ def get_word2id(text_data, vids):
 
 
 def get_word_embeddings(word2id, save=False):
-    if os.path.exists('mosi_word_embedding_vocab.pkl'):
-        with open('mosi_word_embedding_data.pkl', 'rb') as f:
-            data = pickle.load(f)
-            return data['data']
-    else:
-        vec = text.vocab.GloVe(name='840B', dim=300)
-        tokens = []
-        for w, _ in word2id.items():
-            tokens.append(w)
-        # print('Vocab Length: {}'.format(len(tokens)))
-        ret = vec.get_vecs_by_tokens(tokens, lower_case_backup=True)
-        if save:
-            with open('mosi_word_embedding_vocab.pkl', 'wb') as f:
-                # ret_save = ret.numpy()
-                pickle.dump({'data': ret}, f)
-        return ret
+    # if os.path.exists('mosi_word_embedding_vocab.pkl'):
+    #     with open('mosi_word_embedding_vocab.pkl', 'rb') as f:
+    #         data = pickle.load(f)
+    #         return data['data']
+    # else:
+    vec = text.vocab.GloVe(name='840B', dim=300)
+    tokens = []
+    for w, _ in word2id.items():
+        tokens.append(w)
+    # print('Vocab Length: {}'.format(len(tokens)))
+    ret = vec.get_vecs_by_tokens(tokens, lower_case_backup=True)
+    # if save:
+    #     with open('mosi_word_embedding_vocab.pkl', 'wb') as f:
+    #         # ret_save = ret.numpy()
+    #         pickle.dump({'data': ret}, f)
+    return ret
 
 
 def glove_embeddings(text_data, vids, paddings=50):
     data_prod, w2id = get_word2id(text_data, vids)
-    word_embeddings_looks_up = get_word_embeddings(w2id, save=True)
+    word_embeddings_looks_up = get_word_embeddings(w2id)
     looks_up = word_embeddings_looks_up.numpy()
     embedd_data = []
     for vid in vids:
         d = data_prod[vid]
         tmp = []
+        look_up = [looks_up[x] for x in d]
         # Padding with zeros at the front
+        # TODO: fix some segs have more than 50 words
         for i in range(paddings-len(d)):
             tmp.append(np.zeros(300,))
         for x in d:
-            tmp.append(looks_up[x].numpy())
+            tmp.append(looks_up[x])
         # try:
-        #     tmp = [looks_up[x] for x in d[0]]
+        #     tmp = [looks_up[x] for x in d]
         # except:
         #     print(d)
         embedd_data.append(np.array(tmp))
@@ -148,7 +157,7 @@ def get_dataloader(
 
     cmu_data = ['mosi', 'mosi_unalign', 'mosei', 'mosei_unalign', 'pom', 'pom_unalign']
     pkl_data = ['urfunny', 'deception']
-    print(dataset)
+    vids = []
     
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
@@ -158,9 +167,9 @@ def get_dataloader(
         rawtext = get_rawtext(file, 'sarcasm')
     elif dataset in cmu_data:
         datafile = dataset + '.hdf5'
-        ids = [id[0].decode('UTF-8') for id in alldata['test']['id']]
+        vids = [id[0].decode('UTF-8') for id in alldata['test']['id']]
         file = os.path.join(dataFolder, datafile)
-        rawtext = get_rawtext(file, 'hdf5', ids)
+        rawtext, vids = get_rawtext(file, 'hdf5', vids)
     elif dataset in pkl_data:
         datafile = dataset+'.pkl'
         file = os.path.join(dataFolder, datafile)
@@ -176,7 +185,7 @@ def get_dataloader(
         if split == 'test':
             for i in range(10):
                 drop = []
-                robust_text_tmp.append(glove_embeddings(text_robustness(rawtext), noise_level=i/10))
+                robust_text_tmp.append(glove_embeddings(text_robustness(rawtext, noise_level=i/10), vids))
                 for ind, k in enumerate(robust_text_tmp[-1]):
                     if k.sum() == 0:
                         drop.append(ind)
@@ -193,14 +202,14 @@ def get_dataloader(
             alldata[split]["audio"] = np.delete(alldata[split]["audio"], drop, 0)
             alldata[split]["labels"] = np.delete(alldata[split]["labels"], drop, 0)
             if split == 'test':
-                robust_text.append(np.delete(robust_text_tmp[i]), drop, 0)
+                robust_text.append(np.delete(robust_text_tmp[i], drop, 0))
             else:
                 alldata[split]["text"] = np.delete(alldata[split]["text"], drop, 0)
 
     # Add timeseries noises
     test = []
     for i, text in enumerate(robust_text):
-        alldata_test = timeseries_robustness([alldata['test']['vision'], alldata['test']['audio'], text])
+        alldata_test = timeseries_robustness([alldata['test']['vision'], alldata['test']['audio'], text], noise_level=i/10)
         test.append(alldata_test)
 
     train = DataLoader(Affectdataset(alldata['train'], flatten_time_series, task=task), \
@@ -216,7 +225,6 @@ def get_dataloader(
         alldata['test']['text'] = data[2]
         test.append(DataLoader(Affectdataset(alldata['test'], flatten_time_series, task=task), \
         shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
-
     return train, valid, robust_test
 
 
