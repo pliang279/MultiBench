@@ -71,7 +71,7 @@ def train(
                 else:
                     if len(j[-1].size())>1:
                         j[-1] = j[-1].squeeze()
-                    loss1=criterion(out, j[-1].long().cuda())
+                    loss1=criterion(out, j[-1].cuda())
                 loss2=regularize(out, [i.float().cuda() for i in j[:-1]]) if regularization else 0
                 loss = loss1+loss2
             #print(loss)
@@ -106,7 +106,7 @@ def train(
                 else:
                     if len(j[-1].size())>1:
                         j[-1] = j[-1].squeeze()
-                    loss=criterion(out, j[-1].long().cuda())
+                    loss=criterion(out, j[-1].cuda())
                 totalloss += loss*len(j[-1])
                 #print(totalloss)
                 if task == "classification":
@@ -196,14 +196,16 @@ def test(
         true = torch.cat(true, 0).cpu().numpy()
         totals = true.shape[0]
         testloss=totalloss/totals
+        if auprc:
+            print("AUPRC: "+str(AUPRC(pts)))
         if task == "classification":
             print("acc: "+str(accuracy_score(true, pred)))
+            return accuracy_score(true, pred)
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
+            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro")
         elif task == "regression":
             print("mse: "+str(testloss))
-        if auprc:
-            print("AUPRC: "+str(AUPRC(pts)))
-    return accuracy_score(true, pred)
-
+            return testloss.item()
+        
