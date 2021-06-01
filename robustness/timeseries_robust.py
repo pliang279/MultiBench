@@ -33,7 +33,7 @@ def random_drop(data, p):
 
 # each consecutive m time steps across modalities is chosen 
 # with probability p at which all feature dimensions are dropped
-def structured_drop(data, p, m=3):
+def structured_drop(data, p, m=1):
     for time in range(len(data[0])-m):
         if np.random.random_sample() < p:
             for step in range(m):
