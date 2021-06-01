@@ -83,7 +83,7 @@ def train(
                 loss.backward(retain_graph=True)
             else:
                 loss.backward()
-            #torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 8)
             op.step()
         if regularization:
             print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" reg loss: "+str(totalloss2/totals))
@@ -127,11 +127,11 @@ def train(
             acc = accuracy_score(true, pred)
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
                 " acc: "+str(acc))
-            if valloss<bestvalloss:
+            if acc > bestacc:
                 patience = 0
-                bestvalloss=valloss
+                bestacc = acc
                 print("Saving Best")
-                torch.save(model,save)
+                torch.save(model, save)
             else:
                 patience += 1
         elif task == "multilabel":
