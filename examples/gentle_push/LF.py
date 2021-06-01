@@ -22,7 +22,7 @@ from unimodals.gentle_push.head import GentlePushLateLSTM
 from fusions.common_fusions import ConcatWithLinear
 from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
-from .xy_mse_loss import XYMSELoss
+from xy_mse_loss import XYMSELoss
 
 Task = PushTask
 
