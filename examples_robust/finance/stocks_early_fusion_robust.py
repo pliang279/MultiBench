@@ -35,7 +35,7 @@ allmodules = [*encoders, fusion, head]
 
 num_training = 5
 def trainprocess(filename):
-    train(encoders, fusion, head, train_loader, val_loader, total_epochs=4, task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss(), save=filename)
+    train(encoders, fusion, head, train_loader, val_loader, total_epochs=2, task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss(), save=filename)
 filenames = stocks_train(num_training, trainprocess, 'stocks_early_fusion_best')
 # filenames = ['stocks_early_fusion_best0.pt','stocks_early_fusion_best1.pt','stocks_early_fusion_best2.pt','stocks_early_fusion_best3.pt','stocks_early_fusion_best4.pt']
 

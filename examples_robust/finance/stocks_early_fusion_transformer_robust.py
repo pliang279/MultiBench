@@ -40,5 +40,5 @@ def trainprocess(filename):
 filenames = stocks_train(num_training, trainprocess, 'stocks_early_fusion_transformer_best')
 
 def testprocess(model, noise_level):
-    return test(model, test_loader[noise_level], task='regression')
+    return test(model, test_loader[noise_level], task='regression', criterion=nn.MSELoss())
 stocks_test(num_training, filenames, len(test_loader), testprocess)
