@@ -9,6 +9,7 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
     model = nn.Sequential(encoder, head)
     op = optimtype(model.parameters(), lr=lr, weight_decay=weight_decay)
     bestvalloss = 10000
+    bestacc = 0
     bestf1 = 0
     patience = 0
     for epoch in range(total_epochs):
@@ -25,6 +26,7 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
             totalloss += loss * len(j[-1])
             totals += len(j[-1])
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 8)
             op.step()
         print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
         with torch.no_grad():
@@ -57,9 +59,9 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
             acc = accuracy_score(true, pred)
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
                 " acc: "+str(acc))
-            if valloss<bestvalloss:
+            if acc > bestacc:
                 patience = 0
-                bestvalloss=valloss
+                bestacc = acc
                 print("Saving Best")
                 torch.save(encoder, save_encoder)
                 torch.save(head, save_head)

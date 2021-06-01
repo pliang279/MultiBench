@@ -22,11 +22,13 @@ class MMDL(nn.Module):
         self.has_padding = has_padding
 
     def forward(self, inputs, training=False):
-        input_data = self.fuse(inputs[0])
         if self.has_padding:
+            input_data = self.fuse(inputs[0])
             out = self.encoder([input_data, inputs[1][0]], training=training)
         else:
-            out = self.encoder(input_data, training=training)
+            input_data = self.fuse(inputs)
+            #out = self.encoder(input_data, training=training)
+            out = input_data
 
         # print(out)
         return self.head(out, training=training)
@@ -36,6 +38,7 @@ def train(
         encoders, fusion, head, train_dataloader, valid_dataloader, total_epochs, is_packed=False,
         early_stop=False, task="classification", optimtype=torch.optim.RMSprop, lr=0.001, weight_decay=0.0,
         criterion=nn.CrossEntropyLoss(), regularization=False, auprc=False, save='best.pt'):
+    
     model = MMDL(encoders, fusion, head, is_packed).cuda()
     op = optimtype(model.parameters(), lr=lr, weight_decay=weight_decay)
     # scheduler = ExponentialLR(op, 0.9)
@@ -65,12 +68,16 @@ def train(
                     loss2 = regularize(out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
                     loss = loss1 + loss2
             else:
-                out = model([i.float().cuda() for i in j[:-1]], training=True)
-                # print(out, j[-1])
+                out=model([i.float().cuda() for i in j[:-1]],training=True)
+                #print(out, j[-1])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss = criterion(out, j[-1].float().cuda())
+                    loss1=criterion(out, j[-1].float().cuda())
                 else:
-                    loss = criterion(out, j[-1].cuda())
+                    if len(j[-1].size())>1:
+                        j[-1] = j[-1].squeeze()
+                    loss1=criterion(out, j[-1].long().cuda())
+                loss2=regularize(out, [i.float().cuda() for i in j[:-1]]) if regularization else 0
+                loss = loss1+loss2
             # print(loss)
             totalloss += loss * len(j[-1])
             totals += len(j[-1])
@@ -80,7 +87,7 @@ def train(
                 loss.backward(retain_graph=True)
             else:
                 loss.backward()
-            # torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 8)
             op.step()
         if regularization:
             print("Epoch " + str(epoch) + " train loss: " + str(totalloss1 / totals) + " reg loss: " + str(
@@ -102,7 +109,9 @@ def train(
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss = criterion(out, j[-1].float().cuda())
                 else:
-                    loss = criterion(out, j[-1].cuda())
+                    if len(j[-1].size())>1:
+                        j[-1] = j[-1].squeeze()
+                    loss=criterion(out, j[-1].long().cuda())
                 totalloss += loss * len(j[-1])
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
@@ -129,8 +138,6 @@ def train(
                 torch.save(model, save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
         elif task == "multilabel":
             f1_micro = f1_score(true, pred, average="micro")
             f1_macro = f1_score(true, pred, average="macro")
@@ -143,8 +150,6 @@ def train(
                 torch.save(model, save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
         elif task == "regression":
             print("Epoch " + str(epoch) + " valid loss: " + str(valloss))
             if valloss < bestvalloss:
@@ -154,8 +159,8 @@ def train(
                 torch.save(model, save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
+        if early_stop and patience > 7:
+            break
         if auprc:
             print("AUPRC: " + str(AUPRC(pts)))
 
@@ -193,11 +198,12 @@ def test(
                 sm = softmax(out, 1)
                 pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
 
-        # eval mosi/mosei
-        print('include 0:')
-        eval_mosei_senti(torch.cat(pred, 0), torch.cat(true, 0), exclude_zero=False)
-        print('exclude 0:')
-        eval_mosei_senti(torch.cat(pred, 0), torch.cat(true, 0), exclude_zero=True)
+        if task=="classification":
+            # eval mosi/mosei
+            print('include 0:')
+            eval_mosei_senti(torch.cat(pred, 0), torch.cat(true, 0), exclude_zero=False)
+            print('exclude 0:')
+            eval_mosei_senti(torch.cat(pred, 0), torch.cat(true, 0), exclude_zero=True)
 
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()

@@ -393,25 +393,38 @@ class Maxout(nn.Module):
 
 class MaxOut_MLP(nn.Module):
 
-    def __init__(self, num_outputs, first_hidden=64, number_input_feats=300):
+    def __init__(
+        self, num_outputs, first_hidden=64, number_input_feats=300, second_hidden=None, linear_layer=True):
         super(MaxOut_MLP, self).__init__()
 
-        self.op1 = Maxout(number_input_feats, first_hidden, 5)
-        self.op2 = nn.Sequential(nn.BatchNorm1d(first_hidden), nn.Dropout(0.5))
-        self.op3 = Maxout(first_hidden, first_hidden * 2, 5)
-        self.op4 = nn.Sequential(nn.BatchNorm1d(first_hidden * 2), nn.Dropout(0.5))
+        if second_hidden is None:
+            second_hidden = first_hidden
+        self.op0 = nn.BatchNorm1d(number_input_feats, 1e-4)
+        self.op1 = Maxout(number_input_feats, first_hidden, 2)
+        self.op2 = nn.Sequential(nn.BatchNorm1d(first_hidden), nn.Dropout(0.3))
+        #self.op2 = nn.BatchNorm1d(first_hidden)
+        #self.op3 = Maxout(first_hidden, first_hidden * 2, 5)
+        self.op3 = Maxout(first_hidden, second_hidden, 2)
+        self.op4 = nn.Sequential(nn.BatchNorm1d(second_hidden), nn.Dropout(0.3))
+        #self.op4 = nn.BatchNorm1d(first_hidden)
 
         # The linear layer that maps from hidden state space to output space
-        self.hid2val = nn.Linear(first_hidden * 2, num_outputs)
+        if linear_layer:
+            self.hid2val = nn.Linear(second_hidden, num_outputs)
+        else:
+            self.hid2val = None
 
-    def forward(self, x):
-        o1 = self.op1(x)
+    def forward(self, x, training=None):
+        o0 = self.op0(x)
+        o1 = self.op1(o0)
         o2 = self.op2(o1)
         o3 = self.op3(o2)
         o4 = self.op4(o3)
+        if self.hid2val is None:
+            return o4
         o5 = self.hid2val(o4)
 
-        return o1, o3, o5
+        return o5
 
 
 class GlobalPooling2D(nn.Module):
