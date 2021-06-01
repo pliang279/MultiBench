@@ -173,31 +173,22 @@ class MultiplicativeInteractions2Modal(nn.Module):
 
 class TensorFusion(nn.Module):
     # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
-    # only works for 1,2,3 modalities
-    def __init__(self, input_dims):
-        super(TensorFusion, self).__init__()
-        self.input_dims = input_dims
+    def __init__(self):
+        super().__init__()
 
     def forward(self, modalities, training=False):
-        batch_size = modalities[0].shape[0]
-        
         if len(modalities) == 1:
-            fused_tensor = modalities[0]
+            return modalities[0]
 
-        if len(modalities) == 2:
-            m1_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modalities[0].dtype), requires_grad=False), modalities[0]), dim=1)
-            m2_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modalities[1].dtype), requires_grad=False), modalities[1]), dim=1)
-            fused_tensor = torch.bmm(m1_withones.unsqueeze(2), m2_withones.unsqueeze(1))
-            fused_tensor = fused_tensor.view(batch_size, -1)
+        nonfeature_size = modalities[0].shape[:-1]
 
-        if len(modalities) == 3:
-            m1_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modalities[0].dtype), requires_grad=False), modalities[0]), dim=1)
-            m2_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modalities[1].dtype), requires_grad=False), modalities[1]), dim=1)
-            m3_withones = torch.cat((Variable(torch.ones(batch_size, 1).type(modalities[2].dtype), requires_grad=False), modalities[2]), dim=1)
-            fused_tensor = torch.bmm(m1_withones.unsqueeze(2), m2_withones.unsqueeze(1))
-            fused_tensor = fused_tensor.view(-1, (self.input_dims[0] + 1) * (self.input_dims[1] + 1), 1)
-            fused_tensor = torch.bmm(fused_tensor, m3_withones.unsqueeze(1)).view(batch_size, -1)
-        return fused_tensor
+        m = torch.cat((Variable(torch.ones(*nonfeature_size, 1).type(modalities[0].dtype), requires_grad=False), modalities[0]), dim=-1)
+        for mod in modalities[1:]:
+            mod = torch.cat((Variable(torch.ones(*nonfeature_size, 1).type(mod.dtype), requires_grad=False), mod), dim=-1)
+            fused = torch.einsum('...i,...j->...ij', m, mod)
+            m = fused.reshape([*nonfeature_size, -1])
+
+        return m
 
 
 class LowRankTensorFusion(nn.Module):
