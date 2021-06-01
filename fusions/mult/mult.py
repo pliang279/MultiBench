@@ -15,6 +15,7 @@ class MULTModel(nn.Module):
         res_dropout = 0.1
         out_dropout = 0.0
         embed_dropout = 0.25
+        embed_dim = 9
         attn_mask = True
         output_dim = 1
         all_steps = False
@@ -24,8 +25,8 @@ class MULTModel(nn.Module):
         Construct a MulT model.
         """
         super().__init__()
-        self.embed_dim = 9
         self.n_modalities = n_modalities
+        self.embed_dim = hyp_params.embed_dim
         self.num_heads = hyp_params.num_heads
         self.layers = hyp_params.layers
         self.attn_dropout = hyp_params.attn_dropout
@@ -102,7 +103,8 @@ class MULTModel(nn.Module):
                 last_hs.append(h[-1])
 
         if self.all_steps:
-            out = torch.cat(hs, dim=2)
+            out = torch.cat(hs, dim=2) # [seq_len, batch_size, out_features]
+            out = out.permute(1, 0, 2) # [batch_size, seq_len, out_features]
         else:
             out = torch.cat(last_hs, dim=1)
 
