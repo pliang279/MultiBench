@@ -19,12 +19,12 @@ criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights)).cuda()
 encoders=[VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).cuda(), VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).cuda()]
 # encoders = [DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
 mult_head = Linear(32, 20).cuda()
-uni_head = Linear(16, 20).cuda(), Linear(16, 20).cuda()
+uni_head = [Linear(16, 20).cuda(), Linear(16, 20).cuda()]
 
 fusion=Concat().cuda()
 
 # train(encoders,fusion,head,traindata,validdata,num_epoch=50,gb_epoch=10,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
-allmodules = encoders + [uni_head, mult_head, fusion]
+allmodules = encoders + [mult_head, fusion] + uni_head
 def trainprocess():
     train(encoders,mult_head,uni_head,fusion,traindata,validdata,50,gb_epoch=10,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
 
