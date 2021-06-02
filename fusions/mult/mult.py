@@ -6,7 +6,7 @@ from .modules.transformer import TransformerEncoder
 class MULTModel(nn.Module):
     # https://github.com/yaohungt/Multimodal-Transformer
 
-    class default_hyp_params():
+    class DefaultHyperParams():
         num_heads = 3
         layers = 3
         attn_dropout = 0.1
@@ -15,16 +15,18 @@ class MULTModel(nn.Module):
         res_dropout = 0.1
         out_dropout = 0.0
         embed_dropout = 0.25
+        embed_dim = 9
         attn_mask = True
         output_dim = 1
+        all_steps = False
 
-    def __init__(self, n_modalities, n_features, hyp_params=default_hyp_params):
+    def __init__(self, n_modalities, n_features, hyp_params=DefaultHyperParams):
         """
         Construct a MulT model.
         """
         super().__init__()
-        self.embed_dim = 9
         self.n_modalities = n_modalities
+        self.embed_dim = hyp_params.embed_dim
         self.num_heads = hyp_params.num_heads
         self.layers = hyp_params.layers
         self.attn_dropout = hyp_params.attn_dropout
@@ -34,6 +36,7 @@ class MULTModel(nn.Module):
         self.out_dropout = hyp_params.out_dropout
         self.embed_dropout = hyp_params.embed_dropout
         self.attn_mask = hyp_params.attn_mask
+        self.all_steps = hyp_params.all_steps
 
         combined_dim = self.embed_dim * n_modalities * n_modalities
 
@@ -84,6 +87,7 @@ class MULTModel(nn.Module):
         proj_x = torch.stack(proj_x)
         proj_x = proj_x.permute(0, 3, 1, 2) # [n_modalities, seq_len, batch_size, proj]
 
+        hs = []
         last_hs = []
         for i in range(self.n_modalities):
             h = []
@@ -93,13 +97,20 @@ class MULTModel(nn.Module):
             h = self.trans_mems[i](h)
             if type(h) == tuple:
                 h = h[0]
-            last_hs.append(h[-1])
+            if self.all_steps:
+                hs.append(h)
+            else:
+                last_hs.append(h[-1])
 
-        last_hs = torch.cat(last_hs, dim=1)
+        if self.all_steps:
+            out = torch.cat(hs, dim=2) # [seq_len, batch_size, out_features]
+            out = out.permute(1, 0, 2) # [batch_size, seq_len, out_features]
+        else:
+            out = torch.cat(last_hs, dim=1)
 
         # A residual block
-        last_hs_proj = self.proj2(F.dropout(F.relu(self.proj1(last_hs)), p=self.out_dropout, training=self.training))
-        last_hs_proj += last_hs
+        out_proj = self.proj2(F.dropout(F.relu(self.proj1(out)), p=self.out_dropout, training=self.training))
+        out_proj += out
 
-        output = self.out_layer(last_hs_proj)
-        return output
+        out = self.out_layer(out_proj)
+        return out
