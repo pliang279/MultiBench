@@ -4,7 +4,7 @@ sys.path.append(os.getcwd())
 
 import torch
 from torch import nn
-from fusions.finance.mult import MULTModel
+from fusions.mult import MULTModel
 from training_structures.unimodal import train, test
 from unimodals.common_models import MLP
 

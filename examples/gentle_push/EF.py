@@ -22,6 +22,7 @@ from unimodals.gentle_push.head import Head
 from fusions.common_fusions import ConcatWithLinear
 from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
+from xy_mse_loss import XYMSELoss
 
 Task = PushTask
 
@@ -79,5 +80,5 @@ all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best.pt').cuda()
 def testprocess():
-    test(model, test_loader, task='regression', criterion=loss_state)
+    test(model, test_loader, task='regression', criterion=XYMSELoss())
 all_in_one_test(testprocess, [model])
