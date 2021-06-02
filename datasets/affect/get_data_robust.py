@@ -111,21 +111,12 @@ def get_word2id(text_data, vids):
 
 
 def get_word_embeddings(word2id, save=False):
-    # if os.path.exists('mosi_word_embedding_vocab.pkl'):
-    #     with open('mosi_word_embedding_vocab.pkl', 'rb') as f:
-    #         data = pickle.load(f)
-    #         return data['data']
-    # else:
     vec = text.vocab.GloVe(name='840B', dim=300)
     tokens = []
     for w, _ in word2id.items():
         tokens.append(w)
     # print('Vocab Length: {}'.format(len(tokens)))
     ret = vec.get_vecs_by_tokens(tokens, lower_case_backup=True)
-    # if save:
-    #     with open('mosi_word_embedding_vocab.pkl', 'wb') as f:
-    #         # ret_save = ret.numpy()
-    #         pickle.dump({'data': ret}, f)
     return ret
 
 
@@ -150,6 +141,16 @@ def glove_embeddings(text_data, vids, paddings=50):
         #     print(d)
         embedd_data.append(np.array(tmp))
     return np.array(embedd_data)
+
+
+def drop_entry(dataset):
+    drop = []
+    for ind, k in enumerate(dataset["text"]):
+        if k.sum() == 0:
+            drop.append(ind)
+    for modality in list(dataset.keys()):
+        dataset[modality] = np.delete(dataset[modality], drop, 0)
+    return dataset
 
 
 def get_dataloader(
@@ -177,55 +178,60 @@ def get_dataloader(
     else:
         print('Wrong Input!')
 
+    alldata['train'] = drop_entry(alldata['train'])
+    alldata['valid'] = drop_entry(alldata['valid'])
+    train = DataLoader(Affectdataset(alldata['train'], flatten_time_series, task=task), shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size, collate_fn=process)
+    valid = DataLoader(Affectdataset(alldata['valid'], flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process)
+
     # Add text noises
-    robust_text_tmp = []
     robust_text = []
-    for split in alldata:
-        drops = []
-        if split == 'test':
-            for i in range(10):
-                drop = []
-                robust_text_tmp.append(glove_embeddings(text_robustness(rawtext, noise_level=i/10), vids))
-                for ind, k in enumerate(robust_text_tmp[-1]):
-                    if k.sum() == 0:
-                        drop.append(ind)
-                drops.append(drop)
-        else:
-            drop = []
-            for ind, k in enumerate(alldata[split]["text"]):
-                if k.sum() == 0:
-                    drop.append(ind)
-            drops.append(drop)
-        # print(drop)
-        for i, drop in enumerate(drops):
-            alldata[split]["vision"] = np.delete(alldata[split]["vision"], drop, 0)
-            alldata[split]["audio"] = np.delete(alldata[split]["audio"], drop, 0)
-            alldata[split]["labels"] = np.delete(alldata[split]["labels"], drop, 0)
-            if split == 'test':
-                robust_text.append(np.delete(robust_text_tmp[i], drop, 0))
-            else:
-                alldata[split]["text"] = np.delete(alldata[split]["text"], drop, 0)
+    for i in range(10):
+        test = dict()
+        test['vision'] = alldata['test']["vision"]
+        test['audio'] = alldata['test']["audio"]
+        test['text'] = glove_embeddings(text_robustness(rawtext, noise_level=i/10), vids)
+        test['labels'] = alldata['test']["label"]
+        test = drop_entry(test)
+        robust_text.append(DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
+    
+    # Add visual noises
+    robust_vision = []
+    for i in range(10):
+        test = dict()
+        test['vision'] = timeseries_robustness([alldata['test']['vision']], noise_level=i/10, rand_drop=False, struct_drop=False)
+        test['audio'] = alldata['test']["audio"]
+        test['text'] = alldata['test']['text']
+        test['labels'] = alldata['test']["label"]
+        test = drop_entry(test)
+        robust_vision.append(DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
+
+    # Add audio noises
+    robust_audio = []
+    for i in range(10):
+        test = dict()
+        test['vision'] = alldata['test']["vision"]
+        test['audio'] = timeseries_robustness([alldata['test']['audio']], noise_level=i/10, rand_drop=False)
+        test['text'] = alldata['test']['text']
+        test['labels'] = alldata['test']["label"]
+        test = drop_entry(test)
+        robust_audio.append(DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
 
     # Add timeseries noises
-    test = []
     for i, text in enumerate(robust_text):
         alldata_test = timeseries_robustness([alldata['test']['vision'], alldata['test']['audio'], text], noise_level=i/10)
         test.append(alldata_test)
 
-    train = DataLoader(Affectdataset(alldata['train'], flatten_time_series, task=task), \
-        shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size, \
-        collate_fn=process)
-    valid = DataLoader(Affectdataset(alldata['valid'], flatten_time_series, task=task), \
-        shuffle=False, num_workers=num_workers, batch_size=batch_size, \
-        collate_fn=process)
-    robust_test = []
-    for data in test:
-        alldata['test']['vision'] = data[0]
-        alldata['test']['audio'] = data[1]
-        alldata['test']['text'] = data[2]
-        test.append(DataLoader(Affectdataset(alldata['test'], flatten_time_series, task=task), \
-        shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
-    return train, valid, robust_test
+    robust_timeseries = []
+    alldata['test'] = drop_entry(alldata['test'])
+    for i in range(10):
+        robust_timeseries_tmp = timeseries_robustness([alldata['test']['vision'], alldata['test']['audio'], alldata['test']['text']], noise_level=i/10)
+        test = dict()
+        test['vision'] = robust_timeseries_tmp[0]
+        test['audio'] = robust_timeseries_tmp[1]
+        test['text'] = robust_timeseries_tmp[2]
+        test['labels'] = alldata['test']['labels']
+        robust_timeseries.append(DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
+    return train, valid, robust_text, robust_vision, robust_audio, robust_timeseries
 
 
 def process(inputs:List):

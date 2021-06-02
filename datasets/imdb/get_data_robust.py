@@ -85,16 +85,6 @@ def process_data(filename, path, labels):
     return data
 
 
-def normalizeText(text):
-    text = text.lower()
-    text = re.sub(r'<br />', r' ', text).strip()
-    text = re.sub(r'^https?:\/\/.*[\r\n]*', ' L ', text, flags=re.MULTILINE)
-    text = re.sub(r'[\~\*\+\^`_#\[\]|]', r' ', text).strip()
-    text = re.sub(r'[0-9]+', r' N ', text).strip()
-    text = re.sub(r'([/\'\-\.?!\(\)",:;])', r' \1 ', text).strip()
-    return text.split()
-
-
 def get_dataloader(
     path:str, num_workers:int=8, train_shuffle:bool=True, batch_size:int=40, vgg:bool=False)->Tuple[DataLoader]:
     
@@ -106,7 +96,7 @@ def get_dataloader(
     return train_dataloader, val_dataloader
 
 
-def get_dataloader_robust(path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40)->Tuple[Dict]:
+def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40)->Tuple[Dict]:
 
     split_file = os.path.join(path, "split.json")
     with open(split_file, "r") as f:
@@ -115,10 +105,13 @@ def get_dataloader_robust(path:str,num_workers:int=8, train_shuffle:bool=True, b
     label_file = os.path.join(path, "labels.json")
     with open(label_file, "r") as f:
         label_map = json.load(f) 
+
+    test_dataset = h5py.File(test_path, 'r')
+    test_text = test_dataset[18160:25959]['features']
+    test_vision = test_dataset[18160:25959]['vgg_features']
     
     dataset = os.path.join(path, "dataset")
 
-    testdata = []
     # clsf = VGGClassifier(model_path='/home/pliang/multibench/MultiBench/datasets/imdb/vgg16.tar', synset_words='synset_words.txt')
     # googleword2vec = word2vec.KeyedVectors.load_word2vec_format('/home/pliang/multibench/MultiBench/datasets/imdb/GoogleNews-vectors-negative300.bin.gz', binary=True)
     images = []
@@ -129,13 +122,13 @@ def get_dataloader_robust(path:str,num_workers:int=8, train_shuffle:bool=True, b
         images.append(data['image'])
         texts.append(data['plot'][0])
         labels.append(data['label'])
+
+    # Add visual noises
+    robust_vision = []
     for noise_level in range(11):
         vgg_filename = os.path.join(os.getcwd(), 'vgg_features_{}.npy'.format(noise_level))
-        text_filename = os.path.join(os.getcwd(), 'text_features_{}.npy'.format(noise_level))
         # extract_vgg = not os.path.exists(vgg_filename)
-        # extract_text = not os.path.exists(text_filename)
         # vgg_features = []
-        # text_features = []
         # if extract_vgg:
         #     images_robust = visual_robustness(images, noise_level=noise_level/10)
         #     for im in tqdm(images_robust):
@@ -143,6 +136,17 @@ def get_dataloader_robust(path:str,num_workers:int=8, train_shuffle:bool=True, b
         #     np.save(vgg_filename, vgg_features)
         # else:
         vgg_features = np.load(vgg_filename, allow_pickle=True)
+        robust_vision.append([(test_text[i], vgg_features[i], labels[i]) for i in range(len(vgg_features))])
+    robust_vision_dataloader = []
+    for test in robust_vision:
+        robust_vision_dataloader.append(DataLoader(IMDBDataset_robust(test, 0, len(test)), shuffle=False, num_workers=num_workers, batch_size=batch_size))
+
+    # Add text noises
+    robust_text = []
+    for noise_level in range(11):
+        text_filename = os.path.join(os.getcwd(), 'text_features_{}.npy'.format(noise_level)) 
+        # extract_text = not os.path.exists(text_filename)
+        # text_features = []
         # if extract_text:
         #     texts_robust = text_robustness(texts, noise_level=noise_level/10)    
         #     for words in tqdm(texts_robust):
@@ -153,9 +157,9 @@ def get_dataloader_robust(path:str,num_workers:int=8, train_shuffle:bool=True, b
         #     np.save(text_filename, text_features)
         # else:
         text_features = np.load(text_filename, allow_pickle=True)
-        testdata.append([(text_features[i], vgg_features[i], labels[i]) for i in range(len(vgg_features))])
-    test_dataloader = []
-    for test in testdata:
-        test_dataloader.append(DataLoader(IMDBDataset_robust(test, 0, len(test)), shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size))
-    return test_dataloader
+        robust_text.append([(text_features[i], test_vision[i], labels[i]) for i in range(len(text_features))])
+    robust_text_dataloader = []
+    for test in robust_text:
+        robust_text_dataloader.append(DataLoader(IMDBDataset_robust(test, 0, len(test)), shuffle=False, num_workers=num_workers, batch_size=batch_size))
+    return robust_vision_dataloader, robust_text_dataloader
 
