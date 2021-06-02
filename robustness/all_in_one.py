@@ -58,24 +58,27 @@ def general_train(trainprocess, algorithm, encoder=False):
         return filename
 
 
-def general_test(testprocess, filename, noise_range, encoder=False, multi_measure=False):
-    measure = []
-    if encoder:
-        encoder = torch.load(filename[0]).cuda()
-        head = torch.load(filename[1]).cuda()
-        print("Robustness testing:")
-        for noise_level in range(noise_range):
-            print("Noise level {}: ".format(noise_level/10))
-            measure.append(testprocess(encoder, head, noise_level))
-    else:
-        model = torch.load(filename).cuda()
-        print("Robustness testing:")
-        for noise_level in range(noise_range):
-            print("Noise level {}: ".format(noise_level/10))
-            measure.append(testprocess(model, noise_level))
-    if multi_measure:
-        result = []
-        for i in range(len(measure[0])):
-            result.append([x[i] for x in measure])
-        measure = result
-    print("Different noise levels:", measure)
+def general_test(testprocess, filename, robustdatasets, encoder=False, multi_measure=False):
+    measures = []
+    for robustdata in robustdatasets:
+        measure = []
+        if encoder:
+            encoder = torch.load(filename[0]).cuda()
+            head = torch.load(filename[1]).cuda()
+            print("Robustness testing:")
+            for noise_level in range(len(robustdata)):
+                print("Noise level {}: ".format(noise_level/10))
+                measure.append(testprocess(encoder, head, robustdata[noise_level]))
+        else:
+            model = torch.load(filename).cuda()
+            print("Robustness testing:")
+            for noise_level in range(len(robustdata)):
+                print("Noise level {}: ".format(noise_level/10))
+                measure.append(testprocess(model, robustdata[noise_level]))
+        if multi_measure:
+            result = []
+            for i in range(len(measure[0])):
+                result.append([x[i] for x in measure])
+            measure = result
+        measures.append(measure)
+    print("Different noise levels:", list(np.mean(np.array(measures), axis=0)))
