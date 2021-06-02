@@ -13,7 +13,7 @@ traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5',
 
 encoders=[MaxOut_MLP(512, 512, 300, linear_layer=False), MaxOut_MLP(512, 1024, 4096, 512, False)]
 #encoders=[MLP(300, 512, 512), VGG16(512)]
-head= Linear(1024, 23)
+head= Linear(1024, 23).cuda()
 fusion=Concat().cuda()
 
 train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multilabel", regularization=False,\

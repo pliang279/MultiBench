@@ -78,7 +78,7 @@ def train(
             totalloss1 += loss1 * len(j[-1])
             totalloss2 += loss2 * len(j[-1])
             loss.backward()
-            #torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 8)
             op.step()
         print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" cca loss: "+str(totalloss2/totals))
         

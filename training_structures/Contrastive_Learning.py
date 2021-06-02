@@ -126,6 +126,7 @@ def train(
             totals+=len(j[-1])
             
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 8)
             op.step()
         
         train_loss = totalloss/totals
