@@ -17,9 +17,9 @@ import unimodals.gentle_push.layers as layers
 from torch.utils.data import DataLoader
 
 from datasets.gentle_push.data_loader import SubsequenceDataset, PushTask
-from unimodals.common_models import Sequential, Transpose, Reshape, MLP, Identity
-from unimodals.gentle_push.head import GentlePushLateLSTM
-from fusions.common_fusions import ConcatWithLinear
+from unimodals.common_models import Sequential, Transpose, Reshape, Identity
+from unimodals.gentle_push.head import Head
+from fusions.mult import MULTModel
 from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 from xy_mse_loss import XYMSELoss
@@ -56,13 +56,19 @@ test_loader = DataLoader(
     shuffle=False,
 )
 
+class HyperParams(MULTModel.DefaultHyperParams):
+    num_heads = 4
+    embed_dim = 64
+    output_dim = 2
+    all_steps = True
+
 encoders = [
-    Sequential(Transpose(0, 1), layers.observation_pos_layers(64), GentlePushLateLSTM(64, 256), Transpose(0, 1)),
-    Sequential(Transpose(0, 1), layers.observation_sensors_layers(64), GentlePushLateLSTM(64, 256), Transpose(0, 1)),
-    Sequential(Transpose(0, 1), Reshape([-1, 1, 32, 32]), layers.observation_image_layers(64), Reshape([16, -1, 64]), GentlePushLateLSTM(64, 256), Transpose(0, 1)),
-    Sequential(Transpose(0, 1), layers.control_layers(64), GentlePushLateLSTM(64, 256), Transpose(0, 1)),
+    Sequential(Transpose(0, 1), layers.observation_pos_layers(64), Transpose(0, 1)),
+    Sequential(Transpose(0, 1), layers.observation_sensors_layers(64), Transpose(0, 1)),
+    Sequential(Transpose(0, 1), Reshape([-1, 1, 32, 32]), layers.observation_image_layers(64), Reshape([16, -1, 64]), Transpose(0, 1)),
+    Sequential(Transpose(0, 1), layers.control_layers(64), Transpose(0, 1)),
 ]
-fusion = ConcatWithLinear(256 * 4, 2, concat_dim=2)
+fusion = MULTModel(4, [64, 64, 64, 64], HyperParams)
 head = Identity()
 allmodules = [*encoders, fusion, head]
 optimtype = optim.Adam

@@ -442,7 +442,7 @@ def _load_trajectories(
 # From https://github.com/stanford-iprl-lab/torchfilter:
 
 def split_trajectories(
-    trajectories: List[TrajectoryNumpy], subsequence_length: int
+    trajectories: List[TrajectoryNumpy], subsequence_length: int, modalities=None
 ):
     """Helper for splitting a list of trajectories into a list of overlapping
     subsequences.
@@ -502,15 +502,29 @@ def split_trajectories(
                 ),
             ):
                 # Add to subsequences
-                subsequences.append(
-                    (
-                        o['gripper_pos'],
-                        o['gripper_sensors'],
-                        o['image'],
-                        c,
-                        s,
+                if modalities is None:
+                    subsequences.append(
+                        (
+                            o['gripper_pos'],
+                            o['gripper_sensors'],
+                            o['image'],
+                            c,
+                            s,
+                        )
                     )
-                )
+                else:
+                    mods = []
+                    for m in modalities:
+                        if m == 'gripper_pos':
+                            mods.append(o['gripper_pos'])
+                        elif m == 'gripper_sensors':
+                            mods.append(o['gripper_sensors'])
+                        elif m == 'image':
+                            mods.append(o['image'])
+                        elif m == 'control':
+                            mods.append(c)
+                    mods.append(s)
+                    subsequences.append(tuple(mods))
     return subsequences
 
 
@@ -526,11 +540,11 @@ class SubsequenceDataset(Dataset):
     """
 
     def __init__(
-        self, trajectories: List[TrajectoryNumpy], subsequence_length: int
+        self, trajectories: List[TrajectoryNumpy], subsequence_length: int, modalities=None
     ):
         # Split trajectory into overlapping subsequences
         self.subsequences = split_trajectories(
-            trajectories, subsequence_length
+            trajectories, subsequence_length, modalities
         )
 
     def __getitem__(self, index: int):
