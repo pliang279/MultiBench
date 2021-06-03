@@ -34,21 +34,22 @@ class MMDL(nn.Module):
         fuse = self.fuse(outs, training=training)
         logit = self.head(fuse, training=training)
         
-        rec_feature = self.refiner(fuse, training=training)
         rec_features = []
-        for i in range(input_num):
-            if self.has_padding:
-                if i == 0:
-                    rec_features.append(rec_feature[:, :inputs[0][i].size(1)])
+        if training:
+            rec_feature = self.refiner(fuse, training=training)
+            for i in range(input_num):
+                if self.has_padding:
+                    if i == 0:
+                        rec_features.append(rec_feature[:, :inputs[0][i].size(1)])
+                    else:
+                        rec_features.append(rec_feature[:, \
+                            inputs[0][i-1].size(1):inputs[0][i-1].size(1)+inputs[i].size(1)])
                 else:
-                    rec_features.append(rec_feature[:, \
-                        inputs[0][i-1].size(1):inputs[0][i-1].size(1)+inputs[i].size(1)])
-            else:
-                if i == 0:
-                    rec_features.append(rec_feature[:, :inputs[i].size(1)])
-                else:
-                    rec_features.append(rec_feature[:, \
-                        inputs[i-1].size(1):inputs[i-1].size(1)+inputs[i].size(1)])
+                    if i == 0:
+                        rec_features.append(rec_feature[:, :inputs[i].size(1)])
+                    else:
+                        rec_features.append(rec_feature[:, \
+                            inputs[i-1].size(1):inputs[i-1].size(1)+inputs[i].size(1)])
             '''
             if i == 0:
                 rec_features.append(rec_feature[:, :outs[i].size(-1)])
@@ -125,63 +126,11 @@ def train(
             totals+=len(j[-1])
             
             loss.backward()
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 8)
             op.step()
         
         train_loss = totalloss/totals
         print("Epoch "+str(epoch)+" train loss: "+str(train_loss))
-        '''
-        if bestloss == 0.0:
-            bestloss = train_loss
-            continue
-
-        if (bestloss-train_loss)/bestloss < 1e-6:
-            patience += 1
-            print(patience)
-        else:
-            bestloss = train_loss
-            patience = 0
-        if patience > 20:
-            print("Early Stop!")
-            break
-        
-    
-    patience = 0
-    bestvalloss = 10000
-    for epoch in range(total_epochs):
-        totalloss = 0.0
-        total_reg_loss = 0.0
-        total_contrast_loss = 0.0
-        totals = 0
-        model.train()
-        for j in train_dataloader:
-            #print([i for i in j[:-1]])
-            op.zero_grad()
-            if is_packed:
-                with torch.backends.cudnn.flags(enabled=False):
-                    out=model(
-                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],True,training=True)
-                    #out, out1, out2=model(
-                    #    [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],True,training=True)
-                    #print(j[-1])
-            else:
-                out=model([i.float().cuda() for i in j[:-1]],training=True)
-                #print(j[-1])
-            reg_loss=criterion(out,j[-1].cuda())
-            #loss1=contrast_criterion(out1)
-            #loss2=contrast_criterion(out2)
-            #contrast_loss = loss1 + loss2
-            #loss = reg_loss+0.1*contrast_loss
-            loss = reg_loss
-            total_reg_loss += reg_loss * len(j[-1])
-            #total_contrast_loss += contrast_loss * len(j[-1])
-            totalloss += loss * len(j[-1])
-            totals+=len(j[-1])
-            
-            loss.backward()
-            op.step()
-        #print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
-        print("Epoch "+str(epoch)+" train loss: "+str(total_reg_loss/totals)+" contrast loss: "+str(total_contrast_loss/totals))
-        '''
 
         model.eval()
         with torch.no_grad():
@@ -293,12 +242,15 @@ def test(
         true = torch.cat(true, 0).cpu().numpy()
         totals = true.shape[0]
         testloss=totalloss/totals
+        if auprc:
+            print("AUPRC: "+str(AUPRC(pts)))
         if task == "classification":
             print("acc: "+str(accuracy_score(true, pred)))
+            return accuracy_score(true, pred)
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
+            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
         elif task == "regression":
             print("mse: "+str(testloss))
-        if auprc:
-            print("AUPRC: "+str(AUPRC(pts)))
+            return testloss

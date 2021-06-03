@@ -7,6 +7,8 @@ from fusions.common_fusions import Concat
 from datasets.enrico.get_data import get_dataloader
 from unimodals.common_models import VGG16, VGG16Slim,DAN,Linear,MLP, VGG11Slim, VGG11Pruned
 
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
+
 import torch
 
 dls, weights = get_dataloader('datasets/enrico/dataset')
@@ -22,10 +24,17 @@ uni_head = [Linear(16, 20).cuda(), Linear(16, 20).cuda()]
 fusion=Concat().cuda()
 
 # train(encoders,fusion,head,traindata,validdata,num_epoch=50,gb_epoch=10,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
-train(encoders,mult_head,uni_head,fusion,traindata,validdata,50,gb_epoch=10,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
+allmodules = encoders + [mult_head, fusion] + uni_head
+def trainprocess():
+    train(encoders,mult_head,uni_head,fusion,traindata,validdata,50,gb_epoch=10,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
+
+all_in_one_train(trainprocess, allmodules)
 
 print("Testing:")
 model=torch.load('best.pt').cuda()
-test(model,testdata)
+def testprocess():
+    test(model,testdata)
+
+all_in_one_test(testprocess, [model])
 
 
