@@ -7,10 +7,11 @@ import torch
 from training_structures.Contrastive_Learning import train, test
 from fusions.common_fusions import Concat
 from datasets.imdb.get_data import get_dataloader
-from unimodals.common_models import MLP, VGG16
+from unimodals.common_models import MLP, VGG16, MaxOut_MLP, Linear
 
 traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', vgg=True)
 
+#encoders=[MaxOut_MLP(512, 512, 300, linear_layer=False), MaxOut_MLP(512, 1024, 4096, 512, False)]
 encoders=[MLP(300, 512, 512), MLP(4096, 1000, 512)]
 #encoders=[MLP(300, 512, 512), VGG16(512)]
 head=MLP(1024,512,23).cuda()
@@ -19,7 +20,7 @@ refiner = MLP(1024,3072,4396).cuda()
 fusion=Concat().cuda()
 
 train(encoders,fusion,head,refiner,traindata,validdata,1000, early_stop=True,task="multilabel",\
-    save="best_contrast.pt", optimtype=torch.optim.AdamW,lr=5e-5,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
+    save="best_contrast.pt", optimtype=torch.optim.AdamW,lr=4e-5,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
 
 print("Testing:")
 model=torch.load('best_contrast.pt').cuda()

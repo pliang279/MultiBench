@@ -1,6 +1,7 @@
 import h5py
 from typing import *
 
+import torch
 from torch.utils.data import Dataset, DataLoader
 
 
@@ -20,7 +21,7 @@ class IMDBDataset(Dataset):
             self.dataset["vgg_features"][ind+self.start_ind]
         label = self.dataset["genres"][ind+self.start_ind]
 
-        return text, image, label
+        return torch.tensor(text, dtype=torch.float32), torch.tensor(image, dtype=torch.float32), label
 
     def __len__(self):
         return self.size

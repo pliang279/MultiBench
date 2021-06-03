@@ -9,9 +9,10 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from unimodals.common_models import Identity
-from fusions.finance.mult import MULTModel
+from fusions.mult import MULTModel
 sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 from get_data_robust import get_dataloader
+from get_data import Grouping
 from training_structures.unimodal import train, test
 from robustness.all_in_one import stocks_train, stocks_test
 
@@ -27,7 +28,13 @@ print('Target: ' + args.target_stock)
 stocks = sorted(args.input_stocks.split(' '))
 train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], modality_first=False)
 
-model = MULTModel(train_loader.dataset[0][0].shape[1]).cuda()
+n_modalities = 3
+grouping = Grouping(n_modalities)
+
+# Get n_features for each group
+n_features = [x.size(-1) for x in grouping(next(iter(train_loader))[0])]
+
+model = nn.Sequential(grouping, MULTModel(n_modalities, n_features)).cuda()
 identity = Identity()
 allmodules = [model, identity]
 

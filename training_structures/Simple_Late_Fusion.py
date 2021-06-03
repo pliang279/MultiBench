@@ -73,7 +73,7 @@ def train(
                 else:
                     if len(j[-1].size())>1:
                         j[-1] = j[-1].squeeze()
-                    loss1=criterion(out, j[-1].long().cuda())
+                    loss1=criterion(out, j[-1].cuda())
                 loss2=regularize(out, [i.float().cuda() for i in j[:-1]]) if regularization else 0
                 loss = loss1+loss2
             #print(loss)
@@ -85,7 +85,7 @@ def train(
                 loss.backward(retain_graph=True)
             else:
                 loss.backward()
-            #torch.nn.utils.clip_grad_norm_(model.parameters(), 1)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 8)
             op.step()
         if regularization:
             print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" reg loss: "+str(totalloss2/totals))
@@ -111,7 +111,7 @@ def train(
                 else:
                     if len(j[-1].size())>1:
                         j[-1] = j[-1].squeeze()
-                    loss=criterion(out, j[-1].long().cuda())
+                    loss=criterion(out, j[-1].cuda())
                 totalloss += loss*len(j[-1])
                 #print(totalloss)
                 if task == "classification":
@@ -132,15 +132,13 @@ def train(
             acc = accuracy_score(true, pred)
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
                 " acc: "+str(acc))
-            if valloss<bestvalloss:
+            if acc > bestacc:
                 patience = 0
-                bestvalloss=valloss
+                bestacc = acc
                 print("Saving Best")
-                torch.save(model,save)
+                torch.save(model, save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
         elif task == "multilabel":
             f1_micro = f1_score(true, pred, average="micro")
             f1_macro = f1_score(true, pred, average="macro")
@@ -153,8 +151,6 @@ def train(
                 torch.save(model,save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
         elif task == "regression":
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss.item()))
             if valloss<bestvalloss:
@@ -164,8 +160,8 @@ def train(
                 torch.save(model,save)
             else:
                 patience += 1
-            if early_stop and patience > 7:
-                break
+        if early_stop and patience > 7:
+            break
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
         validendtime=time.time()
@@ -208,14 +204,16 @@ def test(
         true = torch.cat(true, 0).cpu().numpy()
         totals = true.shape[0]
         testloss=totalloss/totals
+        if auprc:
+            print("AUPRC: "+str(AUPRC(pts)))
         if task == "classification":
             print("acc: "+str(accuracy_score(true, pred)))
+            return accuracy_score(true, pred)
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
+            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro")
         elif task == "regression":
             print("mse: "+str(testloss))
-        if auprc:
-            print("AUPRC: "+str(AUPRC(pts)))
-    return accuracy_score(true, pred)
-
+            return testloss.item()
+        
