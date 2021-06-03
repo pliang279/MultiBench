@@ -96,7 +96,7 @@ def get_dataloader(
     return train_dataloader, val_dataloader
 
 
-def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40)->Tuple[Dict]:
+def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, batch_size:int=40)->Tuple[Dict]:
 
     split_file = os.path.join(path, "split.json")
     with open(split_file, "r") as f:
