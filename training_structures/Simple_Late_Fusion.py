@@ -2,7 +2,7 @@ from sklearn.metrics import accuracy_score, f1_score
 import torch
 from torch import nn
 from torch.optim.lr_scheduler import ExponentialLR
-
+import time
 from utils.AUPRC import AUPRC
 from objective_functions.regularization import RegularizationLoss
 #import pdb
@@ -33,7 +33,7 @@ class MMDL(nn.Module):
 def train(
     encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
     early_stop=False,task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
-    criterion=nn.CrossEntropyLoss(),regularization=False,auprc=False,save='best.pt'):
+    criterion=nn.CrossEntropyLoss(),regularization=False,auprc=False,save='best.pt',validtime=False):
     
     model = MMDL(encoders,fusion,head,is_packed).cuda()
     op = optimtype([p for p in model.parameters() if p.requires_grad],lr=lr,weight_decay=weight_decay)
@@ -68,6 +68,8 @@ def train(
                 #print(out, j[-1])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss1=criterion(out, j[-1].float().cuda())
+                elif type(criterion) == torch.nn.MSELoss:
+                    loss1=criterion(out, j[-1].float().cuda())
                 else:
                     if len(j[-1].size())>1:
                         j[-1] = j[-1].squeeze()
@@ -89,7 +91,7 @@ def train(
             print("Epoch "+str(epoch)+" train loss: "+str(totalloss1/totals)+" reg loss: "+str(totalloss2/totals))
         else:
             print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
-        
+        validstarttime=time.time()
         model.eval()
         with torch.no_grad():
             totalloss = 0.0
@@ -102,6 +104,9 @@ def train(
                 else:
                     out = model([i.float().cuda() for i in j[:-1]],training=False)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
+                    loss=criterion(out, j[-1].float().cuda())
+
+                elif type(criterion) == torch.nn.MSELoss:
                     loss=criterion(out, j[-1].float().cuda())
                 else:
                     if len(j[-1].size())>1:
@@ -151,7 +156,7 @@ def train(
             if early_stop and patience > 7:
                 break
         elif task == "regression":
-            print("Epoch "+str(epoch)+" valid loss: "+str(valloss))
+            print("Epoch "+str(epoch)+" valid loss: "+str(valloss.item()))
             if valloss<bestvalloss:
                 patience = 0
                 bestvalloss=valloss
@@ -163,7 +168,10 @@ def train(
                 break
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
-        
+        validendtime=time.time()
+        if validtime:
+            print("valid time:  "+str(validendtime-validstarttime))
+
         #scheduler.step()
 
 
