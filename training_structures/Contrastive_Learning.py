@@ -121,7 +121,8 @@ def train(
                 for i in range(len(out[3])):
                     loss_self += ss_criterion(out[3][i], j[i].float().cuda(), \
                         torch.ones(out[3][i].size(0)).cuda())
-                loss = loss_cl+0.1*loss_contrast+0.1*loss_self
+                #print(loss_cl, loss_contrast, loss_self)
+                loss = loss_cl+1e-4*loss_contrast+0.1*loss_self
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             
