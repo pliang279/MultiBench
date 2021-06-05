@@ -1,7 +1,7 @@
 import sys
 import os
-sys.path.append('/home/pliang/multibench/MultiBench/datasets/imdb')
-sys.path.append('/home/pliang/multibench/MultiBench')
+sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
+
 import torch
 
 from training_structures.Simple_Late_Fusion import train, test
@@ -10,6 +10,7 @@ from unimodals.common_models import MLP, VGG16, Linear, MaxOut_MLP
 # from get_data_robust import get_dataloader, get_dataloader_robust
 from get_data_robust import get_dataloader, get_dataloader_robust
 from robustness.all_in_one import general_train, general_test
+from unimodals.common_models import MLP, VGG16, Linear, MaxOut_MLP
 
 traindata, validdata = get_dataloader('../../../video/multimodal_imdb.hdf5', batch_size=128, vgg=True)
 robustdata = get_dataloader_robust('../../../video/mmimdb', '../../../video/multimodal_imdb.hdf5',batch_size=128)
