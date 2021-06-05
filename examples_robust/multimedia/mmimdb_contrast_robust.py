@@ -17,7 +17,7 @@ robustdata = get_dataloader_robust('../../../video/mmimdb', '../../../video/mult
 encoders=[MaxOut_MLP(512, 512, 300, linear_layer=False), MaxOut_MLP(512, 1024, 4096, 512, False)]
 #encoders=[MLP(300, 512, 512), MLP(4096, 1000, 512)]
 #encoders=[MLP(300, 512, 512), VGG16(512)]
-head=MLP(1024,512,23).cuda()
+head=Linear(1024,23).cuda()
 refiner = MLP(1024,3072,4396).cuda()
 #refiner = MLP(1024,2048,1024).cuda()
 fusion=Concat().cuda()
