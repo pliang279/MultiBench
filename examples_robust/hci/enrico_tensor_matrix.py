@@ -13,7 +13,8 @@ from memory_profiler import memory_usage
 import torch
 
 dls, weights = get_dataloader('datasets/enrico/dataset')
-traindata, validdata, testdata = dls
+traindata, validdata, _ = dls
+robustdata = get_dataloader_robust('datasets/enrico/dataset')
 criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights)).cuda()
 # encoders=[VGG16Slim(64).cuda(), DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
 # head = Linear(96, 20)
