@@ -4,7 +4,7 @@ sys.path.append(os.getcwd())
 
 import torch
 
-from training_structures.Contrastive_Learning import train, test
+from training_structures.Contrastive_Learning_2 import train, test
 from fusions.common_fusions import Concat
 from datasets.imdb.get_data import get_dataloader
 from unimodals.common_models import MLP, VGG16, MaxOut_MLP, Linear

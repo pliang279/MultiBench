@@ -4,13 +4,12 @@ from typing import *
 import numpy as np
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
-from robustness.visual_robust import visual_robustness
-from robustness.text_robust import text_robustness
+# from robustness.visual_robust import visual_robustness
+# from robustness.text_robust import text_robustness
 
-import re
-from vgg import VGGClassifier
-import gensim.models.keyedvectors as word2vec
-import torch
+# from vgg import VGGClassifier
+# from gensim.models import KeyedVectors
+
 import h5py
 from typing import *
 from torch.utils.data import Dataset, DataLoader
@@ -20,7 +19,6 @@ from PIL import Image
 from typing import *
 import os
 from tqdm import tqdm
-
 
 
 class IMDBDataset(Dataset):
@@ -62,25 +60,19 @@ class IMDBDataset_robust(Dataset):
     def __len__(self):
         return self.size
 
-def process_data(filename, path, labels):
+def process_data(filename, path):
     data = {}
     filepath = os.path.join(path, filename)
 
-    with Image.open(filepath+".jpeg") as f:
-        image = np.array(f.convert("RGB"))
-        data["image"] = image
+    # with Image.open(filepath+".jpeg") as f:
+    #     image = np.array(f.convert("RGB"))
+    #     data["image"] = image
     
     with open(filepath+".json", "r") as f:
         info = json.load(f)
         
         plot = info["plot"]
         data["plot"] = plot
-        
-        genre = np.zeros(len(labels))
-        for label in info["genres"]:
-            if label in labels:
-                genre[labels[label]] = 1
-        data["label"] = genre
 
     return data
 
@@ -96,40 +88,36 @@ def get_dataloader(
     return train_dataloader, val_dataloader
 
 
-def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, batch_size:int=40)->Tuple[Dict]:
-
-    split_file = os.path.join(path, "split.json")
-    with open(split_file, "r") as f:
-        split = json.load(f)
-
-    label_file = os.path.join(path, "labels.json")
-    with open(label_file, "r") as f:
-        label_map = json.load(f) 
-
-    test_dataset = h5py.File(test_path, 'r')
-    test_text = test_dataset[18160:25959]['features']
-    test_vision = test_dataset[18160:25959]['vgg_features']
+def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40)->Tuple[Dict]:
     
-    dataset = os.path.join(path, "dataset")
+    test_dataset = h5py.File(test_path, 'r')
+    test_text = test_dataset['features'][18160:25959]
+    test_vision = test_dataset['vgg_features'][18160:25959]
+    labels = test_dataset["genres"][18160:25959]
+    # names = test_dataset["imdb_ids"][18160:25959]
+    
+    # dataset = os.path.join(path, "dataset")
 
     # clsf = VGGClassifier(model_path='/home/pliang/multibench/MultiBench/datasets/imdb/vgg16.tar', synset_words='synset_words.txt')
-    # googleword2vec = word2vec.KeyedVectors.load_word2vec_format('/home/pliang/multibench/MultiBench/datasets/imdb/GoogleNews-vectors-negative300.bin.gz', binary=True)
-    images = []
-    texts = []
-    labels = []
-    for name in tqdm(split["test"]):
-        data = process_data(name, dataset, label_map)
-        images.append(data['image'])
-        texts.append(data['plot'][0])
-        labels.append(data['label'])
-
+    # googleword2vec = KeyedVectors.load_word2vec_format('/home/pliang/multibench/MultiBench/datasets/imdb/GoogleNews-vectors-negative300.bin.gz', binary=True)
+    
+    # images = []
+    # texts = []
+    # for name in tqdm(names):
+    #     name = name.decode("utf-8")
+    #     data = process_data(name, dataset)
+    #     # images.append(data['image'])
+    #     plot_id = np.array([len(p) for p in data['plot']]).argmax()
+    #     texts.append(data['plot'][plot_id])
+    
+    print("Create Visual Noise")
     # Add visual noises
     robust_vision = []
     for noise_level in range(11):
         vgg_filename = os.path.join(os.getcwd(), 'vgg_features_{}.npy'.format(noise_level))
         # extract_vgg = not os.path.exists(vgg_filename)
-        # vgg_features = []
         # if extract_vgg:
+        #     vgg_features = []
         #     images_robust = visual_robustness(images, noise_level=noise_level/10)
         #     for im in tqdm(images_robust):
         #         vgg_features.append(clsf.get_features(Image.fromarray(im)).reshape((-1,)))
@@ -141,15 +129,17 @@ def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, batch_size:i
     for test in robust_vision:
         robust_vision_dataloader.append(DataLoader(IMDBDataset_robust(test, 0, len(test)), shuffle=False, num_workers=num_workers, batch_size=batch_size))
 
+    print("Create Text Noise")
     # Add text noises
     robust_text = []
     for noise_level in range(11):
         text_filename = os.path.join(os.getcwd(), 'text_features_{}.npy'.format(noise_level)) 
         # extract_text = not os.path.exists(text_filename)
-        # text_features = []
         # if extract_text:
+        #     text_features = []
         #     texts_robust = text_robustness(texts, noise_level=noise_level/10)    
         #     for words in tqdm(texts_robust):
+        #         words = words.split()
         #         if len([googleword2vec[w] for w in words if w in googleword2vec]) == 0:
         #             text_features.append(np.zeros((300,)))
         #         else:
