@@ -24,7 +24,7 @@ fusion=Concat().cuda()
 
 def trainprocess(filename):
     train(encoders,fusion,head,refiner,traindata,validdata,1000, early_stop=True,task="multilabel",\
-    save=filename, optimtype=torch.optim.AdamW,lr=1e-3,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
+    save=filename, optimtype=torch.optim.AdamW,lr=1e-2,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
 filename = general_train(trainprocess, 'mmimdb_contrast')
 
 def testprocess(model, robustdata):
