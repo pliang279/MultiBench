@@ -126,14 +126,16 @@ class EnricoDataset(Dataset):
         screenLabel = self.topic2Idx[example['topic']]
         return [screenImg, screenWireframeImg, screenLabel]
 
-def get_dataloader_robust(data_dir, batch_size=32, num_workers=0):
+def get_dataloader_robust(data_dir, batch_size=32, num_workers=0, img_noise=True, wireframe_noise=True):
     ds_test_img = []
     ds_test_wireframe = []
     dl_test = []
-    for i in range(11):
-        ds_test_img.append(EnricoDataset(data_dir, img_noise=True, noise_level=i/10))
-    for i in range(11):
-        ds_test_wireframe.append(EnricoDataset(data_dir, wireframe_noise=True, noise_level=i/10))
-    dl_test.append([DataLoader(test, shuffle=False, num_workers=num_workers, batch_size=batch_size) for test in ds_test_img])
-    dl_test.append([DataLoader(test, shuffle=False, num_workers=num_workers, batch_size=batch_size) for test in ds_test_wireframe])
+    if img_noise:
+        for i in range(11):
+            ds_test_img.append(EnricoDataset(data_dir, img_noise=True, noise_level=i/10))
+        dl_test.append([DataLoader(test, shuffle=False, num_workers=num_workers, batch_size=batch_size) for test in ds_test_img])
+    if wireframe_noise:
+        for i in range(11):
+            ds_test_wireframe.append(EnricoDataset(data_dir, wireframe_noise=True, noise_level=i/10))
+        dl_test.append([DataLoader(test, shuffle=False, num_workers=num_workers, batch_size=batch_size) for test in ds_test_wireframe])
     return dl_test

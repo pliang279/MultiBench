@@ -28,6 +28,6 @@ def trainprocess(filename_encoder, filename_head):
 filename = general_train(trainprocess, 'enrico_unimodal_0', encoder=True)
 
 def testprocess(encoder, head, testdata):
-    test(encoder, head, testdata, modalnum=modalnum)
+    return test(encoder, head, testdata, modalnum=modalnum)
 
 general_test(testprocess, filename, robustdata, encoder=True)
