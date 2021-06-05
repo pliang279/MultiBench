@@ -6,12 +6,10 @@ from torch.nn import functional as F
 from torch.optim.lr_scheduler import ExponentialLR
 
 from utils.AUPRC import AUPRC
-from objective_functions.contrast import MultiSimilarityLoss
 #import pdb
 
 
 softmax = nn.Softmax()
-
 
 
 class MMDL(nn.Module):
@@ -34,11 +32,10 @@ class MMDL(nn.Module):
         
         fuse = self.fuse(outs, training=training)
         logit = self.head(fuse, training=training)
-        sizes = [torch.flatten(ii,start_dim=1).size(1) for ii in inputs]
+        
         rec_features = []
         if training:
             rec_feature = self.refiner(fuse, training=training)
-            curr=0
             for i in range(input_num):
                 if self.has_padding:
                     if i == 0:
@@ -48,12 +45,10 @@ class MMDL(nn.Module):
                             inputs[0][i-1].size(1):inputs[0][i-1].size(1)+inputs[i].size(1)])
                 else:
                     if i == 0:
-                        rec_features.append(rec_feature[:, :sizes[0]])
-                        curr = sizes[0]
+                        rec_features.append(rec_feature[:, :inputs[i].size(1)])
                     else:
                         rec_features.append(rec_feature[:, \
-                                curr:curr+sizes[i]])
-                        curr += sizes[i]
+                            inputs[i-1].size(1):inputs[i-1].size(1)+inputs[i].size(1)])
             '''
             if i == 0:
                 rec_features.append(rec_feature[:, :outs[i].size(-1)])
@@ -83,13 +78,12 @@ class MMDL(nn.Module):
 def train(
     encoders,fusion,head,refiner,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
     early_stop=False,task="multilabel",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
-    criterion=nn.L1Loss(),auprc=False,save='best.pt',num_classes=10):
+    criterion=nn.L1Loss(),auprc=False,save='best.pt'):
     
     #n_data = len(train_dataloader.dataset)
     model = MMDL(encoders,fusion,refiner,head,is_packed).cuda()
     op = optimtype(model.parameters(),lr=lr,weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
-    contrast_criterion = MultiSimilarityLoss()
     ss_criterion = nn.CosineEmbeddingLoss()
 
     bestvalloss = 10000
@@ -110,9 +104,10 @@ def train(
                     out1, out2=model(
                         [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()],training=True)
                     #print(j[-1])
-                    loss1=contrast_criterion(out1)
-                    loss2=contrast_criterion(out2)
-                    loss = loss1+loss2
+                    # loss1=contrast_criterion(out1)
+                    # loss2=contrast_criterion(out2)
+                    # loss = loss1+loss2
+                    loss = 0
             else:
                 out=model([i.float().cuda() for i in j[:-1]],training=True)
                 #print(j[-1])
@@ -120,13 +115,12 @@ def train(
                     loss_cl=criterion(out[0], j[-1].float().cuda())
                 else:
                     loss_cl=criterion(out[0], j[-1].cuda())
-                loss_contrast = contrast_criterion(out[1], F.one_hot(j[-1]).cuda())
                 loss_self = 0
                 for i in range(len(out[3])):
-                    loss_self += ss_criterion(out[3][i], torch.flatten(j[i].float(),start_dim=1).cuda(), \
+                    loss_self += ss_criterion(out[3][i], j[i].float().cuda(), \
                         torch.ones(out[3][i].size(0)).cuda())
                 #print(loss_cl, loss_contrast, loss_self)
-                loss = loss_cl+1e-4*loss_contrast+0.1*loss_self
+                loss = loss_cl+0.1*loss_self
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             

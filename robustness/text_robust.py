@@ -1,5 +1,6 @@
 import numpy as np
 import re
+from tqdm import tqdm
 
 
 ##############################################################################
@@ -17,7 +18,7 @@ def text_robustness(tests, noise_level=0.3, swap=True, rand_mid=True, typo=True,
     if omit:
         noises.append(omission)
     robustness_tests = []
-    for i in range(len(tests)):
+    for i in tqdm(range(len(tests))):
         newtext = []
         text = normalizeText(tests[i])
         for word in text:

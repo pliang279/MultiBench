@@ -199,8 +199,8 @@ class MultiSimilarityLoss(nn.Module):
         self.thresh = 0.5
         self.margin = 0.1
 
-        self.scale_pos = 50
-        self.scale_neg = 2
+        self.scale_pos = 5e-2
+        self.scale_neg = 2e-3
 
     def forward(self, feats, labels):
         assert feats.size(0) == labels.size(0), \
@@ -228,14 +228,15 @@ class MultiSimilarityLoss(nn.Module):
 
                     if len(neg_pair) < 1 or len(pos_pair) < 1:
                         continue
-
+                    #print(-self.scale_pos * (pos_pair - self.thresh))
                     # weighting step
                     pos_loss = 1.0 / self.scale_pos * torch.log(
                         1 + torch.sum(torch.exp(-self.scale_pos * (pos_pair - self.thresh))))
                     neg_loss = 1.0 / self.scale_neg * torch.log(
                         1 + torch.sum(torch.exp(self.scale_neg * (neg_pair - self.thresh))))
                     loss.append(pos_loss + neg_loss)
-
+                    assert math.isinf(pos_loss) == False
+                    assert math.isinf(neg_loss) == False
         if len(loss) == 0:
             return torch.zeros([], requires_grad=True)
 

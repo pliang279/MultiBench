@@ -1,5 +1,6 @@
 import numpy as np
 from PIL import Image, ImageOps, ImageEnhance
+from tqdm import tqdm
 import colorsys
 
 
@@ -28,10 +29,13 @@ def visual_robustness(tests, noise_level=0.3, gray=True, contrast=True, inv=True
     if crop:
         noises.append(random_crop)
     robustness_tests = []
-    for i in range(len(tests)):
+    for i in tqdm(range(len(tests))):
         img = Image.fromarray(tests[i])
+        mode = img.mode
+        img = img.convert('RGB')
         for noise in noises:
             img = noise(img, noise_level)
+        img = img.convert(mode)
         robustness_tests.append(np.array(img))
     return robustness_tests
 

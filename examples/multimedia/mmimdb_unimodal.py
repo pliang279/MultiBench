@@ -6,7 +6,7 @@ import torch
 
 from training_structures.unimodal import train, test
 from datasets.imdb.get_data import get_dataloader
-from unimodals.common_models import MLP,
+from unimodals.common_models import MLP
 
 traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', vgg=True)
 
