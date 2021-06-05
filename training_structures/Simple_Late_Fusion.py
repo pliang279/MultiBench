@@ -73,7 +73,7 @@ def train(
                 else:
                     if len(j[-1].size())>1:
                         j[-1] = j[-1].squeeze()
-                    loss1=criterion(out, j[-1].cuda())
+                    loss1=criterion(out, j[-1].long().cuda())
                 loss2=regularize(out, [i.float().cuda() for i in j[:-1]]) if regularization else 0
                 loss = loss1+loss2
             #print(loss)
@@ -113,7 +113,7 @@ def train(
                 else:
                     if len(j[-1].size())>1:
                         j[-1] = j[-1].squeeze()
-                    loss=criterion(out, j[-1].cuda())
+                    loss=criterion(out, j[-1].long().cuda())
                 totalloss += loss*len(j[-1])
                 #print(totalloss)
                 if task == "classification":
