@@ -27,7 +27,7 @@ def text_robustness(tests, noise_level=0.3, swap=True, rand_mid=True, typo=True,
                 newtext.append(noises[mode](word))
             else:
                 newtext.append(word)
-        robustness_tests.append(newtext)
+        robustness_tests.append(' '.join(newtext))
     return robustness_tests
 
 

@@ -6,8 +6,7 @@ import torch
 
 from training_structures.Simple_Late_Fusion import train, test
 from fusions.common_fusions import Concat
-from unimodals.common_models import MLP, VGG16, Linear, MaxOut_MLP
-# from get_data_robust import get_dataloader, get_dataloader_robust
+sys.path.append('/home/pliang/multibench/MultiBench/datasets/imdb')
 from get_data_robust import get_dataloader, get_dataloader_robust
 from robustness.all_in_one import general_train, general_test
 from unimodals.common_models import MLP, VGG16, Linear, MaxOut_MLP
