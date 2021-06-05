@@ -21,8 +21,8 @@ refiner = MLP(1024,3072,4396).cuda()
 fusion=Concat().cuda()
 
 train(encoders,fusion,head,refiner,traindata,validdata,1000, early_stop=True,task="multilabel",\
-    save="best_contrast_54.pt", optimtype=torch.optim.AdamW,lr=5e-4,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
+    save="best_contrast.pt", optimtype=torch.optim.AdamW,lr=1e-2,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
 
 print("Testing:")
-model=torch.load('best_contrast_54.pt').cuda()
+model=torch.load('best_contrast.pt').cuda()
 test(model,testdata,criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
