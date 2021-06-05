@@ -19,8 +19,10 @@ class CCALoss(nn.Module):
         eps = 1e-9
 
         H1, H2 = H1.t(), H2.t()
-        # assert torch.isnan(H1).sum().item() == 0
-        # assert torch.isnan(H2).sum().item() == 0
+        #print(H1)
+        #print(H2)
+        assert torch.isnan(H1).sum().item() == 0
+        assert torch.isnan(H2).sum().item() == 0
 
         o1 = o2 = H1.size(0)
 

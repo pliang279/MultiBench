@@ -1,0 +1,9 @@
+Epoch 0 train loss: tensor(2.2278, device='cuda:0', grad_fn=<DivBackward0>)
+Epoch 0 valid loss: tensor(1.5874, device='cuda:0') acc: 0.5314
+Saving Best
+Epoch 1 train loss: tensor(1.4753, device='cuda:0', grad_fn=<DivBackward0>)
+Epoch 1 valid loss: tensor(0.9719, device='cuda:0') acc: 0.652
+Saving Best
+Epoch 2 train loss: tensor(1.1588, device='cuda:0', grad_fn=<DivBackward0>)
+Epoch 2 valid loss: tensor(0.8512, device='cuda:0') acc: 0.6776
+Saving Best
