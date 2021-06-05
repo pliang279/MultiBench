@@ -92,6 +92,8 @@ def train(
         else:
             print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
         validstarttime=time.time()
+        if validtime:
+            print("train total: "+str(totals))
         model.eval()
         with torch.no_grad():
             totalloss = 0.0
@@ -167,6 +169,7 @@ def train(
         validendtime=time.time()
         if validtime:
             print("valid time:  "+str(validendtime-validstarttime))
+            print("Valid total: "+str(totals))
 
         #scheduler.step()
 
