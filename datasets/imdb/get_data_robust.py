@@ -5,10 +5,10 @@ import numpy as np
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
 # from robustness.visual_robust import visual_robustness
-from robustness.text_robust import text_robustness
+# from robustness.text_robust import text_robustness
 
 # from vgg import VGGClassifier
-from gensim.models import KeyedVectors
+# from gensim.models import KeyedVectors
 
 import h5py
 from typing import *
@@ -19,7 +19,6 @@ from PIL import Image
 from typing import *
 import os
 from tqdm import tqdm
-
 
 
 class IMDBDataset(Dataset):
@@ -95,21 +94,21 @@ def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, train_shuffl
     test_text = test_dataset['features'][18160:25959]
     test_vision = test_dataset['vgg_features'][18160:25959]
     labels = test_dataset["genres"][18160:25959]
-    names = test_dataset["imdb_ids"][18160:25959]
+    # names = test_dataset["imdb_ids"][18160:25959]
     
-    dataset = os.path.join(path, "dataset")
+    # dataset = os.path.join(path, "dataset")
 
     # clsf = VGGClassifier(model_path='/home/pliang/multibench/MultiBench/datasets/imdb/vgg16.tar', synset_words='synset_words.txt')
-    googleword2vec = KeyedVectors.load_word2vec_format('/home/pliang/multibench/MultiBench/datasets/imdb/GoogleNews-vectors-negative300.bin.gz', binary=True)
+    # googleword2vec = KeyedVectors.load_word2vec_format('/home/pliang/multibench/MultiBench/datasets/imdb/GoogleNews-vectors-negative300.bin.gz', binary=True)
     
     # images = []
-    texts = []
-    for name in tqdm(names):
-        name = name.decode("utf-8")
-        data = process_data(name, dataset)
-        # images.append(data['image'])
-        plot_id = np.array([len(p) for p in data['plot']]).argmax()
-        texts.append(data['plot'][plot_id])
+    # texts = []
+    # for name in tqdm(names):
+    #     name = name.decode("utf-8")
+    #     data = process_data(name, dataset)
+    #     # images.append(data['image'])
+    #     plot_id = np.array([len(p) for p in data['plot']]).argmax()
+    #     texts.append(data['plot'][plot_id])
     
     print("Create Visual Noise")
     # Add visual noises
@@ -135,18 +134,19 @@ def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, train_shuffl
     robust_text = []
     for noise_level in range(11):
         text_filename = os.path.join(os.getcwd(), 'text_features_{}.npy'.format(noise_level)) 
-        extract_text = not os.path.exists(text_filename)
-        if extract_text:
-            text_features = []
-            texts_robust = text_robustness(texts, noise_level=noise_level/10)    
-            for words in tqdm(texts_robust):
-                if len([googleword2vec[w] for w in words if w in googleword2vec]) == 0:
-                    text_features.append(np.zeros((300,)))
-                else:
-                    text_features.append(np.array([googleword2vec[w] for w in words if w in googleword2vec]).mean(axis=0))
-            np.save(text_filename, text_features)
-        else:
-            text_features = np.load(text_filename, allow_pickle=True)
+        # extract_text = not os.path.exists(text_filename)
+        # if extract_text:
+        #     text_features = []
+        #     texts_robust = text_robustness(texts, noise_level=noise_level/10)    
+        #     for words in tqdm(texts_robust):
+        #         words = words.split()
+        #         if len([googleword2vec[w] for w in words if w in googleword2vec]) == 0:
+        #             text_features.append(np.zeros((300,)))
+        #         else:
+        #             text_features.append(np.array([googleword2vec[w] for w in words if w in googleword2vec]).mean(axis=0))
+        #     np.save(text_filename, text_features)
+        # else:
+        text_features = np.load(text_filename, allow_pickle=True)
         robust_text.append([(text_features[i], test_vision[i], labels[i]) for i in range(len(text_features))])
     robust_text_dataloader = []
     for test in robust_text:
