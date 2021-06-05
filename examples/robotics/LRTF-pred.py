@@ -12,7 +12,7 @@ import torch.optim as optim
 import yaml
 import os
 from tqdm import tqdm
-
+from private_test_scripts.all_in_one import all_in_one_train
 from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised,roboticsConcat
 from unimodals.robotics.encoders import (
     ProprioEncoder, ForceEncoder, ImageEncoder, DepthEncoder, ActionEncoder,
@@ -58,13 +58,13 @@ class selfsupervised:
         """
         self.fusion = Sequential2(roboticsConcat("noconcat"),LowRankTensorFusion([256,256,256,256,32],200,40))
         #self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"])
-        self.head=MLP(200,128,2)
+        self.head=MLP(200,128,4)
         self.optimtype = optim.Adam
 
         # losses
         self.loss_contact_next = nn.BCEWithLogitsLoss()
 
-        self.train_loader, self.val_loader = get_data(self.device, self.configs,"/home/pliang/multibench/MultiBench-robotics/")
+        self.train_loader, self.val_loader = get_data(self.device, self.configs,"/home/pliang/multibench/MultiBench-robotics/",output='ee_yaw_next')
 
     def train(self):
         print(len(self.train_loader.dataset), len(self.val_loader.dataset))
@@ -74,11 +74,13 @@ class selfsupervised:
         with open('val_dataset.txt', 'w') as f:
             for x in self.val_loader.dataset.dataset_path:
                 f.write(f'{x}\n')
-        train(self.encoders, self.fusion, self.head,
+        def trpr():
+            train(self.encoders, self.fusion, self.head,
               self.train_loader, self.val_loader,
-              15,
+              35,task='regression',
               optimtype=self.optimtype,
-              lr=self.configs['lr'])
+              lr=self.configs['lr'],criterion=torch.nn.MSELoss(),validtime=True)
+        all_in_one_train(trpr,self.encoders+[self.fusion,self.head])
 
 with open('examples/robotics/training_default.yaml') as f:
     configs = yaml.load(f)

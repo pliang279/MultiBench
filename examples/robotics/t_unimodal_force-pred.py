@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.insert(0, os.getcwd())
-
+from private_test_scripts.all_in_one import all_in_one_train
 import time
 
 import numpy as np
@@ -21,12 +21,12 @@ from unimodals.common_models import MLP
 from unimodals.robotics.decoders import ContactDecoder
 from training_structures.Simple_Late_Fusion import train, test
 from robotics_utils import set_seeds
-from fusions.common_fusions import LowRankTensorFusion
+
 from datasets.robotics.data_loader import get_data
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
-from utils.helper_modules import Sequential2
+
 
 class selfsupervised:
     def __init__(self, configs):
@@ -42,10 +42,7 @@ class selfsupervised:
         set_seeds(configs["seed"], use_cuda)
 
         self.encoders = [
-            ImageEncoder(configs['zdim'], alpha=configs['vision']),
             ForceEncoder(configs['zdim'], alpha=configs['force']),
-            ProprioEncoder(configs['zdim'], alpha=configs['proprio']),
-            DepthEncoder(configs['zdim'], alpha=configs['depth']),
             ActionEncoder(configs['action_dim']),
         ]
         """
@@ -56,15 +53,15 @@ class selfsupervised:
             z_dim=configs["zdim"],
         ).to(self.device)
         """
-        self.fusion = Sequential2(roboticsConcat("noconcat"),LowRankTensorFusion([256,256,256,256,32],200,40))
+        self.fusion = roboticsConcat("simple")
         #self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"])
-        self.head=MLP(200,128,2)
+        self.head=MLP(288,128,4)
         self.optimtype = optim.Adam
 
         # losses
         self.loss_contact_next = nn.BCEWithLogitsLoss()
 
-        self.train_loader, self.val_loader = get_data(self.device, self.configs,"/home/pliang/multibench/MultiBench-robotics/")
+        self.train_loader, self.val_loader = get_data(self.device, self.configs,"/home/pliang/multibench/MultiBench-robotics/",unimodal='force',output='ee_yaw_next')
 
     def train(self):
         print(len(self.train_loader.dataset), len(self.val_loader.dataset))
@@ -74,13 +71,15 @@ class selfsupervised:
         with open('val_dataset.txt', 'w') as f:
             for x in self.val_loader.dataset.dataset_path:
                 f.write(f'{x}\n')
-        train(self.encoders, self.fusion, self.head,
+        def trainprocess():
+            train(self.encoders, self.fusion, self.head,
               self.train_loader, self.val_loader,
-              15,
+              15,task='regression',
               optimtype=self.optimtype,
-              lr=self.configs['lr'])
+              lr=self.configs['lr'],criterion=torch.nn.MSELoss(),validtime=True)
+        all_in_one_train(trainprocess,self.encoders+[self.fusion,self.head])
 
 with open('examples/robotics/training_default.yaml') as f:
     configs = yaml.load(f)
 
-selfsupervised(configs).train()
+selfsupervised(configs).train() 

@@ -4,7 +4,8 @@ import numpy as np
 ##############################################################################
 # Time-Series
 def timeseries_robustness(tests, noise_level=0.3, noise=True, rand_drop=True, struct_drop=True):
-    robust_tests = np.array(tests)
+    # robust_tests = np.array(tests)
+    robust_tests = tests
     if noise:
         robust_tests = white_noise(robust_tests, noise_level)
     if rand_drop:
@@ -27,16 +28,15 @@ def random_drop(data, p):
         for time in range(len(data[i])):
             for feature in range(len(data[i][time])):
                 if np.random.random_sample() < p:
-                    data[i][time][feature] = np.zeros(np.array([data[i][time][feature]]).shape)[0]
+                    data[i][time][feature] = 0
     return data
 
 
-# each consecutive m time steps across modalities is chosen 
-# with probability p at which all feature dimensions are dropped
-def structured_drop(data, p, m=1):
-    for time in range(len(data[0])-m):
-        if np.random.random_sample() < p:
-            for step in range(m):
-                for i in range(len(data)):
-                    data[i][time+step] = np.zeros(data[i][time+step].shape)
+# independently for each modality, each time step is chosen with probability p 
+# at which all feature dimensions are dropped
+def structured_drop(data, p):
+    for i in range(len(data)):
+        for time in range(len(data[i])):
+            if np.random.random_sample() < p:
+                data[i][time] = np.zeros(data[i][time].shape)
     return data
