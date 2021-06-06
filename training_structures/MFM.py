@@ -1,46 +1,46 @@
+from sklearn.metrics import accuracy_score, f1_score
+
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
-from torch.autograd import Variable
-from torch.nn import functional as F
-from torch.nn.parameter import Parameter
-import math
 from utils.AUPRC import AUPRC
 
 
 class MFM(nn.Module):
-    def __init__(self, encoders, decoders, fusionmodule, head, intermediates):
-        super(MFM, self).__init__()
-        self.encoders = nn.ModuleList(encoders)
-        self.decoders = nn.ModuleList(decoders)
-        self.intermediates = nn.ModuleList(intermediates)
-        self.fuse = fusionmodule
-        self.head = head
+  def __init__(self, encoders, decoders, fusionmodule, head, intermediates):
+    super(MFM, self).__init__()
+    self.encoders = nn.ModuleList(encoders)
+    self.decoders = nn.ModuleList(decoders)
+    self.intermediates = nn.ModuleList(intermediates)
+    self.fuse = fusionmodule
+    self.head = head
 
-    def forward(self, inputs, training=True):
-        outs = []
-        for i in range(len(inputs)):
-          outs.append(self.encoders[i](inputs[i]))
-        #print(outs[0].size())
-        #print(outs[1].size())
-        fused = self.fuse(outs)
-        #print(fused.size())
-        combined = self.intermediates[-1](fused)
-        recons = []
-        for i in range(len(outs)):
-          outs[i] = self.intermediates[i](outs[i])
-        for i in range(len(inputs)):
-          recons.append(self.decoders[i](
-              torch.cat([outs[i], combined], dim=1)))
-        return recons, self.head(combined)
-
-
-criterion = nn.CrossEntropyLoss()
+  def forward(self, inputs, training=True):
+    outs = []
+    for i in range(len(inputs)):
+      outs.append(self.encoders[i](inputs[i]))
+    #print(outs[0].size())
+    #print(outs[1].size())
+    fused = self.fuse(outs)
+    #print(fused.size())
+    combined = self.intermediates[-1](fused)
+    recons = []
+    for i in range(len(outs)):
+      outs[i] = self.intermediates[i](outs[i])
+    for i in range(len(inputs)):
+      recons.append(self.decoders[i](
+          torch.cat([outs[i], combined], dim=1)))
+    return recons, self.head(combined)
 
 
-def train_MFM(encoders, decoders, head, intermediates, fusion, recon_loss_func, train_dataloader, valid_dataloader, total_epochs, ce_weight=2.0, learning_rate=0.001, savedir='best.pt'):
+def train_MFM(
+  encoders, decoders, head, intermediates, fusion, recon_loss_func, train_dataloader, valid_dataloader, 
+  total_epochs, ce_weight=2.0, learning_rate=0.001, savedir='best.pt', 
+  early_stop=False, task="classification", criterion = nn.CrossEntropyLoss()):
+  
   n_modals = len(encoders)
   bestvalloss = 100
+  bestf1 = 0
+  patience = 0
   mvae = MFM(encoders, decoders, fusion, head, intermediates)
   optim = torch.optim.Adam(mvae.parameters(), lr=learning_rate)
   for ep in range(total_epochs):
@@ -51,7 +51,10 @@ def train_MFM(encoders, decoders, head, intermediates, fusion, recon_loss_func, 
       trains = [x.float().cuda() for x in j[:-1]]
       total += len(trains[0])
       recons, outs = mvae(trains, training=True)
-      loss = criterion(outs, j[-1].cuda())*ce_weight
+      if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
+        loss=criterion(outs, j[-1].float().cuda())*ce_weight
+      else:
+        loss = criterion(outs, j[-1].cuda())*ce_weight
       #print(loss)
       loss += recon_loss_func(recons, trains)
       #print(loss)
@@ -62,42 +65,80 @@ def train_MFM(encoders, decoders, head, intermediates, fusion, recon_loss_func, 
     if True:
       with torch.no_grad():
         totalloss = 0.0
-        total = 0
-        correct = 0
+        pred = []
+        true = []
         for j in valid_dataloader:
           trains = [x.float().cuda() for x in j[:-1]]
           _, outs = mvae(trains, training=False)
-          loss = criterion(outs, j[-1].cuda())
+          if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
+            loss=criterion(outs, j[-1].float().cuda())
+          else:
+            loss = criterion(outs, j[-1].cuda())
           totalloss += loss * len(j[0])
-          for i in range(len(j[-1])):
-            total += 1
-            if torch.argmax(outs[i]).item() == j[-1][i].item():
-              correct += 1
+          if task == "classification":
+            pred.append(torch.argmax(outs, 1))
+          elif task == "multilabel":
+            pred.append(torch.sigmoid(outs).round())
+          true.append(j[-1])
+        if pred:
+          pred = torch.cat(pred, 0).cpu().numpy()
+        true = torch.cat(true, 0).cpu().numpy()
+        total = true.shape[0]
         valoss = totalloss/total
-        print("valid loss: "+str(valoss)+" acc: "+str(correct/total))
-        if valoss < bestvalloss:
-          bestvalloss = valoss
-          print('saving best')
-          torch.save(mvae, savedir)
+        if task == "classification":
+          acc = accuracy_score(true, pred)
+          print("Epoch "+str(ep)+" valid loss: "+str(valoss)+\
+              " acc: "+str(acc))
+          if valoss < bestvalloss:
+            patience = 0
+            bestvalloss = valoss
+            print("Saving Best")
+            torch.save(mvae, savedir)
+          else:
+            patience += 1
+        elif task == "multilabel":
+          f1_micro = f1_score(true, pred, average="micro")
+          f1_macro = f1_score(true, pred, average="macro")
+          print("Epoch "+str(ep)+" valid loss: "+str(valoss)+\
+              " f1_micro: "+str(f1_micro)+" f1_macro: "+str(f1_macro))
+          if f1_macro>bestf1:
+            patience = 0
+            bestf1=f1_macro
+            print("Saving Best")
+            torch.save(mvae,savedir)
+          else:
+            patience += 1
+        if early_stop and patience > 7:
+          break
 
 
-def test_MFM(model, test_dataloader, auprc=False):
-  total = 0
-  correct = 0
-  batchsize = 40
+def test_MFM(model, test_dataloader, auprc=False, task="classification"):
+  pred=[]
+  true=[]
   pts = []
   for j in test_dataloader:
     xes = [x.float().cuda() for x in j[:-1]]
     y_batch = j[-1].cuda()
     with torch.no_grad():
       _, outs = model(xes, training=False)
-      a = nn.Softmax()(outs)
+      if task=="classification":
+        a = nn.Softmax()(outs)
     for ii in range(len(outs)):
-      total += 1
-      if outs[ii].tolist().index(max(outs[ii])) == y_batch[ii]:
-        correct += 1
       pts.append([a[ii][1], y_batch[ii]])
-  print((float(correct)/total))
+    if task == "classification":
+      pred.append(torch.argmax(outs, 1))
+    elif task == "multilabel":
+      pred.append(torch.sigmoid(outs).round())
+    true.append(j[-1])
+  if pred:
+    pred = torch.cat(pred, 0).cpu().numpy()
+  true = torch.cat(true, 0).cpu().numpy()
   if auprc:
     print(AUPRC(pts))
-  return float(correct)/total
+  if task == "classification":
+    print("acc: "+str(accuracy_score(true, pred)))
+    return accuracy_score(true, pred)
+  elif task == "multilabel":
+    print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
+        " f1_macro: "+str(f1_score(true, pred, average="macro")))
+    return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro")
