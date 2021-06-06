@@ -121,11 +121,10 @@ def test_MFM(model, test_dataloader, auprc=False, task="classification"):
     y_batch = j[-1].cuda()
     with torch.no_grad():
       _, outs = model(xes, training=False)
-      if task=="classification":
-        a = nn.Softmax()(outs)
-    for ii in range(len(outs)):
-      pts.append([a[ii][1], y_batch[ii]])
     if task == "classification":
+      a = nn.Softmax()(outs)
+      for ii in range(len(outs)):
+        pts.append([a[ii][1], y_batch[ii]])
       pred.append(torch.argmax(outs, 1))
     elif task == "multilabel":
       pred.append(torch.sigmoid(outs).round())
