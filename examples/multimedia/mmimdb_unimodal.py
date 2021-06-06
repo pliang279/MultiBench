@@ -8,7 +8,7 @@ from training_structures.unimodal import train, test
 from datasets.imdb.get_data import get_dataloader
 from unimodals.common_models import MLP
 
-traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', vgg=True)
+traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', vgg=True, batch_size=128)
 
 encoders=MLP(300, 512, 512).cuda()
 #encoders=MLP(4096,1024,512).cuda()
