@@ -13,10 +13,11 @@ import yaml
 import os
 from tqdm import tqdm
 
-from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised
+from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised,roboticsConcat
 from unimodals.robotics.encoders import (
     ProprioEncoder, ForceEncoder, ImageEncoder, DepthEncoder, ActionEncoder,
 )
+from unimodals.common_models import MLP
 from unimodals.robotics.decoders import ContactDecoder
 from training_structures.Simple_Late_Fusion import train, test
 from robotics_utils import set_seeds
@@ -47,30 +48,23 @@ class selfsupervised:
             DepthEncoder(configs['zdim'], alpha=configs['depth']),
             ActionEncoder(configs['action_dim']),
         ]
+        """
         self.fusion = SensorFusionSelfSupervised(
             device=self.device,
             encoder=configs["encoder"],
             deterministic=configs["deterministic"],
             z_dim=configs["zdim"],
         ).to(self.device)
-        self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"],head=2)
-        
-
+        """
+        self.fusion = roboticsConcat()
+        #self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"])
+        self.head=MLP(1056,128,2)
         self.optimtype = optim.Adam
 
         # losses
         self.loss_contact_next = nn.BCEWithLogitsLoss()
 
-        self.train_loader, self.val_loader = get_data(self.device, self.configs)
-        for j in self.train_loader:
-            print(j[0].size())
-            print(j[1].size())
-            print(j[2].size())
-            print(j[3].size())
-            print(j[4].size())
-
-            print(j[5].size())
-            
+        self.train_loader, self.val_loader = get_data(self.device, self.configs,"/home/pliang/multibench/MultiBench-robotics/")
 
     def train(self):
         print(len(self.train_loader.dataset), len(self.val_loader.dataset))
@@ -82,7 +76,7 @@ class selfsupervised:
                 f.write(f'{x}\n')
         train(self.encoders, self.fusion, self.head,
               self.train_loader, self.val_loader,
-              15,
+              15,regularization=True,
               optimtype=self.optimtype,
               lr=self.configs['lr'])
 

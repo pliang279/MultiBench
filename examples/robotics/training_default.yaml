@@ -19,7 +19,7 @@ eedelta: 1.0
 # Training parameters
 lr: 0.0005
 beta1: 0.9 
-seed: 12179
+seed: 12149
 max_epoch: 50
 batch_size: 64
 ep_length: 50
