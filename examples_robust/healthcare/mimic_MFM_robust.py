@@ -1,7 +1,6 @@
 import sys
 import os
-sys.path.append('/home/pliang/multibench/MultiBench/datasets/mimic')
-sys.path.append('/home/pliang/multibench/MultiBench')
+sys.path.append(os.getcwd())
 from training_structures.MFM import train_MFM,test_MFM
 from fusions.common_fusions import Concat
 from unimodals.MVAE import TSEncoder,TSDecoder
@@ -9,9 +8,9 @@ from unimodals.common_models import MLP
 from torch import nn
 import torch
 from objective_functions.recon import recon_weighted_sum,sigmloss1d
-from get_data_robust import get_dataloader
+from datasets.mimic.get_data_robust import get_dataloader
 
-traindata, validdata, testdata, robustdata = get_dataloader(7, imputed_path='../../datasets/mimic/im.pk',flatten_time_series=True)
+traindata, validdata, testdata, robustdata = get_dataloader(1, imputed_path='datasets/mimic/im.pk',flatten_time_series=True)
 classes=2
 n_latent=200
 series_dim=12
