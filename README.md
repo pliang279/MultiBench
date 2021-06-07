@@ -120,6 +120,8 @@ python examples/hci/enrico_simple_late_fusion.py
 
 ### MultiMedia
 
+Scripts for the Kinetics dataset are located in the `special` directory.
+
 ### Complexity
 
 ### Robustness
