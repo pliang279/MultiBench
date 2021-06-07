@@ -67,6 +67,29 @@ To add a new algorithm:
 ### Finance
 
 ### HCI
+The code for HCI experiments can be found under the `examples/hci` directory.
+
+The unimodal examples can be run using the following commands.
+
+Screenshot modality
+
+```
+python examples/hci/enrico_unimodal_0.py
+```
+
+UI Element modality
+
+```
+python examples/hci/enrico_unimodal_1.py
+```
+
+The multimodal examples are found in the same directory. As an example:
+
+Simple Late Fusion
+
+```
+python examples/hci/enrico_simple_late_fusion.py
+```
 
 ### MultiMedia
 
