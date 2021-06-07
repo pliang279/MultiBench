@@ -25,11 +25,19 @@ def white_noise(data, p):
 # each entry is dropped independently with probability p
 def random_drop(data, p):
     for i in range(len(data)):
-        for time in range(len(data[i])):
-            for feature in range(len(data[i][time])):
-                if np.random.random_sample() < p:
-                    data[i][time][feature] = 0
+        data[i] = random_drop_helper(data[i], p, len(np.array(data).shape))
     return data
+
+def random_drop_helper(data, p, level):
+    if level == 2:
+        for i in range(len(data)):
+            if np.random.random_sample() < p:
+                data[i] = 0
+        return data
+    else:
+        for i in range(len(data)):
+            data[i] = random_drop_helper(data[i], p, level - 1)
+        return data
 
 
 # independently for each modality, each time step is chosen with probability p 
