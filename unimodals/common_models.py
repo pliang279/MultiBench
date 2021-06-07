@@ -12,6 +12,14 @@ class Linear(torch.nn.Module):
     def forward(self,x,training=False):
         return self.fc(x)
 
+class Linear_inited(torch.nn.Module):
+    def __init__(self,indim,outdim):
+        super(Linear_inited, self).__init__()
+        self.fc = nn.Linear(indim,outdim)
+        nn.init.xavier_normal(self.fc.weight)
+        self.fc.bias.data.fill_(0.0)
+    def forward(self,x,training=False):
+        return self.fc(x)
 
 class Squeeze(torch.nn.Module):
     def __init__(self, dim=None):

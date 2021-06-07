@@ -13,6 +13,7 @@ from objective_functions.contrast import MultiSimilarityLoss
 softmax = nn.Softmax()
 
 
+
 class MMDL(nn.Module):
     def __init__(self,encoders,fusion,refiner,head,has_padding=False):
         super(MMDL,self).__init__()
@@ -33,10 +34,11 @@ class MMDL(nn.Module):
         
         fuse = self.fuse(outs, training=training)
         logit = self.head(fuse, training=training)
-        
+        sizes = [torch.flatten(ii,start_dim=1).size(1) for ii in inputs]
         rec_features = []
         if training:
             rec_feature = self.refiner(fuse, training=training)
+            curr=0
             for i in range(input_num):
                 if self.has_padding:
                     if i == 0:
@@ -46,10 +48,12 @@ class MMDL(nn.Module):
                             inputs[0][i-1].size(1):inputs[0][i-1].size(1)+inputs[i].size(1)])
                 else:
                     if i == 0:
-                        rec_features.append(rec_feature[:, :inputs[i].size(1)])
+                        rec_features.append(rec_feature[:, :sizes[0]])
+                        curr = sizes[0]
                     else:
                         rec_features.append(rec_feature[:, \
-                            inputs[i-1].size(1):inputs[i-1].size(1)+inputs[i].size(1)])
+                                curr:curr+sizes[i]])
+                        curr += sizes[i]
             '''
             if i == 0:
                 rec_features.append(rec_feature[:, :outs[i].size(-1)])
@@ -79,7 +83,7 @@ class MMDL(nn.Module):
 def train(
     encoders,fusion,head,refiner,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
     early_stop=False,task="multilabel",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
-    criterion=nn.L1Loss(),auprc=False,save='best.pt'):
+    criterion=nn.L1Loss(),auprc=False,save='best.pt',num_classes=10,selflossweight=0.1):
     
     #n_data = len(train_dataloader.dataset)
     model = MMDL(encoders,fusion,refiner,head,is_packed).cuda()
@@ -114,15 +118,19 @@ def train(
                 #print(j[-1])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss_cl=criterion(out[0], j[-1].float().cuda())
+                elif task=='regression':
+                    #print(out[0].size())
+                    loss_cl=criterion(out[0],j[-1].float().cuda())
                 else:
-                    loss_cl=criterion(out[0], j[-1].cuda())
-                loss_contrast = contrast_criterion(out[1], j[-1].cuda())
+                    #print(j[-1].long())
+                    loss_cl=criterion(out[0], torch.flatten(j[-1].long()).cuda())
+                #loss_contrast = contrast_criterion(out[1], F.one_hot(j[-1]).cuda())
                 loss_self = 0
                 for i in range(len(out[3])):
-                    loss_self += ss_criterion(out[3][i], j[i].float().cuda(), \
+                    loss_self += ss_criterion(out[3][i], torch.flatten(j[i].float(),start_dim=1).cuda(), \
                         torch.ones(out[3][i].size(0)).cuda())
                 #print(loss_cl, loss_contrast, loss_self)
-                loss = loss_cl+1e-4*loss_contrast+0.1*loss_self
+                loss = loss_cl+selflossweight*loss_self
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
             
@@ -149,8 +157,10 @@ def train(
                     out,_,_,_ = model([i.float().cuda() for i in j[:-1]],training=False)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss=criterion(out, j[-1].float().cuda())
+                elif task=='regression':
+                    loss_cl=criterion(out[0],j[-1].float().cuda())
                 else:
-                    loss=criterion(out, j[-1].cuda())
+                    loss=criterion(out, torch.flatten(j[-1].long()).cuda())
                 totalloss += loss*len(j[-1])
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
@@ -194,7 +204,7 @@ def train(
             if early_stop and patience > 7:
                 break
         elif task == "regression":
-            print("Epoch "+str(epoch)+" valid loss: "+str(valloss))
+            print("Epoch "+str(epoch)+" valid loss: "+str(valloss.item()))
             if valloss<bestvalloss:
                 patience = 0
                 bestvalloss=valloss
