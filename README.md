@@ -44,4 +44,22 @@ To add a new algorithm:
 
 ## Experiments
 
+### Affective Computing
+
+### Healthcare
+
+### Robotics
+
+### Finance
+
+### HCI
+
+### MultiMedia
+
+### Complexity
+
+### Robustness
+
+commands to run + plot
+
 ## References
