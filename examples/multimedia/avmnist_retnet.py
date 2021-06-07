@@ -16,7 +16,7 @@ head=MLP(channels*64,100,10).cuda()
 refiner=MLP(channels*64,1000,13328)
 fusion=Concat().cuda()
 
-train(encoders,fusion,head,refiner,traindata,validdata,25,task='classification',optimtype=torch.optim.SGD,lr=0.001,criterion=torch.nn.CrossEntropyLoss())
+train(encoders,fusion,head,refiner,traindata,validdata,15,task='classification',optimtype=torch.optim.SGD,lr=0.005,criterion=torch.nn.CrossEntropyLoss())
 
 print("Testing:")
 model=torch.load('best.pt').cuda()
