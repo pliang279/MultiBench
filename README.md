@@ -12,7 +12,7 @@ Correspondence to:
   - Xiang Fan
   - Zetian Wu
   - Yun Cheng
-  - Jason Wu
+  - [Jason Wu](https://jasonwunix.com/) (jsonwu@cmu.edu)
   - Leslie Chen
   - Peter Wu
   - Michelle A. Lee
@@ -26,7 +26,7 @@ Correspondence to:
 2. Healthcare: MIMIC
 3. Robotics:
 4. Finance: Stocks-food, Stocks-tech, Stocks-healthcare
-5. HCI: 
+5. HCI: ENRICO
 6. Multimedia: AV-MNIST, MMIMDB, Kinetics (size issue?)
 
 TODO: add HCI and Robotics
