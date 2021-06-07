@@ -72,9 +72,35 @@ To add a new algorithm:
 
 ### Affective Computing
 
+```diff
+- TODO: 
+```
+
 ### Healthcare
 
+Note that the MIMIC dataset for Healthcare has restricted access. To gain access to the preprocessed version of this dataset, please follow instructions [here](https://mimic.mit.edu/iv/access/) to gain the necessary credentials. Once you have the credentials, email ylyu1@andrew.cmu.edu with proof of your credentials and ask for the preprocessed 'im.pk' file. 
+
+After you have the 'im.pk' file, you can get the dataloaders of this dataset by calling the get_dataloader function in examples/mimic/get_data.py. The get_dataloader function takes 2 inputs: the first specifies which task you want to do (-1 means mortality task, 1 means icd9 10-19 task, 7 means ic9 70-79 task). The input modalities will be static (vector of size 5) and time-series (24x30 shaped).
+
+There are lots of example scripts for running MIMIC under examples/healthcare/. For example, to run MIMIC with Low Rank Tensor Fusion, do
+
+```
+python3 examples/healthcare/mimic_low_rank_tensor.py
+```
+
 ### Robotics
+
+For Vision and Touch dataset, the scripts for downloading the dataset is included in dataset/robotics/ folder (download_data.sh). After the data is downloaded, use dataset/robotics/data_loader.py to access the preprocessed dataloaders. Note that this dataset only has train and valid set, so the output will be a tuple of 2 dataloaders instead of 3. The default task is Contact, but you can get the dataloaders for End Effector task by passing in "output='ee_yaw_next'" as argument to the get_data function.
+
+For more detailed information on this dataset, see the original [repo](https://github.com/stanford-iprl-lab/multimodal_representation).
+
+There are lots of example scripts for running Vision and Touch under examples/robotics/. For example, to run Vision and Touch with Low Rank Tensor Fusion on Contact Task, do
+
+```
+python3 examples/robotics/LRTF.py
+```
+
+
 
 ### Finance
 
@@ -120,9 +146,22 @@ python examples/hci/enrico_simple_late_fusion.py
 
 ### MultiMedia
 
-Scripts for the Kinetics dataset are located in the `special` directory.
+To access AV-MNIST, download the avmnist.tar.gz file from [here] and untar it. Then, input the location of the avmnist file to the get_dataloader function in datasets/avmnist/get_data.py script. The input modalities are black-white images (28x28 tensors) and audio spectograms (112x112 tensors).
+
+There are lots of example scripts for running AV-MNIST under examples/robotics/. For example, to run Vision and Touch with Simple Late Fusion with Concatenation, do
+```
+python examples/multimedia/avmnist_simple_late_fusion.py
+```
+
+```diff
+- TODO: add mmimdb, kinetics infos
+```
 
 ### Complexity
+
+We have a private script (private_test_scripts/all_in_one.py) for recording complexity data for training and testing, including peak memory, number-of-parameters and time for training and number-of-parameters and time for testing. You will need to install [memory_profiler](https://pypi.org/project/memory-profiler/) to run this script. It provides 2 useful functions: all_in_one_train, which takes in a function reference of the training process as well as all the modules involved in training and will run the training process and print out total runtime, peak memory and total number of parameters; all_in_one_test, which takes a function reference of the testing process as well as all the modules involved in testing and will run the testing process and print out total runtime and total number of parameters. 
+
+For example usage, see private_test_scripts/memtest.py (which adds complexity measuring to the script examples/healthcare/mimic_baseline.py)
 
 ### Robustness
 
