@@ -20,31 +20,32 @@ Correspondence to:
   - Ruslan Salakhutdinov
   - Louis-Philippe Morency
 
-## Datasets supported
+## Datasets currently supported
 
 1. Affective computing: CMU-MOSI, CMU-MOSEI, POM, UR-FUNNY, Deception, MUStARD
 2. Healthcare: MIMIC
-3. Robotics:
+3. Robotics: Vision and Touch, MuJoCo Push
 4. Finance: Stocks-food, Stocks-tech, Stocks-healthcare
 5. HCI: ENRICO
-6. Multimedia: AV-MNIST, MMIMDB, Kinetics (size issue?)
+6. Multimedia: AV-MNIST, MMIMDB, Kinetics-S, Kinetics-L
 
-TODO: add HCI and Robotics
 
 To add a new dataset:
 
 1. see datasets/
 2. add a new folder if appropriate
-3. write a dataloader python file following the existing examples
+3. write a python file with a get_dataloader function that returns a tuple of 3 dataloaders (for train, valid, test data respectively) containing preprocessed data. Please following the existing examples (such as avmnist: datasets/avmnist/get_data.py)
 4. see examples/ and write an example training python file following the existing examples
 5. check that calling the dataloader and running a simple training script works
 
 ## Algorithms supported
 
-1. unimodals: LSTM, Transformer, FCN, Random Forest
-3. fusions: early/late concatenation, attention, tensors
-4. objective_functions: VAE, contrastive learning, max MI, CCA
-5. training_structures: balancing generalization, architecture search
+See Appendix Section F for detailed descriptions of each part.
+
+1. unimodals: MLP, GRU, LeNet, CNN, LSTM, Transformer, FCN, Random Forest, ResNet, etc... (see unimodals/)
+2. fusions: early/late concatenation, NL-gate, tensor fusions, Multiplicative Interactions, Low-Rank Tensor Fusion, etc (see fusions/ )
+3. objective_functions: (default: CrossEntropyLoss for classification tasks, MSELoss for regression tasks), ELBO, Weighted Reconstruction Loss, CCA, Contrastive Loss, etc (see objective_functions/)
+4. training_structures: Simple Early Fusion, Simple Late Fusion, Gradient Blend, MVAE, MFM, Architecture Search, etc (see training_structures/)
 
 To add a new algorithm:
 
@@ -55,6 +56,8 @@ To add a new algorithm:
 - training_structures/ : training algorithms excluding objective functions (e.g., balancing generalization, architecture search outer RL loop)
 2. see examples/ and write an example training python file following the existing examples
 3. check that calling the added functions and running a simple training script works
+4. Make sure your new modules are well documented by comments in its input and output format and shapes
+ 
 
 ## Experiments
 
