@@ -9,7 +9,7 @@ Large Scale Benchmarks for Multimodal Representation Learning
 Correspondence to: 
   - [Paul Pu Liang](http://www.cs.cmu.edu/~pliang/) (pliang@cs.cmu.edu)
   - Yiwei Lyu (ylyu1@andrew.cmu.edu)
-  - Xiang Fan
+  - [Xiang Fan](https://github.com/sfanxiang) (xiangfan@cmu.edu)
   - Zetian Wu
   - Yun Cheng (yuncheng@andrew.cmu.edu)
   - [Jason Wu](https://jasonwunix.com/) (jsonwu@cmu.edu)
