@@ -97,6 +97,8 @@ python examples/hci/enrico_simple_late_fusion.py
 
 ### Robustness
 
+Modality-specific and multimodal imperfection implementations are under `robustness`, organized by modalities.
+
 All robustness experiment examples are under `examples_robust` and are organized by datasets.
 
 To run an experiment example, first go to the parent directory of `examples_robust`, which should be on the same dir level as `datasets` and `robustness`, then run the command
