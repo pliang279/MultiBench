@@ -14,7 +14,7 @@ Correspondence to:
   - Yun Cheng (yuncheng@andrew.cmu.edu)
   - [Jason Wu](https://jasonwunix.com/) (jsonwu@cmu.edu)
   - Leslie Chen
-  - Peter Wu
+  - [Peter Wu](https://peter.onrender.com/) (peterw1@cs.cmu.edu)
   - Michelle A. Lee
   - Yuke Zhu
   - Ruslan Salakhutdinov
