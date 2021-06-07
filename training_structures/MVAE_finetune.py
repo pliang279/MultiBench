@@ -35,7 +35,7 @@ class MVAE(nn.Module):
         # reconstruct inputs based on that gaussian
         recons=[]
         for i in range(len(inputs)):
-            recons.append(self.decoders[i](z,training=training));
+            recons.append(self.decoders[i](z,training=training))
         return z, recons, mu, logvar
 
     def infer(self, inputs,training=False): 
