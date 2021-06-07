@@ -68,6 +68,9 @@ To add a new algorithm:
 
 ### HCI
 The code for HCI experiments can be found under the `examples/hci` directory.
+Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI elements.
+
+![](/datasets/enrico/hci.jpg)
 
 The unimodal examples can be run using the following commands.
 
