@@ -78,6 +78,18 @@ To add a new algorithm:
 
 ### Finance
 
+The code for finance experiments can be found under the `examples/finance` directory. Each model type has its own Python file under this directory. Each file accepts two arguments, `--input-stocks` and `--target-stock`. For example, to run early fusion on the stocks benchmarked in the paper:
+
+```sh
+python examples/finance/stocks_early_fusion.py --input-stocks 'MCD SBUX HSY HRL' --target-stock 'MCD'
+python examples/finance/stocks_early_fusion.py --input-stocks 'AAPL MSFT AMZN INTC AMD MSI' --target-stock 'MSFT'
+python examples/finance/stocks_early_fusion.py --input-stocks 'MRK WST CVS MCK ABT UNH TFX' --target-stock 'UNH'
+```
+
+You can specify arbitrary stocks to be downloaded. The data loader will automatically download the data for you. If the stocks do not cover the date range defined in `datasets/stocks/get_data.py`, a different date range can be specified.
+
+For unimodal experiments, run `stocks_early_fusion.py` with the the same stock passed to `--input-stocks` and `--target-stock`.
+
 ### HCI
 The code for HCI experiments can be found under the `examples/hci` directory.
 Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI layout. App screens are classified into 20 different design categories.
