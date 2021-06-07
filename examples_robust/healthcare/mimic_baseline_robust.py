@@ -1,6 +1,6 @@
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
+sys.path.append(os.getcwd())
 from training_structures.Simple_Late_Fusion import train, test
 from fusions.common_fusions import Concat
 from datasets.mimic.get_data_robust import get_dataloader
@@ -10,7 +10,7 @@ import torch
 import numpy as np
 
 #get dataloader for icd9 classification task 7
-traindata, validdata, testdata, robustdata = get_dataloader(-1, imputed_path='../../datasets/mimic/im.pk')
+traindata, validdata, testdata, robustdata = get_dataloader(1, imputed_path='datasets/mimic/im.pk')
 
 #build encoders, head and fusion layer
 encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False).cuda()]

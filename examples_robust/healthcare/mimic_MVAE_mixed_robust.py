@@ -1,7 +1,6 @@
 import sys
 import os
-sys.path.append('/home/pliang/multibench/MultiBench/datasets/mimic')
-sys.path.append('/home/pliang/multibench/MultiBench')
+sys.path.append(os.getcwd())
 from training_structures.MVAE_mixed import train_MVAE,test_MVAE
 from fusions.MVAE import ProductOfExperts
 from unimodals.MVAE import MLPEncoder,TSEncoder,TSDecoder
@@ -9,12 +8,12 @@ from unimodals.common_models import MLP
 from torch import nn
 import torch
 from objective_functions.recon import elbo_loss,sigmloss1d
-from get_data_robust import get_dataloader
+from datasets.mimic.get_data_robust import get_dataloader
 
 
 filename1 = 'mimic_MVAE_mixed_best1.pt'
 filename2 = 'mimic_MVAE_mixed_best2.pt'
-traindata, validdata, testdata, robustdata = get_dataloader(-1, imputed_path='../../datasets/mimic/im.pk', flatten_time_series=True)
+traindata, validdata, testdata, robustdata = get_dataloader(1, imputed_path='datasets/mimic/im.pk', flatten_time_series=True)
 classes=6
 n_latent=200
 series_dim=12

@@ -4,21 +4,21 @@ import numpy as np
 from torch.utils.data import DataLoader
 import random
 import pickle
+import copy
 # sys.path.append('/home/pliang/multibench/robustness/')
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 from robustness.timeseries_robust import timeseries_robustness
 from robustness.tabular_robust import tabular_robustness
+from tqdm import tqdm
 
 
 #task: integer between -1 and 19 inclusive, -1 means mortality task, 0-19 means icd9 task
-def get_dataloader(task,batch_size=40, num_workers=8, train_shuffle=True, imputed_path='im.pk', flatten_time_series=False, noise_level=0.3, tabular_robust=True, timeseries_robust=True):
+def get_dataloader(task,batch_size=40, num_workers=1, train_shuffle=True, imputed_path='im.pk', flatten_time_series=False, tabular_robust=True, timeseries_robust=True):
   f = open(imputed_path,'rb')
   datafile = pickle.load(f)
   f.close()
-  # print(datafile['adm_features_all'].shape, datafile['ep_tdata'].shape)
-  # quit()
-  X_s = datafile['adm_features_all']
   X_t = datafile['ep_tdata']
+  X_s = datafile['adm_features_all']
   
   X_t[np.isinf(X_t)]=0
   X_t[np.isnan(X_t)]=0
@@ -66,32 +66,26 @@ def get_dataloader(task,batch_size=40, num_workers=8, train_shuffle=True, impute
 
   random.shuffle(datasets)
 
-  # print(datasets[0:le//10])
-  # quit()
-  dataset_robust = datasets[le//10:le//5]
+  valids = DataLoader(datasets[0:le//10], shuffle=False, num_workers=num_workers, batch_size=batch_size)
+  tests = DataLoader(datasets[le//10:le//5], shuffle=False, num_workers=num_workers, batch_size=batch_size)
+  trains = DataLoader(datasets[le//5:], shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
+
   datasets_robust = []
-  for noise_level in range(11):
+  tests_robust = []
+  for noise_level in tqdm(range(11)):
+    dataset_robust = copy.deepcopy(datasets[le//10:le//5])
     if tabular_robust:
       X_s_robust = tabular_robustness([dataset_robust[i][0] for i in range(len(dataset_robust))], noise_level=noise_level/10)
     else:
       X_s_robust = [dataset_robust[i][0] for i in range(len(dataset_robust))]
     if timeseries_robust:
-      if flatten_time_series:
-        X_t_robust = timeseries_robustness([dataset_robust[i][1].reshape((timestep,series_dim)) for i in range(len(dataset_robust))],noise_level=noise_level/10)
-      else:
-        X_t_robust = timeseries_robustness([dataset_robust[i][1] for i in range(len(dataset_robust))],noise_level=noise_level/10)
+      X_t_robust = timeseries_robustness([[dataset_robust[i][1] for i in range(len(dataset_robust))]],noise_level=noise_level/10)[0]
     else:
       X_t_robust = [dataset_robust[i][1] for i in range(len(dataset_robust))]
     y_robust = [dataset_robust[i][2] for i in range(len(dataset_robust))]
     if flatten_time_series:
-      datasets_robust.append([(X_s_robust[i],X_t_robust[i].reshape(timestep*series_dim),y_robust[i]) for i in range(len(y_robust))])
+      tests_robust.append(DataLoader([(X_s_robust[i],X_t_robust[i].reshape(timestep*series_dim),y_robust[i]) for i in range(len(y_robust))], shuffle=False, num_workers=num_workers, batch_size=batch_size))
     else:
-      datasets_robust.append([(X_s_robust[i],X_t_robust[i],y_robust[i]) for i in range(len(y_robust))])
-
-  valids = DataLoader(datasets[0:le//10], shuffle=False, num_workers=num_workers, batch_size=batch_size)
-  tests = DataLoader(datasets[le//10:le//5], shuffle=False, num_workers=num_workers, batch_size=batch_size)
-  trains = DataLoader(datasets[le//5:], shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
-  tests_robust = []
-  for i in range(len(datasets_robust)):
-    tests_robust.append(DataLoader(datasets_robust[i], shuffle=False, num_workers=num_workers, batch_size=batch_size))
+      tests_robust.append(DataLoader([(X_s_robust[i],X_t_robust[i],y_robust[i]) for i in range(len(y_robust))], shuffle=False, num_workers=num_workers, batch_size=batch_size))
+    
   return trains,valids,tests,tests_robust
