@@ -116,6 +116,14 @@ You can specify arbitrary stocks to be downloaded. The data loader will automati
 
 For unimodal experiments, run `stocks_early_fusion.py` with the the same stock passed to `--input-stocks` and `--target-stock`.
 
+Below is a full list of stocks under each category outlined in the paper:
+
+```yaml
+F&B (18): CAG CMG CPB DPZ DRI GIS HRL HSY K KHC LW MCD MDLZ MKC SBUX SJM TSN YUM
+Health (63): ABT ABBV ABMD A ALXN ALGN ABC AMGN ANTM BAX BDX BIO BIIB BSX BMY CAH CTLT CNC CERN CI COO CVS DHR DVA XRAY DXCM EW GILD HCA HSIC HOLX HUM IDXX ILMN INCY ISRG IQV JNJ LH LLY MCK MDT MRK MTD PKI PRGO PFE DGX REGN RMD STE SYK TFX TMO UNH UHS VAR VRTX VTRS WAT WST ZBH ZTS
+Tech (100): AAPL ACN ADBE ADI ADP ADSK AKAM AMAT AMD ANET ANSS APH ATVI AVGO BR CDNS CDW CHTR CMCSA CRM CSCO CTSH CTXS DIS DISCA DISCK DISH DXC EA ENPH FB FFIV FIS FISV FLIR FLT FOX FOXA FTNT GLW GOOG GOOGL GPN HPE HPQ IBM INTC INTU IPG IPGP IT JKHY JNPR KEYS KLAC LRCX LUMN LYV MA MCHP MPWR MSFT MSI MU MXIM NFLX NLOK NOW NTAP NVDA NWS NWSA NXPI OMC ORCL PAYC PAYX PYPL QCOM QRVO SNPS STX SWKS T TEL TER TMUS TRMB TTWO TWTR TXN TYL V VIAC VRSN VZ WDC WU XLNX ZBRA
+```
+
 ### HCI
 The code for HCI experiments can be found under the `examples/hci` directory.
 Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI layout. App screens are classified into 20 different design categories.
