@@ -2,18 +2,32 @@
 
 Large Scale Benchmarks for Multimodal Representation Learning
 
+[MultiBench website](https://cmu-multicomp-lab.github.io/multibench/)
+
 ## Contributors
 
 Correspondence to: 
   - [Paul Pu Liang](http://www.cs.cmu.edu/~pliang/) (pliang@cs.cmu.edu)
   - Yiwei Lyu (ylyu1@andrew.cmu.edu)
+  - Xiang Fan
+  - Zetian Wu
+  - Yun Cheng
+  - Jason Wu
+  - Leslie Chen
+  - Peter Wu
+  - Michelle A. Lee
+  - Yuke Zhu
+  - Ruslan Salakhutdinov
+  - Louis-Philippe Morency
 
 ## Datasets supported
 
 1. Affective computing: CMU-MOSI, CMU-MOSEI, POM, UR-FUNNY, Deception, MUStARD
 2. Healthcare: MIMIC
-3. Multimedia: AV-MNIST, MMIMDB, Kinetics (size issue?)
+3. Robotics:
 4. Finance: Stocks-food, Stocks-tech, Stocks-healthcare
+5. HCI: 
+6. Multimedia: AV-MNIST, MMIMDB, Kinetics (size issue?)
 
 TODO: add HCI and Robotics
 
