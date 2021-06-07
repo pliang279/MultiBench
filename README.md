@@ -68,7 +68,7 @@ To add a new algorithm:
 
 ### HCI
 The code for HCI experiments can be found under the `examples/hci` directory.
-Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI elements.
+Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI layout. App screens are classified into 20 different design categories.
 
 ![](/datasets/enrico/hci.jpg)
 
@@ -80,7 +80,7 @@ Screenshot modality
 python examples/hci/enrico_unimodal_0.py
 ```
 
-UI Element modality
+UI Layout modality
 
 ```
 python examples/hci/enrico_unimodal_1.py
