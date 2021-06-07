@@ -11,7 +11,7 @@ Correspondence to:
   - Yiwei Lyu (ylyu1@andrew.cmu.edu)
   - Xiang Fan
   - Zetian Wu
-  - Yun Cheng
+  - Yun Cheng (yuncheng@andrew.cmu.edu)
   - [Jason Wu](https://jasonwunix.com/) (jsonwu@cmu.edu)
   - Leslie Chen
   - Peter Wu
@@ -74,6 +74,15 @@ To add a new algorithm:
 
 ### Robustness
 
-commands to run + plot
+All robustness experiment examples are under `examples_robust` and are organized by datasets.
+
+To run an experiment example, first go to the parent directory of `examples_robust`, which should be on the same dir level as `datasets` and `robustness`, then run the command
+
+```
+python examples_robust/healthcare/mimic_baseline_robust.py
+```
+
+We visualize the experiment results using two metrics, relative and effective robustness, as well a combination of both. These plots indicate the tradeoff between accuracy and robustness:
+![](/examples_robust/robustness_plots.png)
 
 ## References
