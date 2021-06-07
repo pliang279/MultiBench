@@ -252,4 +252,4 @@ def test(
             return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
         elif task == "regression":
             print("mse: "+str(testloss))
-            return testloss
+            return testloss.item()

@@ -73,10 +73,8 @@ class MMDL(nn.Module):
             return out1, out2 
         '''
         '''
-
         out = self.fuse(outs, training=training)
         out1, out2 = self.contrast(outs[0], outs[1], inputs[2])
-
         return self.head(out, training=training), out1, out2    
         '''
 
@@ -264,4 +262,4 @@ def test(
             return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
         elif task == "regression":
             print("mse: "+str(testloss))
-            return testloss
+            return testloss.item()
