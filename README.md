@@ -186,9 +186,8 @@ There are lots of example scripts for running MM-IMDb under examples/multimedia/
 ```
 python examples/multimedia/mmimdb_simple_late_fusion.py
 ```
-```diff
-- TODO: add kinetics infos
-```
+
+Scripts for the Kinetics dataset are located in the `special` directory. Run `python special/kinetics_*.py` for the respective script.
 
 ### Complexity
 
