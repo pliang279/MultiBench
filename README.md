@@ -171,13 +171,19 @@ python examples/hci/enrico_simple_late_fusion.py
 
 To access AV-MNIST, download the avmnist.tar.gz file from [here](https://drive.google.com/file/d/1KvKynJJca5tDtI5Mmp6CoRh9pQywH8Xp/view?usp=sharing) and untar it. Then, input the location of the avmnist file to the get_dataloader function in datasets/avmnist/get_data.py script. The input modalities are black-white images (28x28 tensors) and audio spectograms (112x112 tensors).
 
-There are lots of example scripts for running AV-MNIST under examples/robotics/. For example, to run Vision and Touch with Simple Late Fusion with Concatenation, do
+There are lots of example scripts for running AV-MNIST under examples/multimedia/. For example, to run Vision and Touch with Simple Late Fusion with Concatenation, do
 ```
 python examples/multimedia/avmnist_simple_late_fusion.py
 ```
 
+To access MM-IMDb, download the multimodal_imdb.hdf5 from [here](http://lisi1.unal.edu.co/mmimdb/multimodal_imdb.hdf5) and we also use the raw data from [here](http://lisi1.unal.edu.co/mmimdb/mmimdb.tar.gz) to test models' robustness. 
+
+There are lots of example scripts for running MM-IMDb under examples/multimedia/. To run experiments, input the location of the hdf5 file to the get_dataloader function in each of the examples. Then, taking Text and Image with Simple Late Fusion with Concatenation for example, do 
+```
+python examples/multimedia/mmimdb_simple_late_fusion.py
+```
 ```diff
-- TODO: add mmimdb, kinetics infos
+- TODO: add kinetics infos
 ```
 
 ### Complexity
