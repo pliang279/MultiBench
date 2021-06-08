@@ -143,8 +143,6 @@ Tech (100): AAPL ACN ADBE ADI ADP ADSK AKAM AMAT AMD ANET ANSS APH ATVI AVGO BR 
 The code for HCI experiments can be found under the `examples/hci` directory.
 Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI layout. App screens are classified into 20 different design categories.
 
-![](/datasets/enrico/hci.jpg)
-
 The unimodal examples can be run using the following commands.
 
 Screenshot modality
