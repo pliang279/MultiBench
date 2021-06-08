@@ -20,24 +20,31 @@ Correspondence to:
   - Ruslan Salakhutdinov
   - Louis-Philippe Morency
 
+![](/fig1.png)
+
 ## Overview
 
 MultiBench is a large scale multimodal benchmark, and this repo supplies a comprehensive PyTorch-based infrastructure for conveniently building and evaluating multimodal architectures on included datasets.
 
-![](/slide.png)
+![](/fig2.png)
 
-The picture above shows the general structure of the repo. We modularize the complex multimodal architectures into its main training structures and its components. The training structures can be seen as the "main program" of the training process, and the other components (unimodal encoders/decoders, fusion modules, objective functions, classification heads, etc) can all be seen as plugins to the training structure. As listed in the "Algorithms supported" section below, we already included most commonly used unimodal models, fusion modules and objective functions, and it is also easy to add new modules following the format existing code. This design allows easy construction and training of multimodal architectures and grants flexibility and reusability of code (as the "plugin" modules to training structures are easily changeable). On the bottom right of the slide above shows a snippet of code for running Low Rank Tensor Fusion on AV-MNIST dataset: all you need to do is get the dataloaders, build the unimodal encoders, fusion module, and classification head from existing modules in unimodal/ and fusions/ folders, and pass all that as well as some hyperparameters to the Simple_Late_Fusion training structure to be trained. We included a lot of scripts for running multimodal architectures on supported datasets in the examples/ folder.
+The picture above shows the main parts of the repo. We modularize the complex multimodal architectures into its main training structures and its components. The training procedures (or training structures as called in this repo) can be seen as the "main program" of the training process with the main training loops, and the other components (unimodal encoders/decoders, fusion modules, objective functions, classification heads, etc) can all be seen as plugins to the training structure. As listed in the "Algorithms supported" section below, we already included most commonly used unimodal models, fusion modules and objective functions, and it is also easy to add new modules following the format existing code. This design allows easy construction and training of multimodal architectures and grants flexibility and reusability of code (as the "plugin" modules to training structures are easily changeable). 
+
+![](/slidepart.png)
+
+The above is a snippet of code for running Low Rank Tensor Fusion on AV-MNIST dataset: all you need to do is get the dataloaders, build the unimodal encoders, fusion module, and classification head from existing modules in unimodal/ and fusions/ folders, and pass all that as well as some hyperparameters to the Simple_Late_Fusion training structure to be trained. We included a lot of scripts for running multimodal architectures on supported datasets in the examples/ folder.
 
 
 ## Datasets currently supported
 
-1. Affective computing: CMU-MOSI, CMU-MOSEI, POM, UR-FUNNY, Deception, MUStARD
+1. Affective computing: CMU-MOSI, CMU-MOSEI, UR-FUNNY, MUStARD
 2. Healthcare: MIMIC
 3. Robotics: Vision and Touch, MuJoCo Push
 4. Finance: Stocks-food, Stocks-tech, Stocks-healthcare
 5. HCI: ENRICO
 6. Multimedia: AV-MNIST, MMIMDB, Kinetics-S, Kinetics-L
 
+![](/tab1.png)
 
 To add a new dataset:
 
