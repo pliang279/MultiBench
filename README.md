@@ -90,6 +90,8 @@ python3 examples/healthcare/mimic_low_rank_tensor.py
 
 ### Robotics
 
+#### Vision & Touch
+
 For Vision and Touch dataset, the scripts for downloading the dataset is included in dataset/robotics/ folder (download_data.sh). After the data is downloaded, use dataset/robotics/data_loader.py to access the preprocessed dataloaders. Note that this dataset only has train and valid set, so the output will be a tuple of 2 dataloaders instead of 3. The default task is Contact, but you can get the dataloaders for End Effector task by passing in "output='ee_yaw_next'" as argument to the get_data function.
 
 For more detailed information on this dataset, see the original [repo](https://github.com/stanford-iprl-lab/multimodal_representation).
@@ -100,7 +102,20 @@ There are lots of example scripts for running Vision and Touch under examples/ro
 python3 examples/robotics/LRTF.py
 ```
 
+#### MuJoCo Push (Gentle Push)
 
+The code for MuJoCo Push experiments can be found under the `examples/gentle_push` directory. Each model type has its own Python file under this directory, which can be directly executed to run the experiments.
+
+For example, to run the late fusion model:
+
+```sh
+python examples/gentle_push/LF.py
+```
+
+This will also download the dataset to `datasets/gentle_push/cache` on the first run. Since the original dataset is hosted on Google Drive, sometimes the download may fail for various reasons. We observed that running on Colab solves the issue. Additionally, you can download these files manually and place them at the correct locations:
+- Download [gentle_push_10.hdf5](https://drive.google.com/file/d/1qmBCfsAGu8eew-CQFmV1svodl9VJa6fX/view) to `datasets/gentle_push/cache/1qmBCfsAGu8eew-CQFmV1svodl9VJa6fX-gentle_push_10.hdf5`.
+- Download [gentle_push_300.hdf5](https://drive.google.com/file/d/18dr1z0N__yFiP_DAKxy-Hs9Vy_AsaW6Q/view) to `datasets/gentle_push/cache/18dr1z0N__yFiP_DAKxy-Hs9Vy_AsaW6Q-gentle_push_300.hdf5`.
+- Download [gentle_push_1000.hdf5](https://drive.google.com/file/d/1JTgmq1KPRK9HYi8BgvljKg5MPqT_N4cR/view) to `datasets/gentle_push/cache/1JTgmq1KPRK9HYi8BgvljKg5MPqT_N4cR-gentle_push_1000.hdf5`.
 
 ### Finance
 
