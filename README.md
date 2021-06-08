@@ -72,9 +72,9 @@ To add a new algorithm:
 
 ### Affective Computing
 
-All the affective computing datasets included in the MultiBench is open accessed, you can directly go the [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), the method to process the original raw datasets is the `datasets/affect/get_draft_data`, or email lesliechen1998@gmail.com to ask ready-to-load raw datasets with some different feature sets or processed datasets (aligned and with padded sequence).
+All the affective computing datasets included in the MultiBench is open accessed, you can directly go the [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), the method to process the original raw datasets is the `datasets/affect/get_draft_data.py`, or email lesliechen1998@gmail.com to ask ready-to-load raw datasets with some different feature sets or processed datasets (aligned and with left padding).
 
-You can get the tensors with `datasets/affect/get_data.py`, note that the `sarcasm` means the [MUsTARD](https://github.com/soujanyaporia/MUStARD)  and the `humor` means the [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI for the `task` and `classcification` for MUsTARD and UR-Funny.
+You can get the tensors with `datasets/affect/get_data.py`, note that the `sarcasm` means the [MUsTARD](https://github.com/soujanyaporia/MUStARD) and the `humor` means the [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI for the `task` and `classcification` for MUsTARD and UR-Funny.
 
 There are lots of example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with MCTN, do
 
