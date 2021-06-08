@@ -112,7 +112,7 @@ For example, to run the late fusion model:
 python examples/gentle_push/LF.py
 ```
 
-This will also download the dataset to `datasets/gentle_push/cache` on the first run. Since the original dataset is hosted on Google Drive, sometimes the download may fail for various reasons. We observed that running on Colab solves the issue. Additionally, you can download these files manually and place them at the correct locations:
+This will also download the dataset to `datasets/gentle_push/cache` on the first run. Since the original dataset is hosted on Google Drive, sometimes the automatic download may fail for various reasons. We observed that running on Colab solves the issue. Additionally, you can download these files manually and place them at the correct locations:
 - Download [gentle_push_10.hdf5](https://drive.google.com/file/d/1qmBCfsAGu8eew-CQFmV1svodl9VJa6fX/view) to `datasets/gentle_push/cache/1qmBCfsAGu8eew-CQFmV1svodl9VJa6fX-gentle_push_10.hdf5`.
 - Download [gentle_push_300.hdf5](https://drive.google.com/file/d/18dr1z0N__yFiP_DAKxy-Hs9Vy_AsaW6Q/view) to `datasets/gentle_push/cache/18dr1z0N__yFiP_DAKxy-Hs9Vy_AsaW6Q-gentle_push_300.hdf5`.
 - Download [gentle_push_1000.hdf5](https://drive.google.com/file/d/1JTgmq1KPRK9HYi8BgvljKg5MPqT_N4cR/view) to `datasets/gentle_push/cache/1JTgmq1KPRK9HYi8BgvljKg5MPqT_N4cR-gentle_push_1000.hdf5`.
