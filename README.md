@@ -169,7 +169,7 @@ python examples/hci/enrico_simple_late_fusion.py
 
 ### MultiMedia
 
-To access AV-MNIST, download the avmnist.tar.gz file from [here] and untar it. Then, input the location of the avmnist file to the get_dataloader function in datasets/avmnist/get_data.py script. The input modalities are black-white images (28x28 tensors) and audio spectograms (112x112 tensors).
+To access AV-MNIST, download the avmnist.tar.gz file from [here](https://drive.google.com/file/d/1KvKynJJca5tDtI5Mmp6CoRh9pQywH8Xp/view?usp=sharing) and untar it. Then, input the location of the avmnist file to the get_dataloader function in datasets/avmnist/get_data.py script. The input modalities are black-white images (28x28 tensors) and audio spectograms (112x112 tensors).
 
 There are lots of example scripts for running AV-MNIST under examples/robotics/. For example, to run Vision and Touch with Simple Late Fusion with Concatenation, do
 ```
