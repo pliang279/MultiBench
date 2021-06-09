@@ -20,13 +20,13 @@ Correspondence to:
   - Ruslan Salakhutdinov
   - Louis-Philippe Morency
 
-![](/fig1.png)
+![](/images/overview.png)
 
 ## Overview
 
 MultiBench is a large scale multimodal benchmark, and this repo supplies a comprehensive PyTorch-based infrastructure for conveniently building and evaluating multimodal architectures on included datasets.
 
-![](/fig2.png)
+![](/images/multizoo.png)
 
 The picture above shows the main parts of the repo. We modularize the complex multimodal architectures into its main training structures and its components. The training procedures (or training structures as called in this repo) can be seen as the "main program" of the training process with the main training loops, and the other components (unimodal encoders/decoders, fusion modules, objective functions, classification heads, etc) can all be seen as plugins to the training structure. As listed in the "Algorithms supported" section below, we already included most commonly used unimodal models, fusion modules and objective functions, and it is also easy to add new modules following the format existing code. This design allows easy construction and training of multimodal architectures and grants flexibility and reusability of code (as the "plugin" modules to training structures are easily changeable). 
 
