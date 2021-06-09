@@ -10,15 +10,15 @@ Correspondence to:
   - [Paul Pu Liang](http://www.cs.cmu.edu/~pliang/) (pliang@cs.cmu.edu)
   - Yiwei Lyu (ylyu1@andrew.cmu.edu)
   - [Xiang Fan](https://github.com/sfanxiang) (xiangfan@cmu.edu)
-  - Zetian Wu
+  - Zetian Wu (zwu49@jhu.edu)
   - Yun Cheng (yuncheng@andrew.cmu.edu)
   - [Jason Wu](https://jasonwunix.com/) (jsonwu@cmu.edu)
   - Leslie Chen (lesliechen1998@gmail.com)
   - [Peter Wu](https://peter.onrender.com/) (peterw1@cs.cmu.edu)
-  - Michelle A. Lee
-  - Yuke Zhu
-  - Ruslan Salakhutdinov
-  - Louis-Philippe Morency
+  - [Michelle A. Lee](http://stanford.edu/~mishlee/) (michellelee@cs.stanford.edu)
+  - [Yuke Zhu](https://www.cs.utexas.edu/~yukez/) (yukez@cs.utexas.edu)
+  - [Ruslan Salakhutdinov](https://www.cs.cmu.edu/~rsalakhu/) (rsalakhu@cs.cmu.edu)
+  - [Louis-Philippe Morency](https://www.cs.cmu.edu/~morency/) (morency@cs.cmu.edu)
 
 ![](/images/overview.png)
 
