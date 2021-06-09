@@ -214,7 +214,7 @@ To run an experiment example, first go to the parent directory of `examples_robu
 python examples_robust/healthcare/mimic_baseline_robust.py
 ```
 
-We visualize the experiment results using two metrics, relative and effective robustness, as well a combination of both. These plots indicate the tradeoff between accuracy and robustness:
+We visualize the experiment results using two metrics, relative and effective robustness, as well as a combination of both. These plots indicate the tradeoff between accuracy and robustness:
 ![](/examples_robust/robustness_plots.png)
 
 ## References
