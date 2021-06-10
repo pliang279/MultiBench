@@ -74,7 +74,7 @@ def CCA_objective(out_dim,cca_weight=0.001,criterion=torch.nn.CrossEntropyLoss()
         return cca_loss * cca_weight + ce_loss
     return actualfunc
 
-def RefNet_objective(ref_weight,criterion=torch.nn.CrossEntropyLoss()):
+def RefNet_objective(ref_weight,criterion=torch.nn.CrossEntropyLoss(),input_to_float=True):
     ss_criterion=torch.nn.CosineEmbeddingLoss()
     def actualfunc(pred,truth,args):
         ce_loss = criterioning(pred,truth,criterion)
@@ -82,7 +82,17 @@ def RefNet_objective(ref_weight,criterion=torch.nn.CrossEntropyLoss()):
         fused = args['fused']
         inps = args['inputs']
         refinerout = refiner(fused)
-        inputsizes = [torch.flatten(t[0],start_dim=0).size(0) for t in inps]
+        if input_to_float:
+            inputs = [torch.flatten(t,start_dim=1).float().cuda() for t in inps]
+        else:
+            inputs = [torch.flatten(t,start_dim=1).cuda() for t in inps]
+
+        inputsizes = [t.size(1) for t in inputs]
         ss_loss=0.0
+        loc=0
         for i in range(len(inps)):
-            out = refinerout[:,:]
+            out = refinerout[:,loc:loc+inputsizes[i]]
+            loc += inputsizes[i]
+            ss_loss += ss_criterion(out,inputs[i],torch.ones(out.size(0)).cuda())
+        return ce_loss + ss_loss*ref_weight
+    return actualfunc
