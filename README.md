@@ -39,24 +39,24 @@ To accompany MultiBench, we also provide a standardized implementation of 20 cor
 5. HCI: ENRICO
 6. Multimedia: AV-MNIST, MMIMDB, Kinetics-S, Kinetics-L
 
-![](/tab1.png)
+![](/images/datasets.png)
 
 To add a new dataset:
 
-1. see datasets/
-2. add a new folder if appropriate
-3. write a python file with a get_dataloader function that returns a tuple of 3 dataloaders (for train, valid, test data respectively) containing preprocessed data. Please following the existing examples (such as avmnist: datasets/avmnist/get_data.py)
-4. see examples/ and write an example training python file following the existing examples
-5. check that calling the dataloader and running a simple training script works
+1. Go to datasets/
+2. Add a new folder if appropriate
+3. Write a python file with a get_dataloader function that returns a tuple of 3 dataloaders (for train, valid, test data respectively) containing preprocessed data. Please following the existing examples (such as avmnist: datasets/avmnist/get_data.py)
+4. Go to examples/ and write an example training python file following the existing examples
+5. Check that calling the dataloader and running a simple training script works
 
 ## Algorithms supported
 
 See Appendix Section F for detailed descriptions of each part.
 
-1. unimodals: MLP, GRU, LeNet, CNN, LSTM, Transformer, FCN, Random Forest, ResNet, etc... (see unimodals/)
-2. fusions: early/late concatenation, NL-gate, tensor fusions, Multiplicative Interactions, Low-Rank Tensor Fusion, etc (see fusions/ )
-3. objective_functions: (default: CrossEntropyLoss for classification tasks, MSELoss for regression tasks), ELBO, Weighted Reconstruction Loss, CCA, Contrastive Loss, etc (see objective_functions/)
-4. training_structures: Simple Early Fusion, Simple Late Fusion, Gradient Blend, MVAE, MFM, Architecture Search, etc (see training_structures/)
+1. Unimodal models: MLP, GRU, LeNet, CNN, LSTM, Transformer, FCN, Random Forest, ResNet, etc... (see unimodals/)
+2. Fusion paradigms: early/late fusion, NL-gate, tensor fusions, Multiplicative Interactions, Low-Rank Tensor Fusion, etc (see fusions/)
+3. Optimization objectives: (default: CrossEntropyLoss for classification tasks, MSELoss for regression tasks), ELBO, Weighted Reconstruction Loss, CCA loss, Contrastive Loss, etc (see objective_functions/)
+4. Training structures: Simple Early Fusion, Simple Late Fusion, Gradient Blend, MVAE, MFM, Architecture Search, etc (see training_structures/)
 
 To add a new algorithm:
 
