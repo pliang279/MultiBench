@@ -20,20 +20,17 @@ Correspondence to:
   - [Ruslan Salakhutdinov](https://www.cs.cmu.edu/~rsalakhu/) (rsalakhu@cs.cmu.edu)
   - [Louis-Philippe Morency](https://www.cs.cmu.edu/~morency/) (morency@cs.cmu.edu)
 
-![](/images/overview.png)
-
 ## Overview
 
-MultiBench is a large scale multimodal benchmark, and this repo supplies a comprehensive PyTorch-based infrastructure for conveniently building and evaluating multimodal architectures on included datasets.
+![](/images/overview.png)
+
+Learning multimodal representations involves integrating information from multiple heterogeneous sources of data. It is a challenging yet crucial area with numerous real-world applications in multimedia, affective computing, robotics, finance, human-computer interaction, and healthcare. Unfortunately, multimodal research has seen limited resources to study (1) generalization across domains and modalities, (2) complexity during training and inference, and (3) robustness to noisy and missing modalities.
+
+In order to accelerate progress towards understudied modalities and tasks while ensuring real-world robustness, we release MultiBench, a systematic and unified large-scale benchmark for multimodal learning spanning 15 datasets, 10 modalities, 20 prediction tasks, and 6 research areas. MultiBench provides an automated end-to-end machine learning pipeline that simplifies and standardizes data loading, experimental setup, and model evaluation. To reflect real-world requirements, MultiBench is designed to holistically evaluate (1) performance across domains and modalities, (2) complexity during training and inference, and (3) robustness to noisy and missing modalities.
 
 ![](/images/multizoo.png)
 
-The picture above shows the main parts of the repo. We modularize the complex multimodal architectures into its main training structures and its components. The training procedures (or training structures as called in this repo) can be seen as the "main program" of the training process with the main training loops, and the other components (unimodal encoders/decoders, fusion modules, objective functions, classification heads, etc) can all be seen as plugins to the training structure. As listed in the "Algorithms supported" section below, we already included most commonly used unimodal models, fusion modules and objective functions, and it is also easy to add new modules following the format existing code. This design allows easy construction and training of multimodal architectures and grants flexibility and reusability of code (as the "plugin" modules to training structures are easily changeable). 
-
-![](/slidepart.png)
-
-The above is a snippet of code for running Low Rank Tensor Fusion on AV-MNIST dataset: all you need to do is get the dataloaders, build the unimodal encoders, fusion module, and classification head from existing modules in unimodal/ and fusions/ folders, and pass all that as well as some hyperparameters to the Simple_Late_Fusion training structure to be trained. We included a lot of scripts for running multimodal architectures on supported datasets in the examples/ folder.
-
+To accompany MultiBench, we also provide a standardized implementation of 20 core approaches in multimodal learning unifying innovations in fusion paradigms, optimization objectives, and training approaches which we call MultiZoo. MultiZoo implements these methods in a modular fashion to enable accessibility for new researchers, compositionality of approaches, and reproducibility of results.
 
 ## Datasets currently supported
 
