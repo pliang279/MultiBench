@@ -1,6 +1,4 @@
-# MultiBench: Multiscale Multimodal Benchmark
-
-Large Scale Benchmarks for Multimodal Representation Learning
+# MultiBench: Multiscale Benchmarks for Multimodal Representation Learning
 
 [MultiBench website](https://cmu-multicomp-lab.github.io/multibench/)
 
