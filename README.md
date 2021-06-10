@@ -175,7 +175,7 @@ Simple Late Fusion
 python examples/hci/enrico_simple_late_fusion.py
 ```
 
-### MultiMedia
+### Multimedia
 
 To access AV-MNIST, download the avmnist.tar.gz file from [here](https://drive.google.com/file/d/1KvKynJJca5tDtI5Mmp6CoRh9pQywH8Xp/view?usp=sharing) and untar it. Then, input the location of the avmnist file to the get_dataloader function in datasets/avmnist/get_data.py script. The input modalities are black-white images (28x28 tensors) and audio spectograms (112x112 tensors).
 
@@ -192,6 +192,8 @@ python examples/multimedia/mmimdb_simple_late_fusion.py
 ```
 
 Scripts for the Kinetics dataset are located in the `special` directory. Run `python special/kinetics_*.py` for the respective script.
+
+## Evaluation
 
 ### Complexity
 
@@ -215,3 +217,5 @@ We visualize the experiment results using two metrics, relative and effective ro
 ![](/examples_robust/robustness_plots.png)
 
 ## References
+
+
