@@ -4,6 +4,9 @@ from torch import nn
 from torch.optim.lr_scheduler import ExponentialLR
 import time
 from eval_scripts.performance import AUPRC,f1_score,accuracy
+from eval_scripts.complexity import all_in_one_train, all_in_one_test
+from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
+from tqdm import tqdm
 #import pdb
 
 softmax = nn.Softmax()
@@ -171,7 +174,7 @@ def train(
         #scheduler.step()
 
 
-def test(
+def single_test(
     model,test_dataloader,is_packed=False,
     criterion=nn.CrossEntropyLoss(),task="classification",auprc=False,input_to_float=True):
     def processinput(inp):
@@ -212,12 +215,29 @@ def test(
             print("AUPRC: "+str(AUPRC(pts)))
         if task == "classification":
             print("acc: "+str(accuracy(true, pred)))
-            return accuracy(true, pred)
+            return {'Accuracy': accuracy(true, pred)}
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
-            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro")
+            return {'F1 score (micro)': f1_score(true, pred, average="micro"), 'F1 score (macro)': f1_score(true, pred, average="macro")}
         elif task == "regression":
             print("mse: "+str(testloss.item()))
-            return testloss.item()
-        
+            return {'MSE': testloss.item()}
+
+
+def test(
+        model, test_dataloaders_all, example_name, method_name='My method', is_packed=False,
+        criterion=nn.CrossEntropyLoss(), task="classification", auprc=False, input_to_float=True):
+    def testprocess():
+        single_test(model, test_dataloaders_all[0][0], is_packed, criterion, task, auprc, input_to_float)
+    all_in_one_test(testprocess, [model])
+    for noisy_modality, test_dataloaders in test_dataloaders_all.items():
+        print("Testing on noisy data ({})...".format(noisy_modality))
+        for test_dataloader in tqdm(test_dataloaders):
+            robustness_curve = single_test(model, test_dataloader, is_packed, criterion, task, auprc, input_to_float)
+        for measure, robustness_result in robustness_curve.items():
+            print("relative robustness ({}): {}".format(noisy_modality, str(relative_robustness(robustness_result))))
+            print("effective robustness ({}): {}".format(noisy_modality, str(effective_robustness(robustness_result, example_name))))
+            fig_name = '{}-{}-{}-{}'.format(method_name, example_name, noisy_modality, measure)
+            single_plot(robustness_result, example_name, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
+            print("Plot saved as "+fig_name)
