@@ -4,7 +4,17 @@ from torch import nn
 from utils.AUPRC import AUPRC
 softmax = nn.Softmax()
 
-
+# encoder: unimodal encoder for the modality
+# head: takes in unimodal encoder output and produces final prediction
+# train_dataloader, valid_dataloader: dataloaders for input datas and ground truths
+# optimtype: type of optimizer to use
+# lr: learning rate
+# weight_decay: weight decay of optimizer
+# auprc: whether to compute auprc score or not
+# save_encoder: the name of the saved file for the encoder model with current best validation performance
+# save_head: the name of the saved file for the head model with current best validation performance
+# modalnum: which modality to use (if the input contains multiple modalities and you only want to use one, put the index of the modality you want to use here. put 0 otherwise)
+# task: type of task, currently support "classification","regression","multilabel"
 def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early_stop=False, optimtype=torch.optim.RMSprop, lr=0.001, weight_decay=0.0, criterion=nn.CrossEntropyLoss(), auprc=False, save_encoder='encoder.pt', save_head='head.pt', modalnum=0, task='classification'):
     model = nn.Sequential(encoder, head)
     op = optimtype(model.parameters(), lr=lr, weight_decay=weight_decay)
