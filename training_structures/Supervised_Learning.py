@@ -47,6 +47,24 @@ def deal_with_objective(objective,pred,truth,args):
     else:
         return objective(pred,truth,args)
 
+# encoders: list of modules, unimodal encoders for each input modality in the order of the modality input data.
+# fusion: fusion module, takes in outputs of encoders in a list and outputs fused representation
+# head: classification or prediction head, takes in output of fusion module and outputs the classification or prediction results that will be sent to the objective function for loss calculation
+# total_epochs: maximum number of epochs to train
+# additional_optimizing_modules: list of modules, include all modules that you want to be optimized by the optimizer other than those in encoders, fusion, head (for example, decoders in MVAE)
+# is_packed: whether the input modalities are packed in one list or not (default is False, which means we expect input of [tensor(20xmodal1_size),(20xmodal2_size),(20xlabel_size)] for batch size 20 and 2 input modalities)
+# early_stop: whether to stop early if valid performance does not improve over 7 epochs
+# task: type of task, currently support "classification","regression","multilabel"
+# optimtype: type of optimizer to use
+# lr: learning rate
+# weight_decay: weight decay of optimizer
+# objective: objective function, which is either one of CrossEntropyLoss, MSELoss or BCEWithLogitsLoss or a custom objective function that takes in three arguments: prediction, ground truth, and an argument dictionary.
+# auprc: whether to compute auprc score or not
+# save: the name of the saved file for the model with current best validation performance
+# validtime: whether to show valid time in seconds or not
+# objective_args_dict: the argument dictionary to be passed into objective function. If not None, at every batch the dict's "reps", "fused", "inputs", "training" fields will be updated to the batch's encoder outputs, fusion module output, input tensors, and boolean of whether this is training or validation, respectively.
+# input_to_float: whether to convert input to float type or not
+# clip_val: grad clipping limit
 def train(
     encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,additional_optimizing_modules=[],is_packed=False,
     early_stop=False,task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
@@ -174,6 +192,10 @@ def train(
         #scheduler.step()
 
 
+# model: saved checkpoint filename from train
+# test_dataloaders_all: test data
+# criterion: only needed for regression, put MSELoss there
+# all other arguments are same as train
 def single_test(
     model,test_dataloader,is_packed=False,
     criterion=nn.CrossEntropyLoss(),task="classification",auprc=False,input_to_float=True):
@@ -194,8 +216,10 @@ def single_test(
                 out = model([processinput(i).float().cuda() for i in j[:-1]],training=False)
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss or type(criterion) == torch.nn.MSELoss:
                 loss=criterion(out, j[-1].float().cuda())
+            elif type(criterion) == torch.nn.CrossEntropyLoss:
+                loss=criterion(out, j[-1].long().cuda())
             else:
-                loss=criterion(out, j[-1].cuda())
+                loss = criterion(out,j[-1].cuda())
             totalloss += loss*len(j[-1])
             if task == "classification":
                 pred.append(torch.argmax(out, 1))
@@ -223,7 +247,6 @@ def single_test(
         elif task == "regression":
             print("mse: "+str(testloss.item()))
             return {'MSE': testloss.item()}
-
 
 def test(
         model, test_dataloaders_all, example_name, method_name='My method', is_packed=False,
