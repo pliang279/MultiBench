@@ -56,7 +56,7 @@ See Appendix Section F for detailed descriptions of each part.
 1. Unimodal models: MLP, GRU, LeNet, CNN, LSTM, Transformer, FCN, Random Forest, ResNet, etc... (see unimodals/)
 2. Fusion paradigms: early/late fusion, NL-gate, tensor fusions, Multiplicative Interactions, Low-Rank Tensor Fusion, etc (see fusions/)
 3. Optimization objectives: (default: CrossEntropyLoss for classification tasks, MSELoss for regression tasks), ELBO, Weighted Reconstruction Loss, CCA loss, Contrastive Loss, etc (see objective_functions/)
-4. Training structures: Simple Early Fusion, Simple Late Fusion, Gradient Blend, MVAE, MFM, Architecture Search, etc (see training_structures/)
+4. Training structures: Supervised Learning (which supports Early Fusion, Late Fusion, MVAE, MFM, etc), Gradient Blend, Architecture Search, etc (see training_structures/)
 
 To add a new algorithm:
 
@@ -78,10 +78,10 @@ All the affective computing datasets included in the MultiBench is open accessed
 
 You can get the tensors with `datasets/affect/get_data.py`, note that the `sarcasm` means the [MUsTARD](https://github.com/soujanyaporia/MUStARD) and the `humor` means the [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI for the `task` and `classcification` for MUsTARD and UR-Funny.
 
-There are lots of example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with MCTN, do
+There are lots of example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with simple late fusion, do
 
 ```
-python3 examples/healthcare/humor_mctn_level_2.py
+python3 examples/affect/humor_late_fusion.py
 ```
 
 ### Healthcare
@@ -127,12 +127,12 @@ This will also download the dataset to `datasets/gentle_push/cache` on the first
 
 ### Finance
 
-The code for finance experiments can be found under the `examples/finance` directory. Each model type has its own Python file under this directory. Each file accepts two arguments, `--input-stocks` and `--target-stock`. For example, to run early fusion on the stocks benchmarked in the paper:
+The code for finance experiments can be found under the `examples/finance` directory. Each model type has its own Python file under this directory. Each file accepts two arguments, `--input-stocks` and `--target-stock`. For example, to run simple late fusion on the stocks benchmarked in the paper:
 
 ```sh
-python examples/finance/stocks_early_fusion.py --input-stocks 'MCD SBUX HSY HRL' --target-stock 'MCD'
-python examples/finance/stocks_early_fusion.py --input-stocks 'AAPL MSFT AMZN INTC AMD MSI' --target-stock 'MSFT'
-python examples/finance/stocks_early_fusion.py --input-stocks 'MRK WST CVS MCK ABT UNH TFX' --target-stock 'UNH'
+python examples/finance/stocks_late_fusion.py --input-stocks 'MCD SBUX HSY HRL' --target-stock 'MCD'
+python examples/finance/stocks_late_fusion.py --input-stocks 'AAPL MSFT AMZN INTC AMD MSI' --target-stock 'MSFT'
+python examples/finance/stocks_late_fusion.py --input-stocks 'MRK WST CVS MCK ABT UNH TFX' --target-stock 'UNH'
 ```
 
 You can specify arbitrary stocks to be downloaded. The data loader will automatically download the data for you. If the stocks do not cover the date range defined in `datasets/stocks/get_data.py`, a different date range can be specified.
@@ -195,9 +195,9 @@ Scripts for the Kinetics dataset are located in the `special` directory. Run `py
 
 ### Complexity
 
-We have a private script (private_test_scripts/all_in_one.py) for recording complexity data for training and testing, including peak memory, number-of-parameters and time for training and number-of-parameters and time for testing. You will need to install [memory_profiler](https://pypi.org/project/memory-profiler/) to run this script. It provides 2 useful functions: all_in_one_train, which takes in a function reference of the training process as well as all the modules involved in training and will run the training process and print out total runtime, peak memory and total number of parameters; all_in_one_test, which takes a function reference of the testing process as well as all the modules involved in testing and will run the testing process and print out total runtime and total number of parameters. 
+We have a script (eval_scripts/complexity.py) for recording complexity data for training and testing, including peak memory, number-of-parameters and time for training and number-of-parameters and time for testing. You will need to install [memory_profiler](https://pypi.org/project/memory-profiler/) to run this script. It provides 2 useful functions: all_in_one_train, which takes in a function reference of the training process as well as all the modules involved in training and will run the training process and print out total runtime, peak memory and total number of parameters; all_in_one_test, which takes a function reference of the testing process as well as all the modules involved in testing and will run the testing process and print out total runtime and total number of parameters. 
 
-For example usage, see private_test_scripts/memtest.py (which adds complexity measuring to the script examples/healthcare/mimic_baseline.py)
+For example usage, see examples/healthcare/mimic_baseline_track_complexity.py (which adds complexity measuring to the script examples/healthcare/mimic_baseline.py)
 
 ### Robustness
 
