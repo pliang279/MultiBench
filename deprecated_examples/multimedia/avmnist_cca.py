@@ -1,12 +1,12 @@
 import sys
 import os
 sys.path.append(os.getcwd())
-from objective_functions.objectives_for_supervised_learning import CCA_objective
+
 import torch
 from datasets.avmnist.get_data import get_dataloader
 from unimodals.common_models import LeNet,MLP,Constant
 from torch import nn
-from training_structures.Supervised_Learning import train, test
+from training_structures.cca_onestage import train, test
 from fusions.common_fusions import Concat
 from unimodals.common_models import MLP, VGG16, Linear_inited, MaxOut_MLP
 from utils.helper_modules import Sequential2
@@ -21,8 +21,8 @@ encoders=[LeNet(1,channels,3).cuda(),Sequential2(LeNet(1,channels,5),Linear_init
 head=Linear_inited(96, 10).cuda()
 fusion=Concat().cuda()
 
-train(encoders,fusion,head,traindata,validdata,25,
-    save="best_cca.pt", optimtype=torch.optim.AdamW,lr=1e-2,objective=CCA_objective(48),objective_args_dict={})
+train(encoders,fusion,head,traindata,validdata,25,outdim=48,\
+    save="best_cca.pt", optimtype=torch.optim.AdamW,lr=1e-2)
     #,weight_decay=0.01)
 
 print("Testing:")

@@ -11,7 +11,7 @@ from torch import nn
 from fusions.common_fusions import ConcatWithLinear
 from unimodals.common_models import LSTM, Identity
 from datasets.stocks.get_data import get_dataloader
-from training_structures.Supervised_Learning import train, test
+from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 
 
