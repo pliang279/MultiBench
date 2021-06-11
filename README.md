@@ -216,4 +216,7 @@ We visualize the experiment results using two metrics, relative and effective ro
 
 ## References
 
+## Patch Note / Major Updates
+
+6/11/2021: Refactored some code. Specifically, we deprecated the Simple_Early_Fusion, Simple_Late_Fusion, MVAE, MFM, CCA, Contrastive training structures with the new Supervised_Learning training structure, and modified some examples/ files accordingly. The deprecated training structures as well as their examples can be found in deprecated_training_structures/ and deprecated_examples folders.
 
