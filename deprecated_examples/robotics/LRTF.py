@@ -19,7 +19,7 @@ from unimodals.robotics.encoders import (
 )
 from unimodals.common_models import MLP
 from unimodals.robotics.decoders import ContactDecoder
-from training_structures.Supervised_Learning import train, test
+from training_structures.Simple_Late_Fusion import train, test
 from robotics_utils import set_seeds
 from fusions.common_fusions import LowRankTensorFusion
 from datasets.robotics.data_loader import get_data
