@@ -195,21 +195,15 @@ Scripts for the Kinetics dataset are located in the `special` directory. Run `py
 
 ### Complexity
 
-We have a script (eval_scripts/complexity.py) for recording complexity data for training and testing, including peak memory, number-of-parameters and time for training and number-of-parameters and time for testing. You will need to install [memory_profiler](https://pypi.org/project/memory-profiler/) to run this script. It provides 2 useful functions: all_in_one_train, which takes in a function reference of the training process as well as all the modules involved in training and will run the training process and print out total runtime, peak memory and total number of parameters; all_in_one_test, which takes a function reference of the testing process as well as all the modules involved in testing and will run the testing process and print out total runtime and total number of parameters. 
+We have a script (`eval_scripts/complexity.py`) for recording complexity data for training and testing, including peak memory, number-of-parameters and time for training and number-of-parameters and time for testing. You will need to install [memory_profiler](https://pypi.org/project/memory-profiler/) to run this script. It provides 2 useful functions: `all_in_one_train`, which takes in a function reference of the training process as well as all the modules involved in training and will run the training process and print out total runtime, peak memory and total number of parameters; `all_in_one_test`, which takes a function reference of the testing process as well as all the modules involved in testing and will run the testing process and print out total runtime and total number of parameters. 
 
-For example usage, see examples/healthcare/mimic_baseline_track_complexity.py (which adds complexity measuring to the script examples/healthcare/mimic_baseline.py)
+For example usage, see `examples/healthcare/mimic_baseline_track_complexity.py` (which adds complexity measuring to the script `examples/healthcare/mimic_baseline.py`)
 
 ### Robustness
 
-Modality-specific and multimodal imperfection implementations are under `robustness`, organized by modalities.
+Modality-specific and multimodal imperfection implementations are under `robustness`, organized by modalities. We have a script (`eval_scripts/robustness.py`) that reports robustness metrics for testing on data of modality-specific and multimodal imperfections. It also plots the performance-imperfection curve and saves to the default directory. 
 
-All robustness experiment examples are under `examples_robust` and are organized by datasets.
-
-To run an experiment example, first go to the parent directory of `examples_robust`, which should be on the same dir level as `datasets` and `robustness`, then run the command
-
-```
-python examples_robust/healthcare/mimic_baseline_robust.py
-```
+All robustness experiments are now integrated into the standard training/testing scripts.
 
 We visualize the experiment results using two metrics, relative and effective robustness, as well as a combination of both. These plots indicate the tradeoff between accuracy and robustness:
 ![](/examples_robust/robustness_plots.png)
@@ -218,5 +212,5 @@ We visualize the experiment results using two metrics, relative and effective ro
 
 ## Patch Note / Major Updates
 
-6/11/2021: Refactored some code. Specifically, we deprecated the Simple_Early_Fusion, Simple_Late_Fusion, MVAE, MFM, CCA, Contrastive training structures with the new Supervised_Learning training structure, and modified some examples/ files accordingly. The deprecated training structures as well as their examples can be found in deprecated_training_structures/ and deprecated_examples folders.
+6/11/2021: Refactored some code. Specifically, we deprecated the Simple_Early_Fusion, Simple_Late_Fusion, MVAE, MFM, CCA, Contrastive training structures with the new `Supervised_Learning` training structure, and modified some `examples/` files accordingly. We also integrated the dataloaders and testing scripts for robustness experiments into the regular ones. The deprecated training structures as well as their examples can be found in `deprecated_training_structures/` and `deprecated_examples/` folders. The deprecated dataloaders and testing scripts specifically for robustness can be found in `deprecated_dataloaders/` and `deprecated_examples_robust/` folders
 
