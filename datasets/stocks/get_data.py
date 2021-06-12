@@ -1,10 +1,12 @@
+from robustness.timeseries_robust import timeseries_robustness
 import datetime
+from posixpath import split
 import numpy as np
 import pandas as pd
 import pandas_datareader
 import torch
-from torch import nn
 from torch.utils.data import DataLoader
+import copy
 
 
 def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shuffle=True, start_date=datetime.datetime(2000, 6, 1), end_date=datetime.datetime(2021, 2, 28), window_size=500, val_split=3200, test_split=3700, modality_first=True, cuda=True):
@@ -23,8 +25,10 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     data = pd.concat(data)
     data = data.sort_values(by=['Date', 'Symbol'])
 
-    input_stocks = np.array([np.where(data['Symbol'] == x)[0][0] for x in input_stocks])
-    output_stocks = np.array([np.where(data['Symbol'] == x)[0][0] for x in output_stocks])
+    input_stocks = np.array(
+        [np.where(data['Symbol'] == x)[0][0] for x in input_stocks])
+    output_stocks = np.array(
+        [np.where(data['Symbol'] == x)[0][0] for x in output_stocks])
 
     X = torch.tensor(list(data['Open'])).view(-1, len(stocks))
     RX = torch.log(X[1:] / X[:-1])
@@ -34,7 +38,8 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     RX = RX / torch.std(RX[:window_size + val_split])
     Y = Y / torch.std(Y[:val_split])
 
-    X = [RX[i:i + window_size, input_stocks].reshape(1, window_size, -1) for i in range(len(RX) - window_size)]
+    X = [RX[i:i + window_size, input_stocks].reshape(
+        1, window_size, -1) for i in range(len(RX) - window_size)]
     X = torch.cat(X)
 
     if cuda:
@@ -79,11 +84,23 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
                     return res
 
     train_ds = MyDataset(X[:val_split], Y[:val_split], modality_first)
-    train_loader = torch.utils.data.DataLoader(train_ds, shuffle=train_shuffle, batch_size=batch_size)
-    val_ds = MyDataset(X[val_split:test_split], Y[val_split:test_split], modality_first)
-    val_loader = torch.utils.data.DataLoader(val_ds, shuffle=False, batch_size=batch_size, drop_last=False)
-    test_ds = MyDataset(X[test_split:], Y[test_split:], modality_first)
-    test_loader = torch.utils.data.DataLoader(test_ds, shuffle=False, batch_size=batch_size, drop_last=False)
+    train_loader = torch.utils.data.DataLoader(
+        train_ds, shuffle=train_shuffle, batch_size=batch_size)
+    val_ds = MyDataset(X[val_split:test_split],
+                       Y[val_split:test_split], modality_first)
+    val_loader = torch.utils.data.DataLoader(
+        val_ds, shuffle=False, batch_size=batch_size, drop_last=False)
+    test_loader = dict()
+    test_loader['timeseries'] = []
+    for noise_level in range(10):
+        X_robust = copy.deepcopy(X[test_split:].cpu().numpy())
+        X_robust = torch.tensor(timeseries_robustness(
+            X_robust, noise_level=noise_level/10), dtype=torch.float32)
+        if cuda:
+            X_robust = X_robust.cuda()
+        test_ds = MyDataset(X_robust, Y[test_split:], modality_first)
+        test_loader['timeseries'].append(torch.utils.data.DataLoader(
+            test_ds, shuffle=False, batch_size=batch_size, drop_last=False))
 
     return train_loader, val_loader, test_loader
 
