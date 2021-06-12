@@ -4,7 +4,7 @@ from torch.nn import functional as F
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torchvision import models as tmodels
 
-
+# One layer linear
 class Linear(torch.nn.Module):
     def __init__(self,indim,outdim):
         super(Linear, self).__init__()
@@ -12,6 +12,7 @@ class Linear(torch.nn.Module):
     def forward(self,x,training=False):
         return self.fc(x)
 
+# One layer linear with initialized weights
 class Linear_inited(torch.nn.Module):
     def __init__(self,indim,outdim):
         super(Linear_inited, self).__init__()
@@ -20,7 +21,7 @@ class Linear_inited(torch.nn.Module):
         self.fc.bias.data.fill_(0.0)
     def forward(self,x,training=False):
         return self.fc(x)
-
+# the squeeze module
 class Squeeze(torch.nn.Module):
     def __init__(self, dim=None):
         super().__init__()
@@ -32,7 +33,7 @@ class Squeeze(torch.nn.Module):
         else:
             return torch.squeeze(x, self.dim)
 
-
+# Sequential module
 class Sequential(nn.Sequential):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -42,7 +43,7 @@ class Sequential(nn.Sequential):
             del kwargs['training']
         return super().forward(*args, **kwargs)
 
-
+# Reshaping module
 class Reshape(nn.Module):
     def __init__(self, shape):
         super().__init__()
@@ -51,7 +52,7 @@ class Reshape(nn.Module):
     def forward(self, x, training=False):
         return torch.reshape(x, self.shape)
 
-
+# Transposing module
 class Transpose(nn.Module):
     def __init__(self, dim0, dim1):
         super().__init__()
@@ -61,7 +62,7 @@ class Transpose(nn.Module):
     def forward(self, x, training=False):
         return torch.transpose(x, self.dim0, self.dim1)
 
-
+# 2-layer MLP
 class MLP(torch.nn.Module):
     def __init__(self, indim, hiddim, outdim, dropout=False,dropoutp=0.1,output_each_layer=False):
         super(MLP, self).__init__()
@@ -82,7 +83,7 @@ class MLP(torch.nn.Module):
             return [0,x,output,self.lklu(output2)]
         return output2
 
-
+# Wrapper for GRU
 class GRU(torch.nn.Module):
     def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
         super(GRU,self).__init__()
@@ -103,7 +104,7 @@ class GRU(torch.nn.Module):
             out=torch.flatten(out,1)
         return out
 
-
+# GRU unit followed by a linear layer
 class GRUWithLinear(torch.nn.Module):
     def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False,output_each_layer=False):
         super(GRUWithLinear,self).__init__()
@@ -130,7 +131,7 @@ class GRUWithLinear(torch.nn.Module):
             return [0,torch.flatten(x,1),torch.flatten(hidden,1),self.lklu(out)]
         return out
 
-
+# LSTM
 class LSTM(torch.nn.Module):
     def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
         super(LSTM,self).__init__()
@@ -155,7 +156,7 @@ class LSTM(torch.nn.Module):
             out=torch.flatten(out,1)
         return out
 
-
+# 2-layer LSTM
 class TwoLayersLSTM(torch.nn.Module):
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False,
                  LayNorm=True, isBidirectional=True):
