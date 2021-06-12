@@ -22,7 +22,6 @@ from unimodals.common_models import Sequential, Transpose, Reshape, MLP
 from unimodals.gentle_push.head import Head
 from fusions.common_fusions import ConcatWithLinear
 from training_structures.Simple_Late_Fusion import train, test
-from xy_mse_loss import XYMSELoss
 
 Task = PushTask
 modalities = ['image']
@@ -80,5 +79,5 @@ def trainprocess(filename):
 filename = general_train(trainprocess, 'gentle_push_unimodal_image')
 
 def testprocess(model, testdata):
-    return test(model, testdata, task='regression', criterion=XYMSELoss())
+    return test(model, testdata, task='regression', criterion=loss_state)
 general_test(testprocess, filename, [image_robust_loader])
