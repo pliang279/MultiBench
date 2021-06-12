@@ -4,6 +4,10 @@ from torch import nn
 import copy
 import random
 from torch.utils.data import DataLoader, Subset
+from eval_scripts.performance import AUPRC,f1_score,accuracy
+from eval_scripts.complexity import all_in_one_train, all_in_one_test
+from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
+from tqdm import tqdm
 
 criterion = nn.CrossEntropyLoss()
 delta = False
@@ -308,7 +312,7 @@ def train(unimodal_models,  multimodal_classification_head,
                                       fusehead, finetunehead), savedir)
 
 
-def test(model, test_dataloader, auprc=False, classification=True):
+def single_test(model, test_dataloader, auprc=False, classification=True):
     with torch.no_grad():
       totalloss = 0.0
       total = 0
@@ -338,3 +342,18 @@ def test(model, test_dataloader, auprc=False, classification=True):
     else:
       return (totalloss/total).item()
 
+
+def test(model, test_dataloaders_all, example_name, method_name='My method', auprc=False, classification=True):
+  def testprocess():
+    single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc, classification)
+  all_in_one_test(testprocess, [model])
+  for noisy_modality, test_dataloaders in test_dataloaders_all.items():
+    print("Testing on noisy data ({})...".format(noisy_modality))
+    for test_dataloader in tqdm(test_dataloaders):
+      robustness_curve = single_test(model, test_dataloader, auprc, classification)
+    for measure, robustness_result in robustness_curve.items():
+      print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
+      print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, example_name))))
+      fig_name = '{}-{}-{}-{}'.format(method_name, example_name, noisy_modality, measure)
+      single_plot(robustness_result, example_name, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
+      print("Plot saved as "+fig_name)

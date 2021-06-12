@@ -2,6 +2,10 @@ from sklearn.metrics import accuracy_score, f1_score
 import torch
 from torch import nn
 from utils.AUPRC import AUPRC
+# from eval_scripts.performance import AUPRC,f1_score,accuracy
+from eval_scripts.complexity import all_in_one_train, all_in_one_test
+from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
+from tqdm import tqdm
 softmax = nn.Softmax()
 
 # encoder: unimodal encoder for the modality
@@ -106,7 +110,7 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
             print("AUPRC: "+str(AUPRC(pts)))
 
 
-def test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classification', criterion=None):
+def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classification', criterion=None):
     model = nn.Sequential(encoder, head)
     with torch.no_grad():
         pred = []
@@ -144,3 +148,19 @@ def test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classifi
             return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
         else:
             return (totalloss / totals).item()
+
+
+def test(encoder, head, test_dataloaders_all, example_name, method_name='My method', auprc=False, modalnum=0, task='classification', criterion=None):
+    def testprocess():
+        single_test(encoder, head, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc, modalnum, task, criterion)
+    all_in_one_test(testprocess, [encoder, head])
+    for noisy_modality, test_dataloaders in test_dataloaders_all.items():
+        print("Testing on noisy data ({})...".format(noisy_modality))
+        for test_dataloader in tqdm(test_dataloaders):
+            robustness_curve = single_test(encoder, head, test_dataloader, auprc, modalnum, task, criterion)
+        for measure, robustness_result in robustness_curve.items():
+            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
+            print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, example_name))))
+            fig_name = '{}-{}-{}-{}'.format(method_name, example_name, noisy_modality, measure)
+            single_plot(robustness_result, example_name, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
+            print("Plot saved as "+fig_name)

@@ -10,6 +10,10 @@ import utils.surrogate as surr
 import utils.search_tools as tools
 
 import fusions.searchable as avm
+# from eval_scripts.performance import AUPRC
+from eval_scripts.complexity import all_in_one_train, all_in_one_test
+from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
+from tqdm import tqdm
 
 # unimodal_files: dictionary of names of files containing pretrained unimodal encoders
 # rep_size: size of representation
@@ -156,7 +160,7 @@ class ModelSearcher():
 from utils.AUPRC import AUPRC
 
 
-def test(model,test_dataloader,auprc=False):
+def single_test(model,test_dataloader,auprc=False):
     total = 0
     corrects = 0
     pts=[]
@@ -174,6 +178,17 @@ def test(model,test_dataloader,auprc=False):
     if auprc:
         print("AUPRC: "+str(AUPRC(pts)))
 
-
-
-
+def test(model, test_dataloaders_all, example_name, method_name='My method', auprc=False):
+    def testprocess():
+        single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc)
+    all_in_one_test(testprocess, [model])
+    for noisy_modality, test_dataloaders in test_dataloaders_all.items():
+        print("Testing on noisy data ({})...".format(noisy_modality))
+        for test_dataloader in tqdm(test_dataloaders):
+            robustness_curve = single_test(model, test_dataloader, auprc)
+        for measure, robustness_result in robustness_curve.items():
+            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
+            print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, example_name))))
+            fig_name = '{}-{}-{}-{}'.format(method_name, example_name, noisy_modality, measure)
+            single_plot(robustness_result, example_name, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
+            print("Plot saved as "+fig_name)
