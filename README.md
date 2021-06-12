@@ -206,7 +206,7 @@ Modality-specific and multimodal imperfection implementations are under `robustn
 All robustness experiments are now integrated into the standard training/testing scripts.
 
 We visualize the experiment results using two metrics, relative and effective robustness, as well as a combination of both. These plots indicate the tradeoff between accuracy and robustness:
-![](/examples_robust/robustness_plots.png)
+![](/deprecated_examples_robust/robustness_plots.png)
 
 ## References
 
