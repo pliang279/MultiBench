@@ -11,7 +11,14 @@ import utils.search_tools as tools
 
 import fusions.searchable as avm
 
-
+# unimodal_files: dictionary of names of files containing pretrained unimodal encoders
+# rep_size: size of representation
+# classes: output size
+# sub_sizes: the output size of each layer within the unimodal encoders
+# train_data, valid_data: dataloaders for the input data and ground truths
+# surrogate: a surrogate instance, see utils/surrogate.py
+# max_labels: the search space of the fusion architecture
+# all other input configs: hyperparameters, see original repo https://github.com/slyviacassell/_MFAS/blob/master/models/searchable.py for detail
 def train(unimodal_files,rep_size,classes,sub_sizes, train_data, valid_data,surrogate, max_labels,
         batch_size=32, epochs=3, 
         search_iter=3, num_samples=15, epoch_surrogate=50, 

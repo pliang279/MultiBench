@@ -1,6 +1,4 @@
-# MultiBench: Multiscale Multimodal Benchmark
-
-Large Scale Benchmarks for Multimodal Representation Learning
+# MultiBench: Multiscale Benchmarks for Multimodal Representation Learning
 
 [MultiBench website](https://cmu-multicomp-lab.github.io/multibench/)
 
@@ -10,51 +8,55 @@ Correspondence to:
   - [Paul Pu Liang](http://www.cs.cmu.edu/~pliang/) (pliang@cs.cmu.edu)
   - Yiwei Lyu (ylyu1@andrew.cmu.edu)
   - [Xiang Fan](https://github.com/sfanxiang) (xiangfan@cmu.edu)
-  - Zetian Wu
+  - Zetian Wu (zwu49@jhu.edu)
   - Yun Cheng (yuncheng@andrew.cmu.edu)
   - [Jason Wu](https://jasonwunix.com/) (jsonwu@cmu.edu)
-  - Leslie Chen
+  - Leslie Chen (lesliechen1998@gmail.com)
   - [Peter Wu](https://peter.onrender.com/) (peterw1@cs.cmu.edu)
-  - Michelle A. Lee
-  - Yuke Zhu
-  - Ruslan Salakhutdinov
-  - Louis-Philippe Morency
+  - [Michelle A. Lee](http://stanford.edu/~mishlee/) (michellelee@cs.stanford.edu)
+  - [Yuke Zhu](https://www.cs.utexas.edu/~yukez/) (yukez@cs.utexas.edu)
+  - [Ruslan Salakhutdinov](https://www.cs.cmu.edu/~rsalakhu/) (rsalakhu@cs.cmu.edu)
+  - [Louis-Philippe Morency](https://www.cs.cmu.edu/~morency/) (morency@cs.cmu.edu)
 
 ## Overview
 
-MultiBench is a large scale multimodal benchmark, and this repo supplies a comprehensive PyTorch-based infrastructure for conveniently building and evaluating multimodal architectures on included datasets.
+![](/images/overview.png)
 
-![](/slide.png)
+Learning multimodal representations involves integrating information from multiple heterogeneous sources of data. It is a challenging yet crucial area with numerous real-world applications in multimedia, affective computing, robotics, finance, human-computer interaction, and healthcare. Unfortunately, multimodal research has seen limited resources to study (1) generalization across domains and modalities, (2) complexity during training and inference, and (3) robustness to noisy and missing modalities.
 
-The picture above shows the general structure of the repo. We modularize the complex multimodal architectures into its main training structures and its components. The training structures can be seen as the "main program" of the training process, and the other components (unimodal encoders/decoders, fusion modules, objective functions, classification heads, etc) can all be seen as plugins to the training structure. As listed in the "Algorithms supported" section below, we already included most commonly used unimodal models, fusion modules and objective functions, and it is also easy to add new modules following the format existing code. This design allows easy construction and training of multimodal architectures and grants flexibility and reusability of code (as the "plugin" modules to training structures are easily changeable). On the bottom right of the slide above shows a snippet of code for running Low Rank Tensor Fusion on AV-MNIST dataset: all you need to do is get the dataloaders, build the unimodal encoders, fusion module, and classification head from existing modules in unimodal/ and fusions/ folders, and pass all that as well as some hyperparameters to the Simple_Late_Fusion training structure to be trained. We included a lot of scripts for running multimodal architectures on supported datasets in the examples/ folder.
+In order to accelerate progress towards understudied modalities and tasks while ensuring real-world robustness, we release MultiBench, a systematic and unified large-scale benchmark for multimodal learning spanning 15 datasets, 10 modalities, 20 prediction tasks, and 6 research areas. MultiBench provides an automated end-to-end machine learning pipeline that simplifies and standardizes data loading, experimental setup, and model evaluation. To reflect real-world requirements, MultiBench is designed to holistically evaluate (1) performance across domains and modalities, (2) complexity during training and inference, and (3) robustness to noisy and missing modalities.
 
+![](/images/multizoo.png)
+
+To accompany MultiBench, we also provide a standardized implementation of 20 core approaches in multimodal learning unifying innovations in fusion paradigms, optimization objectives, and training approaches which we call MultiZoo. MultiZoo implements these methods in a modular fashion to enable accessibility for new researchers, compositionality of approaches, and reproducibility of results.
 
 ## Datasets currently supported
 
-1. Affective computing: CMU-MOSI, CMU-MOSEI, POM, UR-FUNNY, Deception, MUStARD
+1. Affective computing: CMU-MOSI, CMU-MOSEI, UR-FUNNY, MUStARD
 2. Healthcare: MIMIC
 3. Robotics: Vision and Touch, MuJoCo Push
 4. Finance: Stocks-food, Stocks-tech, Stocks-healthcare
 5. HCI: ENRICO
 6. Multimedia: AV-MNIST, MMIMDB, Kinetics-S, Kinetics-L
 
+![](/images/datasets.png)
 
 To add a new dataset:
 
-1. see datasets/
-2. add a new folder if appropriate
-3. write a python file with a get_dataloader function that returns a tuple of 3 dataloaders (for train, valid, test data respectively) containing preprocessed data. Please following the existing examples (such as avmnist: datasets/avmnist/get_data.py)
-4. see examples/ and write an example training python file following the existing examples
-5. check that calling the dataloader and running a simple training script works
+1. Go to datasets/
+2. Add a new folder if appropriate
+3. Write a python file with a get_dataloader function that returns a tuple of 3 dataloaders (for train, valid, test data respectively) containing preprocessed data. Please following the existing examples (such as avmnist: datasets/avmnist/get_data.py)
+4. Go to examples/ and write an example training python file following the existing examples
+5. Check that calling the dataloader and running a simple training script works
 
 ## Algorithms supported
 
 See Appendix Section F for detailed descriptions of each part.
 
-1. unimodals: MLP, GRU, LeNet, CNN, LSTM, Transformer, FCN, Random Forest, ResNet, etc... (see unimodals/)
-2. fusions: early/late concatenation, NL-gate, tensor fusions, Multiplicative Interactions, Low-Rank Tensor Fusion, etc (see fusions/ )
-3. objective_functions: (default: CrossEntropyLoss for classification tasks, MSELoss for regression tasks), ELBO, Weighted Reconstruction Loss, CCA, Contrastive Loss, etc (see objective_functions/)
-4. training_structures: Simple Early Fusion, Simple Late Fusion, Gradient Blend, MVAE, MFM, Architecture Search, etc (see training_structures/)
+1. Unimodal models: MLP, GRU, LeNet, CNN, LSTM, Transformer, FCN, Random Forest, ResNet, etc... (see unimodals/)
+2. Fusion paradigms: early/late fusion, NL-gate, tensor fusions, Multiplicative Interactions, Low-Rank Tensor Fusion, etc (see fusions/)
+3. Optimization objectives: (default: CrossEntropyLoss for classification tasks, MSELoss for regression tasks), ELBO, Weighted Reconstruction Loss, CCA loss, Contrastive Loss, etc (see objective_functions/)
+4. Training structures: Supervised Learning (which supports Early Fusion, Late Fusion, MVAE, MFM, etc), Gradient Blend, Architecture Search, etc (see training_structures/)
 
 To add a new algorithm:
 
@@ -72,8 +74,14 @@ To add a new algorithm:
 
 ### Affective Computing
 
-```diff
-- TODO: 
+All the affective computing datasets included in the MultiBench is open accessed, you can directly go the [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), the method to process the original raw datasets is the `datasets/affect/get_draft_data.py`, or email lesliechen1998@gmail.com to ask ready-to-load raw datasets with some different feature sets or processed datasets (aligned and with left padding).
+
+You can get the tensors with `datasets/affect/get_data.py`, note that the `sarcasm` means the [MUsTARD](https://github.com/soujanyaporia/MUStARD) and the `humor` means the [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI for the `task` and `classcification` for MUsTARD and UR-Funny.
+
+There are lots of example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with simple late fusion, do
+
+```
+python3 examples/affect/humor_late_fusion.py
 ```
 
 ### Healthcare
@@ -119,12 +127,12 @@ This will also download the dataset to `datasets/gentle_push/cache` on the first
 
 ### Finance
 
-The code for finance experiments can be found under the `examples/finance` directory. Each model type has its own Python file under this directory. Each file accepts two arguments, `--input-stocks` and `--target-stock`. For example, to run early fusion on the stocks benchmarked in the paper:
+The code for finance experiments can be found under the `examples/finance` directory. Each model type has its own Python file under this directory. Each file accepts two arguments, `--input-stocks` and `--target-stock`. For example, to run simple late fusion on the stocks benchmarked in the paper:
 
 ```sh
-python examples/finance/stocks_early_fusion.py --input-stocks 'MCD SBUX HSY HRL' --target-stock 'MCD'
-python examples/finance/stocks_early_fusion.py --input-stocks 'AAPL MSFT AMZN INTC AMD MSI' --target-stock 'MSFT'
-python examples/finance/stocks_early_fusion.py --input-stocks 'MRK WST CVS MCK ABT UNH TFX' --target-stock 'UNH'
+python examples/finance/stocks_late_fusion.py --input-stocks 'MCD SBUX HSY HRL' --target-stock 'MCD'
+python examples/finance/stocks_late_fusion.py --input-stocks 'AAPL MSFT AMZN INTC AMD MSI' --target-stock 'MSFT'
+python examples/finance/stocks_late_fusion.py --input-stocks 'MRK WST CVS MCK ABT UNH TFX' --target-stock 'UNH'
 ```
 
 You can specify arbitrary stocks to be downloaded. The data loader will automatically download the data for you. If the stocks do not cover the date range defined in `datasets/stocks/get_data.py`, a different date range can be specified.
@@ -142,8 +150,6 @@ Tech (100): AAPL ACN ADBE ADI ADP ADSK AKAM AMAT AMD ANET ANSS APH ATVI AVGO BR 
 ### HCI
 The code for HCI experiments can be found under the `examples/hci` directory.
 Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI layout. App screens are classified into 20 different design categories.
-
-![](/datasets/enrico/hci.jpg)
 
 The unimodal examples can be run using the following commands.
 
@@ -167,7 +173,7 @@ Simple Late Fusion
 python examples/hci/enrico_simple_late_fusion.py
 ```
 
-### MultiMedia
+### Multimedia
 
 To access AV-MNIST, download the avmnist.tar.gz file from [here](https://drive.google.com/file/d/1KvKynJJca5tDtI5Mmp6CoRh9pQywH8Xp/view?usp=sharing) and untar it. Then, input the location of the avmnist file to the get_dataloader function in datasets/avmnist/get_data.py script. The input modalities are black-white images (28x28 tensors) and audio spectograms (112x112 tensors).
 
@@ -182,15 +188,16 @@ There are lots of example scripts for running MM-IMDb under examples/multimedia/
 ```
 python examples/multimedia/mmimdb_simple_late_fusion.py
 ```
-```diff
-- TODO: add kinetics infos
-```
+
+Scripts for the Kinetics dataset are located in the `special` directory. Run `python special/kinetics_*.py` for the respective script.
+
+## Evaluation
 
 ### Complexity
 
-We have a private script (private_test_scripts/all_in_one.py) for recording complexity data for training and testing, including peak memory, number-of-parameters and time for training and number-of-parameters and time for testing. You will need to install [memory_profiler](https://pypi.org/project/memory-profiler/) to run this script. It provides 2 useful functions: all_in_one_train, which takes in a function reference of the training process as well as all the modules involved in training and will run the training process and print out total runtime, peak memory and total number of parameters; all_in_one_test, which takes a function reference of the testing process as well as all the modules involved in testing and will run the testing process and print out total runtime and total number of parameters. 
+We have a script (eval_scripts/complexity.py) for recording complexity data for training and testing, including peak memory, number-of-parameters and time for training and number-of-parameters and time for testing. You will need to install [memory_profiler](https://pypi.org/project/memory-profiler/) to run this script. It provides 2 useful functions: all_in_one_train, which takes in a function reference of the training process as well as all the modules involved in training and will run the training process and print out total runtime, peak memory and total number of parameters; all_in_one_test, which takes a function reference of the testing process as well as all the modules involved in testing and will run the testing process and print out total runtime and total number of parameters. 
 
-For example usage, see private_test_scripts/memtest.py (which adds complexity measuring to the script examples/healthcare/mimic_baseline.py)
+For example usage, see examples/healthcare/mimic_baseline_track_complexity.py (which adds complexity measuring to the script examples/healthcare/mimic_baseline.py)
 
 ### Robustness
 
@@ -204,7 +211,12 @@ To run an experiment example, first go to the parent directory of `examples_robu
 python examples_robust/healthcare/mimic_baseline_robust.py
 ```
 
-We visualize the experiment results using two metrics, relative and effective robustness, as well a combination of both. These plots indicate the tradeoff between accuracy and robustness:
+We visualize the experiment results using two metrics, relative and effective robustness, as well as a combination of both. These plots indicate the tradeoff between accuracy and robustness:
 ![](/examples_robust/robustness_plots.png)
 
 ## References
+
+## Patch Note / Major Updates
+
+6/11/2021: Refactored some code. Specifically, we deprecated the Simple_Early_Fusion, Simple_Late_Fusion, MVAE, MFM, CCA, Contrastive training structures with the new Supervised_Learning training structure, and modified some examples/ files accordingly. The deprecated training structures as well as their examples can be found in deprecated_training_structures/ and deprecated_examples folders.
+

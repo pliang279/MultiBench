@@ -6,11 +6,11 @@ import torch
 
 from training_structures.Simple_Late_Fusion import train, test
 from fusions.common_fusions import Concat
-from get_data import get_dataloader
+from datasets.affect.get_data import get_dataloader
 from unimodals.common_models import GRU, MLP
 
 # Support mosi/mosi_unaligned/mosei/mosei_unaligned
-traindata, validdata, testdata = get_dataloader('../affect/processed/humor_data.pkl')
+traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/humor_data.pkl')
 
 # humor 371 81 300
 encoders = GRU(752, 1128, dropout=True, has_padding=True).cuda()
@@ -23,9 +23,9 @@ head = MLP(1128, 512, 1).cuda()
 fusion = Concat().cuda()
 
 # Support simple late_fusion and late_fusion with removing bias
-train(encoders, fusion, head, traindata, validdata, 1000, True, True, \
+train(encoders, fusion, head, traindata, validdata, 1000, is_packed=True, early_stop=True, \
     task="classification", optimtype=torch.optim.AdamW, lr=1e-5, save='humor_lf_best.pt', \
-    weight_decay=0.01, criterion=torch.nn.MSELoss(), regularization=False)
+    weight_decay=0.01, objective=torch.nn.MSELoss())
 
 print("Testing:")
 model=torch.load('humor_lf_best.pt').cuda()

@@ -1,0 +1,44 @@
+training_type: "selfsupervised"
+log_level: 'INFO'
+
+test: False
+
+# Ablations
+encoder: False
+deterministic: False
+vision: 1.0
+depth: 1.0
+proprio: 1.0
+force: 1.0
+sceneflow: 1.0
+opticalflow: 1.0
+contact: 1.0
+pairing: 1.0
+eedelta: 1.0
+
+# Training parameters
+lr: 0.0005
+beta1: 0.9 
+seed: 12149
+max_epoch: 50
+batch_size: 64
+ep_length: 50
+zdim: 128
+action_dim: 4
+
+# Dataset params
+dataset_params:
+  force_name: "force"
+  action_dim: 4
+
+load: ''
+logging_folder: logging/
+
+
+# path to dataset hdf5 file'
+dataset: "/home/pliang/multibench/MultiBench-robotics/datasets/robotics/triangle_real_data/"
+
+val_ratio: 0.20
+cuda: True
+num_workers: 8
+img_record_n: 500
