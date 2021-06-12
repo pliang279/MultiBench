@@ -9,8 +9,12 @@ import torch
 from torchvision import transforms
 
 from PIL import Image
+import numpy as np
+from robustness.visual_robust import visual_robustness
 
 # helper function for extracting UI elements from hierarchy
+
+
 def add_screen_elements(tree, element_list):
     if 'children' in tree and len(tree['children']) > 0:
         # we are at an intermediate node
@@ -25,9 +29,13 @@ def add_screen_elements(tree, element_list):
             node = (nodeBounds, nodeLabel)
             element_list.append(node)
 
+
 class EnricoDataset(Dataset):
-    def __init__(self, data_dir, mode="train", img_dim_x=128, img_dim_y=256, random_seed=42, train_split=0.65, val_split=0.15, test_split=0.2, normalize_image=False, seq_len=64):
+    def __init__(self, data_dir, noise_level, img_noise=False, wireframe_noise=False, img_dim_x=128, img_dim_y=256, random_seed=42, train_split=0.65, val_split=0.15, test_split=0.2, normalize_image=False, seq_len=64):
         super(EnricoDataset, self).__init__()
+        self.noise_level = noise_level
+        self.img_noise = img_noise
+        self.wireframe_noise = wireframe_noise
         self.img_dim_x = img_dim_x
         self.img_dim_y = img_dim_y
         self.seq_len = seq_len
@@ -39,27 +47,20 @@ class EnricoDataset(Dataset):
             reader = csv.DictReader(f)
             example_list = list(reader)
 
-        IGNORES = set(["50105", "50109"]) # the wireframe files are corrupted for these files
-        example_list = [e for e in example_list if e['screen_id'] not in IGNORES]
+        # the wireframe files are corrupted for these files
+        IGNORES = set(["50105", "50109"])
+        example_list = [
+            e for e in example_list if e['screen_id'] not in IGNORES]
 
         self.example_list = example_list
 
         keys = list(range(len(example_list)))
         # shuffle and create splits
         random.Random(random_seed).shuffle(keys)
-        
-        if mode == "train":
-            # train split is at the front
-            start_index = 0
-            stop_index = int(len(example_list) * train_split)
-        elif mode == "val":
-            # val split is in the middle
-            start_index = int(len(example_list) * train_split)
-            stop_index = int(len(example_list) * (train_split + val_split))
-        elif mode == "test":
-            # test split is at the end
-            start_index = int(len(example_list) * (train_split + val_split))
-            stop_index = len(example_list)
+
+        # test split is at the end
+        start_index = int(len(example_list) * (train_split + val_split))
+        stop_index = len(example_list)
 
         # only keep examples in the current split
         keys = keys[start_index:stop_index]
@@ -70,7 +71,8 @@ class EnricoDataset(Dataset):
             transforms.ToTensor()
         ]
         if normalize_image:
-            img_transforms.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
+            img_transforms.append(transforms.Normalize(
+                (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
 
         # pytorch image transforms
         self.img_transforms = transforms.Compose(img_transforms)
@@ -91,7 +93,8 @@ class EnricoDataset(Dataset):
         self.idx2Topic = idx2Topic
         self.topic2Idx = topic2Idx
 
-        UI_TYPES = ["Text", "Text Button", "Icon", "Card", "Drawer", "Web View", "List Item", "Toolbar", "Bottom Navigation", "Multi-Tab", "List Item", "Toolbar", "Bottom Navigation", "Multi-Tab", "Background Image", "Image", "Video", "Input", "Number Stepper", "Checkbox", "Radio Button", "Pager Indicator", "On/Off Switch", "Modal", "Slider", "Advertisement", "Date Picker", "Map View"]
+        UI_TYPES = ["Text", "Text Button", "Icon", "Card", "Drawer", "Web View", "List Item", "Toolbar", "Bottom Navigation", "Multi-Tab", "List Item", "Toolbar", "Bottom Navigation", "Multi-Tab",
+                    "Background Image", "Image", "Video", "Input", "Number Stepper", "Checkbox", "Radio Button", "Pager Indicator", "On/Off Switch", "Modal", "Slider", "Advertisement", "Date Picker", "Map View"]
 
         idx2Label = {}
         label2Idx = {}
@@ -117,10 +120,18 @@ class EnricoDataset(Dataset):
         example = self.example_list[self.keys[idx]]
         screenId = example['screen_id']
         # image modality
-        screenImg = Image.open(os.path.join(self.img_dir, screenId + ".jpg")).convert("RGB")
+        screenImg = Image.open(os.path.join(
+            self.img_dir, screenId + ".jpg")).convert("RGB")
+        if self.img_noise:
+            screenImg = Image.fromarray(visual_robustness(
+                [np.array(screenImg)], noise_level=self.noise_level)[0])
         screenImg = self.img_transforms(screenImg)
         # wireframe image modality
-        screenWireframeImg = Image.open(os.path.join(self.wireframe_dir, screenId + ".png")).convert("RGB")
+        screenWireframeImg = Image.open(os.path.join(
+            self.wireframe_dir, screenId + ".png")).convert("RGB")
+        if self.wireframe_noise:
+            screenWireframeImg = Image.fromarray(visual_robustness(
+                [np.array(screenWireframeImg)], noise_level=self.noise_level)[0])
         screenWireframeImg = self.img_transforms(screenWireframeImg)
         # label
         screenLabel = self.topic2Idx[example['topic']]
@@ -129,7 +140,6 @@ class EnricoDataset(Dataset):
 def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, return_class_weights=True):
     ds_train = EnricoDataset(data_dir, mode="train")
     ds_val = EnricoDataset(data_dir, mode="val")
-    ds_test = EnricoDataset(data_dir, mode="test")
 
     targets = []
     class_counter = Counter()
@@ -166,7 +176,20 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
     # dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
     dl_val = DataLoader(ds_val, shuffle=False, num_workers=num_workers, batch_size=batch_size)
     # dl_val = DataLoader(ds_val, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
-    dl_test = DataLoader(ds_test, shuffle=False, num_workers=num_workers, batch_size=batch_size)
+
+    ds_test_img = []
+    ds_test_wireframe = []
+    dl_test = dict()
+    # Add image noise
+    for i in range(11):
+        ds_test_img.append(EnricoDataset(data_dir, img_noise=True, noise_level=i/10))
+    dl_test['image'] = [DataLoader(test, shuffle=False, num_workers=num_workers,
+                   batch_size=batch_size) for test in ds_test_img]
+    # Add wireframe image noise
+    for i in range(11):
+        ds_test_wireframe.append(EnricoDataset(data_dir, wireframe_noise=True, noise_level=i/10))
+    dl_test['wireframe image'] = [DataLoader(test, shuffle=False, num_workers=num_workers,
+                   batch_size=batch_size) for test in ds_test_wireframe]
     
     dls = tuple([dl_train, dl_val, dl_test])
     if return_class_weights:
