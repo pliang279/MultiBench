@@ -34,7 +34,7 @@ allmodules = [*encoders, fusion, head]
 
 def trainprocess():
     train(encoders, fusion, head, train_loader, val_loader, total_epochs=4,
-          task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss())
+          task='regression', optimtype=torch.optim.Adam, objective=nn.MSELoss())
 all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best.pt').cuda()

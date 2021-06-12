@@ -245,8 +245,13 @@ def single_test(
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
             return {'F1 score (micro)': f1_score(true, pred, average="micro"), 'F1 score (macro)': f1_score(true, pred, average="macro")}
         elif task == "regression":
-            print("mse: "+str(testloss.item()))
-            return {'MSE': testloss.item()}
+            if torch.numel(testloss) != 1:
+                testloss = testloss.detach().cpu()
+                print('mse: ' + str(testloss))
+                return {'MSE': testloss}
+            else:
+                print("mse: "+str(testloss.item()))
+                return {'MSE': testloss.item()}
 
 def test(
         model, test_dataloaders_all, example_name, method_name='My method', is_packed=False,

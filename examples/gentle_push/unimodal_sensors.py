@@ -20,11 +20,12 @@ from datasets.gentle_push.data_loader import SubsequenceDataset, PushTask
 from unimodals.common_models import Sequential, Transpose, Reshape, MLP
 from unimodals.gentle_push.head import Head
 from fusions.common_fusions import ConcatWithLinear
-from training_structures.Simple_Late_Fusion import train, test
+from training_structures.Supervised_Learning import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 from xy_mse_loss import XYMSELoss
 
 Task = PushTask
+modalities = ['gripper_sensors']
 
 # Parse args
 parser = argparse.ArgumentParser()
@@ -40,29 +41,26 @@ val_trajectories = Task.get_eval_trajectories(**dataset_args)
 test_trajectories = Task.get_test_trajectories(**dataset_args)
 
 train_loader = DataLoader(
-    SubsequenceDataset(train_trajectories, 16),
+    SubsequenceDataset(train_trajectories, 16, modalities),
     batch_size=32,
     shuffle=True,
     drop_last=True,
 )
 val_loader = DataLoader(
-    SubsequenceDataset(val_trajectories, 16),
+    SubsequenceDataset(val_trajectories, 16, modalities),
     batch_size=32,
     shuffle=True,
 )
 test_loader = DataLoader(
-    SubsequenceDataset(test_trajectories, 16),
+    SubsequenceDataset(test_trajectories, 16, modalities),
     batch_size=32,
     shuffle=False,
 )
 
 encoders = [
-    Sequential(Transpose(0, 1), layers.observation_pos_layers(64)),
     Sequential(Transpose(0, 1), layers.observation_sensors_layers(64)),
-    Sequential(Transpose(0, 1), Reshape([-1, 1, 32, 32]), layers.observation_image_layers(64), Reshape([16, -1, 64])),
-    Sequential(Transpose(0, 1), layers.control_layers(64)),
 ]
-fusion = ConcatWithLinear(64 * 4, 64, concat_dim=2)
+fusion = ConcatWithLinear(64, 64, concat_dim=2)
 head = Sequential(Head(), Transpose(0, 1))
 allmodules = [*encoders, fusion, head]
 optimtype = optim.Adam
@@ -74,7 +72,7 @@ def trainprocess():
           20,
           task='regression',
           optimtype=optimtype,
-          criterion=loss_state,
+          objective=loss_state,
           lr=0.00001)
 all_in_one_train(trainprocess, allmodules)
 
