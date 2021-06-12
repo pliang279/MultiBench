@@ -22,7 +22,6 @@ from unimodals.gentle_push.head import Head
 from fusions.common_fusions import ConcatWithLinear
 from training_structures.Simple_Late_Fusion import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
-from xy_mse_loss import XYMSELoss
 
 Task = PushTask
 modalities = ['control']
@@ -80,5 +79,5 @@ def trainprocess(filename):
 filename = general_train(trainprocess, 'gentle_push_unimodal_image')
 
 def testprocess(model, testdata):
-    return test(model, testdata, task='regression', criterion=XYMSELoss())
+    return test(model, testdata, task='regression', criterion=loss_state)
 general_test(testprocess, filename, [controls_robust_loader])

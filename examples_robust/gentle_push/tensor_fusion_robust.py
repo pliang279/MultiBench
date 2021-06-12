@@ -22,7 +22,6 @@ from unimodals.common_models import Sequential, Transpose, Reshape, Identity, ML
 from unimodals.gentle_push.head import Head
 from fusions.common_fusions import TensorFusion
 from training_structures.Simple_Late_Fusion import train, test
-from xy_mse_loss import XYMSELoss
 
 Task = PushTask
 
@@ -118,5 +117,5 @@ def trainprocess(filename):
 filename = general_train(trainprocess, 'gentle_push_tensor_fusion')
 
 def testprocess(model, testdata):
-    return test(model, testdata, task='regression', criterion=XYMSELoss())
+    return test(model, testdata, task='regression', criterion=loss_state)
 general_test(testprocess, filename, [image_robust_loader, prop_robust_loader, haptics_robust_loader, controls_robust_loader, multimodal_robust_loader])
