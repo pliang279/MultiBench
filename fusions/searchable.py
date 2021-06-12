@@ -4,6 +4,9 @@ import torch.optim as op
 from torch import nn
 import utils.aux_models as aux
 import utils.scheduler as sc
+
+# See https://github.com/slyviacassell/_MFAS/tree/master/models for hyperparameter details
+
 def train_sampled_models(sampled_configurations, searchable_type, dataloaders,
                          use_weightsharing, device, unimodal_files, rep_size, classes, sub_sizes, batch_size, epochs,
                          eta_max,eta_min, Ti, Tm,

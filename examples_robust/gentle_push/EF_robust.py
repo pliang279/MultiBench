@@ -21,8 +21,7 @@ from robustness.all_in_one import general_train, general_test
 from unimodals.common_models import Sequential, Transpose, Reshape, MLP
 from unimodals.gentle_push.head import Head
 from fusions.common_fusions import ConcatWithLinear
-from training_structures.Simple_Late_Fusion import train, test
-from xy_mse_loss import XYMSELoss
+from training_structures.Supervised_Learning import train, test
 
 Task = PushTask
 
@@ -113,10 +112,10 @@ def trainprocess(filename):
           task='regression',
           save=filename,
           optimtype=optimtype,
-          criterion=loss_state,
+          objective=loss_state,
           lr=0.00001)
 filename = general_train(trainprocess, 'gentle_push_EF')
 
 def testprocess(model, testdata):
-    return test(model, testdata, task='regression', criterion=XYMSELoss())
+    return test(model, testdata, task='regression', criterion=loss_state)
 general_test(testprocess, filename, [image_robust_loader, prop_robust_loader, haptics_robust_loader, controls_robust_loader, multimodal_robust_loader])

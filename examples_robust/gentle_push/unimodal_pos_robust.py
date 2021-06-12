@@ -17,12 +17,12 @@ import unimodals.gentle_push.layers as layers
 from torch.utils.data import DataLoader
 
 from datasets.gentle_push.data_loader import SubsequenceDataset, PushTask
+from robustness.all_in_one import general_train, general_test
 from unimodals.common_models import Sequential, Transpose, Reshape, MLP
 from unimodals.gentle_push.head import Head
 from fusions.common_fusions import ConcatWithLinear
-from training_structures.Simple_Late_Fusion import train, test
+from training_structures.Supervised_Learning import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
-from xy_mse_loss import XYMSELoss
 
 Task = PushTask
 modalities = ['gripper_pos']
@@ -76,10 +76,10 @@ def trainprocess(filename):
           task='regression',
           save=filename,
           optimtype=optimtype,
-          criterion=loss_state,
+          objective=loss_state,
           lr=0.00001)
 filename = general_train(trainprocess, 'gentle_push_unimodal_pos')
 
 def testprocess(model, testdata):
-    return test(model, testdata, task='regression', criterion=XYMSELoss())
+    return test(model, testdata, task='regression', criterion=loss_state)
 general_test(testprocess, filename, [prop_robust_loader])

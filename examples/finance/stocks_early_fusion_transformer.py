@@ -12,7 +12,7 @@ from fusions.common_fusions import Stack
 from fusions.finance.early_fusion import EarlyFusionTransformer
 from unimodals.common_models import LSTMWithLinear, Identity
 from datasets.stocks.get_data import get_dataloader
-from training_structures.Simple_Late_Fusion import train, test
+from training_structures.Supervised_Learning import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 
 
@@ -35,7 +35,7 @@ allmodules = [*encoders, fusion, head]
 
 def trainprocess():
     train(encoders, fusion, head, train_loader, val_loader, total_epochs=4,
-          task='regression', optimtype=torch.optim.Adam, criterion=nn.MSELoss())
+          task='regression', optimtype=torch.optim.Adam, objective=nn.MSELoss())
 all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best.pt').cuda()

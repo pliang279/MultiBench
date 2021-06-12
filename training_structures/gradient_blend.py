@@ -173,7 +173,21 @@ def calcAUPRC(pts):
   predicted_probs = [x[0] for x in pts]
   return sklearn.metrics.average_precision_score(true_labels, predicted_probs)
 
-
+# unimodal_models: list of modules, unimodal encoders for each input modality in the order of the modality input data.
+# multimodal_classification_head: classification head that takes in fused output of unimodal models of all modalities
+# unimodal_classification_heads: list of classification heads that each takes in output of one unimodal model (must be in the same modality order as unimodal_models)
+# fuse: fusion module that takes in a list of outputs from unimodal_models and generate a fused representation
+# train_dataloader, valid_dataloader: dataloaders of input datas
+# num_epochs: total number of epochs
+# lr: learning rate
+# gb_epoch: how many epochs between re-evaluate weights of gradient blend
+# v_rate: portion of training set used as validation for gradient blend weight estimation
+# weight_decay: weight decay of optimizer
+# optimtype: type of optimizer to use
+# finetune_epoch: how many epochs to finetune the classification head
+# classification: whether the task is a classification task
+# auprc: whether to compute auprc score or not
+# savedir: the name of the saved file for the model with current best validation performance
 def train(unimodal_models,  multimodal_classification_head,
           unimodal_classification_heads, fuse, train_dataloader, valid_dataloader,
           num_epoch, lr, gb_epoch=20, v_rate=0.08, weight_decay=0.0, optimtype=torch.optim.SGD,

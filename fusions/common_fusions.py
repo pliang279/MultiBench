@@ -4,6 +4,7 @@ from torch.nn import functional as F
 import pdb
 from torch.autograd import Variable
 
+# Simple concatenation on dim 1
 class Concat(nn.Module):
     def __init__(self):
         super(Concat,self).__init__()
@@ -14,7 +15,7 @@ class Concat(nn.Module):
             flattened.append(torch.flatten(modality, start_dim=1))
         return torch.cat(flattened, dim=1)
 
-
+# Simple Early concatenation on dim 2
 class ConcatEarly(torch.nn.Module):
     def __init__(self):
         super(ConcatEarly, self).__init__()
@@ -22,7 +23,7 @@ class ConcatEarly(torch.nn.Module):
     def forward(self, modalities, training=False):
         return torch.cat(modalities, dim=2)
 
-
+# Stacking modalities
 class Stack(nn.Module):
     def __init__(self):
         super().__init__()
@@ -33,12 +34,13 @@ class Stack(nn.Module):
             flattened.append(torch.flatten(modality, start_dim=1))
         return torch.stack(flattened, dim=2)
 
-
+# Concatenation with a linear layer
 class ConcatWithLinear(nn.Module):
-    def __init__(self, input_dims, output_dim, concat_dim=1):
+    # input dim, output_dim: the in/out dim of the linear layer
+    def __init__(self, input_dim, output_dim, concat_dim=1):
         super(ConcatWithLinear,self).__init__()
         self.concat_dim = concat_dim
-        self.fc = nn.Linear(input_dims, output_dim)
+        self.fc = nn.Linear(input_dim, output_dim)
     
     def forward(self, modalities, training=False):
         return self.fc(torch.cat(modalities, dim=self.concat_dim))
@@ -59,8 +61,10 @@ class FiLM(nn.Module):
         beta = self.b_net(modalities[self.bgen_modal])
         return gamma * modalities[self.base_modal] + beta
 
-
+# 3-modal Multiplicative Interactions
 class MultiplicativeInteractions3Modal(nn.Module):
+    # input_dims: list or tuple of 3 integers indicating sizes of input
+    # output_dim: size of output
     def __init__(self,input_dims, output_dim):
         super(MultiplicativeInteractions3Modal, self).__init__()
         self.a = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
@@ -70,8 +74,15 @@ class MultiplicativeInteractions3Modal(nn.Module):
     def forward(self, modalities, training=False):
         return torch.matmul(modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
 
-
+# Multiplicative Interactions for 2 Modal
 class MultiplicativeInteractions2Modal(nn.Module):
+    # input_dims: list or tuple of 2 integers indicating input dimensions of the 2 modalities
+    # output_dim: output dimension
+    # output: type of MI, options from 'matrix3D','matrix','vector','scalar'
+    # flatten: whether we need to flatten the input modalities
+    # clip: clip parameter values, None if no clip
+    # grad_clip: clip grad values, None if no clip
+    # flip: whether to swap the two input modalities in forward function or not
     def __init__(self, input_dims, output_dim, output, flatten = False, clip = None, grad_clip = None, flip = False):
         super(MultiplicativeInteractions2Modal, self).__init__()
         self.input_dims = input_dims
@@ -194,6 +205,9 @@ class TensorFusion(nn.Module):
 
 class LowRankTensorFusion(nn.Module):
     # https://github.com/Justin1904/Low-rank-Multimodal-Fusion
+    # input_dims: list or tuple of integers indicating input dimensions of the modalities
+    # output_dim: output dimension
+    # rank: a hyperparameter of LRTF. See link above for details
     def __init__(self, input_dims, output_dim, rank, flatten=True):
         super(LowRankTensorFusion, self).__init__()
 

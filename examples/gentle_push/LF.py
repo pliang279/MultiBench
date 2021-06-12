@@ -20,7 +20,7 @@ from datasets.gentle_push.data_loader import SubsequenceDataset, PushTask
 from unimodals.common_models import Sequential, Transpose, Reshape, MLP, Identity
 from unimodals.gentle_push.head import GentlePushLateLSTM
 from fusions.common_fusions import ConcatWithLinear
-from training_structures.Simple_Late_Fusion import train, test
+from training_structures.Supervised_Learning import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 from xy_mse_loss import XYMSELoss
 
@@ -74,7 +74,7 @@ def trainprocess():
           20,
           task='regression',
           optimtype=optimtype,
-          criterion=loss_state,
+          objective=loss_state,
           lr=0.00001)
 all_in_one_train(trainprocess, allmodules)
 
