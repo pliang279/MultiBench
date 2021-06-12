@@ -2,12 +2,18 @@ from objective_functions.recon import recon_weighted_sum,elbo_loss
 import torch
 from objective_functions.cca import CCALoss
 
+# deals with some built-in criterions
 def criterioning(pred,truth,criterion):
     if type(criterion)==torch.nn.CrossEntropyLoss:
         return criterion(pred,truth.long().cuda())
     elif type(criterion)==torch.nn.modules.loss.BCEWithLogitsLoss or type(criterion)==torch.nn.MSELoss:
         return criterion(pred,truth.float().cuda())
 
+# objective for MFM
+# ce_weight: weight of simple supervised loss
+# modal_loss_funcs: list of functions that takes in reconstruction and input of each modality and compute reconstruction loss
+# recon_weights: list of float values indicating the weight of reconstruction loss of each modality
+# criterion: the criterion for supervised loss
 def MFM_objective(ce_weight,modal_loss_funcs,recon_weights,input_to_float=True,criterion=torch.nn.CrossEntropyLoss()):
     recon_loss_func = recon_weighted_sum(modal_loss_funcs,recon_weights)
     def actualfunc(pred,truth,args):
@@ -36,6 +42,12 @@ def reparameterize(mu, logvar, training):
     else:
         return mu
 
+# ce_weight: weight of simple supervised loss
+# modal_loss_funcs: list of functions that takes in reconstruction and input of each modality and compute reconstruction loss
+# recon_weights: list of float values indicating the weight of reconstruction loss of each modality
+# criterion: the criterion for supervised loss
+# annealing: the annealing factor (i.e. weight of kl)
+# input_to_float: whether to convert input to float or not
 def MVAE_objective(ce_weight,modal_loss_funcs,recon_weights,input_to_float=True,annealing=1.0,criterion=torch.nn.CrossEntropyLoss()):
     recon_loss_func = elbo_loss(modal_loss_funcs,recon_weights,annealing)
     def allnonebuti(i,item):
@@ -65,6 +77,9 @@ def MVAE_objective(ce_weight,modal_loss_funcs,recon_weights,input_to_float=True,
         return total_loss
     return actualfunc
 
+# out_dim: output dimension
+# cca_weight: weight of cca loss
+# criterion: criterion for supervised loss
 def CCA_objective(out_dim,cca_weight=0.001,criterion=torch.nn.CrossEntropyLoss()):
     lossfunc = CCALoss(out_dim,False, device=torch.device("cuda"))
     def actualfunc(pred,truth,args):
@@ -74,6 +89,9 @@ def CCA_objective(out_dim,cca_weight=0.001,criterion=torch.nn.CrossEntropyLoss()
         return cca_loss * cca_weight + ce_loss
     return actualfunc
 
+# ref_weight: weight of refiner loss
+# criterion: criterion for supervised loss
+# input_to_float: whether to convert input to float or not
 def RefNet_objective(ref_weight,criterion=torch.nn.CrossEntropyLoss(),input_to_float=True):
     ss_criterion=torch.nn.CosineEmbeddingLoss()
     def actualfunc(pred,truth,args):
