@@ -338,9 +338,9 @@ def single_test(model, test_dataloader, auprc=False, classification=True):
       if auprc:
         print("With AUPRC: "+str(calcAUPRC(auprclist)))
     if classification:
-      return float(corrects)/total
+      return {'Accuracy': float(corrects)/total}
     else:
-      return (totalloss/total).item()
+      return {'MSE': (totalloss/total).item()}
 
 
 def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, classification=True):

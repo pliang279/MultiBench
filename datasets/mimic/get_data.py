@@ -1,126 +1,89 @@
-from robustness.timeseries_robust import timeseries_robustness
-import datetime
-from posixpath import split
+import sys
+import os
 import numpy as np
-import pandas as pd
-import pandas_datareader
-import torch
 from torch.utils.data import DataLoader
+import random
+import pickle
 import copy
-from torch import nn
+sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
+from robustness.timeseries_robust import timeseries_robustness
+from robustness.tabular_robust import tabular_robustness
+from tqdm import tqdm
 
 
-def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shuffle=True, start_date=datetime.datetime(2000, 6, 1), end_date=datetime.datetime(2021, 2, 28), window_size=500, val_split=3200, test_split=3700, modality_first=True, cuda=True):
-    stocks = np.array(stocks)
+#task: integer between -1 and 19 inclusive, -1 means mortality task, 0-19 means icd9 task
+def get_dataloader(task,batch_size=40, num_workers=1, train_shuffle=True, imputed_path='im.pk', flatten_time_series=False, tabular_robust=True, timeseries_robust=True):
+  f = open(imputed_path,'rb')
+  datafile = pickle.load(f)
+  f.close()
+  X_t = datafile['ep_tdata']
+  X_s = datafile['adm_features_all']
 
-    def fetch_finance_data(symbol, start, end):
-        return pandas_datareader.data.DataReader(symbol, 'yahoo', start, end)
+  X_t[np.isinf(X_t)]=0
+  X_t[np.isnan(X_t)]=0
+  X_s[np.isinf(X_s)]=0
+  X_s[np.isnan(X_s)]=0
 
-    data = []
-    for stock in stocks:
-        fetch = fetch_finance_data(stock, start_date, end_date)
-        print(stock + ' length: ' + str(len(fetch)))
-        fetch.insert(0, 'Symbol', stock)
-        data.append(fetch)
+  X_s_avg=np.average(X_s,axis=0)
+  X_s_std=np.std(X_s,axis=0)
+  X_t_avg=np.average(X_t,axis=(0,1))
+  X_t_std=np.std(X_t,axis=(0,1))
 
-    data = pd.concat(data)
-    data = data.sort_values(by=['Date', 'Symbol'])
+  for i in range(len(X_s)):
+    X_s[i] = (X_s[i]-X_s_avg)/X_s_std
+    for j in range(len(X_t[0])):
+      X_t[i][j] = (X_t[i][j]-X_t_avg)/X_t_std
 
-    input_stocks = np.array(
-        [np.where(data['Symbol'] == x)[0][0] for x in input_stocks])
-    output_stocks = np.array(
-        [np.where(data['Symbol'] == x)[0][0] for x in output_stocks])
+  static_dim=len(X_s[0])
+  timestep=len(X_t[0])
+  series_dim=len(X_t[0][0])
+  if flatten_time_series:
+    X_t=X_t.reshape(len(X_t),timestep*series_dim)
+  if task<0:
+    y=datafile['adm_labels_all'][:,1]
+    admlbl=datafile['adm_labels_all']
+    le = len(y)
+    for i in range(0,le):
+      if admlbl[i][1]>0:
+        y[i]=1
+      elif admlbl[i][2]>0:
+        y[i]=2
+      elif admlbl[i][3]>0:
+        y[i]=3
+      elif admlbl[i][4]>0:
+        y[i]=4
+      elif admlbl[i][5]>0:
+        y[i]=5
+      else:
+        y[i]=0
+  else:
+    y=datafile['y_icd9'][:,task]
+    le = len(y)
+  datasets=[(X_s[i],X_t[i],y[i]) for i in range(le)]
 
-    X = torch.tensor(list(data['Open'])).view(-1, len(stocks))
-    RX = torch.log(X[1:] / X[:-1])
-    Y = RX[window_size:, output_stocks]
-    Y = Y * Y
+  random.seed(10)
 
-    RX = RX / torch.std(RX[:window_size + val_split])
-    Y = Y / torch.std(Y[:val_split])
+  random.shuffle(datasets)
 
-    X = [RX[i:i + window_size, input_stocks].reshape(
-        1, window_size, -1) for i in range(len(RX) - window_size)]
-    X = torch.cat(X)
+  valids = DataLoader(datasets[0:le//10], shuffle=False, num_workers=num_workers, batch_size=batch_size)
+  trains = DataLoader(datasets[le//5:], shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
 
-    if cuda:
-        X = X.cuda()
-        Y = Y.cuda()
+  tests = dict()
+  tests['timeseries'] = []
+  for noise_level in tqdm(range(11)):
+    dataset_robust = copy.deepcopy(datasets[le//10:le//5])
+    if tabular_robust:
+      X_s_robust = tabular_robustness([dataset_robust[i][0] for i in range(len(dataset_robust))], noise_level=noise_level/10)
+    else:
+      X_s_robust = [dataset_robust[i][0] for i in range(len(dataset_robust))]
+    if timeseries_robust:
+      X_t_robust = timeseries_robustness([[dataset_robust[i][1] for i in range(len(dataset_robust))]],noise_level=noise_level/10)[0]
+    else:
+      X_t_robust = [dataset_robust[i][1] for i in range(len(dataset_robust))]
+    y_robust = [dataset_robust[i][2] for i in range(len(dataset_robust))]
+    if flatten_time_series:
+      tests['timeseries'].append(DataLoader([(X_s_robust[i],X_t_robust[i].reshape(timestep*series_dim),y_robust[i]) for i in range(len(y_robust))], shuffle=False, num_workers=num_workers, batch_size=batch_size))
+    else:
+      tests['timeseries'].append(DataLoader([(X_s_robust[i],X_t_robust[i],y_robust[i]) for i in range(len(y_robust))], shuffle=False, num_workers=num_workers, batch_size=batch_size))
 
-    class MyDataset(torch.utils.data.Dataset):
-        def __init__(self, X, Y, modality_first):
-            self.X, self.Y = X, Y
-            self.modality_first = modality_first
-
-        def __len__(self):
-            return len(self.X)
-
-        def __getitem__(self, index):
-            # Data augmentation
-            def quantize(x, y):
-                hi = torch.max(x)
-                lo = torch.min(x)
-                x = (x - lo) * 25 / (hi - lo)
-                x = torch.round(x)
-                x = x * (hi - lo) / 25 + lo
-                return x, y
-
-            x, y = quantize(self.X[index], self.Y[index])
-
-            if not modality_first:
-                return x, y
-            else:
-                if len(x.shape) == 2:
-                    x = x.permute([1, 0])
-                    x = list(x)
-                    x.append(y)
-                    return x
-                else:
-                    x = x.permute([0, 2, 1])
-                    res = []
-                    for data, label in zip(x, y):
-                        data = list(data)
-                        data.append(label)
-                        res.append(data)
-                    return res
-
-    train_ds = MyDataset(X[:val_split], Y[:val_split], modality_first)
-    train_loader = torch.utils.data.DataLoader(
-        train_ds, shuffle=train_shuffle, batch_size=batch_size)
-    val_ds = MyDataset(X[val_split:test_split],
-                       Y[val_split:test_split], modality_first)
-    val_loader = torch.utils.data.DataLoader(
-        val_ds, shuffle=False, batch_size=batch_size, drop_last=False)
-    test_loader = dict()
-    test_loader['timeseries'] = []
-    for noise_level in range(9):
-        X_robust = copy.deepcopy(X[test_split:].cpu().numpy())
-        X_robust = torch.tensor(timeseries_robustness(
-            X_robust, noise_level=noise_level/10), dtype=torch.float32)
-        if cuda:
-            X_robust = X_robust.cuda()
-        test_ds = MyDataset(X_robust, Y[test_split:], modality_first)
-        test_loader['timeseries'].append(torch.utils.data.DataLoader(
-            test_ds, shuffle=False, batch_size=batch_size, drop_last=False))
-    print(len(test_loader))
-    return train_loader, val_loader, test_loader
-
-
-class Grouping(nn.Module):
-    def __init__(self, n_groups):
-        super().__init__()
-        self.n_groups = n_groups
-
-    def forward(self, x, training=False):
-        x = x.permute(2, 0, 1)
-
-        n_modalities = len(x)
-        out = []
-        for i in range(self.n_groups):
-            start_modality = n_modalities * i // self.n_groups
-            end_modality = n_modalities * (i + 1) // self.n_groups
-            sel = list(x[start_modality:end_modality])
-            sel = torch.stack(sel, dim=len(sel[0].size()))
-            out.append(sel)
-
-        return out
+  return trains,valids,tests

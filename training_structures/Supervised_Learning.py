@@ -244,7 +244,7 @@ def single_test(
             if torch.numel(testloss) != 1:
                 testloss = testloss.detach().cpu()
                 print('mse: ' + str(testloss))
-                return {'MSE': testloss}
+                return {'MSE': testloss.item()}
             else:
                 print("mse: "+str(testloss.item()))
                 return {'MSE': testloss.item()}
