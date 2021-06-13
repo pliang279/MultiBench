@@ -9,7 +9,7 @@ from objective_functions.recon import recon_weighted_sum,sigmloss1dcentercrop,si
 from datasets.imdb.get_data import get_dataloader
 
 
-traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', vgg=True, batch_size=128)
+traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', '/home/pliang/multibench/video/mmimdb', vgg=True, batch_size=128)
 
 classes=23
 n_latent=512

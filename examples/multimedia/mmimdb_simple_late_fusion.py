@@ -1,6 +1,7 @@
 import sys
 import os
 sys.path.append(os.getcwd())
+sys.path.append('/home/pliang/multibench/MultiBench')
 
 import torch
 
@@ -9,7 +10,7 @@ from fusions.common_fusions import Concat
 from datasets.imdb.get_data import get_dataloader
 from unimodals.common_models import MLP, VGG16, Linear, MaxOut_MLP
 
-traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/video/multimodal_imdb.hdf5', vgg=True, batch_size=128)
+traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/video/multimodal_imdb.hdf5', '/home/pliang/multibench/video/mmimdb', vgg=True, batch_size=128)
 
 encoders=[MaxOut_MLP(512, 512, 300, linear_layer=False), MaxOut_MLP(512, 1024, 4096, 512, False)]
 #encoders=[MLP(300, 512, 512), VGG16(512)]
