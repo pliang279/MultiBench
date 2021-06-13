@@ -93,7 +93,7 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
         val_ds, shuffle=False, batch_size=batch_size, drop_last=False)
     test_loader = dict()
     test_loader['timeseries'] = []
-    for noise_level in range(10):
+    for noise_level in range(9):
         X_robust = copy.deepcopy(X[test_split:].cpu().numpy())
         X_robust = torch.tensor(timeseries_robustness(
             X_robust, noise_level=noise_level/10), dtype=torch.float32)
@@ -102,7 +102,7 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
         test_ds = MyDataset(X_robust, Y[test_split:], modality_first)
         test_loader['timeseries'].append(torch.utils.data.DataLoader(
             test_ds, shuffle=False, batch_size=batch_size, drop_last=False))
-
+    print(len(test_loader))
     return train_loader, val_loader, test_loader
 
 

@@ -141,13 +141,13 @@ def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='c
             print("loss: " + str(totalloss / totals))
         if task == "classification":
             print("acc: "+str(accuracy_score(true, pred)))
-            return accuracy_score(true, pred)
+            return {'Accuracy': accuracy_score(true, pred)}
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
-            return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
+            return {'F1 score (micro)': f1_score(true, pred, average="micro"), 'F1 score (macro)': f1_score(true, pred, average="macro")}
         else:
-            return (totalloss / totals).item()
+            return {'MSE': (totalloss / totals).item()}
 
 
 def test(encoder, head, test_dataloaders_all, dataset, method_name='My method', auprc=False, modalnum=0, task='classification', criterion=None):

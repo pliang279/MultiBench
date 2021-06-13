@@ -177,6 +177,7 @@ def single_test(model,test_dataloader,auprc=False):
     print('test acc: '+str(float(corrects)/total))
     if auprc:
         print("AUPRC: "+str(AUPRC(pts)))
+    return {'Accuracy': float(corrects)/total}
 
 
 def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False):
