@@ -3,7 +3,7 @@ import sys
 from typing import *
 import numpy as np
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
+sys.path.append('/home/pliang/multibench/MultiBench/datasets/imdb')
 from robustness.visual_robust import visual_robustness
 from robustness.text_robust import text_robustness
 
@@ -76,19 +76,19 @@ def process_data(filename, path):
 
     return data
 
-def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40, vgg:bool=False)->Tuple[Dict]:
+def get_dataloader(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40, vgg:bool=False)->Tuple[Dict]:
     train_dataloader = DataLoader(IMDBDataset(path, 0, 15552, vgg), \
         shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
     val_dataloader = DataLoader(IMDBDataset(path, 15552, 18160, vgg), \
         shuffle=False, num_workers=num_workers, batch_size=batch_size)
 
-    test_dataset = h5py.File(test_path, 'r')
+    test_dataset = h5py.File(path, 'r')
     test_text = test_dataset['features'][18160:25959]
     test_vision = test_dataset['vgg_features'][18160:25959]
     labels = test_dataset["genres"][18160:25959]
     names = test_dataset["imdb_ids"][18160:25959]
     
-    dataset = os.path.join(path, "dataset")
+    dataset = os.path.join(test_path, "dataset")
 
     clsf = VGGClassifier(model_path='/home/pliang/multibench/MultiBench/datasets/imdb/vgg16.tar', synset_words='synset_words.txt')
     googleword2vec = KeyedVectors.load_word2vec_format('/home/pliang/multibench/MultiBench/datasets/imdb/GoogleNews-vectors-negative300.bin.gz', binary=True)

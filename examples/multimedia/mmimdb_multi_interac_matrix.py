@@ -8,7 +8,7 @@ from unimodals.common_models import MaxOut_MLP, Linear
 from torch import nn
 import torch
 
-traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', vgg=True, batch_size=128)
+traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', '/home/pliang/multibench/video/mmimdb', vgg=True, batch_size=128)
 encoders=[MaxOut_MLP(512, 512, 300, linear_layer=False), MaxOut_MLP(512, 1024, 4096, 512, False)]
 head= Linear(1024, 23).cuda()
 
