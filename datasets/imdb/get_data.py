@@ -140,7 +140,7 @@ def get_dataloader_robust(path:str,test_path:str,num_workers:int=8, train_shuffl
         else:
             text_features = np.load(text_filename, allow_pickle=True)
         robust_text.append([(text_features[i], test_vision[i], labels[i]) for i in range(len(text_features))])
-    test_dataloader['text']
+    test_dataloader['text'] = []
     for test in robust_text:
         test_dataloader['text'].append(DataLoader(IMDBDataset_robust(test, 0, len(test)), shuffle=False, num_workers=num_workers, batch_size=batch_size))
     return train_dataloader, val_dataloader, test_dataloader
