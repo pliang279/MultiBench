@@ -252,22 +252,29 @@ def single_test(
 
 # model: saved checkpoint filename from train
 # test_dataloaders_all: test data
-# example_name: the name of dataset+task
+# dataset: the name of dataset, need to be set for testing effective robustness
 # criterion: only needed for regression, put MSELoss there
 # all other arguments are same as train
 def test(
-        model, test_dataloaders_all, example_name, method_name='My method', is_packed=False,
-        criterion=nn.CrossEntropyLoss(), task="classification", auprc=False, input_to_float=True):
+        model, test_dataloaders_all, dataset, method_name='My method', is_packed=False, criterion=nn.CrossEntropyLoss(), task="classification", auprc=False, input_to_float=True):
     def testprocess():
         single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], is_packed, criterion, task, auprc, input_to_float)
     all_in_one_test(testprocess, [model])
     for noisy_modality, test_dataloaders in test_dataloaders_all.items():
         print("Testing on noisy data ({})...".format(noisy_modality))
+        robustness_curve = dict()
         for test_dataloader in tqdm(test_dataloaders):
-            robustness_curve = single_test(model, test_dataloader, is_packed, criterion, task, auprc, input_to_float)
+            single_test_result = single_test(model, test_dataloader, is_packed, criterion, task, auprc, input_to_float)
+            for k, v in single_test_result.items():
+                curve = robustness_curve.get(k, [])
+                curve.append(v)
+                robustness_curve[k] = curve 
         for measure, robustness_result in robustness_curve.items():
             print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
-            print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, example_name))))
-            fig_name = '{}-{}-{}-{}'.format(method_name, example_name, noisy_modality, measure)
-            single_plot(robustness_result, example_name, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
+            robustness_key = '{} {}'.format(dataset, noisy_modality)
+            if len(robustness_curve) != 1:
+                robustness_key = '{} {}'.format(robustness_key, measure)
+            print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, robustness_key))))
+            fig_name = '{}-{}-{}-{}'.format(method_name, robustness_key, noisy_modality, measure)
+            single_plot(robustness_result, robustness_key, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
             print("Plot saved as "+fig_name)

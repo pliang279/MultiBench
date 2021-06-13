@@ -179,18 +179,22 @@ def single_test(model,test_dataloader,auprc=False):
         print("AUPRC: "+str(AUPRC(pts)))
 
 
-def test(model, test_dataloaders_all, robustness_key, method_name='My method', auprc=False):
+def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False):
     def testprocess():
         single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc)
     all_in_one_test(testprocess, [model])
     for noisy_modality, test_dataloaders in test_dataloaders_all.items():
         print("Testing on noisy data ({})...".format(noisy_modality))
+        robustness_curve = dict()
         for test_dataloader in tqdm(test_dataloaders):
-            robustness_curve = single_test(model, test_dataloader, auprc)
+            single_test_result = single_test(model, test_dataloader, auprc)
+            for k, v in single_test_result.items():
+                curve = robustness_curve.get(k, [])
+                curve.append(v)
+                robustness_curve[k] = curve 
         for measure, robustness_result in robustness_curve.items():
             print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
-            if len(test_dataloaders_all) != 1:
-                robustness_key = '{} {}'.format(robustness_key, noisy_modality)
+            robustness_key = '{} {}'.format(dataset, noisy_modality)
             if len(robustness_curve) != 1:
                 robustness_key = '{} {}'.format(robustness_key, measure)
             print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, robustness_key))))

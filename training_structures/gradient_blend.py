@@ -343,17 +343,26 @@ def single_test(model, test_dataloader, auprc=False, classification=True):
       return (totalloss/total).item()
 
 
-def test(model, test_dataloaders_all, example_name, method_name='My method', auprc=False, classification=True):
+def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, classification=True):
   def testprocess():
     single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc, classification)
   all_in_one_test(testprocess, [model])
   for noisy_modality, test_dataloaders in test_dataloaders_all.items():
     print("Testing on noisy data ({})...".format(noisy_modality))
+    robustness_curve = dict()
     for test_dataloader in tqdm(test_dataloaders):
-      robustness_curve = single_test(model, test_dataloader, auprc, classification)
+      single_test_result = single_test(model, test_dataloader, auprc, classification)
+      for k, v in single_test_result.items():
+        curve = robustness_curve.get(k, [])
+        curve.append(v)
+        robustness_curve[k] = curve 
     for measure, robustness_result in robustness_curve.items():
       print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
-      print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, example_name))))
-      fig_name = '{}-{}-{}-{}'.format(method_name, example_name, noisy_modality, measure)
-      single_plot(robustness_result, example_name, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
+      robustness_key = dataset
+      robustness_key = '{} {}'.format(dataset, noisy_modality)
+      if len(robustness_curve) != 1:
+        robustness_key = '{} {}'.format(robustness_key, measure)
+      print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, robustness_key))))
+      fig_name = '{}-{}-{}-{}'.format(method_name, robustness_key, noisy_modality, measure)
+      single_plot(robustness_result, robustness_key, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
       print("Plot saved as "+fig_name)
