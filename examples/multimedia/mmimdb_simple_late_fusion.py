@@ -20,4 +20,4 @@ train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multi
 
 print("Testing:")
 model=torch.load('best_lf.pt').cuda()
-test(model,testdata,criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
+test(model,testdata,dataset='imdb',criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")

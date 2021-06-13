@@ -12,7 +12,7 @@ from unimodals.common_models import Identity
 from fusions.mult import MULTModel
 from datasets.stocks.get_data import get_dataloader, Grouping
 from training_structures.unimodal import train, test
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
+from private_test_scripts.all_in_one import all_in_one_train
 
 
 parser = argparse.ArgumentParser()
@@ -44,6 +44,5 @@ all_in_one_train(trainprocess, allmodules)
 
 encoder = torch.load('encoder.pt').cuda()
 head = torch.load('head.pt').cuda()
-def testprocess():
-    test(encoder, head, test_loader, task='regression', criterion=nn.MSELoss())
-all_in_one_test(testprocess, [encoder, head])
+# dataset = 'finance F&B', finance tech', finance health'
+test(encoder, head, test_loader, dataset='finance F&B', task='regression', criterion=nn.MSELoss())

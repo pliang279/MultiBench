@@ -12,4 +12,5 @@ import utils.surrogate as surr
 traindata, validdata, testdata = get_dataloader(1, imputed_path='datasets/mimic/im.pk')
 
 model = torch.load('temp/best.pt').cuda()
-test(model,testdata,auprc=True)
+# dataset = 'mimic mortality', 'mimic 1', 'mimic 7'
+test(model,testdata,dataset='mimic 1',auprc=True)

@@ -178,7 +178,8 @@ def single_test(model,test_dataloader,auprc=False):
     if auprc:
         print("AUPRC: "+str(AUPRC(pts)))
 
-def test(model, test_dataloaders_all, example_name, method_name='My method', auprc=False):
+
+def test(model, test_dataloaders_all, robustness_key, method_name='My method', auprc=False):
     def testprocess():
         single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc)
     all_in_one_test(testprocess, [model])
@@ -188,7 +189,11 @@ def test(model, test_dataloaders_all, example_name, method_name='My method', aup
             robustness_curve = single_test(model, test_dataloader, auprc)
         for measure, robustness_result in robustness_curve.items():
             print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
-            print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, example_name))))
-            fig_name = '{}-{}-{}-{}'.format(method_name, example_name, noisy_modality, measure)
-            single_plot(robustness_result, example_name, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
+            if len(test_dataloaders_all) != 1:
+                robustness_key = '{} {}'.format(robustness_key, noisy_modality)
+            if len(robustness_curve) != 1:
+                robustness_key = '{} {}'.format(robustness_key, measure)
+            print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, robustness_key))))
+            fig_name = '{}-{}-{}-{}'.format(method_name, robustness_key, noisy_modality, measure)
+            single_plot(robustness_result, robustness_key, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
             print("Plot saved as "+fig_name)

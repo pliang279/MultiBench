@@ -23,4 +23,5 @@ train(encoder, head, traindata, validdata, 20, auprc=False,modalnum=modalnum)
 print("Testing: ")
 encoder = torch.load('encoder.pt').cuda()
 head = torch.load('head.pt').cuda()
-test(encoder,head , testdata, auprc=False, modalnum=modalnum)
+# dataset = 'mimic mortality', 'mimic 1', 'mimic 7'
+test(encoder,head , testdata, dataset='mimic 1', auprc=False, modalnum=modalnum)
