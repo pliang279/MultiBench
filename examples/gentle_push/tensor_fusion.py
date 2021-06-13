@@ -17,27 +17,39 @@ import unimodals.gentle_push.layers as layers
 from torch.utils.data import DataLoader
 
 from datasets.gentle_push.data_loader import SubsequenceDataset, PushTask
+from datasets.gentle_push.data_loader_robust import (
+    SubsequenceDataset as RobustSubsequenceDataset,
+    PushTask as RobustPushTask,
+)
 from unimodals.common_models import Sequential, Transpose, Reshape, Identity, MLP
 from unimodals.gentle_push.head import Head
 from fusions.common_fusions import TensorFusion
 from training_structures.Supervised_Learning import train, test
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 from xy_mse_loss import XYMSELoss
 
 Task = PushTask
+RobustTask = RobustPushTask
 
 # Parse args
 parser = argparse.ArgumentParser()
 Task.add_dataset_arguments(parser)
 args = parser.parse_args()
 dataset_args = Task.get_dataset_args(args)
+parser = argparse.ArgumentParser()
+RobustTask.add_dataset_arguments(parser)
+args = parser.parse_args()
+robust_dataset_args = Task.get_dataset_args(args)
 
 fannypack.data.set_cache_path('datasets/gentle_push/cache')
 
 # Load trajectories into memory
 train_trajectories = Task.get_train_trajectories(**dataset_args)
 val_trajectories = Task.get_eval_trajectories(**dataset_args)
-test_trajectories = Task.get_test_trajectories(**dataset_args)
+image_robust_trajectories = RobustTask.get_test_trajectories(visual_noise=True, **robust_dataset_args)
+prop_robust_trajectories = RobustTask.get_test_trajectories(prop_noise=True, **robust_dataset_args)
+haptics_robust_trajectories = RobustTask.get_test_trajectories(haptics_noise=True, **robust_dataset_args)
+controls_robust_trajectories = RobustTask.get_test_trajectories(controls_noise=True, **robust_dataset_args)
+multimodal_robust_trajectories = RobustTask.get_test_trajectories(multimodal_noise=True, **robust_dataset_args)
 
 train_loader = DataLoader(
     SubsequenceDataset(train_trajectories, 16),
@@ -50,11 +62,52 @@ val_loader = DataLoader(
     batch_size=32,
     shuffle=True,
 )
-test_loader = DataLoader(
-    SubsequenceDataset(test_trajectories, 16),
-    batch_size=32,
-    shuffle=False,
-)
+image_robust_loader = []
+for i in range(len(image_robust_trajectories)):
+    image_robust_loader.append(DataLoader(
+            RobustSubsequenceDataset(image_robust_trajectories[i], 16),
+            batch_size=32,
+            shuffle=False,
+        ))
+
+prop_robust_loader = []
+for i in range(len(prop_robust_trajectories)):
+    prop_robust_loader.append(DataLoader(
+            RobustSubsequenceDataset(prop_robust_trajectories[i], 16),
+            batch_size=32,
+            shuffle=False,
+        ))
+
+haptics_robust_loader = []
+for i in range(len(haptics_robust_trajectories)):
+    haptics_robust_loader.append(DataLoader(
+            RobustSubsequenceDataset(haptics_robust_trajectories[i], 16),
+            batch_size=32,
+            shuffle=False,
+        ))
+
+controls_robust_loader = []
+for i in range(len(controls_robust_trajectories)):
+    controls_robust_loader.append(DataLoader(
+            RobustSubsequenceDataset(controls_robust_trajectories[i], 16),
+            batch_size=32,
+            shuffle=False,
+        ))
+
+multimodal_robust_loader = []
+for i in range(len(multimodal_robust_trajectories)):
+    multimodal_robust_loader.append(DataLoader(
+            RobustSubsequenceDataset(multimodal_robust_trajectories[i], 16),
+            batch_size=32,
+            shuffle=False,
+        ))
+test_loaders = {
+    'image': image_robust_loader,
+    'prop': prop_robust_loader,
+    'haptics': haptics_robust_loader,
+    'controls': controls_robust_loader,
+    'multimodal': multimodal_robust_loader,
+}
 
 encoders = [
     Sequential(Transpose(0, 1), layers.observation_pos_layers(8), Transpose(0, 1)),
@@ -64,19 +117,16 @@ encoders = [
 ]
 fusion = TensorFusion()
 head = MLP((8 + 1) * (8 + 1) * (64 + 1) * (16 + 1), 256, 2)
-allmodules = [*encoders, fusion, head]
 optimtype = optim.Adam
 loss_state = nn.MSELoss()
 
-def trainprocess():
-    train(encoders, fusion, head,
-          train_loader, val_loader,
-          20,
-          task='regression',
-          optimtype=optimtype,
-          objective=loss_state,
-          lr=0.00001)
-all_in_one_train(trainprocess, allmodules)
+train(encoders, fusion, head,
+      train_loader, val_loader,
+      20,
+      task='regression',
+      optimtype=optimtype,
+      objective=loss_state,
+      lr=0.00001)
 
 model = torch.load('best.pt').cuda()
-test(model, test_loader, dataset='gentle push', task='regression', criterion=XYMSELoss())
+test(model, test_loaders, dataset='gentle push', task='regression', criterion=XYMSELoss())
