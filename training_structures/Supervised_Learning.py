@@ -65,132 +65,135 @@ def deal_with_objective(objective,pred,truth,args):
 # objective_args_dict: the argument dictionary to be passed into objective function. If not None, at every batch the dict's "reps", "fused", "inputs", "training" fields will be updated to the batch's encoder outputs, fusion module output, input tensors, and boolean of whether this is training or validation, respectively.
 # input_to_float: whether to convert input to float type or not
 # clip_val: grad clipping limit
+# track_complexity: whether to track training complexity or not
 def train(
     encoders,fusion,head,train_dataloader,valid_dataloader,total_epochs,additional_optimizing_modules=[],is_packed=False,
     early_stop=False,task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
-    objective=nn.CrossEntropyLoss(),auprc=False,save='best.pt',validtime=False, objective_args_dict=None,input_to_float=True,clip_val=8):
-    
+    objective=nn.CrossEntropyLoss(),auprc=False,save='best.pt',validtime=False, objective_args_dict=None,input_to_float=True,clip_val=8,
+    track_complexity=True):
     model = MMDL(encoders,fusion,head,is_packed).cuda()
-    additional_params=[]
-    for m in additional_optimizing_modules:
-        additional_params.extend([p for p in m.parameters() if p.requires_grad])
-    op = optimtype([p for p in model.parameters() if p.requires_grad]+additional_params,lr=lr,weight_decay=weight_decay)
-    bestvalloss = 10000
-    bestacc = 0
-    bestf1 = 0
-    patience = 0
+    def trainprocess():
+        additional_params=[]
+        for m in additional_optimizing_modules:
+            additional_params.extend([p for p in m.parameters() if p.requires_grad])
+        op = optimtype([p for p in model.parameters() if p.requires_grad]+additional_params,lr=lr,weight_decay=weight_decay)
+        bestvalloss = 10000
+        bestacc = 0
+        bestf1 = 0
+        patience = 0
     
-    def processinput(inp):
-        if input_to_float:
-            return inp.float()
-        else:
-            return inp
-
-    for epoch in range(total_epochs):
-        totalloss = 0.0
-        totals = 0
-        model.train()
-        for j in train_dataloader:
-            op.zero_grad()
-            if is_packed:
-                with torch.backends.cudnn.flags(enabled=False):
-                    out=model([[processinput(i).cuda() for i in j[0]], j[1]],training=True)
-                    
+        def processinput(inp):
+            if input_to_float:
+                return inp.float()
             else:
-                out=model([processinput(i).cuda() for i in j[:-1]],training=True)
-            if not (objective_args_dict is None):
-                objective_args_dict['reps']=model.reps
-                objective_args_dict['fused']=model.fuseout
-                objective_args_dict['inputs']=j[:-1]
-                objective_args_dict['training']=True
-            loss=deal_with_objective(objective,out,j[-1],objective_args_dict)
+                return inp
 
-            totalloss += loss * len(j[-1])
-            totals+=len(j[-1])
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), clip_val)
-            op.step()
-        print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
-        validstarttime=time.time()
-        if validtime:
-            print("train total: "+str(totals))
-        model.eval()
-        with torch.no_grad():
+        for epoch in range(total_epochs):
             totalloss = 0.0
-            pred = []
-            true = []
-            pts = []
-            for j in valid_dataloader:
+            totals = 0
+            model.train()
+            for j in train_dataloader:
+                op.zero_grad()
                 if is_packed:
-                    out=model([[processinput(i).cuda() for i in j[0]], j[1]],training=False)
+                    with torch.backends.cudnn.flags(enabled=False):
+                        out=model([[processinput(i).cuda() for i in j[0]], j[1]],training=True)
+                    
                 else:
-                    out = model([processinput(i).cuda() for i in j[:-1]],training=False)
-
+                    out=model([processinput(i).cuda() for i in j[:-1]],training=True)
                 if not (objective_args_dict is None):
                     objective_args_dict['reps']=model.reps
                     objective_args_dict['fused']=model.fuseout
                     objective_args_dict['inputs']=j[:-1]
-                    objective_args_dict['training']=False
+                    objective_args_dict['training']=True
                 loss=deal_with_objective(objective,out,j[-1],objective_args_dict)
-                totalloss += loss*len(j[-1])
-                #print(totalloss)
-                if task == "classification":
-                    pred.append(torch.argmax(out, 1))
-                elif task == "multilabel":
-                    pred.append(torch.sigmoid(out).round())
-                true.append(j[-1])
-                if auprc:
-                    #pdb.set_trace()
-                    sm=softmax(out)
-                    pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
-        if pred:
-            pred = torch.cat(pred, 0)
-        true = torch.cat(true, 0)
-        totals = true.shape[0]
-        valloss=totalloss/totals
-        if task == "classification":
-            acc = accuracy(true, pred)
-            print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
-                " acc: "+str(acc))
-            if acc > bestacc:
-                patience = 0
-                bestacc = acc
-                print("Saving Best")
-                torch.save(model, save)
-            else:
-                patience += 1
-        elif task == "multilabel":
-            f1_micro = f1_score(true, pred, average="micro")
-            f1_macro = f1_score(true, pred, average="macro")
-            print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
-                " f1_micro: "+str(f1_micro)+" f1_macro: "+str(f1_macro))
-            if f1_macro>bestf1:
-                patience = 0
-                bestf1=f1_macro
-                print("Saving Best")
-                torch.save(model,save)
-            else:
-                patience += 1
-        elif task == "regression":
-            print("Epoch "+str(epoch)+" valid loss: "+str(valloss.item()))
-            if valloss<bestvalloss:
-                patience = 0
-                bestvalloss=valloss
-                print("Saving Best")
-                torch.save(model,save)
-            else:
-                patience += 1
-        if early_stop and patience > 7:
-            break
-        if auprc:
-            print("AUPRC: "+str(AUPRC(pts)))
-        validendtime=time.time()
-        if validtime:
-            print("valid time:  "+str(validendtime-validstarttime))
-            print("Valid total: "+str(totals))
 
-        #scheduler.step()
+                totalloss += loss * len(j[-1])
+                totals+=len(j[-1])
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(model.parameters(), clip_val)
+                op.step()
+            print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
+            validstarttime=time.time()
+            if validtime:
+                print("train total: "+str(totals))
+            model.eval()
+            with torch.no_grad():
+                totalloss = 0.0
+                pred = []
+                true = []
+                pts = []
+                for j in valid_dataloader:
+                    if is_packed:
+                        out=model([[processinput(i).cuda() for i in j[0]], j[1]],training=False)
+                    else:
+                        out = model([processinput(i).cuda() for i in j[:-1]],training=False)
 
+                    if not (objective_args_dict is None):
+                        objective_args_dict['reps']=model.reps
+                        objective_args_dict['fused']=model.fuseout
+                        objective_args_dict['inputs']=j[:-1]
+                        objective_args_dict['training']=False
+                    loss=deal_with_objective(objective,out,j[-1],objective_args_dict)
+                    totalloss += loss*len(j[-1])
+                    #print(totalloss)
+                    if task == "classification":
+                        pred.append(torch.argmax(out, 1))
+                    elif task == "multilabel":
+                        pred.append(torch.sigmoid(out).round())
+                    true.append(j[-1])
+                    if auprc:
+                        #pdb.set_trace()
+                        sm=softmax(out)
+                        pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+            if pred:
+                pred = torch.cat(pred, 0)
+            true = torch.cat(true, 0)
+            totals = true.shape[0]
+            valloss=totalloss/totals
+            if task == "classification":
+                acc = accuracy(true, pred)
+                print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
+                    " acc: "+str(acc))
+                if acc > bestacc:
+                    patience = 0
+                    bestacc = acc
+                    print("Saving Best")
+                    torch.save(model, save)
+                else:
+                    patience += 1
+            elif task == "multilabel":
+                f1_micro = f1_score(true, pred, average="micro")
+                f1_macro = f1_score(true, pred, average="macro")
+                print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
+                    " f1_micro: "+str(f1_micro)+" f1_macro: "+str(f1_macro))
+                if f1_macro>bestf1:
+                    patience = 0
+                    bestf1=f1_macro
+                    print("Saving Best")
+                    torch.save(model,save)
+                else:
+                    patience += 1
+            elif task == "regression":
+                print("Epoch "+str(epoch)+" valid loss: "+str(valloss.item()))
+                if valloss<bestvalloss:
+                    patience = 0
+                    bestvalloss=valloss
+                    print("Saving Best")
+                    torch.save(model,save)
+                else:
+                    patience += 1
+            if early_stop and patience > 7:
+                break
+            if auprc:
+                print("AUPRC: "+str(AUPRC(pts)))
+            validendtime=time.time()
+            if validtime:
+                print("valid time:  "+str(validendtime-validstarttime))
+                print("Valid total: "+str(totals))
+    if track_complexity:
+        all_in_one_train(trainprocess,[model]+additional_optimizing_modules)
+    else:
+        trainprocess()
 
 def single_test(
     model,test_dataloader,is_packed=False,
