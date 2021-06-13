@@ -79,6 +79,4 @@ def trainprocess():
 all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best.pt').cuda()
-def testprocess():
-    test(model, test_loader, task='regression', criterion=XYMSELoss())
-all_in_one_test(testprocess, [model])
+test(model, test_loader, dataset='gentle push', task='regression', criterion=XYMSELoss())

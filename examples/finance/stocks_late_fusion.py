@@ -38,6 +38,5 @@ def trainprocess():
 all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best.pt').cuda()
-def testprocess():
-    test(model, test_loader, task='regression', criterion=nn.MSELoss())
-all_in_one_test(testprocess, [model])
+# dataset = 'finance F&B', finance tech', finance health'
+test(model, test_loader, dataset='finance F&B', task='regression', criterion=nn.MSELoss())

@@ -52,6 +52,5 @@ def trainprocess():
 all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best.pt').cuda()
-def testprocess():
-    test(model, test_loader, classification=False)
-all_in_one_test(testprocess, [model])
+# dataset = 'finance F&B', finance tech', finance health'
+test(model, test_loader, dataset='finance F&B', classification=False)

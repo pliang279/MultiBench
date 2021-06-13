@@ -24,5 +24,7 @@ head=MLP(n_latent,20,classes).cuda()
 elbo=MVAE_objective(2.0,[sigmloss1d,sigmloss1d],[1.0,1.0],annealing=0.0)
 argsdict={'decoders':decoders}
 train(encoders,fuse,head,traindata,validdata,30,decoders,optimtype=torch.optim.Adam,lr=0.0001,objective=elbo,objective_args_dict=argsdict)
-modele=torch.load('best.pt')
-test(model,testdata)
+
+model=torch.load('best.pt')
+# dataset = 'mimic mortality', 'mimic 1', 'mimic 7'
+test(model,testdata,dataset='mimic 7')

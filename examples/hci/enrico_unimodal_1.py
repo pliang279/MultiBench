@@ -26,11 +26,6 @@ def trainprocess():
 
 all_in_one_train(trainprocess, allmodules)
 
-print("Testing:")
+
 model=torch.load('best.pt').cuda()
-
-def testprocess():
-    test(encoder,head , testdata, modalnum=modalnum)
-
-all_in_one_test(testprocess, [model])
-
+test(encoder,head , testdata, dataset='enrico', modalnum=modalnum)

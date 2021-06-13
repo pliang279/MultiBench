@@ -30,11 +30,6 @@ def trainprocess():
 
 all_in_one_train(trainprocess, allmodules)
 
-print("Testing:")
+
 model=torch.load('best.pt').cuda()
-def testprocess():
-    test(model,testdata)
-
-all_in_one_test(testprocess, [model])
-
-
+test(model,testdata,dataset='enrico')
