@@ -4,6 +4,7 @@ from torch.nn import functional as F
 import pdb
 from torch.autograd import Variable
 
+
 # Simple concatenation on dim 1
 class Concat(nn.Module):
     def __init__(self):
@@ -15,13 +16,15 @@ class Concat(nn.Module):
             flattened.append(torch.flatten(modality, start_dim=1))
         return torch.cat(flattened, dim=1)
 
+
 # Simple Early concatenation on dim 2
-class ConcatEarly(torch.nn.Module):
+class ConcatEarly(nn.Module):
     def __init__(self):
         super(ConcatEarly, self).__init__()
 
     def forward(self, modalities, training=False):
         return torch.cat(modalities, dim=2)
+
 
 # Stacking modalities
 class Stack(nn.Module):
@@ -33,6 +36,7 @@ class Stack(nn.Module):
         for modality in modalities:
             flattened.append(torch.flatten(modality, start_dim=1))
         return torch.stack(flattened, dim=2)
+
 
 # Concatenation with a linear layer
 class ConcatWithLinear(nn.Module):
@@ -61,6 +65,7 @@ class FiLM(nn.Module):
         beta = self.b_net(modalities[self.bgen_modal])
         return gamma * modalities[self.base_modal] + beta
 
+
 # 3-modal Multiplicative Interactions
 class MultiplicativeInteractions3Modal(nn.Module):
     # input_dims: list or tuple of 3 integers indicating sizes of input
@@ -71,8 +76,10 @@ class MultiplicativeInteractions3Modal(nn.Module):
                 [input_dims[2], output_dim], 'matrix3D')
         self.b = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
                 output_dim, 'matrix')
+
     def forward(self, modalities, training=False):
         return torch.matmul(modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
+
 
 # Multiplicative Interactions for 2 Modal
 class MultiplicativeInteractions2Modal(nn.Module):
