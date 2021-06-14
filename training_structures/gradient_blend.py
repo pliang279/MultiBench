@@ -197,6 +197,7 @@ def train(unimodal_models,  multimodal_classification_head,
           num_epoch, lr, gb_epoch=20, v_rate=0.08, weight_decay=0.0, optimtype=torch.optim.SGD,
           finetune_epoch=25, classification=True, AUPRC=False, savedir='best.pt',track_complexity=True):
     def trainprocess():
+      nonlocal train_dataloader
       params = []
       for model in unimodal_models:
         params.extend(model.parameters())
