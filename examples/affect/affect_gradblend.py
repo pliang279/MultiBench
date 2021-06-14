@@ -14,8 +14,7 @@ from training_structures.gradient_blend import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
-traindata, validdata, _, robust_text, robust_vision, robust_audio, robust_all = \
-    get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
+traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
 
 # mosi/mosei
 encoders=[GRU(35,70,dropout=True,has_padding=True).cuda(), \
@@ -42,12 +41,4 @@ all_in_one_train(trainprocess, all_modules)
 
 print("Testing:")
 model = torch.load('gb.pt').cuda()
-
-
-test(model, robust_text)
-test(model, robust_vision)
-test(model, robust_audio)
-test(model, robust_all)
-
-
-
+test(model, testdata)
