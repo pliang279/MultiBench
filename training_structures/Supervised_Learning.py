@@ -244,13 +244,8 @@ def single_test(
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
             return {'F1 score (micro)': f1_score(true, pred, average="micro"), 'F1 score (macro)': f1_score(true, pred, average="macro")}
         elif task == "regression":
-            if torch.numel(testloss) != 1:
-                testloss = testloss.detach().cpu()
-                print('mse: ' + str(testloss))
-                return {'MSE': testloss.item()}
-            else:
-                print("mse: "+str(testloss.item()))
-                return {'MSE': testloss.item()}
+            print("mse: "+str(testloss.item()))
+            return {'MSE': testloss.item()}
 
 
 # model: saved checkpoint filename from train

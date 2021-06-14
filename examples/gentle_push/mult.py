@@ -25,7 +25,6 @@ from unimodals.common_models import Sequential, Transpose, Reshape, Identity
 from unimodals.gentle_push.head import Head
 from fusions.mult import MULTModel
 from training_structures.Supervised_Learning import train, test
-from xy_mse_loss import XYMSELoss
 
 Task = PushTask
 RobustTask = RobustPushTask
@@ -135,4 +134,4 @@ train(encoders, fusion, head,
       lr=0.00001)
 
 model = torch.load('best.pt').cuda()
-test(model, test_loaders, dataset='gentle push', task='regression', criterion=XYMSELoss())
+test(model, test_loaders, dataset='gentle push', task='regression', criterion=loss_state)
