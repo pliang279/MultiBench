@@ -14,8 +14,7 @@ from training_structures.unimodal import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
-traindata, validdata, _, robust_text, robust_vision, robust_audio, robust_all = \
-    get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
+traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
 
 
 modal_num = 2
@@ -50,11 +49,4 @@ all_in_one_train(trainprocess, all_modules)
 print("Testing:")
 encoder=torch.load('encoder.pt').cuda()
 head=torch.load('head.pt').cuda()
-
-
-test(encoder, head, robust_text, True, "regression", criterion=torch.nn.L1Loss())
-test(encoder, head, robust_vision, True, "regression", criterion=torch.nn.L1Loss())
-test(encoder, head, robust_audio, True, "regression", criterion=torch.nn.L1Loss())
-test(encoder, head, robust_all, True, "regression", criterion=torch.nn.L1Loss())
-
-
+test(encoder, head, testdata, True, "regression", criterion=torch.nn.L1Loss())
