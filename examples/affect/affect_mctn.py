@@ -13,8 +13,7 @@ from training_structures.Supervised_Learning import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
-traindata, validdata, _, robust_text, robust_vision, robust_audio, robust_all = \
-    get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
+traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
 
 max_seq = 20
 feature_dim = 300
@@ -46,6 +45,4 @@ def trainprocess():
 all_in_one_train(trainprocess, allmodules)
 
 model=torch.load('best_mctn.pt').cuda()
-
-
 test(model, testdata, max_seq_len=20)
