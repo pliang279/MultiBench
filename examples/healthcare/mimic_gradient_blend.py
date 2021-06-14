@@ -11,7 +11,7 @@ import torch
 filename = 'bbest10.pt'
 
 #get dataloader for icd9 classification task 7
-traindata, validdata, testdata = get_dataloader(-1, imputed_path='datasets/mimic/im.pk')
+traindata, validdata, testdata = get_dataloader(-1, imputed_path='/home/pliang/yiwei/im.pk')
 
 #build encoders, head and fusion layer
 encoders = [MLP(5, 10, 10).cuda(), GRU(12, 30, flatten=True).cuda()]
