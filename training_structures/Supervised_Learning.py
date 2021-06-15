@@ -268,7 +268,7 @@ def test(
                 curve.append(v)
                 robustness_curve[k] = curve 
         for measure, robustness_result in robustness_curve.items():
-            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
+            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result, robustness_key))))
             robustness_key = '{} {}'.format(dataset, noisy_modality)
             if len(robustness_curve) != 1:
                 robustness_key = '{} {}'.format(robustness_key, measure)

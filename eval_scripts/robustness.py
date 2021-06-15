@@ -3,20 +3,59 @@ from matplotlib.ticker import FormatStrFormatter
 import numpy as np
 
 
-def relative_robustness(robustness_result):
+def relative_robustness(robustness_result, task):
+    return get_robustness_metric(robustness_result, task, 'relative')
+
+
+def effective_robustness(robustness_result, task):
+    return get_robustness_metric(robustness_result, task, 'effective')
+
+
+def get_robustness_metric(robustness_result, task, metric):
+    if metric == 'effective' and task not in robustness['LF']:
+        return "Invalid example name!"
+    else:
+        result = dict()
+        if metric == 'relative':
+            helper = relative_robustness_helper
+        elif metric == 'effective':
+            helper = effective_robustness_helper
+        my_method = helper(robustness_result, task)
+        for method in list(robustness.keys()):
+            if not method.endswith('Transformer'):
+                for t in list(robustness[method].keys()):
+                    if t == task:
+                        if (method == 'EF' or method == 'LF') and task in robustness[method+'-Transformer']:
+                            result[method] = helper((np.array(robustness[method][task])+np.array(robustness[method+'-Transformer'][task]))/2, task)
+                        else:
+                            result[method][task] = helper(robustness[method][task], task)
+        result['my method'] = my_method
+        return maxmin_normalize(result, task)
+
+
+def relative_robustness_helper(robustness_result):
     area = 0
     for i in range(len(robustness_result)-1):
         area += (robustness_result[i] + robustness_result[i+1]) * 0.1 / 2
     return area
 
-def effective_robustness(robustness_result, task):
-    if task not in robustness['LF']:
-        return "Invalid example name!"
-    else:
-        f = np.array(robustness_result)
-        lf = np.array(robustness['LF'][task])
-        beta_f = lf + (f[0] - lf[0])
-        return np.sum(f - beta_f)
+def effective_robustness_helper(robustness_result, task):
+    f = np.array(robustness_result)
+    lf = np.array(robustness['LF'][task])
+    beta_f = lf + (f[0] - lf[0])
+    return np.sum(f - beta_f)
+
+def maxmin_normalize(result, task):
+    tmp = []
+    method2idx = dict()
+    for i, method in enumerate(list(result.keys())):
+        method2idx[method] = i
+        tmp.append(result[method])
+    tmp = np.array(tmp)
+    if task.startswith('finance'):
+        tmp = -1 * tmp
+    tmp = (tmp - np.min(tmp)) / (np.max(tmp) - np.min(tmp))
+    return tmp[method2idx['my method']]
     
 
 def single_plot(robustness_result, task, xlabel, ylabel, fig_name, method):
