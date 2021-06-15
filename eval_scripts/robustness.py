@@ -28,12 +28,12 @@ def get_robustness_metric(robustness_result, task, metric):
                         if (method == 'EF' or method == 'LF') and task in robustness[method+'-Transformer']:
                             result[method] = helper((np.array(robustness[method][task])+np.array(robustness[method+'-Transformer'][task]))/2, task)
                         else:
-                            result[method][task] = helper(robustness[method][task], task)
+                            result[method] = helper(robustness[method][task], task)
         result['my method'] = my_method
         return maxmin_normalize(result, task)
 
 
-def relative_robustness_helper(robustness_result):
+def relative_robustness_helper(robustness_result, task):
     area = 0
     for i in range(len(robustness_result)-1):
         area += (robustness_result[i] + robustness_result[i+1]) * 0.1 / 2

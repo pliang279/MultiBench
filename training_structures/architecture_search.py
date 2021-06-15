@@ -194,8 +194,8 @@ def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=Fa
                 curve.append(v)
                 robustness_curve[k] = curve 
         for measure, robustness_result in robustness_curve.items():
-            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result, robustness_key))))
             robustness_key = '{} {}'.format(dataset, noisy_modality)
+            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result, robustness_key))))
             if len(robustness_curve) != 1:
                 robustness_key = '{} {}'.format(robustness_key, measure)
             print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, robustness_key))))
