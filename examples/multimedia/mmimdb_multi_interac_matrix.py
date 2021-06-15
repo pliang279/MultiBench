@@ -14,7 +14,6 @@ traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5',
 
 encoders=[MaxOut_MLP(512, 512, 300, linear_layer=False), MaxOut_MLP(512, 1024, 4096, 512, False)]
 head= Linear(1024, 23).cuda()
-
 fusion=MultiplicativeInteractions2Modal([512,512],1024,'matrix').cuda()
 
 train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multilabel",\
