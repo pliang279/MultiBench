@@ -68,7 +68,7 @@ To add a new algorithm:
 2. see examples/ and write an example training python file following the existing examples
 3. check that calling the added functions and running a simple training script works
 4. Make sure your new modules are well documented by comments in its input and output format and shapes
- 
+
 
 ## Experiments
 
@@ -206,7 +206,7 @@ Modality-specific and multimodal imperfection implementations are under `robustn
 All robustness experiments are now integrated into the standard training/testing scripts.
 
 We visualize the experiment results using two metrics, relative and effective robustness, as well as a combination of both. These plots indicate the tradeoff between accuracy and robustness:
-![](/deprecated_examples_robust/robustness_plots.png)
+![](/images/robustness_plots.png)
 
 ## References
 
