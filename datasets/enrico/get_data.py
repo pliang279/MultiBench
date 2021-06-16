@@ -31,7 +31,7 @@ def add_screen_elements(tree, element_list):
 
 
 class EnricoDataset(Dataset):
-    def __init__(self, data_dir, noise_level, img_noise=False, wireframe_noise=False, img_dim_x=128, img_dim_y=256, random_seed=42, train_split=0.65, val_split=0.15, test_split=0.2, normalize_image=False, seq_len=64):
+    def __init__(self, data_dir, mode="train", noise_level=0, img_noise=False, wireframe_noise=False, img_dim_x=128, img_dim_y=256, random_seed=42, train_split=0.65, val_split=0.15, test_split=0.2, normalize_image=False, seq_len=64):
         super(EnricoDataset, self).__init__()
         self.noise_level = noise_level
         self.img_noise = img_noise
@@ -58,9 +58,18 @@ class EnricoDataset(Dataset):
         # shuffle and create splits
         random.Random(random_seed).shuffle(keys)
 
-        # test split is at the end
-        start_index = int(len(example_list) * (train_split + val_split))
-        stop_index = len(example_list)
+        if mode == "train":
+            # train split is at the front
+            start_index = 0
+            stop_index = int(len(example_list) * train_split)
+        elif mode == "val":
+            # val split is in the middle
+            start_index = int(len(example_list) * train_split)
+            stop_index = int(len(example_list) * (train_split + val_split))
+        elif mode == "test":
+            # test split is at the end
+            start_index = int(len(example_list) * (train_split + val_split))
+            stop_index = len(example_list)
 
         # only keep examples in the current split
         keys = keys[start_index:stop_index]

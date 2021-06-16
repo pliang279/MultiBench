@@ -288,12 +288,22 @@ def get_dataloader(
         robust_timeseries.append(
             DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers,
                        batch_size=batch_size, collate_fn=process))
+<<<<<<< HEAD
     test_robust_data = dict()
     test_robust_data['robust_text'] = robust_text
     test_robust_data['robust_vision'] = robust_vision
     test_robust_data['robust_audio'] = robust_audio
     test_robust_data['robust_timeseries'] = robust_timeseries
     return train, valid, test_robust_data
+=======
+    test = dict()
+    test['text'] = robust_text
+    test['image'] = robust_vision
+    test['audio'] = robust_audio
+    test['multimodal'] = robust_timeseries
+
+    return train, valid, test
+>>>>>>> dd149b379fd66c54fb60a37ec2b1fa514ed97ddc
 
 
 def process(inputs: List):

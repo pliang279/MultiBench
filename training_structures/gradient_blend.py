@@ -195,122 +195,127 @@ def calcAUPRC(pts):
 def train(unimodal_models,  multimodal_classification_head,
           unimodal_classification_heads, fuse, train_dataloader, valid_dataloader,
           num_epoch, lr, gb_epoch=20, v_rate=0.08, weight_decay=0.0, optimtype=torch.optim.SGD,
-          finetune_epoch=25, classification=True, AUPRC=False, savedir='best.pt'):
-  params = []
-  for model in unimodal_models:
-    params.extend(model.parameters())
-  for model in unimodal_classification_heads:
-    params.extend(model.parameters())
-  params.extend(multimodal_classification_head.parameters())
-  params.extend(fuse.parameters())
-  optim = optimtype(params, lr=lr, weight_decay=weight_decay)
-  train_datas = train_dataloader.dataset
-  splitloc = int(len(train_datas)*v_rate)
-  inds = list(range(len(train_datas)))
-  train_inds = inds[splitloc:]
-  v_inds = inds[0:splitloc]
-  # train_data = train_datas[splitloc:]
-  # v_data = train_datas[0:splitloc]
-  train_data = Subset(train_datas, train_inds)
-  v_data = Subset(train_datas, v_inds)
-  train_dataloader = DataLoader(
-      train_data, shuffle=True, num_workers=8, batch_size=train_dataloader.batch_size)
-  tv_dataloader = DataLoader(
-      v_data, shuffle=False, num_workers=8, batch_size=train_dataloader.batch_size)
-  finetunehead = copy.deepcopy(multimodal_classification_head).cuda()
-  fusehead = copy.deepcopy(fuse).cuda()
-  params = list(finetunehead.parameters())
-  if fuse.parameters() is not None:
-      params.extend(list(fuse.parameters()))
-  optimi = optimtype(params, lr=lr, weight_decay=weight_decay)
-  bestvalloss = 10000.0
-  for i in range(num_epoch//gb_epoch):
-    #"""
-    weights = gb_estimate(unimodal_models,  multimodal_classification_head, fuse,
-                          unimodal_classification_heads, train_dataloader, gb_epoch, train_dataloader.batch_size, tv_dataloader, lr, weight_decay, optimtype)
-    #"""
-    #weights=(1.0,1.0,1.0)
-    print("epoch "+str(i*gb_epoch)+" weights: "+str(weights))
-    for jj in range(gb_epoch):
-      totalloss = 0.0
-      for j in train_dataloader:
-        train_x = [x.float().cuda() for x in j[:-1]]
-        train_y = j[-1].cuda()
-        optim.zero_grad()
-        outs = multimodalcompute(unimodal_models, train_x)
-        catout = fuse(outs, training=True)
-        blendloss = criterion(multimodal_classification_head(
-            catout, training=True), train_y.squeeze())*weights[-1]
-        for ii in range(len(unimodal_models)):
-          loss = criterion(unimodal_classification_heads[ii](
-              outs[ii]), train_y.squeeze())
-          blendloss += loss * weights[ii]
-        totalloss += blendloss*len(j[0])
-        blendloss.backward()
-        optim.step()
-      print("epoch "+str(jj+i*gb_epoch)+" blend train loss: " +
-            str(totalloss/len(train_data)))
-    #finetunes classification head
-    finetunetrains = []
-    with torch.no_grad():
-      for j in train_dataloader:
-        train_x = [x.float().cuda() for x in j[:-1]]
-        train_y = j[-1].cuda()
-        outs = multimodalcompute(unimodal_models, train_x)
-        for iii in range(len(train_y)):
-          aa = [x[iii].cpu() for x in outs]
-          #print(aa)
-          aa.append(train_y[iii].cpu())
-          #print(aa)
-          finetunetrains.append(aa)
-    print("Length of ftt_dataloader: "+str(len(finetunetrains)))
-    ftt_dataloader = DataLoader(
-        finetunetrains, shuffle=True, num_workers=8, batch_size=train_dataloader.batch_size)
-    for jj in range(finetune_epoch):
-      totalloss = 0.0
-      for j in ftt_dataloader:
-        optimi.zero_grad()
-        train_x = [x.float().cuda() for x in j[:-1]]
-        train_y = j[-1].cuda()
-        blendloss = criterion(finetunehead(
-            fusehead(train_x, training=True), training=True), train_y.squeeze())
-        totalloss += blendloss * len(j[0])
-        blendloss.backward()
-        optimi.step()
-      print("finetune train loss: "+str(totalloss/len(train_data)))
-      with torch.no_grad():
-        totalloss = 0.0
-        total = 0
-        corrects = 0
-        auprclist = []
-        for j in valid_dataloader:
-          valid_x = [x.float().cuda() for x in j[:-1]]
-          valid_y = j[-1].cuda()
-          outs = multimodalcompute(unimodal_models, valid_x)
-          catout = fusehead(outs, training=False)
-          predicts = finetunehead(catout, training=False)
-          blendloss = criterion(predicts, valid_y.squeeze())
-          totalloss += blendloss*len(j[0])
-          predictlist = predicts.tolist()
-          for ii in range(len(j[0])):
-            total += 1
+          finetune_epoch=25, classification=True, AUPRC=False, savedir='best.pt',track_complexity=True):
+    def trainprocess():
+      nonlocal train_dataloader
+      params = []
+      for model in unimodal_models:
+        params.extend(model.parameters())
+      for model in unimodal_classification_heads:
+        params.extend(model.parameters())
+      params.extend(multimodal_classification_head.parameters())
+      params.extend(fuse.parameters())
+      optim = optimtype(params, lr=lr, weight_decay=weight_decay)
+      train_datas = train_dataloader.dataset
+      splitloc = int(len(train_datas)*v_rate)
+      inds = list(range(len(train_datas)))
+      train_inds = inds[splitloc:]
+      v_inds = inds[0:splitloc]
+      # train_data = train_datas[splitloc:]
+      # v_data = train_datas[0:splitloc]
+      train_data = Subset(train_datas, train_inds)
+      v_data = Subset(train_datas, v_inds)
+      train_dataloader = DataLoader(
+          train_data, shuffle=True, num_workers=8, batch_size=train_dataloader.batch_size)
+      tv_dataloader = DataLoader(
+          v_data, shuffle=False, num_workers=8, batch_size=train_dataloader.batch_size)
+      finetunehead = copy.deepcopy(multimodal_classification_head).cuda()
+      fusehead = copy.deepcopy(fuse).cuda()
+      params = list(finetunehead.parameters())
+      if fuse.parameters() is not None:
+          params.extend(list(fuse.parameters()))
+      optimi = optimtype(params, lr=lr, weight_decay=weight_decay)
+      bestvalloss = 10000.0
+      for i in range(num_epoch//gb_epoch):
+        #"""
+        weights = gb_estimate(unimodal_models,  multimodal_classification_head, fuse,
+                              unimodal_classification_heads, train_dataloader, gb_epoch, train_dataloader.batch_size, tv_dataloader, lr, weight_decay, optimtype)
+        #"""
+        #weights=(1.0,1.0,1.0)
+        print("epoch "+str(i*gb_epoch)+" weights: "+str(weights))
+        for jj in range(gb_epoch):
+          totalloss = 0.0
+          for j in train_dataloader:
+            train_x = [x.float().cuda() for x in j[:-1]]
+            train_y = j[-1].cuda()
+            optim.zero_grad()
+            outs = multimodalcompute(unimodal_models, train_x)
+            catout = fuse(outs, training=True)
+            blendloss = criterion(multimodal_classification_head(
+                catout, training=True), train_y.squeeze())*weights[-1]
+            for ii in range(len(unimodal_models)):
+              loss = criterion(unimodal_classification_heads[ii](
+                  outs[ii]), train_y.squeeze())
+              blendloss += loss * weights[ii]
+            totalloss += blendloss*len(j[0])
+            blendloss.backward()
+            optim.step()
+          print("epoch "+str(jj+i*gb_epoch)+" blend train loss: " +
+                str(totalloss/len(train_data)))
+        #finetunes classification head
+        finetunetrains = []
+        with torch.no_grad():
+          for j in train_dataloader:
+            train_x = [x.float().cuda() for x in j[:-1]]
+            train_y = j[-1].cuda()
+            outs = multimodalcompute(unimodal_models, train_x)
+            for iii in range(len(train_y)):
+              aa = [x[iii].cpu() for x in outs]
+              #print(aa)
+              aa.append(train_y[iii].cpu())
+              #print(aa)
+              finetunetrains.append(aa)
+        print("Length of ftt_dataloader: "+str(len(finetunetrains)))
+        ftt_dataloader = DataLoader(
+            finetunetrains, shuffle=True, num_workers=8, batch_size=train_dataloader.batch_size)
+        for jj in range(finetune_epoch):
+          totalloss = 0.0
+          for j in ftt_dataloader:
+            optimi.zero_grad()
+            train_x = [x.float().cuda() for x in j[:-1]]
+            train_y = j[-1].cuda()
+            blendloss = criterion(finetunehead(
+                fusehead(train_x, training=True), training=True), train_y.squeeze())
+            totalloss += blendloss * len(j[0])
+            blendloss.backward()
+            optimi.step()
+          print("finetune train loss: "+str(totalloss/len(train_data)))
+          with torch.no_grad():
+            totalloss = 0.0
+            total = 0
+            corrects = 0
+            auprclist = []
+            for j in valid_dataloader:
+              valid_x = [x.float().cuda() for x in j[:-1]]
+              valid_y = j[-1].cuda()
+              outs = multimodalcompute(unimodal_models, valid_x)
+              catout = fusehead(outs, training=False)
+              predicts = finetunehead(catout, training=False)
+              blendloss = criterion(predicts, valid_y.squeeze())
+              totalloss += blendloss*len(j[0])
+              predictlist = predicts.tolist()
+              for ii in range(len(j[0])):
+                total += 1
+                if AUPRC:
+                  predictval = softmax(predicts[ii])
+                  auprclist.append((predictval[1].item(), valid_y[ii].item()))
+                if classification:
+                  if predictlist[ii].index(max(predictlist[ii])) == valid_y[ii]:
+                    corrects += 1
+            valoss = totalloss/total
+            print("epoch "+str((i+1)*gb_epoch-1)+" valid loss: "+str(totalloss/total) +
+                  ((" acc: "+str(float(corrects)/total)) if classification else ''))
             if AUPRC:
-              predictval = softmax(predicts[ii])
-              auprclist.append((predictval[1].item(), valid_y[ii].item()))
-            if classification:
-              if predictlist[ii].index(max(predictlist[ii])) == valid_y[ii]:
-                corrects += 1
-        valoss = totalloss/total
-        print("epoch "+str((i+1)*gb_epoch-1)+" valid loss: "+str(totalloss/total) +
-              ((" acc: "+str(float(corrects)/total)) if classification else ''))
-        if AUPRC:
-          print("With AUPRC: "+str(calcAUPRC(auprclist)))
-        if valoss < bestvalloss:
-            bestvalloss = valoss
-            print("Saving best")
-            torch.save(completeModule(unimodal_models,
-                                      fusehead, finetunehead), savedir)
-
+              print("With AUPRC: "+str(calcAUPRC(auprclist)))
+            if valoss < bestvalloss:
+                bestvalloss = valoss
+                print("Saving best")
+                torch.save(completeModule(unimodal_models,
+                                          fusehead, finetunehead), savedir)
+    if track_complexity:
+        all_in_one_train(trainprocess,unimodal_models+[multimodal_classification_head,fuse]+unimodal_classification_heads)
+    else:
+        trainprocess()
 
 def single_test(model, test_dataloader, auprc=False, classification=True):
     with torch.no_grad():
@@ -357,9 +362,8 @@ def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=Fa
         curve.append(v)
         robustness_curve[k] = curve 
     for measure, robustness_result in robustness_curve.items():
-      print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
-      robustness_key = dataset
       robustness_key = '{} {}'.format(dataset, noisy_modality)
+      print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result, robustness_key))))
       if len(robustness_curve) != 1:
         robustness_key = '{} {}'.format(robustness_key, measure)
       print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, robustness_key))))
