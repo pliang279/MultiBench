@@ -14,8 +14,12 @@ from training_structures.MCTN_Level2 import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+<<<<<<< HEAD
 traindata, validdata, test_robust = \
     get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
+=======
+traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
+>>>>>>> dd149b379fd66c54fb60a37ec2b1fa514ed97ddc
 
 max_seq = 20
 feature_dim = 300
@@ -46,8 +50,13 @@ def trainprocess():
         epoch=10, model_save='best_mctn.pt')
 
 
+<<<<<<< HEAD
 all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best_mctn.pt').cuda()
 
 test(model, test_robust, max_seq_len=20)
+=======
+model=torch.load('best_mctn.pt').cuda()
+test(model, testdata, max_seq_len=20)
+>>>>>>> dd149b379fd66c54fb60a37ec2b1fa514ed97ddc

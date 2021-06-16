@@ -14,15 +14,12 @@ import torch.optim as optim
 
 import unimodals.gentle_push.layers as layers
 
-from torch.utils.data import DataLoader
-
-from datasets.gentle_push.data_loader import SubsequenceDataset, PushTask
+from datasets.gentle_push.data_loader import PushTask
 from unimodals.common_models import Sequential, Transpose, Reshape, MLP
 from unimodals.gentle_push.head import Head
 from fusions.common_fusions import ConcatWithLinear
 from training_structures.Supervised_Learning import train, test
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
-from xy_mse_loss import XYMSELoss
+
 
 Task = PushTask
 modalities = ['gripper_sensors']
@@ -35,46 +32,23 @@ dataset_args = Task.get_dataset_args(args)
 
 fannypack.data.set_cache_path('datasets/gentle_push/cache')
 
-# Load trajectories into memory
-train_trajectories = Task.get_train_trajectories(**dataset_args)
-val_trajectories = Task.get_eval_trajectories(**dataset_args)
-test_trajectories = Task.get_test_trajectories(**dataset_args)
-
-train_loader = DataLoader(
-    SubsequenceDataset(train_trajectories, 16, modalities),
-    batch_size=32,
-    shuffle=True,
-    drop_last=True,
-)
-val_loader = DataLoader(
-    SubsequenceDataset(val_trajectories, 16, modalities),
-    batch_size=32,
-    shuffle=True,
-)
-test_loader = DataLoader(
-    SubsequenceDataset(test_trajectories, 16, modalities),
-    batch_size=32,
-    shuffle=False,
-)
+train_loader, val_loader, test_loader = Task.get_dataloader(16, modalities, batch_size=32, drop_last=True)
 
 encoders = [
     Sequential(Transpose(0, 1), layers.observation_sensors_layers(64)),
 ]
 fusion = ConcatWithLinear(64, 64, concat_dim=2)
 head = Sequential(Head(), Transpose(0, 1))
-allmodules = [*encoders, fusion, head]
 optimtype = optim.Adam
 loss_state = nn.MSELoss()
 
-def trainprocess():
-    train(encoders, fusion, head,
-          train_loader, val_loader,
-          20,
-          task='regression',
-          optimtype=optimtype,
-          objective=loss_state,
-          lr=0.00001)
-all_in_one_train(trainprocess, allmodules)
+train(encoders, fusion, head,
+      train_loader, val_loader,
+      20,
+      task='regression',
+      optimtype=optimtype,
+      objective=loss_state,
+      lr=0.00001)
 
 model = torch.load('best.pt').cuda()
-test(model, test_loader, dataset='gentle push', task='regression', criterion=XYMSELoss())
+test(model, test_loader, dataset='gentle push', task='regression', criterion=loss_state)
