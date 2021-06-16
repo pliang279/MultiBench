@@ -10,7 +10,7 @@ from datasets.imdb.get_data import get_dataloader
 from unimodals.common_models import MaxOut_MLP, Identity
 
 filename = "best_ef.pt"
-traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', '../video/mmimdb', vgg=True, batch_size=128)
+traindata, validdata, testdata = get_dataloader("../video/multimodal_imdb.hdf5", "../video/mmimdb", vgg=True, batch_size=128)
 
 encoders=[Identity(), Identity()]
 head=MaxOut_MLP(23, 512, 4396).cuda()
@@ -21,4 +21,4 @@ train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multi
 
 print("Testing:")
 model=torch.load(filename).cuda()
-test(model,testdata,dataset='mmimdb',criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
+test(model,testdata,method_name="ef",dataset="imdb",criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")

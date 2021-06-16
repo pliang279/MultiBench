@@ -10,7 +10,7 @@ from unimodals.common_models import MLP
 
 encoderfile = "encoder_text.pt"
 headfile = "head_text.pt"
-traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', '../video/mmimdb', vgg=True, batch_size=128)
+traindata, validdata, testdata = get_dataloader("../video/multimodal_imdb.hdf5", "../video/mmimdb", vgg=True, batch_size=128)
 
 encoders=MLP(300, 512, 512).cuda()
 head=MLP(512,512,23).cuda()
@@ -21,4 +21,4 @@ train(encoders,head,traindata,validdata,1000, early_stop=True,task="multilabel",
 print("Testing:")
 encoder=torch.load(encoderfile).cuda()
 head=torch.load(headfile).cuda()
-test(encoder,head,testdata,task="multilabel", modalnum=0)
+test(encoder,head,testdata,"imdb","unimodal_image",task="multilabel", modalnum=0)

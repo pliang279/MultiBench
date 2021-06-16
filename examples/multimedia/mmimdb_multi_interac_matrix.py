@@ -9,8 +9,8 @@ from fusions.common_fusions import MultiplicativeInteractions2Modal
 from datasets.imdb.get_data import get_dataloader
 from unimodals.common_models import MaxOut_MLP, Linear
 
-filename = "best_mfm.pt"
-traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', '../video/mmimdb', vgg=True, batch_size=128)
+filename = "best_mim.pt"
+traindata, validdata, testdata = get_dataloader("../video/multimodal_imdb.hdf5", "../video/mmimdb", vgg=True, batch_size=128)
 
 encoders=[MaxOut_MLP(512, 512, 300, linear_layer=False), MaxOut_MLP(512, 1024, 4096, 512, False)]
 head= Linear(1024, 23).cuda()
@@ -21,6 +21,6 @@ train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multi
 
 print("Testing:")
 model=torch.load(filename).cuda()
-test(model,testdata,dataset='mmimdb',criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
+test(model,testdata,method_name="MIM",dataset="imdb",criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
 
 
