@@ -212,9 +212,9 @@ def get_dataloader(
     valid = DataLoader(Affectdataset(processed_dataset['valid'], flatten_time_series, task=task), \
                        shuffle=False, num_workers=num_workers, batch_size=batch_size, \
                        collate_fn=process)
-    test = DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task), \
-                      shuffle=False, num_workers=num_workers, batch_size=batch_size, \
-                      collate_fn=process)
+    # test = DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task), \
+    #                   shuffle=False, num_workers=num_workers, batch_size=batch_size, \
+    #                   collate_fn=process)
 
     vids = [id for id in alldata['test']['id']]
 
@@ -288,13 +288,13 @@ def get_dataloader(
         robust_timeseries.append(
             DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers,
                        batch_size=batch_size, collate_fn=process))
-    test = dict()
-    test['text'] = robust_text
-    test['image'] = robust_vision
-    test['audio'] = robust_audio
-    test['multimodal'] = robust_timeseries
 
-    return train, valid, test
+    test_robust_data = dict()
+    test_robust_data['robust_text'] = robust_text
+    test_robust_data['robust_vision'] = robust_vision
+    test_robust_data['robust_audio'] = robust_audio
+    test_robust_data['robust_timeseries'] = robust_timeseries
+    return train, valid, test_robust_data
 
 
 def process(inputs: List):
@@ -323,7 +323,7 @@ def process(inputs: List):
 
 
 if __name__ == '__main__':
-    train, valid, test, robust_text, robust_vision, robust_audio, robust_all = get_dataloader('mosi_raw.pkl')
+    train, valid, test, robust_text, robust_vision, robust_audio, robust_all = get_dataloader('/home/pliang/leslie/test/MultiBench/datasets/affect/mosi_raw.pkl')
 
     for batch in robust_all[0]:
         print(batch)
