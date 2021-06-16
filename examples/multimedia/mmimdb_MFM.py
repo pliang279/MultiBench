@@ -12,7 +12,7 @@ from datasets.imdb.get_data import get_dataloader
 from unimodals.common_models import Linear, MLP, MaxOut_MLP
 
 filename = "best_mfm.pt"
-traindata, validdata, testdata = get_dataloader('../video/multimodal_imdb.hdf5', '../video/mmimdb', vgg=True, batch_size=128)
+traindata, validdata, testdata = get_dataloader("../video/multimodal_imdb.hdf5", "../video/mmimdb", vgg=True, batch_size=128)
 
 classes=23
 n_latent=512
@@ -27,8 +27,8 @@ intermediates=[MLP(n_latent,n_latent//2,n_latent//2).cuda(),\
 recon_loss=MFM_objective(2.0, [sigmloss1d,sigmloss1d], [1.0,1.0])
 
 train(encoders,fuse,head,traindata,validdata,1000, decoders+intermediates, early_stop=True,task="multilabel", \
-    objective_args_dict={'decoders':decoders,'intermediates':intermediates},save=filename, optimtype=torch.optim.AdamW,lr=5e-3,weight_decay=0.01, objective=recon_loss)
+    objective_args_dict={"decoders":decoders,"intermediates":intermediates},save=filename, optimtype=torch.optim.AdamW,lr=5e-3,weight_decay=0.01, objective=recon_loss)
 
 print("Testing:")
 model=torch.load(filename).cuda()
-test(model,testdata,dataset='mmimdb',criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
+test(model,testdata,method_name="MFM",dataset="imdb",criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")
