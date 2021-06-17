@@ -105,11 +105,12 @@ def train(
                     objective_args_dict['fused']=model.fuseout
                     objective_args_dict['inputs']=j[:-1]
                     objective_args_dict['training']=True
+                    objective_args_dict['model']=model
                 loss=deal_with_objective(objective,out,j[-1],objective_args_dict)
 
                 totalloss += loss * len(j[-1])
                 totals+=len(j[-1])
-                loss.backward()
+
                 torch.nn.utils.clip_grad_norm_(model.parameters(), clip_val)
                 op.step()
             print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
