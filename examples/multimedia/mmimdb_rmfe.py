@@ -11,7 +11,7 @@ from datasets.imdb.get_data import get_dataloader
 from unimodals.common_models import Linear, MaxOut_MLP
 
 filename = "best_reg.pt"
-traindata, validdata, testdata = get_dataloader("../video/multimodal_imdb.hdf5", "../video/mmimdb", vgg=True, batch_size=128, skip_process=True, num_workers=0)
+traindata, validdata, testdata = get_dataloader("../video/multimodal_imdb.hdf5", "../video/mmimdb", vgg=True, batch_size=128)
 
 encoders=[MaxOut_MLP(512, 128, 300, linear_layer=False), MaxOut_MLP(512, 1024, 4096, 128, False)]
 head= Linear(256, 23).cuda()
