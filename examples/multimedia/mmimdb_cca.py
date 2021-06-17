@@ -18,7 +18,7 @@ encoders=[MaxOut_MLP(512, 512, 300, outdim, False), MaxOut_MLP(512, 1024, 4096, 
 head=Linear(2*outdim, 23).cuda()
 fusion=Concat().cuda()
 
-train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multilabel", save=filename,\
+train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multilabel", save=filename, objective_args_dict={},\
      optimtype=torch.optim.AdamW,lr=1e-2,weight_decay=0.01, objective=CCA_objective(outdim, criterion=torch.nn.BCEWithLogitsLoss()))
 
 print("Testing:")

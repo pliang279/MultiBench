@@ -242,7 +242,7 @@ def single_test(
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
-            return {'F1 score (micro)': f1_score(true, pred, average="micro"), 'F1 score (macro)': f1_score(true, pred, average="macro")}
+            return {'micro': f1_score(true, pred, average="micro"), 'macro': f1_score(true, pred, average="macro")}
         elif task == "regression":
             print("mse: "+str(testloss.item()))
             return {'MSE': testloss.item()}
