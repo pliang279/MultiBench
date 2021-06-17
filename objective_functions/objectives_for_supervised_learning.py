@@ -120,11 +120,16 @@ def RefNet_objective(ref_weight,criterion=torch.nn.CrossEntropyLoss(),input_to_f
 # reg_weight: weight of regularization term
 # criterion: criterion for supervised loss
 # is_packed: packed for LSTM or not
-def RMFE_object(model, reg_weight=1e-10, criterion=torch.nn.BCEWithLogitsLoss(), is_packed=False):
-    lossfunc = RegularizationLoss(criterion, model, reg_weight, is_packed)
-    def actualfunc(pred, truth, args):
+def RMFE_object(reg_weight=1e-10, criterion=torch.nn.BCEWithLogitsLoss(), is_packed=False):
+    def regfunc(pred, truth, args):
+        model=args['model']
+        lossfunc = RegularizationLoss(criterion, model, reg_weight, is_packed)
         ce_loss = criterioning(pred,truth,criterion)
         inps = args['inputs']
-        reg_loss = lossfunc(pred, [i.cuda() for i in inps])
+        try:
+            reg_loss = lossfunc(pred, [i.cuda() for i in inps])
+        except RuntimeError:
+            print("No reg loss for validation")
+            reg_loss = 0
         return ce_loss+reg_loss
-    return actualfunc
+    return regfunc
