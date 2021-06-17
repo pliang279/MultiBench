@@ -1,4 +1,6 @@
 import torch
+import torchvision
+
 from torch import nn
 from torch.nn import functional as F
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
@@ -535,3 +537,25 @@ class DAN(torch.nn.Module):
             if self.dropout:
                 pooled = F.dropout(pooled, p=self.dropoutp, training=training)
         return pooled
+
+
+class ResNetLSTMEnc(torch.nn.Module):
+    def __init__(self, hiddim, dropout=False, dropoutp=0.1):
+        super(ResNetLSTMEnc,self).__init__()
+        self.enc = torchvision.models.resnet18(pretrained=True)
+        self.lstm = nn.LSTM(1000, hiddim, batch_first=True)
+        self.dropoutp=dropoutp
+        self.dropout=dropout
+
+    def forward(self,x,training=True): # x is (cbatch_size, 3, 150, 112, 112)
+        cbatch_size = x.shape[0]
+        x = x.permute([0, 2, 1, 3, 4]) # (cbatch_size, 150, 3, 112, 112)
+        x = x.reshape(-1, 3, 112, 112) # (cbatch_size*150, 3, 112, 112)
+        x = self.enc(x) # (cbatch_size*150, 1000)
+        x = x.reshape(cbatch_size, -1, 1000)
+        hidden = self.lstm(x)[1][0]
+        hidden = hidden.permute([1, 2, 0])
+        hidden = hidden.reshape([hidden.size()[0], -1])
+        if self.dropout:
+            hidden = F.dropout(hidden,p=self.dropoutp,training=training)
+        return hidden
