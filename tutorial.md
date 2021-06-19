@@ -134,5 +134,42 @@ head = MLP(n_latent//2,40,10).cuda()
 ```
 Since MFM's objective function has more components than just one cross entropy loss, we need to use a custom objective function. Luckily, the MFM objective is already provided in MultiBench, so we can directly import and use it:
 ```
-from
+from objective_functions.recon import sigmloss1dcentercrop
+from objective_functions.objectives_for_supervised_learning import MFM_objective
+objective=MFM_objective(2.0,[sigmloss1dcentercrop(28,34),sigmloss1dcentercrop(112,130)],[1.0,1.0])
 ```
+The arguments passed into the MFM_objective function are weight of cross entropy loss, functions for computing reconstruction loss, and weights for reconstruction loss of each modality. Note that since DeLeNet-3 outputs a 34x34 image but the original input images are 28x28, we will use a ``sigmloss1dcentercrop(28,34)`` to center-crop the 34x34 reconstruction to 28x28 and then apply sigmoid-MSE loss. Similarly, we apply ``sigmloss1dcentercrop(112,130)`` since DeLeNet-5 outputs a 130x130 audio spectogram but the original input spectogram is 112x112. 
+
+Now we have completed all parts of the architecture, we can feed them into the Supervised_Learning training structure to train and test:
+
+```
+from training_structures.Supervised_Learning import train,test
+train(encoders,fuse,head,traindata,validdata,25,additional_optimizing_modules=decoders+intermediates,objective=objective,objective_args_dict={'decoders':decoders,'intermediates':intermediates})
+
+#testing
+model=torch.load('best.pt')
+test(model,testdata)
+```
+
+Note that we need to put the decoders and intermediates as additional optimizing modules, since we want to optimize these modules as well. Also, since we used custom objective function, we need to pass in some arguments to the objective function. The Supervised_Learning training structure will automatically pass in the current encoder output, fusion output, input and training status, but in the case of MFM we also need to give the objective function access to the decoders and intermediates, so we need to add these two to the objective_args_dict so the objective function has access to them.
+
+This is all you need to do for a complex multimodal architecture like MFM!
+
+# Tutorials (creating your own objective function)
+
+Let's say you invented some amazing regularization function ``amazing_reg_fn`` that takes in the list of all modules that matters and returns a regularization loss. Here's how we can write an objective function that returns a weighted sum of Cross Entropy Loss and your regularization loss:
+
+```
+def new_objective(regularization_weight):
+    def actualfunc(pred,truth,args):
+        ce_loss = torch.nn.CrossEntropyLoss(pred,truth)
+        reg_loss = amazing_reg_fn(args['all_modules'])
+        return ce_loss + regularization_weight*reg_loss
+    return actualfunc
+```
+
+Note that the ``new_objective`` function creates an actual objective function that takes in 3 arguments: the prediction, the ground truth, and the args dictionary. The args dictionary can contain anything necessary by the objective function. In this case, we need 'all_modules' term in the args dictionary, so we must add that to our objective_args_dict argument in the training structure. For example, if you are using Supervised_Learning training structure, then your train call could look like this:
+```
+train(encoders,fusion,head,traindata,validdata,25,objective=new_objective(1.0),objective_args_dict={'all_modules':encoders+[fusion,head]})
+```
+That's all you need to do to create a custom objective function!
