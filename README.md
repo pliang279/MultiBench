@@ -6,7 +6,7 @@
 
 Correspondence to: 
   - [Paul Pu Liang](http://www.cs.cmu.edu/~pliang/) (pliang@cs.cmu.edu)
-  - Yiwei Lyu (ylyu1@andrew.cmu.edu)
+  - [Yiwei Lyu](https://github.com/lvyiwei1) (ylyu1@andrew.cmu.edu)
   - [Xiang Fan](https://github.com/sfanxiang) (xiangfan@cmu.edu)
   - Zetian Wu (zwu49@jhu.edu)
   - Yun Cheng (yuncheng@andrew.cmu.edu)
