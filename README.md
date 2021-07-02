@@ -88,7 +88,7 @@ The MIMIC dataset has restricted access. To gain access to the preprocessed vers
 
 After you have the 'im.pk' file, you can get the dataloaders of this dataset by calling the get_dataloader function in examples/mimic/get_data.py. The get_dataloader function takes 2 inputs: the first specifies which task you want to do (-1 means mortality task, 1 means icd9 10-19 task, 7 means ic9 70-79 task). The input modalities will be static (vector of size 5) and time-series (24x30 shaped).
 
-There are lots of example scripts for running MIMIC under examples/healthcare/. For example, to run MIMIC with Low Rank Tensor Fusion, do
+There are several example scripts for running MIMIC under examples/healthcare/. For example, to run MIMIC with Low Rank Tensor Fusion, do
 
 ```
 python3 examples/healthcare/mimic_low_rank_tensor.py
@@ -102,7 +102,7 @@ For Vision and Touch dataset, the scripts for downloading the dataset is include
 
 For more detailed information on this dataset, see the original [repo](https://github.com/stanford-iprl-lab/multimodal_representation).
 
-There are lots of example scripts for running Vision and Touch under examples/robotics/. For example, to run Vision and Touch with Low Rank Tensor Fusion on Contact Task, do
+There are several example scripts for running Vision and Touch under examples/robotics/. For example, to run Vision and Touch with Low Rank Tensor Fusion on Contact Task, do
 
 ```
 python3 examples/robotics/LRTF.py
@@ -149,7 +149,7 @@ Tech (100): AAPL ACN ADBE ADI ADP ADSK AKAM AMAT AMD ANET ANSS APH ATVI AVGO BR 
 The code for HCI experiments can be found under the `examples/hci` directory.
 Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI layout. App screens are classified into 20 different design categories.
 
-The unimodal examples can be run using the following commands.
+The unimodal examples can be run using the following commands:
 
 Screenshot modality
 
@@ -175,14 +175,14 @@ python examples/hci/enrico_simple_late_fusion.py
 
 To access AV-MNIST, download the avmnist.tar.gz file from [here](https://drive.google.com/file/d/1KvKynJJca5tDtI5Mmp6CoRh9pQywH8Xp/view?usp=sharing) and untar it. Then, input the location of the avmnist file to the get_dataloader function in datasets/avmnist/get_data.py script. The input modalities are black-white images (28x28 tensors) and audio spectograms (112x112 tensors).
 
-There are lots of example scripts for running AV-MNIST under examples/multimedia/. For example, to run Vision and Touch with Simple Late Fusion with Concatenation, do
+There are several example scripts for running AV-MNIST under examples/multimedia/. For example, to run Vision and Touch with Simple Late Fusion with Concatenation, do
 ```
 python examples/multimedia/avmnist_simple_late_fusion.py
 ```
 
 To access MM-IMDb, download the multimodal_imdb.hdf5 from [here](http://lisi1.unal.edu.co/mmimdb/multimodal_imdb.hdf5) and we also use the raw data from [here](http://lisi1.unal.edu.co/mmimdb/mmimdb.tar.gz) to test models' robustness. 
 
-There are lots of example scripts for running MM-IMDb under examples/multimedia/. To run experiments, input the location of the hdf5 file to the get_dataloader function in each of the examples. Then, taking Text and Image with Simple Late Fusion with Concatenation for example, do 
+There are several example scripts for running MM-IMDb under examples/multimedia/. To run experiments, input the location of the hdf5 file to the get_dataloader function in each of the examples. Then, taking Text and Image with Simple Late Fusion with Concatenation for example, do 
 ```
 python examples/multimedia/mmimdb_simple_late_fusion.py
 ```
