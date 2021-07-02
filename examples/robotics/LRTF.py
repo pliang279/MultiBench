@@ -22,7 +22,7 @@ from unimodals.robotics.decoders import ContactDecoder
 from training_structures.Supervised_Learning import train, test
 from robotics_utils import set_seeds
 from fusions.common_fusions import LowRankTensorFusion
-from datasets.robotics.data_loader import get_data
+from datasets.robotics.get_data import get_data
 from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
