@@ -76,7 +76,7 @@ def process_data(filename, path):
 
     return data
 
-def get_dataloader(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40, vgg:bool=False)->Tuple[Dict]:
+def get_dataloader(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40, vgg:bool=False, skip_process=False)->Tuple[Dict]:
     train_dataloader = DataLoader(IMDBDataset(path, 0, 15552, vgg), \
         shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
     val_dataloader = DataLoader(IMDBDataset(path, 15552, 18160, vgg), \
@@ -90,30 +90,31 @@ def get_dataloader(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=
     
     dataset = os.path.join(test_path, "dataset")
 
-    clsf = VGGClassifier(model_path='/home/pliang/multibench/MultiBench/datasets/imdb/vgg16.tar', synset_words='synset_words.txt')
-    googleword2vec = KeyedVectors.load_word2vec_format('/home/pliang/multibench/MultiBench/datasets/imdb/GoogleNews-vectors-negative300.bin.gz', binary=True)
-    
-    images = []
-    texts = []
-    for name in tqdm(names):
-        name = name.decode("utf-8")
-        data = process_data(name, dataset)
-        # images.append(data['image'])
-        plot_id = np.array([len(p) for p in data['plot']]).argmax()
-        texts.append(data['plot'][plot_id])
+    if not skip_process:
+        clsf = VGGClassifier(model_path='/home/pliang/multibench/MultiBench/datasets/imdb/vgg16.tar', synset_words='synset_words.txt')
+        googleword2vec = KeyedVectors.load_word2vec_format('/home/pliang/multibench/MultiBench/datasets/imdb/GoogleNews-vectors-negative300.bin.gz', binary=True)
+        
+        images = []
+        texts = []
+        for name in tqdm(names):
+            name = name.decode("utf-8")
+            data = process_data(name, dataset)
+            images.append(data['image'])
+            plot_id = np.array([len(p) for p in data['plot']]).argmax()
+            texts.append(data['plot'][plot_id])
     
     # Add visual noises
     robust_vision = []
     for noise_level in range(11):
         vgg_filename = os.path.join(os.getcwd(), 'vgg_features_{}.npy'.format(noise_level))
-        extract_vgg = not os.path.exists(vgg_filename)
-        if extract_vgg:
+        if not skip_process:
             vgg_features = []
             images_robust = visual_robustness(images, noise_level=noise_level/10)
             for im in tqdm(images_robust):
                 vgg_features.append(clsf.get_features(Image.fromarray(im)).reshape((-1,)))
             np.save(vgg_filename, vgg_features)
         else:
+            assert os.path.exists(vgg_filename) == True
             vgg_features = np.load(vgg_filename, allow_pickle=True)
         robust_vision.append([(test_text[i], vgg_features[i], labels[i]) for i in range(len(vgg_features))])
     
@@ -126,8 +127,7 @@ def get_dataloader(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=
     robust_text = []
     for noise_level in range(11):
         text_filename = os.path.join(os.getcwd(), 'text_features_{}.npy'.format(noise_level)) 
-        extract_text = not os.path.exists(text_filename)
-        if extract_text:
+        if not skip_process:
             text_features = []
             texts_robust = text_robustness(texts, noise_level=noise_level/10)    
             for words in tqdm(texts_robust):
@@ -138,6 +138,7 @@ def get_dataloader(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=
                     text_features.append(np.array([googleword2vec[w] for w in words if w in googleword2vec]).mean(axis=0))
             np.save(text_filename, text_features)
         else:
+            assert os.path.exists(text_filename) == True
             text_features = np.load(text_filename, allow_pickle=True)
         robust_text.append([(text_features[i], test_vision[i], labels[i]) for i in range(len(text_features))])
     test_dataloader['text'] = []

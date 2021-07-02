@@ -105,11 +105,12 @@ def train(
                     objective_args_dict['fused']=model.fuseout
                     objective_args_dict['inputs']=j[:-1]
                     objective_args_dict['training']=True
+                    objective_args_dict['model']=model
                 loss=deal_with_objective(objective,out,j[-1],objective_args_dict)
 
                 totalloss += loss * len(j[-1])
                 totals+=len(j[-1])
-                loss.backward()
+
                 torch.nn.utils.clip_grad_norm_(model.parameters(), clip_val)
                 op.step()
             print("Epoch "+str(epoch)+" train loss: "+str(totalloss/totals))
@@ -242,15 +243,10 @@ def single_test(
         elif task == "multilabel":
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
-            return {'F1 score (micro)': f1_score(true, pred, average="micro"), 'F1 score (macro)': f1_score(true, pred, average="macro")}
+            return {'micro': f1_score(true, pred, average="micro"), 'macro': f1_score(true, pred, average="macro")}
         elif task == "regression":
-            if torch.numel(testloss) != 1:
-                testloss = testloss.detach().cpu()
-                print('mse: ' + str(testloss))
-                return {'MSE': testloss}
-            else:
-                print("mse: "+str(testloss.item()))
-                return {'MSE': testloss.item()}
+            print("mse: "+str(testloss.item()))
+            return {'MSE': testloss.item()}
 
 
 # model: saved checkpoint filename from train
@@ -273,8 +269,8 @@ def test(
                 curve.append(v)
                 robustness_curve[k] = curve 
         for measure, robustness_result in robustness_curve.items():
-            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result))))
             robustness_key = '{} {}'.format(dataset, noisy_modality)
+            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result, robustness_key))))
             if len(robustness_curve) != 1:
                 robustness_key = '{} {}'.format(robustness_key, measure)
             print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, robustness_key))))

@@ -1,6 +1,7 @@
 from objective_functions.recon import recon_weighted_sum,elbo_loss
 import torch
 from objective_functions.cca import CCALoss
+from objective_functions.regularization import RegularizationLoss
 
 # deals with some built-in criterions
 def criterioning(pred,truth,criterion):
@@ -114,3 +115,21 @@ def RefNet_objective(ref_weight,criterion=torch.nn.CrossEntropyLoss(),input_to_f
             ss_loss += ss_criterion(out,inputs[i],torch.ones(out.size(0)).cuda())
         return ce_loss + ss_loss*ref_weight
     return actualfunc
+
+# model: model used for inference
+# reg_weight: weight of regularization term
+# criterion: criterion for supervised loss
+# is_packed: packed for LSTM or not
+def RMFE_object(reg_weight=1e-10, criterion=torch.nn.BCEWithLogitsLoss(), is_packed=False):
+    def regfunc(pred, truth, args):
+        model=args['model']
+        lossfunc = RegularizationLoss(criterion, model, reg_weight, is_packed)
+        ce_loss = criterioning(pred,truth,criterion)
+        inps = args['inputs']
+        try:
+            reg_loss = lossfunc(pred, [i.cuda() for i in inps])
+        except RuntimeError:
+            print("No reg loss for validation")
+            reg_loss = 0
+        return ce_loss+reg_loss
+    return regfunc

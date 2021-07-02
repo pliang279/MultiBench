@@ -6,7 +6,7 @@
 
 Correspondence to: 
   - [Paul Pu Liang](http://www.cs.cmu.edu/~pliang/) (pliang@cs.cmu.edu)
-  - Yiwei Lyu (ylyu1@andrew.cmu.edu)
+  - [Yiwei Lyu](https://github.com/lvyiwei1) (ylyu1@andrew.cmu.edu)
   - [Xiang Fan](https://github.com/sfanxiang) (xiangfan@cmu.edu)
   - Zetian Wu (zwu49@jhu.edu)
   - Yun Cheng (yuncheng@andrew.cmu.edu)
@@ -68,17 +68,15 @@ To add a new algorithm:
 2. see examples/ and write an example training python file following the existing examples
 3. check that calling the added functions and running a simple training script works
 4. Make sure your new modules are well documented by comments in its input and output format and shapes
- 
+
 
 ## Experiments
 
 ### Affective Computing
 
-All the affective computing datasets included in the MultiBench is open accessed, you can directly go the [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), the method to process the original raw datasets is the `datasets/affect/get_draft_data.py`, or email lesliechen1998@gmail.com to ask ready-to-load raw datasets with some different feature sets or processed datasets (aligned and with left padding).
+We release the processed datasets [here](https://drive.google.com/drive/folders/1IXZAjOEWFOGLxAK9JKvwlG2D9LThK6c5?usp=sharing). The raw datasets are also publicly available at [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY). You can obtain processed data with `datasets/affect/get_data.py`, note that `sarcasm` means [MUsTARD](https://github.com/soujanyaporia/MUStARD) and `humor` means [UR-FUNNY](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI `task` and `classcification` for MUsTARD and UR-FUNNY.
 
-You can get the tensors with `datasets/affect/get_data.py`, note that the `sarcasm` means the [MUsTARD](https://github.com/soujanyaporia/MUStARD) and the `humor` means the [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI for the `task` and `classcification` for MUsTARD and UR-Funny.
-
-There are lots of example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with simple late fusion, do
+There are several example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with simple late fusion, do
 
 ```
 python3 examples/affect/humor_late_fusion.py
@@ -86,11 +84,11 @@ python3 examples/affect/humor_late_fusion.py
 
 ### Healthcare
 
-Note that the MIMIC dataset for Healthcare has restricted access. To gain access to the preprocessed version of this dataset, please follow instructions [here](https://mimic.mit.edu/iv/access/) to gain the necessary credentials. Once you have the credentials, email ylyu1@andrew.cmu.edu with proof of your credentials and ask for the preprocessed 'im.pk' file. 
+The MIMIC dataset has restricted access. To gain access to the preprocessed version of this dataset, please follow instructions [here](https://mimic.mit.edu/iv/access/) to gain the necessary credentials. Once you have the credentials, email ylyu1@andrew.cmu.edu with proof of your credentials and ask for the preprocessed 'im.pk' file. 
 
 After you have the 'im.pk' file, you can get the dataloaders of this dataset by calling the get_dataloader function in examples/mimic/get_data.py. The get_dataloader function takes 2 inputs: the first specifies which task you want to do (-1 means mortality task, 1 means icd9 10-19 task, 7 means ic9 70-79 task). The input modalities will be static (vector of size 5) and time-series (24x30 shaped).
 
-There are lots of example scripts for running MIMIC under examples/healthcare/. For example, to run MIMIC with Low Rank Tensor Fusion, do
+There are several example scripts for running MIMIC under examples/healthcare/. For example, to run MIMIC with Low Rank Tensor Fusion, do
 
 ```
 python3 examples/healthcare/mimic_low_rank_tensor.py
@@ -104,7 +102,7 @@ For Vision and Touch dataset, the scripts for downloading the dataset is include
 
 For more detailed information on this dataset, see the original [repo](https://github.com/stanford-iprl-lab/multimodal_representation).
 
-There are lots of example scripts for running Vision and Touch under examples/robotics/. For example, to run Vision and Touch with Low Rank Tensor Fusion on Contact Task, do
+There are several example scripts for running Vision and Touch under examples/robotics/. For example, to run Vision and Touch with Low Rank Tensor Fusion on Contact Task, do
 
 ```
 python3 examples/robotics/LRTF.py
@@ -151,7 +149,7 @@ Tech (100): AAPL ACN ADBE ADI ADP ADSK AKAM AMAT AMD ANET ANSS APH ATVI AVGO BR 
 The code for HCI experiments can be found under the `examples/hci` directory.
 Our experiments use the [ENRICO](https://github.com/luileito/enrico) dataset, which contains application screenshots and their UI layout. App screens are classified into 20 different design categories.
 
-The unimodal examples can be run using the following commands.
+The unimodal examples can be run using the following commands:
 
 Screenshot modality
 
@@ -177,14 +175,14 @@ python examples/hci/enrico_simple_late_fusion.py
 
 To access AV-MNIST, download the avmnist.tar.gz file from [here](https://drive.google.com/file/d/1KvKynJJca5tDtI5Mmp6CoRh9pQywH8Xp/view?usp=sharing) and untar it. Then, input the location of the avmnist file to the get_dataloader function in datasets/avmnist/get_data.py script. The input modalities are black-white images (28x28 tensors) and audio spectograms (112x112 tensors).
 
-There are lots of example scripts for running AV-MNIST under examples/multimedia/. For example, to run Vision and Touch with Simple Late Fusion with Concatenation, do
+There are several example scripts for running AV-MNIST under examples/multimedia/. For example, to run Vision and Touch with Simple Late Fusion with Concatenation, do
 ```
 python examples/multimedia/avmnist_simple_late_fusion.py
 ```
 
 To access MM-IMDb, download the multimodal_imdb.hdf5 from [here](http://lisi1.unal.edu.co/mmimdb/multimodal_imdb.hdf5) and we also use the raw data from [here](http://lisi1.unal.edu.co/mmimdb/mmimdb.tar.gz) to test models' robustness. 
 
-There are lots of example scripts for running MM-IMDb under examples/multimedia/. To run experiments, input the location of the hdf5 file to the get_dataloader function in each of the examples. Then, taking Text and Image with Simple Late Fusion with Concatenation for example, do 
+There are several example scripts for running MM-IMDb under examples/multimedia/. To run experiments, input the location of the hdf5 file to the get_dataloader function in each of the examples. Then, taking Text and Image with Simple Late Fusion with Concatenation for example, do 
 ```
 python examples/multimedia/mmimdb_simple_late_fusion.py
 ```
@@ -206,7 +204,7 @@ Modality-specific and multimodal imperfection implementations are under `robustn
 All robustness experiments are now integrated into the standard training/testing scripts.
 
 We visualize the experiment results using two metrics, relative and effective robustness, as well as a combination of both. These plots indicate the tradeoff between accuracy and robustness:
-![](/deprecated_examples_robust/robustness_plots.png)
+![](/images/robustness_plots.png)
 
 ## References
 

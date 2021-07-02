@@ -14,21 +14,14 @@ import torch.optim as optim
 
 import unimodals.gentle_push.layers as layers
 
-from torch.utils.data import DataLoader
-
-from datasets.gentle_push.data_loader import SubsequenceDataset, PushTask
-from datasets.gentle_push.data_loader_robust import (
-    SubsequenceDataset as RobustSubsequenceDataset,
-    PushTask as RobustPushTask,
-)
+from datasets.gentle_push.data_loader import PushTask
 from unimodals.common_models import Sequential, Transpose, Reshape, MLP
 from unimodals.gentle_push.head import Head
 from fusions.common_fusions import ConcatWithLinear
 from training_structures.Supervised_Learning import train, test
-from xy_mse_loss import XYMSELoss
+
 
 Task = PushTask
-RobustTask = RobustPushTask
 modalities = ['control']
 
 # Parse args
@@ -36,39 +29,10 @@ parser = argparse.ArgumentParser()
 Task.add_dataset_arguments(parser)
 args = parser.parse_args()
 dataset_args = Task.get_dataset_args(args)
-parser = argparse.ArgumentParser()
-RobustTask.add_dataset_arguments(parser)
-args = parser.parse_args()
-robust_dataset_args = Task.get_dataset_args(args)
 
 fannypack.data.set_cache_path('datasets/gentle_push/cache')
 
-# Load trajectories into memory
-train_trajectories = Task.get_train_trajectories(**dataset_args)
-val_trajectories = Task.get_eval_trajectories(**dataset_args)
-controls_robust_trajectories = RobustTask.get_test_trajectories(controls_noise=True, **robust_dataset_args)
-
-train_loader = DataLoader(
-    SubsequenceDataset(train_trajectories, 16, modalities),
-    batch_size=32,
-    shuffle=True,
-    drop_last=True,
-)
-val_loader = DataLoader(
-    SubsequenceDataset(val_trajectories, 16, modalities),
-    batch_size=32,
-    shuffle=True,
-)
-controls_robust_loader = []
-for i in range(len(controls_robust_trajectories)):
-    controls_robust_loader.append(DataLoader(
-            RobustSubsequenceDataset(controls_robust_trajectories[i], 16, modalities),
-            batch_size=32,
-            shuffle=False,
-        ))
-test_loaders = {
-    'controls': controls_robust_loader,
-}
+train_loader, val_loader, test_loader = Task.get_dataloader(16, modalities, batch_size=32, drop_last=True)
 
 encoders = [
     Sequential(Transpose(0, 1), layers.control_layers(64)),
@@ -87,4 +51,4 @@ train(encoders, fusion, head,
       lr=0.00001)
 
 model = torch.load('best.pt').cuda()
-test(model, test_loaders, dataset='gentle push', task='regression', criterion=XYMSELoss())
+test(model, test_loader, dataset='gentle push', task='regression', criterion=loss_state)

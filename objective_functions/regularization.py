@@ -3,7 +3,6 @@ An implementation of the paper: "Removing Bias in Multi-modal Classifiers: Regul
  Entropies" NeurIPS 2020.
 """
 
-from training_structures.Contrastive_Learning import train
 import torch
 
 
@@ -243,8 +242,8 @@ class RegularizationLoss(torch.nn.Module):
             for ind, i in enumerate(inputs):
                 inf_inputs.append(Perturbation.perturb_tensor(i, self.reg_params.n_samples).float().cuda())
             inf_output = self.model(inf_inputs, training=True)
-        inf_loss = torch.nn.functional.binary_cross_entropy_with_logits(inf_output, expanded_logits)
-
+        inf_loss = self.criterion(inf_output, expanded_logits)
+        
         gradients = torch.autograd.grad(inf_loss, inf_inputs, create_graph=True)
         grads = [Regularization.get_batch_norm(gradients[k], loss=inf_loss,
                                             estimation=self.reg_params.estimation) for k in range(2)]
