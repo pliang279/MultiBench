@@ -74,11 +74,9 @@ To add a new algorithm:
 
 ### Affective Computing
 
-All the affective computing datasets included in the MultiBench is open accessed, you can directly go the [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), the method to process the original raw datasets is the `datasets/affect/get_draft_data.py`, or email lesliechen1998@gmail.com to ask ready-to-load raw datasets with some different feature sets or processed datasets (aligned and with left padding).
+We release the processed datasets [here](https://drive.google.com/drive/folders/1IXZAjOEWFOGLxAK9JKvwlG2D9LThK6c5?usp=sharing). The raw datasets are also publicly available at [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY). You can obtain processed data with `datasets/affect/get_data.py`, note that `sarcasm` means [MUsTARD](https://github.com/soujanyaporia/MUStARD) and `humor` means [UR-FUNNY](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI `task` and `classcification` for MUsTARD and UR-FUNNY.
 
-You can get the tensors with `datasets/affect/get_data.py`, note that the `sarcasm` means the [MUsTARD](https://github.com/soujanyaporia/MUStARD) and the `humor` means the [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI for the `task` and `classcification` for MUsTARD and UR-Funny.
-
-There are lots of example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with simple late fusion, do
+There are several example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with simple late fusion, do
 
 ```
 python3 examples/affect/humor_late_fusion.py
@@ -86,7 +84,7 @@ python3 examples/affect/humor_late_fusion.py
 
 ### Healthcare
 
-Note that the MIMIC dataset for Healthcare has restricted access. To gain access to the preprocessed version of this dataset, please follow instructions [here](https://mimic.mit.edu/iv/access/) to gain the necessary credentials. Once you have the credentials, email ylyu1@andrew.cmu.edu with proof of your credentials and ask for the preprocessed 'im.pk' file. 
+The MIMIC dataset has restricted access. To gain access to the preprocessed version of this dataset, please follow instructions [here](https://mimic.mit.edu/iv/access/) to gain the necessary credentials. Once you have the credentials, email ylyu1@andrew.cmu.edu with proof of your credentials and ask for the preprocessed 'im.pk' file. 
 
 After you have the 'im.pk' file, you can get the dataloaders of this dataset by calling the get_dataloader function in examples/mimic/get_data.py. The get_dataloader function takes 2 inputs: the first specifies which task you want to do (-1 means mortality task, 1 means icd9 10-19 task, 7 means ic9 70-79 task). The input modalities will be static (vector of size 5) and time-series (24x30 shaped).
 
