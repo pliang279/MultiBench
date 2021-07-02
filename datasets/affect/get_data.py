@@ -5,13 +5,13 @@ import pickle
 import h5py
 import numpy as np
 from numpy.core.numeric import zeros_like
+
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 import torch
 import torchtext as text
 from collections import defaultdict
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader, Dataset
-
 
 from robustness.text_robust import text_robustness
 from robustness.timeseries_robust import timeseries_robustness
@@ -24,14 +24,15 @@ def drop_entry(dataset):
     for ind, k in enumerate(dataset["text"]):
         if k.sum() == 0:
             drop.append(ind)
-    for ind, k in enumerate(dataset["vision"]):
-        if k.sum() == 0:
-            if ind not in drop:
-                drop.append(ind)
-    for ind, k in enumerate(dataset["audio"]):
-        if k.sum() == 0:
-            if ind not in drop:
-                drop.append(ind)
+    # for ind, k in enumerate(dataset["vision"]):
+    #     if k.sum() == 0:
+    #         if ind not in drop:
+    #             drop.append(ind)
+    # for ind, k in enumerate(dataset["audio"]):
+    #     if k.sum() == 0:
+    #         if ind not in drop:
+    #             drop.append(ind)
+    # print(drop)
     for modality in list(dataset.keys()):
         dataset[modality] = np.delete(dataset[modality], drop, 0)
     return dataset
@@ -194,7 +195,8 @@ class Affectdataset(Dataset):
 
 def get_dataloader(
         filepath: str, batch_size: int = 32, max_seq_len=50, train_shuffle: bool = True,
-        num_workers: int = 1, flatten_time_series: bool = False, task=None, raw_path='/home/pliang/multibench/affect/mosi/mosi.hdf5') -> DataLoader:
+        num_workers: int = 4, flatten_time_series: bool = False, task=None,
+        raw_path='/home/pliang/multibench/affect/mosi/mosi.hdf5') -> DataLoader:
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
 
@@ -212,9 +214,9 @@ def get_dataloader(
     valid = DataLoader(Affectdataset(processed_dataset['valid'], flatten_time_series, task=task), \
                        shuffle=False, num_workers=num_workers, batch_size=batch_size, \
                        collate_fn=process)
-    test = DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task), \
-                      shuffle=False, num_workers=num_workers, batch_size=batch_size, \
-                      collate_fn=process)
+    # test = DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task), \
+    #                   shuffle=False, num_workers=num_workers, batch_size=batch_size, \
+    #                   collate_fn=process)
 
     vids = [id for id in alldata['test']['id']]
 
@@ -231,6 +233,7 @@ def get_dataloader(
         test['text'] = glove_embeddings(text_robustness(rawtext, noise_level=i / 10), vids)
         test['labels'] = alldata['test']["labels"]
         test = drop_entry(test)
+
         robust_text_numpy.append(test['text'])
 
         robust_text.append(
@@ -241,12 +244,14 @@ def get_dataloader(
     robust_vision = []
     for i in range(10):
         test = dict()
-        test['vision'] = timeseries_robustness([alldata['test']['vision']], noise_level=i / 10, rand_drop=False,
-                                               struct_drop=False)
-        test['audio'] = alldata['test']["audio"]
-        test['text'] = alldata['test']['text']
+        test['vision'] = timeseries_robustness([alldata['test']['vision'].copy()], noise_level=i / 10, rand_drop=False)[
+            0]
+        # print('vision shape: {}'.format(test['vision'].shape))
+        test['audio'] = alldata['test']["audio"].copy()
+        test['text'] = alldata['test']['text'].copy()
         test['labels'] = alldata['test']["labels"]
         test = drop_entry(test)
+        print('test entries: {}'.format(test['vision'].shape))
 
         robust_vision.append(
             DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers,
@@ -256,11 +261,12 @@ def get_dataloader(
     robust_audio = []
     for i in range(10):
         test = dict()
-        test['vision'] = alldata['test']["vision"]
-        test['audio'] = timeseries_robustness([alldata['test']['audio']], noise_level=i / 10, rand_drop=False)
-        test['text'] = alldata['test']['text']
+        test['vision'] = alldata['test']["vision"].copy()
+        test['audio'] = timeseries_robustness([alldata['test']['audio'].copy()], noise_level=i / 10, rand_drop=False)[0]
+        test['text'] = alldata['test']['text'].copy()
         test['labels'] = alldata['test']["labels"]
         test = drop_entry(test)
+        print('test entries: {}'.format(test['vision'].shape))
 
         robust_audio.append(
             DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers,
@@ -274,27 +280,29 @@ def get_dataloader(
     #     test.append(alldata_test)
 
     robust_timeseries = []
-    alldata['test'] = drop_entry(alldata['test'])
+    # alldata['test'] = drop_entry(alldata['test'])
     for i in range(10):
         robust_timeseries_tmp = timeseries_robustness(
-            [alldata['test']['vision'], alldata['test']['audio'], alldata['test']['text']], noise_level=i / 10)
+            [alldata['test']['vision'].copy(), alldata['test']['audio'].copy(), alldata['test']['text'].copy()],
+            noise_level=i / 10, rand_drop=False)
+        # print('shape: {}'.format(robust_timeseries_tmp[1].shape))
         test = dict()
         test['vision'] = robust_timeseries_tmp[0]
         test['audio'] = robust_timeseries_tmp[1]
         test['text'] = robust_timeseries_tmp[2]
         test['labels'] = alldata['test']['labels']
         test = drop_entry(test)
+        print('test entries: {}'.format(test['vision'].shape))
 
         robust_timeseries.append(
             DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers,
                        batch_size=batch_size, collate_fn=process))
-    test = dict()
-    test['text'] = robust_text
-    test['image'] = robust_vision
-    test['audio'] = robust_audio
-    test['multimodal'] = robust_timeseries
-
-    return train, valid, test
+    test_robust_data = dict()
+    test_robust_data['robust_text'] = robust_text
+    test_robust_data['robust_vision'] = robust_vision
+    test_robust_data['robust_audio'] = robust_audio
+    test_robust_data['robust_timeseries'] = robust_timeseries
+    return train, valid, test_robust_data
 
 
 def process(inputs: List):
@@ -323,10 +331,17 @@ def process(inputs: List):
 
 
 if __name__ == '__main__':
-    train, valid, test, robust_text, robust_vision, robust_audio, robust_all = get_dataloader('mosi_raw.pkl')
+    train, valid, test_robust = get_dataloader('humor.pkl', raw_path='/home/pliang/multibench/affect/mosei/mosei.hdf5')
 
-    for batch in robust_all[0]:
-        print(batch)
+    keys = list(test_robust.keys())
+    print(keys)
+
+    # test_robust[keys[0]][1]
+    for batch in test_robust[keys[1]][0]:
+        for b in batch[0]:
+            print(b.shape)
+        print(batch[1])
+        print(batch[2])
         break
 
 
