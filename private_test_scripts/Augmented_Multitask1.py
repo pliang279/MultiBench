@@ -30,6 +30,7 @@ class MMDL(nn.Module):
         #print(out) 
         return self.head1(out, training=training), self.head2(out, training=training)
 
+sftmax=nn.Softmax(dim=1).cuda()
 
 def train(
     encoders,fusion,head1,head2,train_dataloader,valid_dataloader,total_epochs,is_packed=False,
@@ -65,12 +66,18 @@ def train(
                     loss2=regularize(out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
                     loss = loss1+loss2
             else:
+                j[0]=j[0][0].repeat(4,1)
+                j[1]=j[1].view(4,6,12)
+                l1=j[2].item()
+                l2=j[3].item()
+                j[2]=torch.LongTensor([l1,l1,l1,l1])
+                j[3]=torch.LongTensor([l2,l2,l2,l2])
                 out1,out2=model([i.float().cuda() for i in j[:-2]],training=True)
                 #print(out, j[-1])
                 loss1=criterion(out1, j[-2].long().cuda())
                 loss2=criterion(out2, j[-1].long().cuda())
                 #loss = loss1+loss2
-                loss=loss2
+                loss=loss1
             #print(loss)
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])
@@ -93,13 +100,19 @@ def train(
             true2 = []
             pts = []
             for j in valid_dataloader:
+                j[0]=j[0].repeat_interleave(4,dim=0)
+                j[1]=j[1].view(-1,6,12)
+                l1=j[2].repeat_interleave(4)
+                l2=j[3].repeat_interleave(4)
                 if is_packed:
                     out=model([[i.cuda() for i in j[0]], j[1]],training=False)
                 else:
                     out1,out2 = model([i.float().cuda() for i in j[:-2]],training=False)
-                loss1=criterion(out1, j[-2].long().cuda())
-                loss2=criterion(out2, j[-1].long().cuda())
+                loss1=criterion(out1, l1.long().cuda())
+                loss2=criterion(out2, l2.long().cuda())
                 totalloss += loss*len(j[-1])
+                out1 = sftmax(out1).view(-1,4,6).sum(dim=1)
+                out2 = sftmax(out2).view(-1,4,2).sum(dim=1)
                 #print(totalloss)
                 if task == "classification":
                     pred1.append(torch.argmax(out1, 1))
@@ -122,9 +135,9 @@ def train(
             
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
                 " acc1: "+str(acc1)+" acc2: "+str(acc2))
-            if acc1+acc2 > bestacc:
+            if acc1 > bestacc:
                 patience = 0
-                bestacc = acc1+acc2
+                bestacc = acc1
                 print("Saving Best")
                 torch.save(model, save)
             else:
@@ -173,14 +186,20 @@ def test(
         true2=[]
         pts=[]
         for j in test_dataloader:
+            j[0]=j[0].repeat_interleave(4,dim=0)
+            j[1]=j[1].view(-1,6,12)
+            l1=j[2].repeat_interleave(4)
+            l2=j[3].repeat_interleave(4)
             if is_packed:
                 out=model([[i.cuda() for i in j[0]], j[1]],training=False)
             else:
                 out1,out2 = model([i.float().cuda() for i in j[:-2]],training=False)
-            loss1=criterion(out1, j[-2].cuda())
-            loss2=criterion(out1, j[-1].cuda())
+            loss1=criterion(out1, l1.cuda())
+            loss2=criterion(out2, l2.cuda())
             #print(torch.cat([out,j[-1].cuda()],dim=1))
             #totalloss += loss*len(j[-1])
+            out1 = sftmax(out1).view(-1,4,6).sum(dim=1)
+            out2 = sftmax(out2).view(-1,4,2).sum(dim=1)
             if task == "classification":
                 pred1.append(torch.argmax(out1, 1))
                 pred2.append(torch.argmax(out2, 1))
