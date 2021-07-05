@@ -559,3 +559,19 @@ class ResNetLSTMEnc(torch.nn.Module):
         if self.dropout:
             hidden = F.dropout(hidden,p=self.dropoutp,training=training)
         return hidden
+
+
+class Transformer(nn.Module):
+
+    def __init__(self, n_features, dim):
+        super().__init__()
+        self.embed_dim = dim
+        self.conv = nn.Conv1d(n_features, self.embed_dim, kernel_size=1, padding=0, bias=False)
+        layer = nn.TransformerEncoderLayer(d_model=self.embed_dim, nhead=3)
+        self.transformer = nn.TransformerEncoder(layer, num_layers=3)
+
+    def forward(self, x):
+        x = self.conv(x.permute([0, 2, 1]))
+        x = x.permute([2, 0, 1])
+        x = self.transformer(x)[-1]
+        return x

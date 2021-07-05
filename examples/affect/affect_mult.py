@@ -6,7 +6,8 @@ import torch
 
 from fusions.common_fusions import ConcatEarly
 from datasets.affect.get_data import get_dataloader
-from unimodals.common_models import Transformer, MLP
+from unimodals.common_models import MLP
+from fusions.mult import MULTModel
 
 from training_structures.Supervised_Learning import train, test
 
@@ -16,7 +17,7 @@ from private_test_scripts.all_in_one import all_in_one_train
 traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
 
 # mosi/mosei
-encoders = [Transformer(early=True).cuda()]
+encoders = [MULTModel(409, 512).cuda()]
 head = MLP(512, 256, 1).cuda()
 
 # humor/sarcasm
