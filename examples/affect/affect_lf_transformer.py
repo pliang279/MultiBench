@@ -16,7 +16,7 @@ from private_test_scripts.all_in_one import all_in_one_train
 traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
 
 # mosi/mosei
-encoders = [Transformer().cuda()] * 3
+encoders = [Transformer(74, 150).cuda(), Transformer(35, 70).cuda(), Transformer(300, 600).cuda()]
 
 head = MLP(820, 512, 1).cuda()
 
