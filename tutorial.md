@@ -28,9 +28,15 @@ torchvision >= 0.5.0
 
 tqdm >= 4.36.1
 
-h5py >= 3.3.0
+h5py >= 3.3.0 (for robotics data)
 
-PyYAML >= 5.4.1
+PyYAML >= 5.4.1 (for robotics data)
+
+pmdarima >= 1.8.2 (for finance data)
+
+statsmodels >= 0.12.2 (for finance data)
+
+pandas-datareader >= 0.9.0 (for finance data)
 
 ## Parts
 
