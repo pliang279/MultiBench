@@ -28,6 +28,10 @@ torchvision >= 0.5.0
 
 tqdm >= 4.36.1
 
+h5py >= 3.3.0
+
+PyYAML >= 5.4.1
+
 ## Parts
 
 This repository provides automated end-to-end pipeline that simplifies and standardizes data loading, model construction, experimental setup and evaluation. The repository includes the following parts:
