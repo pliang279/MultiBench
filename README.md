@@ -189,6 +189,8 @@ python examples/multimedia/mmimdb_simple_late_fusion.py
 
 Scripts for the Kinetics dataset are located in the `special` directory. Run `python special/kinetics_*.py` for the respective script.
 
+To access Clotho, clone the [clotho-dataset](https://github.com/audio-captioning/clotho-dataset) repository somewhere on your device and follow the instructions in the ReadMe of that repository to download and preprocess the data (use the one-step preprocess approach). To get the dataloader, input the path to the "clotho-dataset" repo to the get_dataloaders function in datasets/clotho/get_data.py script. The default data are audio features (padded to 2574x64) and text caption word indices (padded to 20x18).
+
 ## Evaluation
 
 ### Complexity
@@ -212,3 +214,4 @@ We visualize the experiment results using two metrics, relative and effective ro
 
 6/11/2021: Refactored some code. Specifically, we deprecated the Simple_Early_Fusion, Simple_Late_Fusion, MVAE, MFM, CCA, Contrastive training structures with the new `Supervised_Learning` training structure, and modified some `examples/` files accordingly. We also integrated the dataloaders and testing scripts for robustness experiments into the regular ones. The deprecated training structures as well as their examples can be found in `deprecated_training_structures/` and `deprecated_examples/` folders. The deprecated dataloaders and testing scripts specifically for robustness can be found in `deprecated_dataloaders/` and `deprecated_examples_robust/` folders
 
+7/9/2021: Added Support for Clotho Dataset, which is not a classification or prediction task. We hope use this as a starting point to gradually expand our repo to include retrieval and generative tasks as well.
