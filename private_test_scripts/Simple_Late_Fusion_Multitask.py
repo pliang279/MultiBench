@@ -69,8 +69,8 @@ def train(
                 #print(out, j[-1])
                 loss1=criterion(out1, j[-2].long().cuda())
                 loss2=criterion(out2, j[-1].long().cuda())
-                #loss = loss1+loss2
-                loss=loss2
+                loss = loss1+loss2
+                #loss=loss2
             #print(loss)
             totalloss += loss * len(j[-1])
             totals+=len(j[-1])

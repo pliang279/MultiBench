@@ -2,8 +2,8 @@ import numpy as np
 from torch.utils.data import DataLoader
 import random
 import pickle
-#task: integer between -1 and 19 inclusive, -1 means mortality task, 0-19 means icd9 task
-def get_dataloader(batch_size=1, num_workers=1, train_shuffle=True, imputed_path='im.pk', flatten_time_series=False):
+# task -1 and task 7 only
+def get_dataloader(batch_size=40, num_workers=1, train_shuffle=True, imputed_path='im.pk', flatten_time_series=False):
   f = open(imputed_path,'rb')
   datafile = pickle.load(f)
   f.close()
