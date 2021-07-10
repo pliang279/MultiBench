@@ -1,12 +1,13 @@
 from robustness.timeseries_robust import timeseries_robustness
+import copy
 import datetime
 from posixpath import split
+import io
 import numpy as np
 import pandas as pd
-import pandas_datareader
+import requests
 import torch
 from torch.utils.data import DataLoader
-import copy
 from torch import nn
 
 
@@ -14,7 +15,10 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     stocks = np.array(stocks)
 
     def fetch_finance_data(symbol, start, end):
-        return pandas_datareader.data.DataReader(symbol, 'yahoo', start, end)
+        url = f'https://query1.finance.yahoo.com/v7/finance/download/{symbol}?period1={start.strftime("%s")}&period2={end.strftime("%s")}&interval=1d&events=history&includeAdjustedClose=true'
+        user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        text = requests.get(url, headers={'User-Agent': user_agent}).text
+        return pd.read_csv(io.StringIO(text), encoding='utf8', parse_dates=True, index_col=0)
 
     data = []
     for stock in stocks:
