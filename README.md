@@ -38,6 +38,7 @@ To accompany MultiBench, we also provide a standardized implementation of 20 cor
 4. Finance: Stocks-food, Stocks-health, Stocks-tech
 5. HCI: ENRICO
 6. Multimedia: AV-MNIST, MM-IMDb, Kinetics-S, Kinetics-L
+7. RTFM env
 
 ![](/images/datasets.png)
 
@@ -190,6 +191,7 @@ python examples/multimedia/mmimdb_simple_late_fusion.py
 Scripts for the Kinetics dataset are located in the `special` directory. Run `python special/kinetics_*.py` for the respective script.
 
 To access Clotho, clone the [clotho-dataset](https://github.com/audio-captioning/clotho-dataset) repository somewhere on your device and follow the instructions in the ReadMe of that repository to download and preprocess the data (use the one-step preprocess approach). To get the dataloader, input the path to the "clotho-dataset" repo to the get_dataloaders function in datasets/clotho/get_data.py script. The default data are audio features (padded to 2574x64) and text caption word indices (padded to 20x18).
+
 
 ## Evaluation
 
