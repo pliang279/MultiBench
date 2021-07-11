@@ -70,6 +70,9 @@ To add a new algorithm:
 3. check that calling the added functions and running a simple training script works
 4. Make sure your new modules are well documented by comments in its input and output format and shapes
 
+## Open call for research areas, datasets, tasks, algorithms, and evaluation 
+
+We welcome new contributions to MultiBench through new research areas, datasets, tasks, algorithms, and evaluation. Please refer to the sections above for instructions on adding new datasets and algorithms, and open a pull request if you would like to see a specific dataset or algorithm added.
 
 ## Experiments
 
