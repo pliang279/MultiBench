@@ -72,7 +72,7 @@ To add a new algorithm:
 
 ## Open call for research areas, datasets, tasks, algorithms, and evaluation 
 
-We welcome new contributions to MultiBench through new research areas, datasets, tasks, algorithms, and evaluation. Please refer to the sections above for instructions on adding new datasets and algorithms, and open a pull request if you would like to see a specific dataset or algorithm added.
+We welcome new contributions to MultiBench through new research areas, datasets, tasks, algorithms, and evaluation. Please refer to the sections above for instructions on adding new datasets and algorithms, and open a pull request if you would like to see a specific dataset or algorithm added. We plan to use MultiBench as a theme for future workshops, competitions, and academic courses - stay tuned for upcoming calls for participation!
 
 ## Experiments
 
