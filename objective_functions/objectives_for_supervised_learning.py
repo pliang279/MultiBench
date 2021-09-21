@@ -9,6 +9,8 @@ def criterioning(pred,truth,criterion):
         return criterion(pred,truth.long().cuda())
     elif type(criterion)==torch.nn.modules.loss.BCEWithLogitsLoss or type(criterion)==torch.nn.MSELoss:
         return criterion(pred,truth.float().cuda())
+    elif type(criterion)==torch.nn.L1Loss:
+        return criterion(pred,truth.float().cuda())
 
 # objective for MFM
 # ce_weight: weight of simple supervised loss

@@ -14,7 +14,7 @@ from training_structures.gradient_blend import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
-traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
+traindata, validdata, testdata = get_dataloader('/home/paul/MultiBench/mosi_raw.pkl')
 
 # mosi/mosei
 encoders=[GRU(35,70,dropout=True,has_padding=True).cuda(), \
@@ -31,7 +31,7 @@ unimodal_heads=[MLP(70,50,1).cuda(),MLP(150,100,1).cuda(), MLP(600, 256, 1).cuda
 
 all_modules = [*encoders, head, *unimodal_heads]
 
-fusion = Concat.cuda()
+fusion = Concat().cuda()
 
 def trainprocess():
     train(encoders, head, unimodal_heads, fusion, traindata, validdata, 300, lr=0.005, AUPRC=False, savedir='gb.pt')

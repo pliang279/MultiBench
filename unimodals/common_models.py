@@ -570,7 +570,7 @@ class Transformer(nn.Module):
         layer = nn.TransformerEncoderLayer(d_model=self.embed_dim, nhead=3)
         self.transformer = nn.TransformerEncoder(layer, num_layers=3)
 
-    def forward(self, x):
+    def forward(self, x,training=True):
         x = self.conv(x.permute([0, 2, 1]))
         x = x.permute([2, 0, 1])
         x = self.transformer(x)[-1]

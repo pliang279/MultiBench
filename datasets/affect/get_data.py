@@ -196,7 +196,7 @@ class Affectdataset(Dataset):
 def get_dataloader(
         filepath: str, batch_size: int = 32, max_seq_len=50, train_shuffle: bool = True,
         num_workers: int = 4, flatten_time_series: bool = False, task=None,
-        raw_path='/home/pliang/multibench/affect/mosi/mosi.hdf5') -> DataLoader:
+        raw_path='/home/paul/MultiBench/mosi.hdf5') -> DataLoader:
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
 
