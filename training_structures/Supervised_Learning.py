@@ -29,10 +29,19 @@ class MMDL(nn.Module):
             for i in range(len(inputs)):
                 outs.append(self.encoders[i](inputs[i], training=training))
         self.reps=outs
-        out = self.fuse(outs, training=training)
+        if self.has_padding:
+            #print(outs[0])
+            if isinstance(outs[0],torch.Tensor):
+                out=self.fuse(outs,training=training)
+            else:
+                out=self.fuse([i[0] for i in outs],training=training)
+        else:
+            out = self.fuse(outs, training=training)
         self.fuseout = out
         if type(out) is tuple:
             out = out[0]
+        if self.has_padding and not isinstance(outs[0],torch.Tensor):
+            return self.head([out,inputs[1][0]],training=training)
         return self.head(out, training=training)
 
 def deal_with_objective(objective,pred,truth,args):
@@ -42,7 +51,7 @@ def deal_with_objective(objective,pred,truth,args):
         else:
             truth1 = truth
         return objective(pred,truth1.long().cuda())
-    elif type(objective)==nn.MSELoss or type(objective)==nn.modules.loss.BCEWithLogitsLoss:
+    elif type(objective)==nn.MSELoss or type(objective)==nn.modules.loss.BCEWithLogitsLoss or type(objective)==nn.L1Loss:
         return objective(pred,truth.float().cuda())
     else:
         return objective(pred,truth,args)
@@ -71,7 +80,7 @@ def train(
     early_stop=False,task="classification",optimtype=torch.optim.RMSprop,lr=0.001,weight_decay=0.0,
     objective=nn.CrossEntropyLoss(),auprc=False,save='best.pt',validtime=False, objective_args_dict=None,input_to_float=True,clip_val=8,
     track_complexity=True):
-    model = MMDL(encoders,fusion,head,is_packed).cuda()
+    model = MMDL(encoders,fusion,head,has_padding=is_packed).cuda()
     def trainprocess():
         additional_params=[]
         for m in additional_optimizing_modules:
@@ -96,7 +105,7 @@ def train(
                 op.zero_grad()
                 if is_packed:
                     with torch.backends.cudnn.flags(enabled=False):
-                        out=model([[processinput(i).cuda() for i in j[0]], j[1]],training=True)
+                        out=model([[processinput(i).cuda() for i in j[0]],j[1]],training=True)
                     
                 else:
                     out=model([processinput(i).cuda() for i in j[:-1]],training=True)
@@ -225,6 +234,15 @@ def single_test(
                 pred.append(torch.argmax(out, 1))
             elif task == "multilabel":
                 pred.append(torch.sigmoid(out).round())
+            elif task == "posneg-classification":
+                prede = []
+                oute = out.cpu().numpy().tolist()
+                for i in oute:
+                    if i[0] >= 0:
+                        prede.append(1)
+                    else:
+                        prede.append(0)
+                pred.append(torch.LongTensor(prede))
             true.append(j[-1])
             if auprc:
                 #pdb.set_trace()
@@ -247,6 +265,17 @@ def single_test(
         elif task == "regression":
             print("mse: "+str(testloss.item()))
             return {'MSE': testloss.item()}
+        elif task == "posneg-classification":
+            trueposneg=[]
+            for i in range(len(true)):
+                if true[i]>=0:
+                    trueposneg.append(1)
+                else:
+                    trueposneg.append(0)
+            accs = accuracy(torch.LongTensor(trueposneg),pred)
+            print("acc: "+str(accs))
+            return {'Accuracy':accs}
+
 
 
 # model: saved checkpoint filename from train

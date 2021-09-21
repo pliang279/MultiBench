@@ -1,4 +1,4 @@
-import sys
+impor:t sys
 import os
 sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
@@ -16,6 +16,7 @@ from private_test_scripts.all_in_one import all_in_one_train
 traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
 
 # mosi/mosei
+
 encoders = [Transformer(409, 512).cuda()]
 head = MLP(512, 256, 1).cuda()
 

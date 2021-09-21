@@ -80,10 +80,10 @@ We welcome new contributions to MultiBench through new research areas, datasets,
 
 We release the processed datasets [here](https://drive.google.com/drive/folders/1IXZAjOEWFOGLxAK9JKvwlG2D9LThK6c5?usp=sharing). The raw datasets are also publicly available at [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY). You can obtain processed data with `datasets/affect/get_data.py`, note that `sarcasm` means [MUsTARD](https://github.com/soujanyaporia/MUStARD) and `humor` means [UR-FUNNY](https://github.com/ROC-HCI/UR-FUNNY), please remember to use `regression` for MOSI and MOSEI `task` and `classcification` for MUsTARD and UR-FUNNY.
 
-There are several example scripts for running affect datasets under examples/affect/. For example, to run UR-Funny with simple late fusion, do
+There are several example scripts for running affect datasets under examples/affect/. For example, to run affect datasets with simple late fusion, do
 
 ```
-python3 examples/affect/humor_late_fusion.py
+python3 examples/affect/affect_late_fusion.py
 ```
 
 ### Healthcare

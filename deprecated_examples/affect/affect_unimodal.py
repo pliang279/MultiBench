@@ -14,7 +14,7 @@ from training_structures.unimodal import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
-traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
+traindata, validdata, testdata = get_dataloader('/home/paul/MultiBench/mosi_raw.pkl')
 
 
 modal_num = 2

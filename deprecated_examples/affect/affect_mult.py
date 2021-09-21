@@ -1,31 +1,40 @@
 import sys
 import os
 sys.path.append(os.getcwd())
-
+sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 import torch
-from torch import nn
-from fusions.mult import MULTModel
-from training_structures.unimodal import train, test
-from unimodals.common_models import MLP
 
+from fusions.common_fusions import ConcatEarly
 from datasets.affect.get_data import get_dataloader
+from unimodals.common_models import MLP
+from fusions.mult import MULTModel
+
+from training_structures.Supervised_Learning import train, test
+
+from private_test_scripts.all_in_one import all_in_one_train
+
+# mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/processed/mosi_raw.pkl')
+
+# mosi/mosei
+encoders = [MULTModel(409, 512).cuda()]
+head = MLP(512, 256, 1).cuda()
+
+# humor/sarcasm
+# encoders = [Transformer(early=True).cuda()]
+# head = MLP(1128, 512, 1).cuda()
+
+all_modules = [*encoders, head]
+
+fusion = ConcatEarly().cuda()
 
 
-traindata, validdata, testdata = get_dataloader('../affect/processed/mosei_senti_data.pkl')
+def trainprocess():
+    train(encoders, fusion, head, traindata, validdata, 1000, task="regression", optimtype=torch.optim.AdamW,
+        lr=1e-4, save='mosi_ef_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
-#mosi
-# encoders=GRU(325,512,dropout=True,has_padding=True).cuda()
-# head=MLP(512,256, 1).cuda()
-
-#mosei
-encoders = MULTModel(3).cuda()
-head = nn.Identity()
-
-train(encoders, head, traindata, validdata, 1000, True, True, task="regression", optimtype=torch.optim.AdamW, lr=1e-5,
-      save='mosei_mult_best.pt', weight_decay=0.01,criterion=torch.nn.L1Loss(), regularization=False)
-
+all_in_one_train(trainprocess, all_modules)
 
 print("Testing:")
-model = torch.load('mosei_mult_best.pt').cuda()
+model = torch.load('mosi_ef_best.pt').cuda()
 test(model, testdata, True, torch.nn.L1Loss(), "regression")
-
