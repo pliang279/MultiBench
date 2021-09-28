@@ -225,8 +225,16 @@ def single_test(
                 out = model([processinput(i).float().cuda() for i in j[:-1]],training=False)
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss or type(criterion) == torch.nn.MSELoss:
                 loss=criterion(out, j[-1].float().cuda())
-            elif type(criterion) == torch.nn.CrossEntropyLoss:
-                loss=criterion(out, j[-1].long().cuda())
+
+            # elif type(criterion) == torch.nn.CrossEntropyLoss:
+            #     loss=criterion(out, j[-1].long().cuda())
+            
+            elif type(criterion)==nn.CrossEntropyLoss:
+                if len(j[-1].size())==len(out.size()):
+                    truth1 = j[-1].squeeze(len(out.size())-1)
+                else:
+                    truth1 = j[-1]
+                loss = criterion(out,truth1.long().cuda())
             else:
                 loss = criterion(out,j[-1].cuda())
             totalloss += loss*len(j[-1])

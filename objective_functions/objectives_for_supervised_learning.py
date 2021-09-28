@@ -1,3 +1,4 @@
+from numpy.core.fromnumeric import shape
 from objective_functions.recon import recon_weighted_sum,elbo_loss
 import torch
 from objective_functions.cca import CCALoss
@@ -6,6 +7,7 @@ from objective_functions.regularization import RegularizationLoss
 # deals with some built-in criterions
 def criterioning(pred,truth,criterion):
     if type(criterion)==torch.nn.CrossEntropyLoss:
+        truth = truth.squeeze() if len(truth.shape) == len(pred.shape) else truth
         return criterion(pred,truth.long().cuda())
     elif type(criterion)==torch.nn.modules.loss.BCEWithLogitsLoss or type(criterion)==torch.nn.MSELoss:
         return criterion(pred,truth.float().cuda())

@@ -12,10 +12,13 @@ from torch.nn.utils.rnn import pack_padded_sequence
 import math
 import random
 from torch.autograd import Variable
+from tqdm import tqdm
 
 from unimodals.common_models import MLP
 from utils.evaluation_metric import eval_mosei_senti_return, eval_mosei_senti
 from fusions.MCTN import Encoder, Decoder, Seq2Seq, L2_MCTN, process_input_L2
+from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
+from eval_scripts.complexity import all_in_one_train, all_in_one_test
 
 feature_dim = 300
 hidden_dim = 2
@@ -132,7 +135,7 @@ def train(
                 break
 
 
-def test(model, testdata, max_seq_len=20):
+def single_test(model, testdata, max_seq_len=20):
     model.eval()
     print('Start Testing ---------->>')
     pred = []
@@ -153,4 +156,29 @@ def test(model, testdata, max_seq_len=20):
         Acc1 = eval_results_include[-1]
         Acc2 = eval_results_exclude[-1]
         print('Test: MAE: {}, Acc1: {}, Acc2: {}'.format(mae, Acc1, Acc2))
-        print()
+        return Acc2
+
+
+def test(
+        model, test_dataloaders_all, dataset, method_name='My method', is_packed=False, criterion=nn.CrossEntropyLoss(), task="classification", auprc=False, input_to_float=True):
+    def testprocess():
+        single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0])
+    all_in_one_test(testprocess, [model])
+    for noisy_modality, test_dataloaders in test_dataloaders_all.items():
+        print("Testing on noisy data ({})...".format(noisy_modality))
+        robustness_curve = dict()
+        for test_dataloader in tqdm(test_dataloaders):
+            single_test_result = single_test(model, test_dataloader)
+            for k, v in single_test_result.items():
+                curve = robustness_curve.get(k, [])
+                curve.append(v)
+                robustness_curve[k] = curve 
+        for measure, robustness_result in robustness_curve.items():
+            robustness_key = '{} {}'.format(dataset, noisy_modality)
+            print("relative robustness ({}, {}): {}".format(noisy_modality, measure, str(relative_robustness(robustness_result, robustness_key))))
+            if len(robustness_curve) != 1:
+                robustness_key = '{} {}'.format(robustness_key, measure)
+            print("effective robustness ({}, {}): {}".format(noisy_modality, measure, str(effective_robustness(robustness_result, robustness_key))))
+            fig_name = '{}-{}-{}-{}'.format(method_name, robustness_key, noisy_modality, measure)
+            single_plot(robustness_result, robustness_key, xlabel='Noise level', ylabel=measure, fig_name=fig_name, method=method_name)
+            print("Plot saved as "+fig_name)

@@ -567,10 +567,10 @@ class Transformer(nn.Module):
         super().__init__()
         self.embed_dim = dim
         self.conv = nn.Conv1d(n_features, self.embed_dim, kernel_size=1, padding=0, bias=False)
-        layer = nn.TransformerEncoderLayer(d_model=self.embed_dim, nhead=3)
-        self.transformer = nn.TransformerEncoder(layer, num_layers=3)
+        layer = nn.TransformerEncoderLayer(d_model=self.embed_dim, nhead=5)
+        self.transformer = nn.TransformerEncoder(layer, num_layers=5)
 
-    def forward(self, x,training=True):
+    def forward(self, x, training=True):
         x = self.conv(x.permute([0, 2, 1]))
         x = x.permute([2, 0, 1])
         x = self.transformer(x)[-1]
