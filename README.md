@@ -8,7 +8,7 @@ Correspondence to:
   - [Paul Pu Liang](http://www.cs.cmu.edu/~pliang/) (pliang@cs.cmu.edu)
   - [Yiwei Lyu](https://github.com/lvyiwei1) (ylyu1@andrew.cmu.edu)
   - [Xiang Fan](https://github.com/sfanxiang) (xiangfan@cmu.edu)
-  - Zetian Wu (zwu49@jhu.edu)
+  - [Zetian Wu](http://neal-ztwu.github.io) (zwu49@jhu.edu)
   - Yun Cheng (yuncheng@andrew.cmu.edu)
   - [Jason Wu](https://jasonwunix.com/) (jsonwu@cmu.edu)
   - Leslie Chen (lesliechen1998@gmail.com)
@@ -184,7 +184,7 @@ There are several example scripts for running AV-MNIST under examples/multimedia
 python examples/multimedia/avmnist_simple_late_fusion.py
 ```
 
-To access MM-IMDb, download the multimodal_imdb.hdf5 from [here](http://lisi1.unal.edu.co/mmimdb/multimodal_imdb.hdf5) and we also use the raw data from [here](http://lisi1.unal.edu.co/mmimdb/mmimdb.tar.gz) to test models' robustness. 
+To access MM-IMDb, download the multimodal_imdb.hdf5 from [here](https://archive.org/download/mmimdb/multimodal_imdb.hdf5) and we also use the raw data from [here](https://archive.org/download/mmimdb/mmimdb.tar.gz) to test models' robustness. 
 
 There are several example scripts for running MM-IMDb under examples/multimedia/. To run experiments, input the location of the hdf5 file to the get_dataloader function in each of the examples. Then, taking Text and Image with Simple Late Fusion with Concatenation for example, do 
 ```
