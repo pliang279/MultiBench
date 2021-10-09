@@ -76,11 +76,15 @@ def process_data(filename, path):
 
     return data
 
-def get_dataloader(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40, vgg:bool=False, skip_process=False)->Tuple[Dict]:
+def get_dataloader(path:str,test_path:str,num_workers:int=8, train_shuffle:bool=True, batch_size:int=40, vgg:bool=False, skip_process=False, no_robust=False)->Tuple[Dict]:
     train_dataloader = DataLoader(IMDBDataset(path, 0, 15552, vgg), \
         shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
     val_dataloader = DataLoader(IMDBDataset(path, 15552, 18160, vgg), \
         shuffle=False, num_workers=num_workers, batch_size=batch_size)
+    if no_robust:
+        test_dataloader = DataLoader(IMDBDataset(path, 18160, 25959, vgg), \
+            shuffle=False, num_workers=num_workers, batch_size=batch_size)
+        return train_dataloader,val_dataloader,test_dataloader
 
     test_dataset = h5py.File(path, 'r')
     test_text = test_dataset['features'][18160:25959]
