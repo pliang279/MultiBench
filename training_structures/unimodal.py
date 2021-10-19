@@ -154,7 +154,12 @@ def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='c
             return {'MSE': (totalloss / totals).item()}
 
 
-def test(encoder, head, test_dataloaders_all, dataset, method_name='My method', auprc=False, modalnum=0, task='classification', criterion=None):
+def test(encoder, head, test_dataloaders_all, dataset='default', method_name='My method', auprc=False, modalnum=0, task='classification', criterion=None,no_robust=False):
+    if no_robust:
+        def testprocess():
+            single_test(encoder,head,test_dataloaders_all,auprc,modalnum,task,criterion)
+        all_in_one_test(testprocess,[model])
+        return
     def testprocess():
         single_test(encoder, head, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc, modalnum, task, criterion)
     all_in_one_test(testprocess, [encoder, head])

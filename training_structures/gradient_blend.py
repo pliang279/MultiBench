@@ -348,7 +348,12 @@ def single_test(model, test_dataloader, auprc=False, classification=True):
       return {'MSE': (totalloss/total).item()}
 
 
-def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, classification=True):
+def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, classification=True,no_robust=False):
+  if no_robust:
+    def testprocess():
+      single_test(model,test_dataloaders_all,auprc,classification)
+    all_in_one_test(testprocess,[model])
+    return
   def testprocess():
     single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc, classification)
   all_in_one_test(testprocess, [model])

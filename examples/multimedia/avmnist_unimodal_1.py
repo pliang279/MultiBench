@@ -20,6 +20,6 @@ train(encoder,head,traindata,validdata,20,optimtype=torch.optim.SGD,lr=0.1,weigh
 print("Testing:")
 encoder=torch.load('encoder.pt').cuda()
 head = torch.load('head.pt')
-test(encoder,head,testdata,modalnum=modalnum)
+test(encoder,head,testdata,modalnum=modalnum,no_robust=True)
 
 
