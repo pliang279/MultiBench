@@ -19,6 +19,6 @@ train(encoders,fusion,head,traindata,validdata,30,optimtype=torch.optim.SGD,lr=0
 
 print("Testing:")
 model=torch.load(filename).cuda()
-test(model,testdata)
+test(model,testdata,no_robust=True)
 
 

@@ -180,7 +180,12 @@ def single_test(model,test_dataloader,auprc=False):
     return {'Accuracy': float(corrects)/total}
 
 
-def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False):
+def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, no_robust=False):
+    if no_robust:
+        def testprocess():
+            single_test(model,test_dataloaders_all, auprc)
+        all_in_one_test(testprocess,[model])
+        return
     def testprocess():
         single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], auprc)
     all_in_one_test(testprocess, [model])

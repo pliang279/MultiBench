@@ -11,4 +11,4 @@ import utils.surrogate as surr
 
 traindata, validdata, testdata = get_dataloader('/data/yiwei/avmnist/_MFAS/avmnist',batch_size=32)
 model = torch.load('temp/best.pt').cuda()
-test(model,testdata)
+test(model,testdata,no_robust=True)

@@ -8,17 +8,17 @@ from unimodals.common_models import LeNet,MLP,Constant
 from torch import nn
 import torch
 
-traindata, validdata, testdata = get_dataloader('/home/pliang/yiwei/avmnist/_MFAS/avmnist')
+traindata, validdata, testdata = get_dataloader('/home/paul/yiwei/avmnist/_MFAS/avmnist')
 channels=6
 encoders=[LeNet(1,channels,3).cuda(),LeNet(1,channels,5).cuda()]
 head=MLP(channels*40,100,10).cuda()
 
 fusion=Concat().cuda()
 
-train(encoders,fusion,head,traindata,validdata,30,optimtype=torch.optim.SGD,lr=0.1,weight_decay=0.0001)
+train(encoders,fusion,head,traindata,validdata,3,optimtype=torch.optim.SGD,lr=0.1,weight_decay=0.0001)
 
 print("Testing:")
 model=torch.load('best.pt').cuda()
-test(model,testdata)
+test(model,testdata,no_robust=True)
 
 

@@ -27,4 +27,4 @@ train(encoders,fusion,head,traindata,validdata,25,
 
 print("Testing:")
 model=torch.load('best_cca.pt').cuda()
-test(model,testdata)
+test(model,testdata,no_robust=True)

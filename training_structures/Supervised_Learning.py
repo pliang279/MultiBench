@@ -292,7 +292,12 @@ def single_test(
 # criterion: only needed for regression, put MSELoss there
 # all other arguments are same as train
 def test(
-        model, test_dataloaders_all, dataset, method_name='My method', is_packed=False, criterion=nn.CrossEntropyLoss(), task="classification", auprc=False, input_to_float=True):
+        model, test_dataloaders_all, dataset='default', method_name='My method', is_packed=False, criterion=nn.CrossEntropyLoss(), task="classification", auprc=False, input_to_float=True, no_robust=False):
+    if no_robust:
+        def testprocess():
+            single_test(model,test_dataloaders_all,is_packed,criterion,task,auprc,input_to_float)
+        all_in_one_test(testprocess,[model])
+        return
     def testprocess():
         single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[0]][0], is_packed, criterion, task, auprc, input_to_float)
     all_in_one_test(testprocess, [model])
