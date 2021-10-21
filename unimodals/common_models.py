@@ -87,9 +87,9 @@ class MLP(torch.nn.Module):
 
 # Wrapper for GRU
 class GRU(torch.nn.Module):
-    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False,batch_first=False):
         super(GRU,self).__init__()
-        self.gru=nn.GRU(indim,hiddim)
+        self.gru=nn.GRU(indim,hiddim,batch_first=batch_first)
         self.dropoutp=dropoutp
         self.dropout=dropout
         self.flatten=flatten
@@ -108,9 +108,9 @@ class GRU(torch.nn.Module):
 
 # GRU unit followed by a linear layer
 class GRUWithLinear(torch.nn.Module):
-    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False,output_each_layer=False):
+    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False,output_each_layer=False,batch_first=False):
         super(GRUWithLinear,self).__init__()
-        self.gru=nn.GRU(indim,hiddim)
+        self.gru=nn.GRU(indim,hiddim,batch_first=batch_first)
         self.linear = nn.Linear(hiddim,outdim)
         self.dropoutp=dropoutp
         self.dropout=dropout

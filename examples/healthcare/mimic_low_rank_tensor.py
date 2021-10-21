@@ -12,7 +12,7 @@ import torch
 traindata, validdata, testdata = get_dataloader(1, imputed_path='datasets/mimic/im.pk')
 
 #build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False).cuda()]
+encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False,batch_first=True).cuda()]
 head = MLP(100, 40, 2, dropout=False).cuda()
 fusion = LowRankTensorFusion([10,720],100,40).cuda()
 

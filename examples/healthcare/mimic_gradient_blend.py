@@ -14,7 +14,7 @@ filename = 'bbest10.pt'
 traindata, validdata, testdata = get_dataloader(-1, imputed_path='/home/pliang/yiwei/im.pk')
 
 #build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10).cuda(), GRU(12, 30, flatten=True).cuda()]
+encoders = [MLP(5, 10, 10).cuda(), GRU(12, 30, flatten=True,batch_first=True).cuda()]
 head = MLP(730, 40, 6).cuda()
 fusion = Concat().cuda()
 unimodal_heads=[MLP(10,20,6).cuda(),MLP(720,40,6).cuda()]

@@ -19,9 +19,9 @@ class MLPEncoder(torch.nn.Module):
     return output[:,:self.outdim],output[:,self.outdim:]
 
 class TSEncoder(torch.nn.Module):
-  def __init__(self,indim,outdim,finaldim,timestep,returnvar=True):
+  def __init__(self,indim,outdim,finaldim,timestep,returnvar=True,batch_first=False):
     super(TSEncoder,self).__init__()
-    self.gru=nn.GRU(input_size=indim,hidden_size=outdim)
+    self.gru=nn.GRU(input_size=indim,hidden_size=outdim,batch_first=batch_first)
     self.indim=indim
     self.ts=timestep
     self.finaldim=finaldim

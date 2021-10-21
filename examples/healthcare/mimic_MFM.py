@@ -18,7 +18,7 @@ n_latent=200
 series_dim=12
 timestep=24
 fuse=Sequential2(Concat(),MLP(2*n_latent,n_latent,n_latent//2)).cuda()
-encoders=[MLP(5,20,n_latent).cuda(),TSEncoder(series_dim,30,n_latent,timestep,returnvar=False).cuda()]
+encoders=[MLP(5,20,n_latent).cuda(),TSEncoder(series_dim,30,n_latent,timestep,returnvar=False,batch_first=True).cuda()]
 decoders=[MLP(n_latent,20,5).cuda(),TSDecoder(series_dim,30,n_latent,timestep).cuda()]
 intermediates=[MLP(n_latent,n_latent//2,n_latent//2).cuda(),MLP(n_latent,n_latent//2,n_latent//2).cuda()]
 head=MLP(n_latent//2,20,classes).cuda()
