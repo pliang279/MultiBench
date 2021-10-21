@@ -13,7 +13,7 @@ from memory_profiler import memory_usage
 traindata, validdata, testdata = get_dataloader(7, imputed_path='datasets/mimic/im.pk')
 
 #build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False).cuda()]
+encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False,batch_first=True).cuda()]
 head = MLP(730, 40, 2, dropout=False).cuda()
 fusion = Concat().cuda()
 allmodules = [encoders[0],encoders[1],head,fusion]

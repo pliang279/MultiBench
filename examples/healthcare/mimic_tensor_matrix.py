@@ -1,7 +1,7 @@
 import sys
 import os
 sys.path.append(os.getcwd())
-from training_structures.Simple_Late_Fusion import train, test
+from training_structures.Supervised_Learning import train, test
 from fusions.common_fusions import MultiplicativeInteractions2Modal
 from datasets.mimic.get_data import get_dataloader
 from unimodals.common_models import MLP, GRU
@@ -11,9 +11,9 @@ import torch
 filename = 'besttensor.pt'
 
 #get dataloader for icd9 classification task 7
-traindata, validdata, testdata = get_dataloader(1, imputed_path='datasets/mimic/im.pk')
+traindata, validdata, testdata = get_dataloader(1, imputed_path='/home/paul/yiwei/im.pk')
 #build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False).cuda()]
+encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False,batch_first=True).cuda()]
 head = MLP(100,40, 2, dropout=False).cuda()
 fusion = MultiplicativeInteractions2Modal([10,720],100,'matrix',flatten=True)
 

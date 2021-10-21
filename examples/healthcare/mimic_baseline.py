@@ -12,7 +12,7 @@ import torch
 traindata, validdata, testdata = get_dataloader(7, imputed_path='/home/pliang/yiwei/im.pk')
 
 #build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False).cuda()]
+encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False,batch_first=True).cuda()]
 head = MLP(730, 40, 2, dropout=False).cuda()
 fusion = Concat().cuda()
 
