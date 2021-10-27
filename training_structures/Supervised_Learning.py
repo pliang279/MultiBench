@@ -3,7 +3,7 @@ import torch
 from torch import nn
 from torch.optim.lr_scheduler import ExponentialLR
 import time
-from eval_scripts.performance import AUPRC,f1_score,accuracy
+from eval_scripts.performance import AUPRC,f1_score,accuracy,eval_affect
 from eval_scripts.complexity import all_in_one_train, all_in_one_test
 from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
 from tqdm import tqdm
@@ -246,8 +246,10 @@ def single_test(
                 prede = []
                 oute = out.cpu().numpy().tolist()
                 for i in oute:
-                    if i[0] >= 0:
+                    if i[0] > 0:
                         prede.append(1)
+                    elif i[0] < 0:
+                        prede.append(-1)
                     else:
                         prede.append(0)
                 pred.append(torch.LongTensor(prede))
@@ -274,14 +276,10 @@ def single_test(
             print("mse: "+str(testloss.item()))
             return {'MSE': testloss.item()}
         elif task == "posneg-classification":
-            trueposneg=[]
-            for i in range(len(true)):
-                if true[i]>=0:
-                    trueposneg.append(1)
-                else:
-                    trueposneg.append(0)
-            accs = accuracy(torch.LongTensor(trueposneg),pred)
-            print("acc: "+str(accs))
+            trueposneg=true
+            accs = eval_affect(trueposneg,pred)
+            acc2 = eval_affect(trueposneg,pred, exclude_zero=False)
+            print("acc: "+str(accs) + ', ' + str(acc2))
             return {'Accuracy':accs}
 
 
