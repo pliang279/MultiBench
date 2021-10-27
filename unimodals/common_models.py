@@ -571,6 +571,8 @@ class Transformer(nn.Module):
         self.transformer = nn.TransformerEncoder(layer, num_layers=5)
 
     def forward(self, x, training=True):
+        if type(x) is list:
+            x = x[0]
         x = self.conv(x.permute([0, 2, 1]))
         x = x.permute([2, 0, 1])
         x = self.transformer(x)[-1]

@@ -74,11 +74,18 @@ def get_rawtext(path, data_kind, vids):
         # vid_id = '{}[{}]'.format(id, seg)
         vid_id = vid
         try:
-            for word in f['words'][vid_id]['features']:
-                if word[0] != b'sp':
-                    text.append(word[0].decode('utf-8'))
-            text_data.append(' '.join(text))
-            new_vids.append(vid_id)
+            if data_kind == 'hdf5':
+                for word in f['words'][vid_id]['features']:
+                    if word[0] != b'sp':
+                        text.append(word[0].decode('utf-8'))
+                text_data.append(' '.join(text))
+                new_vids.append(vid_id)
+            else:
+                for word in f[vid_id]:
+                    if word != 'sp':
+                        text.append(word)
+                text_data.append(' '.join(text))
+                new_vids.append(vid_id)
         except:
             print("missing", vid, vid_id)
     return text_data, new_vids
@@ -142,13 +149,14 @@ def glove_embeddings(text_data, vids, paddings=50):
 
 class Affectdataset(Dataset):
 
-    def __init__(self, data: Dict, flatten_time_series: bool, aligned: bool = True, task: str = None, max_pad=False, max_pad_num=50) -> None:
+    def __init__(self, data: Dict, flatten_time_series: bool, aligned: bool = True, task: str = None, max_pad=False, max_pad_num=50, data_type='mosi') -> None:
         self.dataset = data
         self.flatten = flatten_time_series
         self.aligned = aligned
         self.task = task
         self.max_pad = max_pad
         self.max_pad_num = max_pad_num
+        self.data_type = data_type
 
     def __getitem__(self, ind):
 
@@ -183,8 +191,8 @@ class Affectdataset(Dataset):
         audio = torch.nan_to_num((audio - audio.mean(0, keepdims=True)) / (torch.std(audio, axis=0, keepdims=True)))
         text = torch.nan_to_num((text - text.mean(0, keepdims=True)) / (torch.std(text, axis=0, keepdims=True)))
 
-        def get_class(flag, data_type='mosi'):
-            if data_type in ['mosi', 'mosei']:
+        def get_class(flag, data_type=self.data_type):
+            if data_type in ['mosi', 'mosei', 'sarcasm']:
                 if flag >= 0:
                     return 1
                 else:
@@ -213,8 +221,8 @@ class Affectdataset(Dataset):
 
 def get_dataloader(
         filepath: str, batch_size: int = 32, max_seq_len=50, max_pad=False, train_shuffle: bool = True,
-        num_workers: int = 2, flatten_time_series: bool = False, task=None, robust_test=True,
-        raw_path='/home/paul/MultiBench/mosi.hdf5') -> DataLoader:
+        num_workers: int = 2, flatten_time_series: bool = False, task=None, robust_test=False, data_type='mosi', 
+        raw_path='/home/van/backup/pack/mosi/mosi.hdf5') -> DataLoader:
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
 
@@ -228,10 +236,10 @@ def get_dataloader(
     for dataset in alldata:
         processed_dataset[dataset] = alldata[dataset]
 
-    train = DataLoader(Affectdataset(processed_dataset['train'], flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len), \
+    train = DataLoader(Affectdataset(processed_dataset['train'], flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), \
                        shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size, \
                        collate_fn=process)
-    valid = DataLoader(Affectdataset(processed_dataset['valid'], flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len), \
+    valid = DataLoader(Affectdataset(processed_dataset['valid'], flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), \
                        shuffle=False, num_workers=num_workers, batch_size=batch_size, \
                        collate_fn=process)
     # test = DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task), \
@@ -257,7 +265,7 @@ def get_dataloader(
             robust_text_numpy.append(test['text'])
 
             robust_text.append(
-                DataLoader(Affectdataset(test, flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len), shuffle=False, num_workers=num_workers,
+                DataLoader(Affectdataset(test, flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), shuffle=False, num_workers=num_workers,
                         batch_size=batch_size, collate_fn=process))
 
         # Add visual noises
@@ -273,7 +281,7 @@ def get_dataloader(
             print('test entries: {}'.format(test['vision'].shape))
 
             robust_vision.append(
-                DataLoader(Affectdataset(test, flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len), shuffle=False, num_workers=num_workers,
+                DataLoader(Affectdataset(test, flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), shuffle=False, num_workers=num_workers,
                         batch_size=batch_size, collate_fn=process))
 
         # Add audio noises
@@ -288,7 +296,7 @@ def get_dataloader(
             print('test entries: {}'.format(test['vision'].shape))
 
             robust_audio.append(
-                DataLoader(Affectdataset(test, flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len), shuffle=False, num_workers=num_workers,
+                DataLoader(Affectdataset(test, flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), shuffle=False, num_workers=num_workers,
                         batch_size=batch_size, collate_fn=process))
 
         # Add timeseries noises
@@ -314,7 +322,7 @@ def get_dataloader(
             print('test entries: {}'.format(test['vision'].shape))
 
             robust_timeseries.append(
-                DataLoader(Affectdataset(test, flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len), shuffle=False, num_workers=num_workers,
+                DataLoader(Affectdataset(test, flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), shuffle=False, num_workers=num_workers,
                         batch_size=batch_size, collate_fn=process))
         test_robust_data = dict()
         test_robust_data['robust_text'] = robust_text
@@ -324,7 +332,7 @@ def get_dataloader(
         return train, valid, test_robust_data
     else:
         test = dict()
-        test['all'] = [DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len), \
+        test['all'] = [DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), \
                       shuffle=False, num_workers=num_workers, batch_size=batch_size, \
                       collate_fn=process)]
         return train, valid, test
@@ -382,19 +390,29 @@ def process_2(inputs: List):
 
 if __name__ == '__main__':
     traindata, validdata, test_robust = \
-    get_dataloader('/home/paul/MultiBench/mosi_data.pkl', robust_test=False, max_pad=False)
+    get_dataloader('/home/van/backup/pack/humor/humor.pkl', robust_test=False, max_pad=False, task='classification', data_type='humor')
 
     keys = list(test_robust.keys())
-    # print(keys)
+    print(keys)
+
+    for batch in traindata:
+        print(batch[0][0].shape)
+        print(batch[0][1].shape)
+        print(batch[0][2].shape)
+        print(len(batch[1]))
+        print(batch[2].shape)
+        print(batch[3].shape)
+        break
 
     # test_robust[keys[0]][1]
     for batch in test_robust[keys[0]][0]:
-        for b in batch:
-            print(b.shape)
-            print(b)
+        print(batch[-1])
+        # for b in batch:
+            # print(b.shape)
+            # print(b)
         #     print(b[0].shape)
         # print(batch[1])
         # print(batch[-1])
-        break
+        # break
 
 
