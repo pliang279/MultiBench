@@ -193,23 +193,32 @@ class Affectdataset(Dataset):
 
         def get_class(flag, data_type=self.data_type):
             if data_type in ['mosi', 'mosei', 'sarcasm']:
-                if flag >= 0:
+                if flag > 0:
                     return 1
                 else:
                     return 0
             else:
                 return flag
+        
+        if self.data_type == 'humor':
+            if (self.task == None) or (self.task == 'regression'):
+                if self.dataset['labels'][ind] == 0:
+                    tmp_label = -1
+                else:
+                    tmp_label = 1
+        else:
+            tmp_label = self.dataset['labels'][ind]
 
-        label = torch.tensor(get_class(self.dataset['labels'][ind])).long() if self.task == "classification" else torch.tensor(
-            self.dataset['labels'][ind]).float()
+        label = torch.tensor(get_class(tmp_label)).long() if self.task == "classification" else torch.tensor(
+            tmp_label).float()
 
         if self.flatten:
             return [vision.flatten(), audio.flatten(), text.flatten(), ind, \
                     label]
         else:
             if self.max_pad:
-                tmp = [vision, audio, text, ind, label]
-                for i in range(len(tmp) - 2):
+                tmp = [vision, audio, text, label]
+                for i in range(len(tmp) - 1):
                     tmp[i] = F.pad(tmp[i], (0, 0, 0, self.max_pad_num - tmp[i].shape[0]))
             else:
                 tmp = [vision, audio, text, ind, label]
@@ -331,10 +340,10 @@ def get_dataloader(
         test_robust_data['robust_timeseries'] = robust_timeseries
         return train, valid, test_robust_data
     else:
-        test = dict()
-        test['all'] = [DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), \
+        # test = dict()
+        test = DataLoader(Affectdataset(processed_dataset['test'], flatten_time_series, task=task, max_pad=max_pad, max_pad_num=max_seq_len, data_type=data_type), \
                       shuffle=False, num_workers=num_workers, batch_size=batch_size, \
-                      collate_fn=process)]
+                      collate_fn=process)
         return train, valid, test
 
 def process_1(inputs: List):
@@ -366,10 +375,9 @@ def process_1(inputs: List):
 def process_2(inputs: List):
     processed_input = []
     processed_input_lengths = []
-    inds = []
     labels = []
 
-    for i in range(len(inputs[0]) - 2):
+    for i in range(len(inputs[0]) - 1):
         feature = []
         for sample in inputs:
             feature.append(sample[i])
@@ -379,7 +387,6 @@ def process_2(inputs: List):
 
     for sample in inputs:
         # print(sample[-1].shape)
-        inds.append(sample[-2])
         # if len(sample[-2].shape) > 2:
         #     labels.append(torch.where(sample[-2][:, 1] == 1)[0])
         # else:
@@ -390,23 +397,31 @@ def process_2(inputs: List):
 
 if __name__ == '__main__':
     traindata, validdata, test_robust = \
-    get_dataloader('/home/van/backup/pack/humor/humor.pkl', robust_test=False, max_pad=False, task='classification', data_type='humor')
+    get_dataloader('/home/pliang/multibench/humor.pkl', robust_test=False, max_pad=True, task='classification', data_type='humor', max_seq_len=40)
 
-    keys = list(test_robust.keys())
-    print(keys)
+    # keys = list(test_robust.keys())
+    # print(keys)
+
+    # for batch in traindata:
+    #     print(batch[0][0].shape)
+    #     print(batch[0][1].shape)
+    #     print(batch[0][2].shape)
+    #     print(len(batch[1]))
+    #     print(batch[2].shape)
+    #     print(batch[3].shape)
+    #     break
 
     for batch in traindata:
-        print(batch[0][0].shape)
-        print(batch[0][1].shape)
-        print(batch[0][2].shape)
-        print(len(batch[1]))
+        print(batch[0].shape)
+        print(batch[1].shape)
         print(batch[2].shape)
         print(batch[3].shape)
         break
 
     # test_robust[keys[0]][1]
-    for batch in test_robust[keys[0]][0]:
+    for batch in test_robust:
         print(batch[-1])
+        break
         # for b in batch:
             # print(b.shape)
             # print(b)

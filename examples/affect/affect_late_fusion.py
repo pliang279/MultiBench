@@ -13,9 +13,12 @@ from training_structures.Supervised_Learning import train, test
 
 from private_test_scripts.all_in_one import all_in_one_train
 
-# mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+# mosi_data.pkl, mosei_senti_data.pkl, mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
 traindata, validdata, test_robust = \
-    get_dataloader('/home/van/backup/pack/mosi/mosi_raw.pkl', robust_test=False)
+    get_dataloader('/home/pliang/multibench/affect/pack/mosi/mosi_raw.pkl', robust_test=False)
+
+# traindata, validdata, test_robust = \
+#     get_dataloader('/home/pliang/multibench/affect/sarcasm.pkl', robust_test=False)
 
 # mosi/mosei
 encoders=[GRU(35,64,dropout=True,has_padding=True).cuda(), \
