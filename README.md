@@ -80,13 +80,13 @@ We welcome new contributions to MultiBench through new research areas, datasets,
 
 We release the processed datasets: [sarcasm](https://drive.google.com/drive/folders/1JFcX-NF97zu9ZOZGALGU9kp8dwkP7aJ7?usp=sharing), [mosi](https://drive.google.com/drive/folders/1uEK737LXB9jAlf9kyqRs6B9N6cDncodq?usp=sharing), [mosei](https://drive.google.com/drive/folders/1A_hTmifi824gypelGobgl2M-5Rw9VWHv?usp=sharing), [humor](https://drive.google.com/drive/folders/1A_hTmifi824gypelGobgl2M-5Rw9VWHv?usp=sharing). The raw datasets are also publicly available at [MultimodalSDK](https://github.com/A2Zadeh/CMU-MultimodalSDK) for MOSI and MOSEI, [MUsTARD](https://github.com/soujanyaporia/MUStARD) and [UR-Funny](https://github.com/ROC-HCI/UR-FUNNY). You can obtain processed data with `datasets/affect/get_data.py`, note that `sarcasm` means [MUsTARD](https://github.com/soujanyaporia/MUStARD) and `humor` means [UR-FUNNY](https://github.com/ROC-HCI/UR-FUNNY).
 
-There are several example scripts for running affect datasets under examples/affect/. For example, to run affect datasets with simple late fusion, fistly, you can
+There are several example scripts for running affect datasets under examples/affect/. For example, to run affect datasets with simple late fusion, fistly, you can use
 
 ```
 traindata, validdata, test_robust = get_dataloader('/home/pliang/multibench/affect/pack/mosi/mosi_raw.pkl', data_type='mosi')
 ```
 
-or if you don't want to use packed data, and expect data with the same max squence length use `max_pad` and `max_seq_len` options, and remember to set `is_packed=False` in the `train` and `test` functions
+or if you don't want to use packed data, and expect data with the same max squence length, use `max_pad` and `max_seq_len` options, and remember to set `is_packed=False` in the `train` and `test` functions
 
 ```
 traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/pack/mosi/mosi_raw.pkl', data_type='mosi', max_pad=True, max_seq_len=50)
