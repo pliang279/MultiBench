@@ -17,7 +17,7 @@ traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/
 
 # mosi/mosei
 encoders = [Identity().cuda(),Identity().cuda(),Identity().cuda()]
-head = Sequential(GRU(409,512,dropout=True,has_padding=True, batch_first=True),MLP(512, 512, 1)).cuda()
+head = Sequential(GRU(409,512,dropout=True,has_padding=False, batch_first=True),MLP(512, 512, 1)).cuda()
 
 # humor/sarcasm
 # encoders = [Identity().cuda(),Identity().cuda(),Identity().cuda()]
