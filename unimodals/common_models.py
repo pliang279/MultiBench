@@ -87,24 +87,34 @@ class MLP(torch.nn.Module):
 
 # Wrapper for GRU
 class GRU(torch.nn.Module):
-    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False,batch_first=False):
+    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False,last_only=False):
         super(GRU,self).__init__()
-        self.gru=nn.GRU(indim,hiddim,batch_first=batch_first)
+        self.gru=nn.GRU(indim,hiddim,batch_first=True)
         self.dropoutp=dropoutp
         self.dropout=dropout
         self.flatten=flatten
         self.has_padding=has_padding
+        self.last_only=last_only
     def forward(self,x,training=True):
+        # print(x.size())
         if self.has_padding:
             x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
             out=self.gru(x)[1][-1]
+        elif self.last_only:
+            out= self.gru(x)[1][0]
+            # print(out.size())
+            # print(out)
+            return out
         else:
-            out=self.gru(x)[0]
+            out,l=self.gru(x)
+            print(l.size())
         if self.dropout:
             out = F.dropout(out,p=self.dropoutp,training=training)
         if self.flatten:
             out=torch.flatten(out,1)
+        #print(out)
         return out
+
 
 # GRU unit followed by a linear layer
 class GRUWithLinear(torch.nn.Module):
