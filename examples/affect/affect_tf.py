@@ -31,7 +31,7 @@ head=MLP(8000,512,1).cuda()
 
 fusion = TensorFusion().cuda()
 
-train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, early_stop=True, is_packed=True, lr=1e-4, save='mosi_tf_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
+train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, early_stop=True, is_packed=True, lr=1e-3, save='mosi_tf_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
 print("Testing:")
 model = torch.load('mosi_tf_best.pt').cuda()
