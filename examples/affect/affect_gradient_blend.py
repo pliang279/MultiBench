@@ -16,6 +16,7 @@ import training_structures
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+# raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
 traindata, validdata, test_robust = \
     get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', task='classification', robust_test=False, max_pad=True)
 
@@ -32,6 +33,12 @@ unimodal_heads=[MLP(70,32,2).cuda(),MLP(150,64,2).cuda(),MLP(600,256,2).cuda()]
 #     GRU(81,256,dropout=True,has_padding=True).cuda(),\
 #     GRU(300,600,dropout=True,has_padding=True).cuda()]
 # head=MLP(1368,512,1).cuda()
+encoders=[Transformer(371,700).cuda(), \
+    Transformer(81,150).cuda(),\
+    Transformer(300,600).cuda()]
+head=MLP(1450,512,2).cuda()
+
+unimodal_heads=[MLP(700,512,2).cuda(),MLP(150,64,2).cuda(),MLP(600,256,2).cuda()]
 
 fusion = Concat().cuda()
 

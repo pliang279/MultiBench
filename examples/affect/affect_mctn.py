@@ -14,6 +14,7 @@ from training_structures.MCTN_Level2 import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+# raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
 traindata, validdata, testdata = \
     get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=False)
 

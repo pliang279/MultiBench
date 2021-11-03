@@ -12,6 +12,7 @@ from training_structures.Supervised_Learning import train, test
 
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+# raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
 # traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/pack/mosi/mosi_raw.pkl', robust_test=False)
 traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/pack/mosi/mosi_raw.pkl', robust_test=False, max_pad=True, data_type='mosi', max_seq_len=50)
 

@@ -14,6 +14,7 @@ from training_structures.Supervised_Learning import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+# raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
 traindata, validdata, test_robust = \
     get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=False)
 
@@ -24,10 +25,10 @@ encoders=[GRUWithLinear(35,64,32,dropout=True,has_padding=True).cuda(), \
 head=MLP(128,512,1).cuda()
 
 # humor/sarcasm
-# encoders=[GRU(371,512,dropout=True,has_padding=True).cuda(), \
-#     GRU(81,256,dropout=True,has_padding=True).cuda(),\
-#     GRU(300,600,dropout=True,has_padding=True).cuda()]
-# head=MLP(1368,512,1).cuda()
+# encoders=[GRUWithLinear(371,512,32,dropout=True,has_padding=True).cuda(), \
+#     GRUWithLinear(81,256,32,dropout=True,has_padding=True).cuda(),\
+#     GRUWithLinear(300,600,128,dropout=True,has_padding=True).cuda()]
+# head=MLP(128,512,1).cuda()
 
 fusion = LowRankTensorFusion([32, 32, 128], 128, 32).cuda()
 
