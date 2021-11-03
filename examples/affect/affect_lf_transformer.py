@@ -42,5 +42,5 @@ all_in_one_train(trainprocess, all_modules)
 print("Testing:")
 model = torch.load('mosi_lf_best.pt').cuda()
 
-test(model=model, test_dataloaders_all=test_robust, dataset='mosi', is_packed=True, criterion=torch.nn.L1Loss(), task='posneg-classification')
+test(model=model, test_dataloaders_all=test_robust, dataset='mosi', is_packed=True, criterion=torch.nn.L1Loss(), task='posneg-classification', no_robust=True)
 
