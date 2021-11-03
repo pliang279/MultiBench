@@ -17,8 +17,12 @@ def accuracy(truth, pred):
     return sklearn.metrics.accuracy_score(truth.cpu().numpy(),pred.cpu().numpy())
 
 def eval_affect(truths, results, exclude_zero=True):
-    test_preds = results.cpu().numpy()
-    test_truth = truths.cpu().numpy()
+    if type(results) is np.ndarray:
+        test_preds = results
+        test_truth = truths
+    else:
+        test_preds = results.cpu().numpy()
+        test_truth = truths.cpu().numpy()
 
     non_zeros = np.array([i for i, e in enumerate(test_truth) if e != 0 or (not exclude_zero)])
 
