@@ -130,6 +130,17 @@ def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='c
                 pred.append(torch.argmax(out, 1))
             elif task == "multilabel":
                 pred.append(torch.sigmoid(out).round())
+            elif task == "posneg-classification":
+                prede = []
+                oute = out.cpu().numpy().tolist()
+                for i in oute:
+                    if i[0] > 0:
+                        prede.append(1)
+                    elif i[0] < 0:
+                        prede.append(-1)
+                    else:
+                        prede.append(0)
+                pred.append(torch.LongTensor(prede))
             true.append(j[-1])
             if auprc:
                 #pdb.set_trace()
