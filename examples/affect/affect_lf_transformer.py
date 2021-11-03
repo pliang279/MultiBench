@@ -30,15 +30,10 @@ head=MLP(650,256,1).cuda()
 #     Transformer(300,600).cuda()]
 # head=MLP(1100,256,1).cuda()
 
-all_modules = [*encoders, head]
-
 fusion = Concat().cuda()
 
-def trainprocess():
-    train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, early_stop=True, is_packed=True, lr=1e-4, save='mosi_lf_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
+train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, early_stop=True, is_packed=True, lr=1e-4, save='mosi_lf_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
-
-all_in_one_train(trainprocess, all_modules)
 
 print("Testing:")
 model = torch.load('mosi_lf_best.pt').cuda()

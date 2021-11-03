@@ -29,16 +29,12 @@ head=MLP(820,512,2).cuda()
 unimodal_heads=[MLP(70,32,2).cuda(),MLP(150,64,2).cuda(),MLP(600,256,2).cuda()]
 
 # humor/sarcasm
-# encoders=[GRU(371,512,dropout=True,has_padding=True).cuda(), \
-#     GRU(81,256,dropout=True,has_padding=True).cuda(),\
-#     GRU(300,600,dropout=True,has_padding=True).cuda()]
-# head=MLP(1368,512,1).cuda()
-encoders=[Transformer(371,700).cuda(), \
-    Transformer(81,150).cuda(),\
-    Transformer(300,600).cuda()]
-head=MLP(1450,512,2).cuda()
+# encoders=[Transformer(371,700).cuda(), \
+#     Transformer(81,150).cuda(),\
+#     Transformer(300,600).cuda()]
+# head=MLP(1450,512,2).cuda()
 
-unimodal_heads=[MLP(700,512,2).cuda(),MLP(150,64,2).cuda(),MLP(600,256,2).cuda()]
+# unimodal_heads=[MLP(700,512,2).cuda(),MLP(150,64,2).cuda(),MLP(600,256,2).cuda()]
 
 fusion = Concat().cuda()
 
