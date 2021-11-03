@@ -15,7 +15,7 @@ from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
 traindata, validdata, test_robust = \
-    get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=True)
+    get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=False)
 
 # mosi/mosei
 encoders=[GRUWithLinear(35,64,32,dropout=True,has_padding=True).cuda(), \
