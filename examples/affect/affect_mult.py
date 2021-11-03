@@ -37,7 +37,7 @@ fusion = MULTModel(3, [35, 74, 300], hyp_params=HParams).cuda()
 # fusion = MULTModel(3, [371, 81, 300], hyp_params=HParams).cuda()
 head = Identity().cuda()
 
-train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, early_stop=False, is_packed=False, lr=1e-4, save='mosi_mult_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
+train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, early_stop=False, is_packed=False, lr=1e-4, clip_val=1.0, save='mosi_mult_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
 print("Testing:")
 model = torch.load('mosi_mult_best.pt').cuda()
