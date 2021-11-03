@@ -13,14 +13,10 @@ from fusions.mult import MULTModel
 from training_structures.Supervised_Learning import train, test
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+# raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
 traindata, validdata, test_robust = \
     get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=False, max_pad=True)
 
-# humor/sarcasm
-# encoders=[GRU(371,512,dropout=True,has_padding=True).cuda(), \
-#     GRU(81,256,dropout=True,has_padding=True).cuda(),\
-#     GRU(300,600,dropout=True,has_padding=True).cuda()]
-# head=MLP(1368,512,1).cuda()
 
 class HParams():
         num_heads = 10
@@ -38,6 +34,7 @@ class HParams():
 
 encoders = [Identity().cuda(),Identity().cuda(),Identity().cuda()]
 fusion = MULTModel(3, [35, 74, 300], hyp_params=HParams).cuda()
+# fusion = MULTModel(3, [371, 81, 300], hyp_params=HParams).cuda()
 head = Identity().cuda()
 
 train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, early_stop=False, is_packed=False, lr=1e-4, save='mosi_mult_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())

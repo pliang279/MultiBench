@@ -13,6 +13,7 @@ from training_structures.Supervised_Learning import train, test
 from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
+# raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
 traindata, validdata, testdata = get_dataloader('/home/paul/MultiBench/mosei_senti_data.pkl', robust_test=False)
 
 # mosi/mosei
@@ -20,8 +21,8 @@ encoders = [Identity().cuda(),Identity().cuda(),Identity().cuda()]
 head = Sequential(Transformer(409, 300).cuda(),MLP(300, 128, 1)).cuda()
 
 # humor/sarcasm
-# encoders = GRU(752, 1128, dropout=True, has_padding=True).cuda()
-# head = MLP(1128, 512, 1).cuda()
+# encoders = [Identity().cuda(),Identity().cuda(),Identity().cuda()]
+# head = Sequential(Transformer(752, 300).cuda(),MLP(300, 128, 1)).cuda()
 
 # all_modules = [*encoders, head]
 
