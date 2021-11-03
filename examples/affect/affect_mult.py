@@ -14,7 +14,7 @@ from training_structures.Supervised_Learning import train, test
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
 traindata, validdata, test_robust = \
-    get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=True, max_pad=True)
+    get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=False, max_pad=True)
 
 # humor/sarcasm
 # encoders=[GRU(371,512,dropout=True,has_padding=True).cuda(), \

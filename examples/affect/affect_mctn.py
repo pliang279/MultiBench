@@ -15,7 +15,7 @@ from private_test_scripts.all_in_one import all_in_one_train
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
 traindata, validdata, test_robust = \
-    get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=True)
+    get_dataloader('/home/paul/MultiBench/mosi_raw.pkl', robust_test=False)
 
 max_seq = 20
 feature_dim = 300
