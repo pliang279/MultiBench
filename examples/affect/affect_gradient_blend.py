@@ -42,6 +42,6 @@ train(encoders, head, unimodal_heads, fusion, traindata, validdata, 100, gb_epoc
 print("Testing:")
 model = torch.load('mosi_besf_gb.pt').cuda()
 
-test(model, test_robust, dataset='mosi', auprc=False)
+test(model, test_robust, dataset='mosi', auprc=False, no_robust=True)
 
 # test(model=model, test_dataloaders_all=test_robust, dataset='mosi', is_packed=True, criterion=torch.nn.L1Loss(), task='posneg-classification')
