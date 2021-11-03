@@ -2,7 +2,7 @@ from sklearn.metrics import accuracy_score, f1_score
 import torch
 from torch import nn
 from utils.AUPRC import AUPRC
-# from eval_scripts.performance import AUPRC,f1_score,accuracy
+from eval_scripts.performance import eval_affect
 from eval_scripts.complexity import all_in_one_train, all_in_one_test
 from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
 from tqdm import tqdm
@@ -150,6 +150,12 @@ def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='c
             print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
                 " f1_macro: "+str(f1_score(true, pred, average="macro")))
             return {'F1 score (micro)': f1_score(true, pred, average="micro"), 'F1 score (macro)': f1_score(true, pred, average="macro")}
+        elif task == "posneg-classification":
+            trueposneg=true
+            accs = eval_affect(trueposneg,pred)
+            acc2 = eval_affect(trueposneg,pred, exclude_zero=False)
+            print("acc: "+str(accs) + ', ' + str(acc2))
+            return {'Accuracy':accs}
         else:
             return {'MSE': (totalloss / totals).item()}
 
