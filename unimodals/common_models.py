@@ -77,18 +77,18 @@ class MLP(torch.nn.Module):
         super(MLP, self).__init__()
         self.fc = nn.Linear(indim, hiddim)
         self.fc2 = nn.Linear(hiddim, outdim)
-        self.dropoutp = dropoutp
+        self.dropout_layer = torch.nn.Dropout(dropoutp)
         self.dropout = dropout
         self.output_each_layer = output_each_layer
         self.lklu = nn.LeakyReLU(0.2)
 
-    def forward(self, x, training=True):
+    def forward(self, x):
         output = F.relu(self.fc(x))
         if self.dropout:
-            output = F.dropout(output, p=self.dropout, training=training)
+            output = self.dropout_layer(output)
         output2 = self.fc2(output)
         if self.dropout:
-            output2 = F.dropout(output, p=self.dropoutp, training=training)
+            output2 = self.dropout_layer(output)
         if self.output_each_layer:
             return [0, x, output, self.lklu(output2)]
         return output2
@@ -100,13 +100,13 @@ class GRU(torch.nn.Module):
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False, last_only=False):
         super(GRU, self).__init__()
         self.gru = nn.GRU(indim, hiddim, batch_first=True)
-        self.dropoutp = dropoutp
         self.dropout = dropout
+        self.dropout_layer = torch.nn.Dropout(dropoutp)
         self.flatten = flatten
         self.has_padding = has_padding
         self.last_only = last_only
 
-    def forward(self, x, training=True):
+    def forward(self, x):
         # print(x.size())
         if self.has_padding:
             x = pack_padded_sequence(
@@ -121,7 +121,7 @@ class GRU(torch.nn.Module):
             out, l = self.gru(x)
             print(l.size())
         if self.dropout:
-            out = F.dropout(out, p=self.dropoutp, training=training)
+            out = self.dropout_layer(out)
         if self.flatten:
             out = torch.flatten(out, 1)
         # print(out)
@@ -134,14 +134,14 @@ class GRUWithLinear(torch.nn.Module):
         super(GRUWithLinear, self).__init__()
         self.gru = nn.GRU(indim, hiddim, batch_first=batch_first)
         self.linear = nn.Linear(hiddim, outdim)
-        self.dropoutp = dropoutp
         self.dropout = dropout
+        self.dropout_layer = torch.nn.Dropout(dropoutp)
         self.flatten = flatten
         self.has_padding = has_padding
         self.output_each_layer = output_each_layer
         self.lklu = nn.LeakyReLU(0.2)
 
-    def forward(self, x, training=True):
+    def forward(self, x):
         if self.has_padding:
             x = pack_padded_sequence(
                 x[0], x[1], batch_first=True, enforce_sorted=False)
@@ -149,7 +149,7 @@ class GRUWithLinear(torch.nn.Module):
         else:
             hidden = self.gru(x)[0]
         if self.dropout:
-            hidden = F.dropout(hidden, p=self.dropoutp, training=training)
+            hidden = self.dropout_layer(hidden)
         out = self.linear(hidden)
         if self.flatten:
             out = torch.flatten(out, 1)
@@ -166,12 +166,12 @@ class LSTM(torch.nn.Module):
         self.lstm = nn.LSTM(indim, hiddim, batch_first=True)
         if linear_layer_outdim is not None:
             self.linear = nn.Linear(hiddim, linear_layer_outdim)
-        self.dropoutp = dropoutp
+        self.dropout_layer = torch.nn.Dropout(dropoutp)
         self.dropout = dropout
         self.flatten = flatten
         self.has_padding = has_padding
 
-    def forward(self, x, training=True):
+    def forward(self, x):
         if self.has_padding:
             x = pack_padded_sequence(
                 x[0], x[1], batch_first=True, enforce_sorted=False)
@@ -183,7 +183,7 @@ class LSTM(torch.nn.Module):
         out = out.permute([1, 2, 0])
         out = out.reshape([out.size()[0], -1])
         if self.dropout:
-            out = F.dropout(out, p=self.dropoutp, training=training)
+            out = self.dropout_layer(out)
         if self.flatten:
             out = torch.flatten(out, 1)
         if self.linear_layer_outdim is not None:
@@ -202,13 +202,13 @@ class TwoLayersLSTM(torch.nn.Module):
         self.lstm_1 = nn.LSTM(
             2*indim, hiddim, batch_first=True, bidirectional=isBidirectional)
         self.layer_norm = nn.LayerNorm(2*hiddim)
-        self.dropoutp = dropoutp
+        self.dropout_layer = torch.nn.Dropout(dropoutp)
         self.dropout = dropout
         self.flatten = flatten
         self.has_padding = has_padding
         self.LayerNorm = LayNorm
 
-    def forward(self, x, training=True):
+    def forward(self, x):
         if self.has_padding:
             x = pack_padded_sequence(
                 x[0], x[1], batch_first=True, enforce_sorted=False)
@@ -224,7 +224,7 @@ class TwoLayersLSTM(torch.nn.Module):
             out = self.lstm_0(x)[0]
             out = self.lstm_1(out)[0]
         if self.dropout:
-            out = F.dropout(out, p=self.dropoutp, training=training)
+            out = self.dropout_layer(out)
         if self.flatten:
             out = torch.flatten(out, 1)
         return out
@@ -526,7 +526,7 @@ class Identity(nn.Module):
 class DAN(torch.nn.Module):
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=3, has_padding=False):
         super(DAN, self).__init__()
-        self.dropoutp = dropoutp
+        self.dropout_layer = torch.nn.Dropout(dropoutp)
         self.dropout = dropout
         self.nlayers = nlayers
         self.has_padding = has_padding
@@ -538,7 +538,7 @@ class DAN(torch.nn.Module):
             mlp.append(nn.Linear(hiddim, hiddim))
         self.mlp = nn.ModuleList(mlp)
 
-    def forward(self, x, training=True):
+    def forward(self, x):
         # x_vals: B x S x P
         if self.has_padding:
             x_vals = x[0]
@@ -548,7 +548,7 @@ class DAN(torch.nn.Module):
         # embedded: B x S x H
         embedded = self.embedding(x_vals)
         if self.dropout:
-            embedded = F.dropout(embedded, p=self.dropoutp, training=training)
+            embedded = self.dropout_layer(embedded)
         if self.has_padding:
             # mask out padded values
             # mask: B x S
@@ -561,7 +561,7 @@ class DAN(torch.nn.Module):
         for layer in self.mlp:
             pooled = layer(pooled)
             if self.dropout:
-                pooled = F.dropout(pooled, p=self.dropoutp, training=training)
+                pooled = self.dropout_layer(pooled)
         return pooled
 
 
@@ -570,10 +570,10 @@ class ResNetLSTMEnc(torch.nn.Module):
         super(ResNetLSTMEnc, self).__init__()
         self.enc = torchvision.models.resnet18(pretrained=True)
         self.lstm = nn.LSTM(1000, hiddim, batch_first=True)
-        self.dropoutp = dropoutp
+        self.dropout_layer = torch.nn.Dropout(dropoutp)
         self.dropout = dropout
 
-    def forward(self, x, training=True):  # x is (cbatch_size, 3, 150, 112, 112)
+    def forward(self, x):  # x is (cbatch_size, 3, 150, 112, 112)
         cbatch_size = x.shape[0]
         x = x.permute([0, 2, 1, 3, 4])  # (cbatch_size, 150, 3, 112, 112)
         x = x.reshape(-1, 3, 112, 112)  # (cbatch_size*150, 3, 112, 112)
@@ -583,7 +583,7 @@ class ResNetLSTMEnc(torch.nn.Module):
         hidden = hidden.permute([1, 2, 0])
         hidden = hidden.reshape([hidden.size()[0], -1])
         if self.dropout:
-            hidden = F.dropout(hidden, p=self.dropoutp, training=training)
+            hidden = self.dropout_layer(hidden)
         return hidden
 
 
@@ -597,7 +597,7 @@ class Transformer(nn.Module):
         layer = nn.TransformerEncoderLayer(d_model=self.embed_dim, nhead=5)
         self.transformer = nn.TransformerEncoder(layer, num_layers=5)
 
-    def forward(self, x, training=True):
+    def forward(self, x):
         if type(x) is list:
             x = x[0]
         x = self.conv(x.permute([0, 2, 1]))
