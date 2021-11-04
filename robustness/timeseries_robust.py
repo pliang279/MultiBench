@@ -3,7 +3,7 @@ import numpy as np
 
 ##############################################################################
 # Time-Series
-def timeseries_robustness(tests, noise_level=0.3, noise=True, rand_drop=True, struct_drop=True):
+def add_timeseries_noise(tests, noise_level=0.3, noise=True, rand_drop=True, struct_drop=True):
     # robust_tests = np.array(tests)
     robust_tests = tests
     if noise:

@@ -3,8 +3,8 @@ import numpy as np
 from tqdm import tqdm
 
 from torch.utils.data import Dataset
-from robustness.visual_robust import visual_robustness
-from robustness.timeseries_robust import timeseries_robustness
+from robustness.visual_robust import add_visual_noise
+from robustness.timeseries_robust import add_timeseries_noise
 
 
 class MultimodalManipulationDataset(Dataset):
@@ -287,16 +287,16 @@ class MultimodalManipulationDataset_robust(Dataset):
 
             image = dataset["image"][dataset_index]
             if self.image_noise:
-                image = visual_robustness(
+                image = add_visual_noise(
                     [image], noise_level=self.noise_level)[0]
             depth = dataset["depth_data"][dataset_index]
             proprio = dataset["proprio"][dataset_index][:8]
             if self.prop_noise:
-                proprio = timeseries_robustness(
+                proprio = add_timeseries_noise(
                     [proprio], noise_level=self.noise_level)[0]
             force = dataset["ee_forces_continuous"][dataset_index]
             if self.force_noise:
-                force = timeseries_robustness(
+                force = add_timeseries_noise(
                     [force], noise_level=self.noise_level)[0]
 
             if image.shape[0] == 3:

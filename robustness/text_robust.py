@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 ##############################################################################
 # Text
-def text_robustness(tests, noise_level=0.3, swap=True, rand_mid=True, typo=True, sticky=True, omit=True):
+def add_text_noise(tests, noise_level=0.3, swap=True, rand_mid=True, typo=True, sticky=True, omit=True):
     noises = []
     if swap:
         noises.append(swap_letter)

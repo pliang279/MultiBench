@@ -1,6 +1,6 @@
 from tqdm import tqdm
-from robustness.tabular_robust import tabular_robustness
-from robustness.timeseries_robust import timeseries_robustness
+from robustness.tabular_robust import add_tabular_noise
+from robustness.timeseries_robust import add_timeseries_noise
 import sys
 import os
 import numpy as np
@@ -75,13 +75,13 @@ def get_dataloader(task, batch_size=40, num_workers=1, train_shuffle=True, imput
     for noise_level in tqdm(range(11)):
         dataset_robust = copy.deepcopy(datasets[le//10:le//5])
         if tabular_robust:
-            X_s_robust = tabular_robustness([dataset_robust[i][0] for i in range(
+            X_s_robust = add_tabular_noise([dataset_robust[i][0] for i in range(
                 len(dataset_robust))], noise_level=noise_level/10)
         else:
             X_s_robust = [dataset_robust[i][0]
                           for i in range(len(dataset_robust))]
         if timeseries_robust:
-            X_t_robust = timeseries_robustness([[dataset_robust[i][1] for i in range(
+            X_t_robust = add_timeseries_noise([[dataset_robust[i][1] for i in range(
                 len(dataset_robust))]], noise_level=noise_level/10)[0]
         else:
             X_t_robust = [dataset_robust[i][1]

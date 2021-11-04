@@ -146,7 +146,7 @@ class ContactDecoder(nn.Module):
         self.deterministic = deterministic
         self.contact_fc = nn.Sequential(nn.Linear(z_dim, head))
 
-    def forward(self, input, training=False):
+    def forward(self, input):
         if self.deterministic:
             z, mm_act_feat, tiled_feat, img_out_convs = input
         else:

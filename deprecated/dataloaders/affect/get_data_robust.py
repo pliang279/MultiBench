@@ -1,5 +1,5 @@
-from robustness.timeseries_robust import timeseries_robustness
-from robustness.text_robust import text_robustness
+from robustness.timeseries_robust import add_timeseries_noise
+from robustness.text_robust import add_text_noise
 from types import new_class
 from typing import *
 import h5py
@@ -194,7 +194,7 @@ def get_dataloader(
         test['vision'] = alldata['test']["vision"]
         test['audio'] = alldata['test']["audio"]
         test['text'] = glove_embeddings(
-            text_robustness(rawtext, noise_level=i/10), vids)
+            add_text_noise(rawtext, noise_level=i/10), vids)
         test['labels'] = alldata['test']["label"]
         test = drop_entry(test)
         robust_text.append(DataLoader(Affectdataset(test, flatten_time_series, task=task),
@@ -204,7 +204,7 @@ def get_dataloader(
     robust_vision = []
     for i in range(10):
         test = dict()
-        test['vision'] = timeseries_robustness(
+        test['vision'] = add_timeseries_noise(
             [alldata['test']['vision']], noise_level=i/10, rand_drop=False, struct_drop=False)
         test['audio'] = alldata['test']["audio"]
         test['text'] = alldata['test']['text']
@@ -218,7 +218,7 @@ def get_dataloader(
     for i in range(10):
         test = dict()
         test['vision'] = alldata['test']["vision"]
-        test['audio'] = timeseries_robustness(
+        test['audio'] = add_timeseries_noise(
             [alldata['test']['audio']], noise_level=i/10, rand_drop=False)
         test['text'] = alldata['test']['text']
         test['labels'] = alldata['test']["label"]
@@ -228,14 +228,14 @@ def get_dataloader(
 
     # Add timeseries noises
     for i, text in enumerate(robust_text):
-        alldata_test = timeseries_robustness(
+        alldata_test = add_timeseries_noise(
             [alldata['test']['vision'], alldata['test']['audio'], text], noise_level=i/10)
         test.append(alldata_test)
 
     robust_timeseries = []
     alldata['test'] = drop_entry(alldata['test'])
     for i in range(10):
-        robust_timeseries_tmp = timeseries_robustness(
+        robust_timeseries_tmp = add_timeseries_noise(
             [alldata['test']['vision'], alldata['test']['audio'], alldata['test']['text']], noise_level=i/10)
         test = dict()
         test['vision'] = robust_timeseries_tmp[0]

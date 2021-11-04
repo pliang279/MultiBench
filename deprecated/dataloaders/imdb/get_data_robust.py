@@ -5,8 +5,8 @@ from torch.utils.data import Dataset, DataLoader
 import h5py
 from gensim.models import KeyedVectors
 from vgg import VGGClassifier
-from robustness.text_robust import text_robustness
-from robustness.visual_robust import visual_robustness
+from robustness.text_robust import add_text_noise
+from robustness.visual_robust import add_visual_noise
 import os
 import sys
 from typing import *
@@ -116,7 +116,7 @@ def get_dataloader_robust(path: str, test_path: str, num_workers: int = 8, train
         extract_vgg = not os.path.exists(vgg_filename)
         if extract_vgg:
             vgg_features = []
-            images_robust = visual_robustness(
+            images_robust = add_visual_noise(
                 images, noise_level=noise_level/10)
             for im in tqdm(images_robust):
                 vgg_features.append(clsf.get_features(
@@ -140,7 +140,7 @@ def get_dataloader_robust(path: str, test_path: str, num_workers: int = 8, train
         extract_text = not os.path.exists(text_filename)
         if extract_text:
             text_features = []
-            texts_robust = text_robustness(texts, noise_level=noise_level/10)
+            texts_robust = add_text_noise(texts, noise_level=noise_level/10)
             for words in tqdm(texts_robust):
                 words = words.split()
                 if len([googleword2vec[w] for w in words if w in googleword2vec]) == 0:
