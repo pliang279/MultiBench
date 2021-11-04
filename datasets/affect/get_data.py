@@ -1,5 +1,5 @@
-from robustness.timeseries_robust import timeseries_robustness
-from robustness.text_robust import text_robustness
+from robustness.timeseries_robust import add_timeseries_noise
+from robustness.text_robust import add_text_noise
 from torch.utils.data import DataLoader, Dataset
 from torch.nn.utils.rnn import pad_sequence
 from collections import defaultdict
@@ -273,7 +273,7 @@ def get_dataloader(
             test['vision'] = alldata['test']["vision"]
             test['audio'] = alldata['test']["audio"]
             test['text'] = glove_embeddings(
-                text_robustness(rawtext, noise_level=i / 10), vids)
+                add_text_noise(rawtext, noise_level=i / 10), vids)
             test['labels'] = alldata['test']["labels"]
             test = drop_entry(test)
 
@@ -287,7 +287,7 @@ def get_dataloader(
         robust_vision = []
         for i in range(10):
             test = dict()
-            test['vision'] = timeseries_robustness(
+            test['vision'] = add_timeseries_noise(
                 [alldata['test']['vision'].copy()], noise_level=i / 10, rand_drop=False)[0]
             # print('vision shape: {}'.format(test['vision'].shape))
             test['audio'] = alldata['test']["audio"].copy()
@@ -305,7 +305,7 @@ def get_dataloader(
         for i in range(10):
             test = dict()
             test['vision'] = alldata['test']["vision"].copy()
-            test['audio'] = timeseries_robustness(
+            test['audio'] = add_timeseries_noise(
                 [alldata['test']['audio'].copy()], noise_level=i / 10, rand_drop=False)[0]
             test['text'] = alldata['test']['text'].copy()
             test['labels'] = alldata['test']["labels"]
@@ -326,7 +326,7 @@ def get_dataloader(
         robust_timeseries = []
         # alldata['test'] = drop_entry(alldata['test'])
         for i in range(10):
-            robust_timeseries_tmp = timeseries_robustness(
+            robust_timeseries_tmp = add_timeseries_noise(
                 [alldata['test']['vision'].copy(), alldata['test']['audio'].copy(),
                  alldata['test']['text'].copy()],
                 noise_level=i / 10, rand_drop=False)

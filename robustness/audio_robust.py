@@ -3,7 +3,7 @@ import numpy as np
 
 ##############################################################################
 # Audio
-def audio_robustness(tests, noise_level=0.3, noises=None):
+def add_audio_noise(tests, noise_level=0.3, noises=None):
     if noises == None:
         noises = [additive_white_gaussian_noise,
                   audio_random_dropout, audio_structured_dropout]

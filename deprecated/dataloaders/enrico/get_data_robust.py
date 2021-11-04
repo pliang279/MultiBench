@@ -10,7 +10,7 @@ from torchvision import transforms
 
 from PIL import Image
 import numpy as np
-from robustness.visual_robust import visual_robustness
+from robustness.visual_robust import add_visual_noise
 
 # helper function for extracting UI elements from hierarchy
 
@@ -123,14 +123,14 @@ class EnricoDataset(Dataset):
         screenImg = Image.open(os.path.join(
             self.img_dir, screenId + ".jpg")).convert("RGB")
         if self.img_noise:
-            screenImg = Image.fromarray(visual_robustness(
+            screenImg = Image.fromarray(add_visual_noise(
                 [np.array(screenImg)], noise_level=self.noise_level)[0])
         screenImg = self.img_transforms(screenImg)
         # wireframe image modality
         screenWireframeImg = Image.open(os.path.join(
             self.wireframe_dir, screenId + ".png")).convert("RGB")
         if self.wireframe_noise:
-            screenWireframeImg = Image.fromarray(visual_robustness(
+            screenWireframeImg = Image.fromarray(add_visual_noise(
                 [np.array(screenWireframeImg)], noise_level=self.noise_level)[0])
         screenWireframeImg = self.img_transforms(screenWireframeImg)
         # label

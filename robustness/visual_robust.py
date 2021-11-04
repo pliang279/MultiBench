@@ -5,7 +5,7 @@ import colorsys
 
 ##############################################################################
 # Visual
-def visual_robustness(tests, noise_level=0.3, gray=True, contrast=True, inv=True, temp=True, color=True, s_and_p=True, gaus=True, rot=True, flip=True, crop=True):
+def add_visual_noise(tests, noise_level=0.3, gray=True, contrast=True, inv=True, temp=True, color=True, s_and_p=True, gaus=True, rot=True, flip=True, crop=True):
     noises = []
     if gray:
         noises.append(grayscale)

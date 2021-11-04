@@ -359,7 +359,7 @@ def structured_drop(data, p, modality_map):
 
 ##############################################################################
 # Tabular
-def tabular_robustness(tests, noise_level=0.3, drop=True, swap=True):
+def add_tabular_noise(tests, noise_level=0.3, drop=True, swap=True):
     robust_tests = np.array(tests)
     if drop:
         robust_tests = drop_entry(robust_tests, noise_level)

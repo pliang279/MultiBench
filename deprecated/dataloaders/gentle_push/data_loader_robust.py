@@ -10,8 +10,8 @@ import numpy as np
 import torch
 
 from torch.utils.data import Dataset
-from robustness.visual_robust import visual_robustness
-from robustness.timeseries_robust import timeseries_robustness
+from robustness.visual_robust import add_visual_noise
+from robustness.timeseries_robust import add_timeseries_noise
 
 dataset_urls = {
     # Mujoco URLs
@@ -237,7 +237,7 @@ def _load_trajectories(
             else:
                 observations["gripper_pos"] = raw_trajectory["eef_pos"]
             if prop_noise != 0:
-                observations["gripper_pos"] = timeseries_robustness(
+                observations["gripper_pos"] = add_timeseries_noise(
                     [observations["gripper_pos"]], noise_level=prop_noise, struct_drop=False)[0]
             assert observations["gripper_pos"].shape == (timesteps, 3)
 
@@ -257,7 +257,7 @@ def _load_trajectories(
                     axis=1,
                 )
             if haptics_noise != 0:
-                observations["gripper_sensors"] = timeseries_robustness(
+                observations["gripper_sensors"] = add_timeseries_noise(
                     [observations["gripper_sensors"]], noise_level=haptics_noise, struct_drop=False)[0]
             assert observations["gripper_sensors"].shape[1] == 7
 
@@ -274,7 +274,7 @@ def _load_trajectories(
             else:
                 observations["image"] = raw_trajectory["image"].copy()
             if visual_noise != 0:
-                observations["image"] = np.array(visual_robustness(
+                observations["image"] = np.array(add_visual_noise(
                     observations["image"], noise_level=visual_noise))
             assert observations["image"].shape == (timesteps, 32, 32)
 
@@ -324,11 +324,11 @@ def _load_trajectories(
                 out=controls
             )
             if controls_noise != 0:
-                controls = timeseries_robustness(
+                controls = add_timeseries_noise(
                     [controls], noise_level=controls_noise, struct_drop=False)[0]
 
             if multimodal_noise != 0:
-                tmp = timeseries_robustness([observations["image"], observations["gripper_pos"],
+                tmp = add_timeseries_noise([observations["image"], observations["gripper_pos"],
                                             observations["gripper_sensors"], controls], noise_level=multimodal_noise, rand_drop=False)
                 observations["image"] = tmp[0]
                 observations["gripper_pos"] = tmp[1]
