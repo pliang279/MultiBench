@@ -8,17 +8,17 @@ from unimodals.common_models import LeNet,MLP,Constant
 from torch import nn
 from training_structures.cca_onestage import train, test
 from fusions.common_fusions import Concat
-from unimodals.common_models import MLP, VGG16, Linear_inited, MaxOut_MLP
+from unimodals.common_models import MLP, VGG16, Linear, MaxOut_MLP
 from utils.helper_modules import Sequential2
 
 traindata, validdata, testdata = get_dataloader('/home/pliang/yiwei/avmnist/_MFAS/avmnist',batch_size=800)
 channels=6
-encoders=[LeNet(1,channels,3).cuda(),Sequential2(LeNet(1,channels,5),Linear_inited(192,48)).cuda()]
+encoders=[LeNet(1,channels,3).cuda(),Sequential2(LeNet(1,channels,5),Linear(192,48, xavier_init=True)).cuda()]
 #encoders=[MLP(300,512,outdim), MLP(4096,1024,outdim)]
 #encoders=[MLP(300, 512, 512), VGG16(512)]
 #encoders=[Linear(300, 512), Linear(4096,512)]
 #head=MLP(2*outdim,2*outdim,23).cuda()
-head=Linear_inited(96, 10).cuda()
+head=Linear(96, 10, xavier_init=True).cuda()
 fusion=Concat().cuda()
 
 train(encoders,fusion,head,traindata,validdata,25,outdim=48,\

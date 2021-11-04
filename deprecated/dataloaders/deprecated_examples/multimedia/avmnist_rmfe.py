@@ -8,7 +8,7 @@ from unimodals.common_models import LeNet,MLP,Constant
 from torch import nn
 from training_structures.Simple_Late_Fusion import train, test
 from fusions.common_fusions import Concat
-from unimodals.common_models import MLP, VGG16, Linear_inited, MaxOut_MLP
+from unimodals.common_models import MLP, VGG16, Linear, MaxOut_MLP
 from utils.helper_modules import Sequential2
 
 traindata, validdata, testdata = get_dataloader('/home/pliang/yiwei/avmnist/_MFAS/avmnist',batch_size=2)
