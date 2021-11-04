@@ -47,7 +47,8 @@ class YummlyDataset(Dataset):
         fid_to_label = load_pkl(os.path.join(data_dir, 'fid_to_label.pkl'))
         fid_to_text = load_pkl(os.path.join(data_dir, 'fid_to_text.pkl'))
         fids = list(fid_to_label.keys())
-        paths = [os.path.join(data_dir, 'images', 'img%s.jpg' % fid) for fid in fids]
+        paths = [os.path.join(data_dir, 'images', 'img%s.jpg' % fid)
+                 for fid in fids]
         label_to_int = mk_label_map(set(fid_to_label.values()))
         targets = [label_to_int[fid_to_label[fid]] for fid in fids]
         num_labels = len(np.unique(targets))
@@ -67,11 +68,15 @@ class YummlyDataset(Dataset):
             self.targets = targets[num_train+num_valid:]
             self.texts = texts[num_train+num_valid:]
         self.transform_image = transforms.Compose([lambda x: Image.open(x),
-                                                   lambda x: x.resize((width, height)),
-                                                   lambda x: np.reshape(x, (width, height, 3)),
-                                                   lambda x: np.transpose(x, [2, 0, 1]),
+                                                   lambda x: x.resize(
+                                                       (width, height)),
+                                                   lambda x: np.reshape(
+                                                       x, (width, height, 3)),
+                                                   lambda x: np.transpose(
+                                                       x, [2, 0, 1]),
                                                    lambda x: x/255.])
-        self.transform_text = transforms.Compose([lambda x: tokenize_text(x, word2index)])
+        self.transform_text = transforms.Compose(
+            [lambda x: tokenize_text(x, word2index)])
 
     def __getitem__(self, i):
         p = self.paths[i]
@@ -102,7 +107,10 @@ def get_dataloader(data_dir, batch_size=40, num_workers=8, train_shuffle=True):
     valid_set = YummlyDataset(data_dir, 'valid', 128, 128, word2index)
     test_set = YummlyDataset(data_dir, 'test', 128, 128, word2index)
     train_set = YummlyDataset(data_dir, 'train', 128, 128, word2index)
-    valids = DataLoader(valid_set, shuffle=False, num_workers=num_workers, batch_size=batch_size)
-    tests = DataLoader(test_set, shuffle=False, num_workers=num_workers, batch_size=batch_size)
-    trains = DataLoader(train_set, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
-    return trains,valids,tests
+    valids = DataLoader(valid_set, shuffle=False,
+                        num_workers=num_workers, batch_size=batch_size)
+    tests = DataLoader(test_set, shuffle=False,
+                       num_workers=num_workers, batch_size=batch_size)
+    trains = DataLoader(train_set, shuffle=train_shuffle,
+                        num_workers=num_workers, batch_size=batch_size)
+    return trains, valids, tests

@@ -15,13 +15,15 @@ class BaseBow(Weapon):
 class OrcishBow(BaseBow):
 
     def __init__(self):
-        super().__init__('orcish bow', weight=30, damage=D.Dice.from_str('d2'), material=M.Wood, hit=0)
+        super().__init__('orcish bow', weight=30,
+                         damage=D.Dice.from_str('d2'), material=M.Wood, hit=0)
 
 
 class OrcishArrow(BaseBow):
 
     def __init__(self):
-        super().__init__('orcish arrow', weight=1, damage=D.Dice.from_str('d6'), material=M.Iron, hit=0)
+        super().__init__('orcish arrow', weight=1,
+                         damage=D.Dice.from_str('d6'), material=M.Iron, hit=0)
 
 
 class Bow(BaseBow):
@@ -39,13 +41,15 @@ class Arrow(BaseBow):
 class ElvenBow(BaseBow):
 
     def __init__(self):
-        super().__init__('elven bow', weight=30, damage=D.Dice.from_str('d2'), material=M.Wood, hit=0)
+        super().__init__('elven bow', weight=30,
+                         damage=D.Dice.from_str('d2'), material=M.Wood, hit=0)
 
 
 class ElvenArrow(BaseBow):
 
     def __init__(self):
-        super().__init__('elven arrow', weight=1, damage=D.Dice.from_str('d6'), material=M.Wood, hit=0)
+        super().__init__('elven arrow', weight=1,
+                         damage=D.Dice.from_str('d6'), material=M.Wood, hit=0)
 
 
 class Yumi(BaseBow):
@@ -63,4 +67,5 @@ class Ya(BaseBow):
 class SilverArrow(BaseBow):
 
     def __init__(self):
-        super().__init__('silver arrow', weight=1, damage=D.Dice.from_str('d6'), material=M.Silver, hit=0)
+        super().__init__('silver arrow', weight=1,
+                         damage=D.Dice.from_str('d6'), material=M.Silver, hit=0)

@@ -28,7 +28,7 @@ class TransformerEncoder(nn.Module):
         self.embed_dim = embed_dim
         self.embed_scale = math.sqrt(embed_dim)
         self.embed_positions = SinusoidalPositionalEmbedding(embed_dim)
-        
+
         self.attn_mask = attn_mask
 
         self.layers = nn.ModuleList([])
@@ -46,7 +46,7 @@ class TransformerEncoder(nn.Module):
         if self.normalize:
             self.layer_norm = LayerNorm(embed_dim)
 
-    def forward(self, x_in, x_in_k = None, x_in_v = None):
+    def forward(self, x_in, x_in_k=None, x_in_v=None):
         """
         Args:
             x_in (FloatTensor): embedded input of shape `(src_len, batch, embed_dim)`
@@ -62,19 +62,25 @@ class TransformerEncoder(nn.Module):
         # embed tokens and positions
         x = self.embed_scale * x_in
         if self.embed_positions is not None:
-            x += self.embed_positions(x_in.transpose(0, 1)[:, :, 0]).transpose(0, 1)   # Add positional embedding
+            # Add positional embedding
+            x += self.embed_positions(x_in.transpose(0, 1)
+                                      [:, :, 0]).transpose(0, 1)
         x = F.dropout(x, p=self.dropout, training=self.training)
 
         if x_in_k is not None and x_in_v is not None:
-            # embed tokens and positions    
+            # embed tokens and positions
             x_k = self.embed_scale * x_in_k
             x_v = self.embed_scale * x_in_v
             if self.embed_positions is not None:
-                x_k += self.embed_positions(x_in_k.transpose(0, 1)[:, :, 0]).transpose(0, 1)   # Add positional embedding
-                x_v += self.embed_positions(x_in_v.transpose(0, 1)[:, :, 0]).transpose(0, 1)   # Add positional embedding
+                # Add positional embedding
+                x_k += self.embed_positions(x_in_k.transpose(0, 1)
+                                            [:, :, 0]).transpose(0, 1)
+                # Add positional embedding
+                x_v += self.embed_positions(x_in_v.transpose(0, 1)
+                                            [:, :, 0]).transpose(0, 1)
             x_k = F.dropout(x_k, p=self.dropout, training=self.training)
             x_v = F.dropout(x_v, p=self.dropout, training=self.training)
-        
+
         # encoder layers
         intermediates = [x]
         for layer in self.layers:
@@ -114,7 +120,7 @@ class TransformerEncoderLayer(nn.Module):
         super().__init__()
         self.embed_dim = embed_dim
         self.num_heads = num_heads
-        
+
         self.self_attn = MultiheadAttention(
             embed_dim=self.embed_dim,
             num_heads=self.num_heads,
@@ -126,9 +132,11 @@ class TransformerEncoderLayer(nn.Module):
         self.res_dropout = res_dropout
         self.normalize_before = True
 
-        self.fc1 = Linear(self.embed_dim, 4*self.embed_dim)   # The "Add & Norm" part in the paper
+        # The "Add & Norm" part in the paper
+        self.fc1 = Linear(self.embed_dim, 4*self.embed_dim)
         self.fc2 = Linear(4*self.embed_dim, self.embed_dim)
-        self.layer_norms = nn.ModuleList([LayerNorm(self.embed_dim) for _ in range(2)])
+        self.layer_norms = nn.ModuleList(
+            [LayerNorm(self.embed_dim) for _ in range(2)])
 
     def forward(self, x, x_k=None, x_v=None):
         """
@@ -148,7 +156,7 @@ class TransformerEncoderLayer(nn.Module):
             x, _ = self.self_attn(query=x, key=x, value=x, attn_mask=mask)
         else:
             x_k = self.maybe_layer_norm(0, x_k, before=True)
-            x_v = self.maybe_layer_norm(0, x_v, before=True) 
+            x_v = self.maybe_layer_norm(0, x_v, before=True)
             x, _ = self.self_attn(query=x, key=x_k, value=x_v, attn_mask=mask)
         x = F.dropout(x, p=self.res_dropout, training=self.training)
         x = residual + x
@@ -171,6 +179,7 @@ class TransformerEncoderLayer(nn.Module):
         else:
             return x
 
+
 def fill_with_neg_inf(t):
     """FP16-compatible function that fills a tensor with -inf."""
     return t.float().fill_(float('-inf')).type_as(t)
@@ -180,7 +189,8 @@ def buffered_future_mask(tensor, tensor2=None):
     dim1 = dim2 = tensor.size(0)
     if tensor2 is not None:
         dim2 = tensor2.size(0)
-    future_mask = torch.triu(fill_with_neg_inf(torch.ones(dim1, dim2)), 1+abs(dim2-dim1))
+    future_mask = torch.triu(fill_with_neg_inf(
+        torch.ones(dim1, dim2)), 1+abs(dim2-dim1))
     if tensor.is_cuda:
         future_mask = future_mask.cuda()
     return future_mask[:dim1, :dim2]

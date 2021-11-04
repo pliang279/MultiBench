@@ -15,10 +15,12 @@ class BaseLongSword(Weapon):
 class LongSword(BaseLongSword):
 
     def __init__(self):
-        super().__init__('long sword', weight=40, damage=D.Dice.from_str('d12'), material=M.Iron, hit=0)
+        super().__init__('long sword', weight=40,
+                         damage=D.Dice.from_str('d12'), material=M.Iron, hit=0)
 
 
 class Katana(BaseLongSword):
 
     def __init__(self):
-        super().__init__('katana', weight=40, damage=D.Dice.from_str('d12'), material=M.Iron, hit=0)
+        super().__init__('katana', weight=40,
+                         damage=D.Dice.from_str('d12'), material=M.Iron, hit=0)

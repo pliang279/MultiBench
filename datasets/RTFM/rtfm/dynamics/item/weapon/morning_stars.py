@@ -15,4 +15,5 @@ class BaseMorningStar(Weapon):
 class MorningStar(BaseMorningStar):
 
     def __init__(self):
-        super().__init__('morning star', weight=120, damage=D.Dice.from_str('d6+1'), material=M.Iron, hit=0)
+        super().__init__('morning star', weight=120,
+                         damage=D.Dice.from_str('d6+1'), material=M.Iron, hit=0)

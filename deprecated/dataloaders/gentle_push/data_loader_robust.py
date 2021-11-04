@@ -37,6 +37,7 @@ class TrajectoryNumpy(NamedTuple):
     observations: Any
     controls: Any
 
+
 class PushTask():
     """Dataset definition and model registry for pushing task."""
 
@@ -119,19 +120,24 @@ class PushTask():
             trajectories = []
             if visual_noise:
                 for i in range(10):
-                    trajectories.append(_load_trajectories("gentle_push_300.hdf5", visual_noise=i/10, **dataset_args))
+                    trajectories.append(_load_trajectories(
+                        "gentle_push_300.hdf5", visual_noise=i/10, **dataset_args))
             elif prop_noise:
                 for i in range(10):
-                    trajectories.append(_load_trajectories("gentle_push_300.hdf5", prop_noise=i/10, **dataset_args))
+                    trajectories.append(_load_trajectories(
+                        "gentle_push_300.hdf5", prop_noise=i/10, **dataset_args))
             elif haptics_noise:
                 for i in range(10):
-                    trajectories.append(_load_trajectories("gentle_push_300.hdf5", haptics_noise=i/10, **dataset_args))
+                    trajectories.append(_load_trajectories(
+                        "gentle_push_300.hdf5", haptics_noise=i/10, **dataset_args))
             elif controls_noise:
                 for i in range(10):
-                    trajectories.append(_load_trajectories("gentle_push_300.hdf5", controls_noise=i/10, **dataset_args))
+                    trajectories.append(_load_trajectories(
+                        "gentle_push_300.hdf5", controls_noise=i/10, **dataset_args))
             elif multimodal_noise:
                 for i in range(10):
-                    trajectories.append(_load_trajectories("gentle_push_300.hdf5", multimodal_noise=i/10, **dataset_args))
+                    trajectories.append(_load_trajectories(
+                        "gentle_push_300.hdf5", multimodal_noise=i/10, **dataset_args))
             return trajectories
 
 
@@ -219,10 +225,10 @@ def _load_trajectories(
                 states[:, :2] = raw_trajectory["Cylinder0_pos"][:, :2]  # x, y
 
             # Pull out observations
-            ## This is currently consisted of:
-            ## > gripper_pos: end effector position
-            ## > gripper_sensors: F/T, contact sensors
-            ## > image: camera image
+            # This is currently consisted of:
+            # > gripper_pos: end effector position
+            # > gripper_sensors: F/T, contact sensors
+            # > image: camera image
 
             observations = {}
 
@@ -231,13 +237,17 @@ def _load_trajectories(
             else:
                 observations["gripper_pos"] = raw_trajectory["eef_pos"]
             if prop_noise != 0:
-                observations["gripper_pos"] = timeseries_robustness([observations["gripper_pos"]], noise_level=prop_noise, struct_drop=False)[0]
+                observations["gripper_pos"] = timeseries_robustness(
+                    [observations["gripper_pos"]], noise_level=prop_noise, struct_drop=False)[0]
             assert observations["gripper_pos"].shape == (timesteps, 3)
 
             if kloss_dataset:
-                observations["gripper_sensors"] = np.zeros((timesteps, 7), dtype=np.float32)
-                observations["gripper_sensors"][:, :3] = raw_trajectory["force"]
-                observations["gripper_sensors"][:, 6] = raw_trajectory["contact"]
+                observations["gripper_sensors"] = np.zeros(
+                    (timesteps, 7), dtype=np.float32)
+                observations["gripper_sensors"][:,
+                                                :3] = raw_trajectory["force"]
+                observations["gripper_sensors"][:,
+                                                6] = raw_trajectory["contact"]
             else:
                 observations["gripper_sensors"] = np.concatenate(
                     (
@@ -247,7 +257,8 @@ def _load_trajectories(
                     axis=1,
                 )
             if haptics_noise != 0:
-                observations["gripper_sensors"] = timeseries_robustness([observations["gripper_sensors"]], noise_level=haptics_noise, struct_drop=False)[0]
+                observations["gripper_sensors"] = timeseries_robustness(
+                    [observations["gripper_sensors"]], noise_level=haptics_noise, struct_drop=False)[0]
             assert observations["gripper_sensors"].shape[1] == 7
 
             # Zero out proprioception or haptics if unused
@@ -258,11 +269,13 @@ def _load_trajectories(
 
             # Get image
             if kloss_dataset:
-                observations["image"] = np.mean(raw_trajectory["image"], axis=-1)
+                observations["image"] = np.mean(
+                    raw_trajectory["image"], axis=-1)
             else:
                 observations["image"] = raw_trajectory["image"].copy()
             if visual_noise != 0:
-                observations["image"] = np.array(visual_robustness(observations["image"], noise_level=visual_noise))
+                observations["image"] = np.array(visual_robustness(
+                    observations["image"], noise_level=visual_noise))
             assert observations["image"].shape == (timesteps, 32, 32)
 
             # Mask image observations based on dataset args
@@ -284,10 +297,10 @@ def _load_trajectories(
             observations["image"] *= image_mask
 
             # Pull out controls
-            ## This is currently consisted of:
-            ## > previous end effector position
-            ## > end effector position delta
-            ## > binary contact reading
+            # This is currently consisted of:
+            # > previous end effector position
+            # > end effector position delta
+            # > binary contact reading
             if kloss_dataset:
                 eef_positions = raw_trajectory["tip"]
             else:
@@ -311,10 +324,12 @@ def _load_trajectories(
                 out=controls
             )
             if controls_noise != 0:
-                controls = timeseries_robustness([controls], noise_level=controls_noise, struct_drop=False)[0]
-            
+                controls = timeseries_robustness(
+                    [controls], noise_level=controls_noise, struct_drop=False)[0]
+
             if multimodal_noise != 0:
-                tmp = timeseries_robustness([observations["image"], observations["gripper_pos"], observations["gripper_sensors"], controls], noise_level=multimodal_noise, rand_drop=False)
+                tmp = timeseries_robustness([observations["image"], observations["gripper_pos"],
+                                            observations["gripper_sensors"], controls], noise_level=multimodal_noise, rand_drop=False)
                 observations["image"] = tmp[0]
                 observations["gripper_pos"] = tmp[1]
                 observations["gripper_sensors"] = tmp[2]
@@ -462,7 +477,8 @@ def _load_trajectories(
             trajectories.append(
                 TrajectoryNumpy(
                     states[start_timestep:],
-                    fannypack.utils.SliceWrapper(observations)[start_timestep:],
+                    fannypack.utils.SliceWrapper(observations)[
+                        start_timestep:],
                     controls[start_timestep:],
                 )
             )
@@ -471,10 +487,10 @@ def _load_trajectories(
             raw_trajectories[raw_trajectory_index] = None
             del raw_trajectory
 
-    ## Uncomment this line to generate the lines required to normalize data
+    # Uncomment this line to generate the lines required to normalize data
     # _print_normalization(trajectories)
 
-    return trajectories   
+    return trajectories
 
 
 # From https://github.com/stanford-iprl-lab/torchfilter:
@@ -506,7 +522,8 @@ def split_trajectories(
     for traj in trajectories:
         # Chop up each trajectory into overlapping subsequences
         trajectory_length = len(traj.states)
-        assert len(fp.utils.SliceWrapper(traj.observations)) == trajectory_length
+        assert len(fp.utils.SliceWrapper(
+            traj.observations)) == trajectory_length
         assert len(fp.utils.SliceWrapper(traj.controls)) == trajectory_length
 
         # We iterate over two offsets to generate overlapping subsequences

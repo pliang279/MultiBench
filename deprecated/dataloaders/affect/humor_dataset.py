@@ -44,7 +44,8 @@ class HumorDataset(Dataset):
     def paded_word_idx(self, seq, max_sen_len=20, left_pad=1):
         seq = seq[0:max_sen_len]
         pad_w = np.concatenate((np.zeros(max_sen_len - len(seq)), seq), axis=0)
-        pad_w = np.array([self.word_embedding_list_sdk[int(w_id)] for w_id in pad_w])
+        pad_w = np.array([self.word_embedding_list_sdk[int(w_id)]
+                         for w_id in pad_w])
         return pad_w
 
     # left padding with zero  vector upto maximum number of words in a sentence * covarep dimension
@@ -66,9 +67,12 @@ class HumorDataset(Dataset):
         padded_context = []
         for i in range(len(context_w)):
             p_seq_w = self.paded_word_idx(context_w[i], max_sen_len)
-            p_seq_cvp = self.padded_covarep_features(context_cvp[i], max_sen_len)
-            p_seq_of = self.padded_openface_features(context_of[i], max_sen_len)
-            padded_context.append(np.concatenate((p_seq_w, p_seq_cvp, p_seq_of), axis=1))
+            p_seq_cvp = self.padded_covarep_features(
+                context_cvp[i], max_sen_len)
+            p_seq_of = self.padded_openface_features(
+                context_of[i], max_sen_len)
+            padded_context.append(np.concatenate(
+                (p_seq_w, p_seq_cvp, p_seq_of), axis=1))
 
         pad_c_len = max_context_len - len(padded_context)
         padded_context = np.array(padded_context)
@@ -92,13 +96,19 @@ class HumorDataset(Dataset):
     def __getitem__(self, index):
 
         hid = self.id_list[index]
-        punchline_w = np.array(self.language_sdk[hid]['punchline_embedding_indexes'])
-        punchline_of = np.array(self.word_aligned_openface_sdk[hid]['punchline_features'])
-        punchline_cvp = np.array(self.word_aligned_covarep_sdk[hid]['punchline_features'])
+        punchline_w = np.array(
+            self.language_sdk[hid]['punchline_embedding_indexes'])
+        punchline_of = np.array(
+            self.word_aligned_openface_sdk[hid]['punchline_features'])
+        punchline_cvp = np.array(
+            self.word_aligned_covarep_sdk[hid]['punchline_features'])
 
-        context_w = np.array(self.language_sdk[hid]['context_embedding_indexes'])
-        context_of = np.array(self.word_aligned_openface_sdk[hid]['context_features'])
-        context_cvp = np.array(self.word_aligned_covarep_sdk[hid]['context_features'])
+        context_w = np.array(
+            self.language_sdk[hid]['context_embedding_indexes'])
+        context_of = np.array(
+            self.word_aligned_openface_sdk[hid]['context_features'])
+        context_cvp = np.array(
+            self.word_aligned_covarep_sdk[hid]['context_features'])
 
         # punchline feature
         x_p = torch.LongTensor(

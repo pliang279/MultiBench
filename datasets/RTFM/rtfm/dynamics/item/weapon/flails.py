@@ -15,10 +15,12 @@ class BaseFlail(Weapon):
 class Flail(BaseFlail):
 
     def __init__(self):
-        super().__init__('flail', weight=15, damage=D.Dice.from_str('2d4'), material=M.Iron, hit=0)
+        super().__init__('flail', weight=15,
+                         damage=D.Dice.from_str('2d4'), material=M.Iron, hit=0)
 
 
 class GrapplingHook(BaseFlail):
 
     def __init__(self):
-        super().__init__('grappling hook', weight=30, damage=D.Dice.from_str('d6'), material=M.Iron, hit=0)
+        super().__init__('grappling hook', weight=30,
+                         damage=D.Dice.from_str('d6'), material=M.Iron, hit=0)

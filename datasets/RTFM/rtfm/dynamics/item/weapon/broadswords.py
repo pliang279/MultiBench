@@ -15,16 +15,19 @@ class BaseBroadsword(Weapon):
 class Broadsword(BaseBroadsword):
 
     def __init__(self):
-        super().__init__('broadsword', weight=70, damage=D.Dice.from_str('d6+1'), material=M.Iron, hit=0)
+        super().__init__('broadsword', weight=70,
+                         damage=D.Dice.from_str('d6+1'), material=M.Iron, hit=0)
 
 
 class Runesword(BaseBroadsword):
 
     def __init__(self):
-        super().__init__('runesword', weight=40, damage=D.Dice.from_str('d6+1'), material=M.Iron, hit=0)
+        super().__init__('runesword', weight=40,
+                         damage=D.Dice.from_str('d6+1'), material=M.Iron, hit=0)
 
 
 class ElvenBroadsword(BaseBroadsword):
 
     def __init__(self):
-        super().__init__('elven broadsword', weight=70, damage=D.Dice.from_str('d6+1'), material=M.Wood, hit=0)
+        super().__init__('elven broadsword', weight=70,
+                         damage=D.Dice.from_str('d6+1'), material=M.Wood, hit=0)

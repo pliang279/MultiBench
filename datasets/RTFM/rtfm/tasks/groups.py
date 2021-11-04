@@ -67,7 +67,8 @@ def generate_all(all_monsters, all_groups, all_modifiers):
 
 class Groups(RoomTask):
 
-    monsters = ['wolf', 'jaguar', 'panther', 'goblin', 'bat', 'imp', 'shaman', 'ghost', 'zombie']
+    monsters = ['wolf', 'jaguar', 'panther', 'goblin',
+                'bat', 'imp', 'shaman', 'ghost', 'zombie']
     groups = ['star alliance', 'order of the forest', 'rebel enclave']
     modifiers = [
         'grandmasters', 'blessed', 'shimmering', 'gleaming', 'fanatical', 'mysterious', 'soldiers', 'arcane'
@@ -116,7 +117,8 @@ class Groups(RoomTask):
             )
 
     def __init__(self, room_shape=(10, 10), featurizer=F.Progress(), partially_observable=False, max_placement=2, max_name=8, max_inv=10, max_wiki=80, max_task=40, time_penalty=-0.02, shuffle_wiki=False):
-        self.configs = generate_all(self.monsters, self.groups, self.modifiers)[self.config_index]
+        self.configs = generate_all(self.monsters, self.groups, self.modifiers)[
+            self.config_index]
         # what group of enemies to target
         self.target_monster = None
         self.target_group = None
@@ -125,11 +127,13 @@ class Groups(RoomTask):
         self.modifier_assignment = []
         self.group_assignment = []
         self._cache = {}
-        super().__init__(room_shape, featurizer, partially_observable, self.default_max_iter, max_placement, max_name, max_inv, max_wiki, max_task, time_penalty, shuffle_wiki=shuffle_wiki)
+        super().__init__(room_shape, featurizer, partially_observable, self.default_max_iter,
+                         max_placement, max_name, max_inv, max_wiki, max_task, time_penalty, shuffle_wiki=shuffle_wiki)
 
     def get_reward_finish_win(self):
         agent_dead = self.agent_is_dead()
-        killed_enemy = not self.target_monster.is_alive() or not self.distractor_monster.is_alive()
+        killed_enemy = not self.target_monster.is_alive(
+        ) or not self.distractor_monster.is_alive()
         killed_correct_enemy = not self.target_monster.is_alive()
         finished = killed_enemy or self.out_of_turns() or agent_dead
         won = killed_correct_enemy and not agent_dead
@@ -148,7 +152,8 @@ class Groups(RoomTask):
     def get_wiki(self):
         facts = []
         for element, modifiers in self.modifier_assignment:
-            facts += ['{} beat {}.'.format(', '.join(modifiers), element.describe())]
+            facts += ['{} beat {}.'.format(', '.join(modifiers),
+                                           element.describe())]
         for group, monsters in self.group_assignment:
             facts += ['{} are {}.'.format(', '.join(monsters), group)]
         return ' '.join(facts)
@@ -157,8 +162,10 @@ class Groups(RoomTask):
         labels = []
         words = utils.tokenize(self.get_wiki())
         target_element = self.target_monster.element.describe()
-        target_modifiers = set([a for t, a in self.modifier_assignment if t == self.target_monster.element][0])
-        target_monsters = set([a for t, a in self.group_assignment if t == self.target_group][0])
+        target_modifiers = set(
+            [a for t, a in self.modifier_assignment if t == self.target_monster.element][0])
+        target_monsters = set(
+            [a for t, a in self.group_assignment if t == self.target_group][0])
         for w in words:
             l = 0
             if w == self.target_group:
@@ -176,7 +183,8 @@ class Groups(RoomTask):
 
     def build_vocab(self):
         super().build_vocab()
-        self.add_words('cold fire poison lightning you are beat , . {  }'.split(' '))
+        self.add_words(
+            'cold fire poison lightning you are beat , . {  }'.split(' '))
         for n in Groups.monsters + Groups.modifiers + Groups.groups + Groups.items:
             self.add_words(n.split())
         for template in groups_templates.beat_utterance + groups_templates.group_utterance + groups_templates.task_utterance:
@@ -203,30 +211,39 @@ class Groups(RoomTask):
 
         self.agent = self.place_object(self.Agent())
 
-        self.target_group, target_monsters = random.choice(self.group_assignment)
+        self.target_group, target_monsters = random.choice(
+            self.group_assignment)
 
         # choose a target element
-        target_element, target_modifiers = random.choice(self.modifier_assignment)
+        target_element, target_modifiers = random.choice(
+            self.modifier_assignment)
 
         # choose a target monster
-        self.target_monster = self.place_object(self.Monster(target_element, name=random.choice(target_monsters)))
+        self.target_monster = self.place_object(self.Monster(
+            target_element, name=random.choice(target_monsters)))
 
         # create a target item
         good = self.place_object(I.Unarmed(hit=100, damage='1'))
         good.add_elemental_damage(target_element, dmg=50)
-        good.name = '{} {}'.format(random.choice(target_modifiers), random.choice(self.items))
+        good.name = '{} {}'.format(random.choice(
+            target_modifiers), random.choice(self.items))
         good.char = 'y'
 
         # create a distractor item
-        self.distractor_item = bad = self.place_object(I.Unarmed(hit=100, damage='1'))
-        bad_element, bad_modifiers = random.choice([m for m in self.modifier_assignment if m[0] != target_element])
+        self.distractor_item = bad = self.place_object(
+            I.Unarmed(hit=100, damage='1'))
+        bad_element, bad_modifiers = random.choice(
+            [m for m in self.modifier_assignment if m[0] != target_element])
         bad.add_elemental_damage(bad_element, dmg=50)
-        bad.name = '{} {}'.format(random.choice(bad_modifiers), random.choice(self.items))
+        bad.name = '{} {}'.format(random.choice(
+            bad_modifiers), random.choice(self.items))
         bad.char = 'n'
 
         # create a distractor monster
-        bad_group, bad_monsters = random.choice([g for g in self.group_assignment if g[0] != self.target_group])
-        self.distractor_monster = self.place_object(self.Monster(bad_element, name=random.choice(bad_monsters)))
+        bad_group, bad_monsters = random.choice(
+            [g for g in self.group_assignment if g[0] != self.target_group])
+        self.distractor_monster = self.place_object(
+            self.Monster(bad_element, name=random.choice(bad_monsters)))
         self.distractor_monster.char = '?'
 
 
@@ -354,7 +371,8 @@ class NLGroups(Groups):
         else:
             facts = []
             for element, modifiers in self.modifier_assignment:
-                facts.append(self.get_beat_utterance(element.describe(), modifiers))
+                facts.append(self.get_beat_utterance(
+                    element.describe(), modifiers))
             for group, monsters in self.group_assignment:
                 facts.append(self.get_group_utterance(group, monsters))
             random.shuffle(facts)

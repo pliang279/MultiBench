@@ -62,7 +62,8 @@ class World:
         x, y = position
         assert x >= 0
         assert y >= 0
-        assert obj.position is None, 'Object "{}" has already been placed at {}'.format(self, obj.position)
+        assert obj.position is None, 'Object "{}" has already been placed at {}'.format(
+            self, obj.position)
 
         self.map[position].add(obj)
         obj.position = position
@@ -141,7 +142,8 @@ class World:
         for y in range(0, self.height):
             row = []
             for x in range(0, self.width):
-                os = [o for o in self.get_objects_at_pos((x, y), perspective=perspective)]
+                os = [o for o in self.get_objects_at_pos(
+                    (x, y), perspective=perspective)]
                 os.sort(key=lambda o: getattr(o, 'speed', 0), reverse=True)
                 if max_placement is not None:
                     os = os[:max_placement]
@@ -169,7 +171,8 @@ class World:
         for x, y in candidates:
             if 0 <= x < self.width and 0 <= y < self.height:
                 # is valid
-                classes = [o.__class__ for o in self.get_objects_at_pos((x, y))]
+                classes = [
+                    o.__class__ for o in self.get_objects_at_pos((x, y))]
                 if all([c not in ignore for c in classes]):
                     neighbours.append((x, y))
         return neighbours
@@ -265,7 +268,8 @@ class Room(AreaObject):
         for door, door_pos in self.doors:
             x, y = door_pos
             new_pos = xmin+x, ymin+y
-            walls = [o for o in world.get_objects_at_pos(new_pos) if isinstance(o, O.Wall)]
+            walls = [o for o in world.get_objects_at_pos(
+                new_pos) if isinstance(o, O.Wall)]
             for w in walls:
                 world.remove_object(w)
             door.place(new_pos, world)

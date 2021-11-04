@@ -993,7 +993,8 @@ def get_class_name(name):
 
 
 def initialize(group):
-    fname = os.path.join(mydir, '{}.py'.format(group.replace('-', '_').replace(' ', '_').lower()))
+    fname = os.path.join(mydir, '{}.py'.format(
+        group.replace('-', '_').replace(' ', '_').lower()))
     class_name = 'Base' + get_class_name(group)
     if class_name[-1] == 's':  # make singular
         class_name = class_name[:-1]
@@ -1017,7 +1018,8 @@ def get_class(base_class, attributes):
         'class {}({}):'.format(class_name, base_class),
         '',
         '    def __init__(self):',
-        '        super().__init__(\'{name}\', weight={weight}, armour_class={armour_class}, material={material})'.format(**attributes),
+        '        super().__init__(\'{name}\', weight={weight}, armour_class={armour_class}, material={material})'.format(
+            **attributes),
         '',
     ]
 
@@ -1026,7 +1028,8 @@ if __name__ == '__main__':
     doc = html.fromstring(TABLE)
 
     trs = doc.xpath('//tr')
-    header = ['name', 'cost', 'weight', 'armour_class', 'weight_per_ac0', 'weight_per_ac5', 'material', 'effect', 'mc', 'prob', 'magical', 'appearance']
+    header = ['name', 'cost', 'weight', 'armour_class', 'weight_per_ac0',
+              'weight_per_ac5', 'material', 'effect', 'mc', 'prob', 'magical', 'appearance']
 
     current = {}
 
@@ -1048,12 +1051,15 @@ if __name__ == '__main__':
                 else:
                     with open(current['file'], 'wt') as f:
                         f.write(content)
-            current['rows'], current['base'], current['file'] = initialize(group)
+            current['rows'], current['base'], current['file'] = initialize(
+                group)
             all_files.append(current['file'])
         else:
             # this is an item row
-            attributes = {k: v for k, v in zip(header, [t.text_content().strip() for t in row])}
-            attributes['name'] = re.sub(r'(\(.+\))', '', attributes['name']).strip()
+            attributes = {k: v for k, v in zip(
+                header, [t.text_content().strip() for t in row])}
+            attributes['name'] = re.sub(
+                r'(\(.+\))', '', attributes['name']).strip()
             if not attributes['magical']:
                 # NOTE: we skip magical items because we don't implement the dynamics
                 current['rows'] += get_class(current['base'], attributes)
@@ -1062,5 +1068,6 @@ if __name__ == '__main__':
     content = '\n'.join(current['rows'])
     with open(current['file'], 'wt') as f:
         f.write(content)
-    create_init(['base_armour'] + [os.path.basename(f).replace('.py', '') for f in all_files])
+    create_init(['base_armour'] + [os.path.basename(f).replace('.py', '')
+                for f in all_files])
     print('done')

@@ -15,10 +15,12 @@ class BaseTwoHandedSword(Weapon):
 class TwoHandedSword(BaseTwoHandedSword):
 
     def __init__(self):
-        super().__init__('two-handed sword', weight=150, damage=D.Dice.from_str('3d6'), material=M.Iron, hit=0)
+        super().__init__('two-handed sword', weight=150,
+                         damage=D.Dice.from_str('3d6'), material=M.Iron, hit=0)
 
 
 class Tsurugi(BaseTwoHandedSword):
 
     def __init__(self):
-        super().__init__('tsurugi', weight=60, damage=D.Dice.from_str('d8+2d6'), material=M.Metal, hit=0)
+        super().__init__('tsurugi', weight=60, damage=D.Dice.from_str(
+            'd8+2d6'), material=M.Metal, hit=0)

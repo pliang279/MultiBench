@@ -44,6 +44,3 @@ task_utterance = [
     'defeat the group monster',
     'slay the monster from the group',
 ]
-
-
-

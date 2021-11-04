@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 
+
 def stocks_train(num_training, trainprocess, algorithm, encoder=False):
     if encoder:
         filenames_encoder = []
@@ -19,6 +20,7 @@ def stocks_train(num_training, trainprocess, algorithm, encoder=False):
             filenames.append(filename)
             trainprocess(filename)
         return filenames
+
 
 def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
     loss = []
@@ -43,7 +45,8 @@ def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
                 loss_tmp.append(testprocess(model, noise_level))
             loss.append(np.array(loss_tmp))
     print("Standard deviation:", list(np.std(np.array(loss), axis=0)))
-    print("Average loss of different noise levels:", list(np.mean(np.array(loss), axis=0)))
+    print("Average loss of different noise levels:",
+          list(np.mean(np.array(loss), axis=0)))
 
 
 def general_train(trainprocess, algorithm, encoder=False):
@@ -68,7 +71,8 @@ def general_test(testprocess, filename, robustdatasets, encoder=False, multi_mea
             print("Robustness testing:")
             for noise_level in range(len(robustdata)):
                 print("Noise level {}: ".format(noise_level/10))
-                measure.append(testprocess(encoder, head, robustdata[noise_level]))
+                measure.append(testprocess(
+                    encoder, head, robustdata[noise_level]))
         else:
             model = torch.load(filename).cuda()
             print("Robustness testing:")

@@ -146,6 +146,7 @@ class EnricoDataset(Dataset):
         screenLabel = self.topic2Idx[example['topic']]
         return [screenImg, screenWireframeImg, screenLabel]
 
+
 def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, return_class_weights=True):
     ds_train = EnricoDataset(data_dir, mode="train")
     ds_val = EnricoDataset(data_dir, mode="val")
@@ -172,7 +173,7 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
         weights = []
         for i in range(len(ds_train.topic2Idx)):
             weights.append(class_counter[i])
-        
+
         weights2 = []
         for w in weights:
             weights2.append(1 / (w / sum(weights)))
@@ -181,9 +182,11 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
             weights3.append(w / sum(weights2))
         weights = weights3
 
-    dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
+    dl_train = DataLoader(ds_train, num_workers=num_workers,
+                          sampler=sampler, batch_size=batch_size)
     # dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
-    dl_val = DataLoader(ds_val, shuffle=False, num_workers=num_workers, batch_size=batch_size)
+    dl_val = DataLoader(ds_val, shuffle=False,
+                        num_workers=num_workers, batch_size=batch_size)
     # dl_val = DataLoader(ds_val, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
 
     ds_test_img = []
@@ -191,15 +194,17 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
     dl_test = dict()
     # Add image noise
     for i in range(11):
-        ds_test_img.append(EnricoDataset(data_dir, img_noise=True, noise_level=i/10))
+        ds_test_img.append(EnricoDataset(
+            data_dir, img_noise=True, noise_level=i/10))
     dl_test['image'] = [DataLoader(test, shuffle=False, num_workers=num_workers,
-                   batch_size=batch_size) for test in ds_test_img]
+                                   batch_size=batch_size) for test in ds_test_img]
     # Add wireframe image noise
     for i in range(11):
-        ds_test_wireframe.append(EnricoDataset(data_dir, wireframe_noise=True, noise_level=i/10))
+        ds_test_wireframe.append(EnricoDataset(
+            data_dir, wireframe_noise=True, noise_level=i/10))
     dl_test['wireframe image'] = [DataLoader(test, shuffle=False, num_workers=num_workers,
-                   batch_size=batch_size) for test in ds_test_wireframe]
-    
+                                             batch_size=batch_size) for test in ds_test_wireframe]
+
     dls = tuple([dl_train, dl_val, dl_test])
     if return_class_weights:
         return dls, weights

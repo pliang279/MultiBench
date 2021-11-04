@@ -11,7 +11,7 @@ def timeseries_robustness(tests, noise_level=0.3, noise=True, rand_drop=True, st
     if rand_drop:
         robust_tests = random_drop(robust_tests, noise_level)
     if struct_drop:
-        robust_tests = structured_drop(robust_tests, noise_level)  
+        robust_tests = structured_drop(robust_tests, noise_level)
     return robust_tests
 
 
@@ -23,10 +23,13 @@ def white_noise(data, p):
     return data
 
 # each entry is dropped independently with probability p
+
+
 def random_drop(data, p):
     for i in range(len(data)):
         data[i] = random_drop_helper(data[i], p, len(np.array(data).shape))
     return data
+
 
 def random_drop_helper(data, p, level):
     if level == 2:
@@ -40,7 +43,7 @@ def random_drop_helper(data, p, level):
         return data
 
 
-# independently for each modality, each time step is chosen with probability p 
+# independently for each modality, each time step is chosen with probability p
 # at which all feature dimensions are dropped
 def structured_drop(data, p):
     for i in range(len(data)):

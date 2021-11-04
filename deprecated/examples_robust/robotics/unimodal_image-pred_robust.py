@@ -1,32 +1,26 @@
-import sys
-import os
-sys.path.insert(0, os.getcwd())
-
-import time
-
-import numpy as np
-
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import yaml
-import os
-from tqdm import tqdm
-
-from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised,roboticsConcat
+from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised, roboticsConcat
+from torchvision import transforms
+from torch.utils.data.sampler import SubsetRandomSampler
+from torch.utils.data import DataLoader
+from robustness.all_in_one import general_train, general_test
+from datasets.robotics.data_loader_robust import get_data
+from robotics_utils import set_seeds
+from training_structures.Simple_Late_Fusion import train, test
+from unimodals.robotics.decoders import ContactDecoder
+from unimodals.common_models import MLP
 from unimodals.robotics.encoders import (
     ProprioEncoder, ForceEncoder, ImageEncoder, DepthEncoder, ActionEncoder,
 )
-from unimodals.common_models import MLP
-from unimodals.robotics.decoders import ContactDecoder
-from training_structures.Simple_Late_Fusion import train, test
-from robotics_utils import set_seeds
-
-from datasets.robotics.data_loader_robust import get_data
-from robustness.all_in_one import general_train, general_test
-from torch.utils.data import DataLoader
-from torch.utils.data.sampler import SubsetRandomSampler
-from torchvision import transforms
+from tqdm import tqdm
+import yaml
+import torch.optim as optim
+import torch.nn as nn
+import torch
+import numpy as np
+import time
+import sys
+import os
+sys.path.insert(0, os.getcwd())
 
 
 class selfsupervised:
@@ -56,13 +50,14 @@ class selfsupervised:
         """
         self.fusion = roboticsConcat("image")
         #self.head = ContactDecoder(z_dim=configs["zdim"], deterministic=configs["deterministic"])
-        self.head=MLP(544,128,4)
+        self.head = MLP(544, 128, 4)
         self.optimtype = optim.Adam
 
         # losses
         self.loss_contact_next = nn.BCEWithLogitsLoss()
 
-        self.train_loader, self.val_loader, self.test_loader = get_data(self.device, self.configs,"/home/pliang/multibench/MultiBench-robotics/",unimodal='image',output='ee_yaw_next')
+        self.train_loader, self.val_loader, self.test_loader = get_data(
+            self.device, self.configs, "/home/pliang/multibench/MultiBench-robotics/", unimodal='image', output='ee_yaw_next')
 
     def train(self):
         print(len(self.train_loader.dataset), len(self.val_loader.dataset))
@@ -72,19 +67,22 @@ class selfsupervised:
         with open('val_dataset.txt', 'w') as f:
             for x in self.val_loader.dataset.dataset_path:
                 f.write(f'{x}\n')
+
         def trainprocess(filename):
             train(self.encoders, self.fusion, self.head,
-                self.train_loader, self.val_loader,
-                15,task='regression',
-                optimtype=self.optimtype,
-                lr=self.configs['lr'],criterion=torch.nn.MSELoss(),
-                save=filename)
-        self.filename = general_train(trainprocess, 'robotics_unimodal_image-pred')
-    
+                  self.train_loader, self.val_loader,
+                  15, task='regression',
+                  optimtype=self.optimtype,
+                  lr=self.configs['lr'], criterion=torch.nn.MSELoss(),
+                  save=filename)
+        self.filename = general_train(
+            trainprocess, 'robotics_unimodal_image-pred')
+
     def test(self):
         def testprocess(model, testdata):
-            return test(model, testdata, criterion=torch.nn.MSELoss(),task='regression')
+            return test(model, testdata, criterion=torch.nn.MSELoss(), task='regression')
         general_test(testprocess, self.filename, self.test_loader)
+
 
 with open('examples/robotics/training_default.yaml') as f:
     configs = yaml.load(f)

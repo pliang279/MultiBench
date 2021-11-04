@@ -51,7 +51,8 @@ class Task(gym.Env):
         self.vocab.word2index(list(words), train=True)
 
     def build_vocab(self):
-        self.add_words([c.__name__.split('.')[-1].lower() for c in utils.get_all_subclasses(O.WorldObject)])
+        self.add_words([c.__name__.split('.')[-1].lower()
+                       for c in utils.get_all_subclasses(O.WorldObject)])
 
     def agent_is_dead(self):
         return not self.agent.is_alive()

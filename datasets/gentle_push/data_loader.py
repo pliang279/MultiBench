@@ -267,10 +267,10 @@ def _load_trajectories(
                 states[:, :2] = raw_trajectory["Cylinder0_pos"][:, :2]  # x, y
 
             # Pull out observations
-            ## This is currently consisted of:
-            ## > gripper_pos: end effector position
-            ## > gripper_sensors: F/T, contact sensors
-            ## > image: camera image
+            # This is currently consisted of:
+            # > gripper_pos: end effector position
+            # > gripper_sensors: F/T, contact sensors
+            # > image: camera image
 
             observations = {}
 
@@ -339,10 +339,10 @@ def _load_trajectories(
             observations["image"] *= image_mask
 
             # Pull out controls
-            ## This is currently consisted of:
-            ## > previous end effector position
-            ## > end effector position delta
-            ## > binary contact reading
+            # This is currently consisted of:
+            # > previous end effector position
+            # > end effector position delta
+            # > binary contact reading
             if kloss_dataset:
                 eef_positions = raw_trajectory["tip"]
             else:
@@ -529,7 +529,7 @@ def _load_trajectories(
             raw_trajectories[raw_trajectory_index] = None
             del raw_trajectory
 
-    ## Uncomment this line to generate the lines required to normalize data
+    # Uncomment this line to generate the lines required to normalize data
     # _print_normalization(trajectories)
 
     return trajectories

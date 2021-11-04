@@ -1,4 +1,4 @@
-#copied from https://github.com/kenshohara/3D-ResNets-PyTorch/blob/master/models/resnet2p1d.py
+# copied from https://github.com/kenshohara/3D-ResNets-PyTorch/blob/master/models/resnet2p1d.py
 
 import math
 from functools import partial
@@ -228,7 +228,8 @@ class ResNet(nn.Module):
                                      stride=stride)
             else:
                 downsample = nn.Sequential(
-                    conv1x1x1(self.in_planes, planes * block.expansion, stride),
+                    conv1x1x1(self.in_planes, planes *
+                              block.expansion, stride),
                     nn.BatchNorm3d(planes * block.expansion))
 
         layers = []

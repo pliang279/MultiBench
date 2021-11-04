@@ -15,7 +15,8 @@ class BaseDagger(Weapon):
 class OrcishDagger(BaseDagger):
 
     def __init__(self):
-        super().__init__('orcish dagger', weight=10, damage=D.SingleDice(3), material=M.Iron)
+        super().__init__('orcish dagger', weight=10,
+                         damage=D.SingleDice(3), material=M.Iron)
 
 
 class Dagger(BaseDagger):
@@ -27,7 +28,8 @@ class Dagger(BaseDagger):
 class SilverDagger(BaseDagger):
 
     def __init__(self):
-        super().__init__('silver dagger', weight=12, damage=D.SingleDice(3), material=M.Silver)
+        super().__init__('silver dagger', weight=12,
+                         damage=D.SingleDice(3), material=M.Silver)
 
 
 class Athame(BaseDagger):
