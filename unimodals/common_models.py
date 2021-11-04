@@ -139,9 +139,11 @@ class GRUWithLinear(torch.nn.Module):
 
 # LSTM
 class LSTM(torch.nn.Module):
-    def __init__(self,indim,hiddim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
+    def __init__(self,indim,hiddim, linear_layer_outdim=None, dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
         super(LSTM,self).__init__()
         self.lstm=nn.LSTM(indim,hiddim,batch_first=True)
+        if linear_layer_outdim is not None:
+            self.linear = nn.Linear(hiddim, linear_layer_outdim)
         self.dropoutp=dropoutp
         self.dropout=dropout
         self.flatten=flatten
@@ -160,6 +162,8 @@ class LSTM(torch.nn.Module):
             out = F.dropout(out,p=self.dropoutp,training=training)
         if self.flatten:
             out=torch.flatten(out,1)
+        if self.linear_layer_outdim is not None:
+            out = self.linear(out)
         return out
 
 # 2-layer LSTM
@@ -196,30 +200,6 @@ class TwoLayersLSTM(torch.nn.Module):
             out = torch.flatten(out, 1)
         return out
 
-
-class LSTMWithLinear(torch.nn.Module):
-    def __init__(self,indim,hiddim,outdim,dropout=False,dropoutp=0.1,flatten=False,has_padding=False):
-        super(LSTMWithLinear,self).__init__()
-        self.lstm = nn.LSTM(indim, hiddim, batch_first=True)
-        self.linear = nn.Linear(hiddim, outdim)
-        self.dropoutp=dropoutp
-        self.dropout=dropout
-        self.flatten=flatten
-        self.has_padding=has_padding
-    def forward(self,x,training=True):
-        if self.has_padding:
-            x = pack_padded_sequence(x[0],x[1],batch_first=True,enforce_sorted=False)
-            hidden=self.lstm(x)[1][0]
-        else:
-            if len(x.size()) == 2:
-                x = x.unsqueeze(2)
-            hidden=self.lstm(x)[1][0]
-        hidden = hidden.permute([1, 2, 0])
-        hidden = hidden.reshape([hidden.size()[0], -1])
-        if self.dropout:
-            hidden = F.dropout(hidden,p=self.dropoutp,training=training)
-        out = self.linear(hidden)
-        return out
 
 
 #adapted from centralnet code https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py

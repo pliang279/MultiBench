@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import Stack
 from fusions.finance.early_fusion import EarlyFusionTransformer
-from unimodals.common_models import LSTMWithLinear, Identity
+from unimodals.common_models import Identity
 from datasets.stocks.get_data import get_dataloader
 from training_structures.Supervised_Learning import train, test
 from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test

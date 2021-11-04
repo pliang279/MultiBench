@@ -10,7 +10,7 @@ import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import Stack
 from fusions.finance.early_fusion import EarlyFusionTransformer
-from unimodals.common_models import LSTMWithLinear, Identity
+from unimodals.common_models import LSTM, Identity
 from training_structures.Simple_Late_Fusion import train, test
 from robustness.all_in_one import stocks_train, stocks_test
 sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
