@@ -6,7 +6,7 @@ sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 from robustness.all_in_one import stocks_train, stocks_test
 from training_structures.gradient_blend import train, test
 from get_data_robust import get_dataloader
-from unimodals.common_models import LSTMWithLinear, Identity, Squeeze
+from unimodals.common_models import LSTM, Identity, Squeeze
 from fusions.common_fusions import Stack
 from torch import nn
 import training_structures.gradient_blend
@@ -41,9 +41,9 @@ train_loader, val_loader, test_loader = get_dataloader(
 
 unimodal_models = [Identity().cuda() for x in stocks]
 multimodal_head = IgnoreTrainingArg(nn.Sequential(
-    LSTMWithLinear(len(stocks), 128, 1), Squeeze())).cuda()
+    LSTM(len(stocks), 128, linear_layer_outdim=1), Squeeze())).cuda()
 unimodal_heads = [IgnoreTrainingArg(nn.Sequential(
-    LSTMWithLinear(1, 128, 1), Squeeze())).cuda() for x in stocks]
+    LSTM(1, 128, linear_layer_outdim=1), Squeeze())).cuda() for x in stocks]
 fuse = Stack().cuda()
 allmodules = [*unimodal_models, multimodal_head, *unimodal_heads, fuse]
 

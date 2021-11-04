@@ -9,7 +9,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import Stack
-from unimodals.common_models import LSTMWithLinear
+from unimodals.common_models import LSTM
 sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 from get_data_robust import get_dataloader
 

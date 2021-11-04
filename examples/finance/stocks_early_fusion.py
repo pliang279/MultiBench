@@ -10,7 +10,7 @@ import torch
 import torch.nn.functional as F
 from torch import nn
 from fusions.common_fusions import Stack
-from unimodals.common_models import LSTMWithLinear, Identity
+from unimodals.common_models import LSTM, Identity
 sys.path.append('/home/pliang/multibench/MultiBench/datasets/stocks')
 from datasets.stocks.get_data import get_dataloader
 from training_structures.Supervised_Learning import train, test
@@ -31,7 +31,7 @@ train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.tar
 n_modalities = len(train_loader.dataset[0]) - 1
 encoders = [Identity().cuda()] * n_modalities
 fusion = Stack().cuda()
-head = LSTMWithLinear(n_modalities, 128, 1).cuda()
+head = LSTM(n_modalities, 128, linear_layer_outdim=1).cuda()
 allmodules = [*encoders, fusion, head]
 
 def trainprocess():
