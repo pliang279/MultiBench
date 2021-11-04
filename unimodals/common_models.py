@@ -8,21 +8,15 @@ from torchvision import models as tmodels
 
 # One layer linear
 class Linear(torch.nn.Module):
-    def __init__(self,indim,outdim):
+    def __init__(self,indim,outdim, xavier_init=False):
         super(Linear, self).__init__()
         self.fc = nn.Linear(indim,outdim)
+        if xavier_init:
+            nn.init.xavier_normal(self.fc.weight)
+            self.fc.bias.data.fill_(0.0)
     def forward(self,x,training=False):
         return self.fc(x)
 
-# One layer linear with initialized weights
-class Linear_inited(torch.nn.Module):
-    def __init__(self,indim,outdim):
-        super(Linear_inited, self).__init__()
-        self.fc = nn.Linear(indim,outdim)
-        nn.init.xavier_normal(self.fc.weight)
-        self.fc.bias.data.fill_(0.0)
-    def forward(self,x,training=False):
-        return self.fc(x)
 # the squeeze module
 class Squeeze(torch.nn.Module):
     def __init__(self, dim=None):
