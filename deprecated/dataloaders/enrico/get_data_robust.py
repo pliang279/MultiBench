@@ -13,6 +13,8 @@ import numpy as np
 from robustness.visual_robust import visual_robustness
 
 # helper function for extracting UI elements from hierarchy
+
+
 def add_screen_elements(tree, element_list):
     if 'children' in tree and len(tree['children']) > 0:
         # we are at an intermediate node
@@ -26,6 +28,7 @@ def add_screen_elements(tree, element_list):
             nodeLabel = tree['componentLabel']
             node = (nodeBounds, nodeLabel)
             element_list.append(node)
+
 
 class EnricoDataset(Dataset):
     def __init__(self, data_dir, noise_level, img_noise=False, wireframe_noise=False, img_dim_x=128, img_dim_y=256, random_seed=42, train_split=0.65, val_split=0.15, test_split=0.2, normalize_image=False, seq_len=64):
@@ -44,15 +47,17 @@ class EnricoDataset(Dataset):
             reader = csv.DictReader(f)
             example_list = list(reader)
 
-        IGNORES = set(["50105", "50109"]) # the wireframe files are corrupted for these files
-        example_list = [e for e in example_list if e['screen_id'] not in IGNORES]
+        # the wireframe files are corrupted for these files
+        IGNORES = set(["50105", "50109"])
+        example_list = [
+            e for e in example_list if e['screen_id'] not in IGNORES]
 
         self.example_list = example_list
 
         keys = list(range(len(example_list)))
         # shuffle and create splits
         random.Random(random_seed).shuffle(keys)
-        
+
         # test split is at the end
         start_index = int(len(example_list) * (train_split + val_split))
         stop_index = len(example_list)
@@ -66,7 +71,8 @@ class EnricoDataset(Dataset):
             transforms.ToTensor()
         ]
         if normalize_image:
-            img_transforms.append(transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
+            img_transforms.append(transforms.Normalize(
+                (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)))
 
         # pytorch image transforms
         self.img_transforms = transforms.Compose(img_transforms)
@@ -87,7 +93,8 @@ class EnricoDataset(Dataset):
         self.idx2Topic = idx2Topic
         self.topic2Idx = topic2Idx
 
-        UI_TYPES = ["Text", "Text Button", "Icon", "Card", "Drawer", "Web View", "List Item", "Toolbar", "Bottom Navigation", "Multi-Tab", "List Item", "Toolbar", "Bottom Navigation", "Multi-Tab", "Background Image", "Image", "Video", "Input", "Number Stepper", "Checkbox", "Radio Button", "Pager Indicator", "On/Off Switch", "Modal", "Slider", "Advertisement", "Date Picker", "Map View"]
+        UI_TYPES = ["Text", "Text Button", "Icon", "Card", "Drawer", "Web View", "List Item", "Toolbar", "Bottom Navigation", "Multi-Tab", "List Item", "Toolbar", "Bottom Navigation", "Multi-Tab",
+                    "Background Image", "Image", "Video", "Input", "Number Stepper", "Checkbox", "Radio Button", "Pager Indicator", "On/Off Switch", "Modal", "Slider", "Advertisement", "Date Picker", "Map View"]
 
         idx2Label = {}
         label2Idx = {}
@@ -113,18 +120,23 @@ class EnricoDataset(Dataset):
         example = self.example_list[self.keys[idx]]
         screenId = example['screen_id']
         # image modality
-        screenImg = Image.open(os.path.join(self.img_dir, screenId + ".jpg")).convert("RGB")
+        screenImg = Image.open(os.path.join(
+            self.img_dir, screenId + ".jpg")).convert("RGB")
         if self.img_noise:
-            screenImg = Image.fromarray(visual_robustness([np.array(screenImg)], noise_level=self.noise_level)[0])
+            screenImg = Image.fromarray(visual_robustness(
+                [np.array(screenImg)], noise_level=self.noise_level)[0])
         screenImg = self.img_transforms(screenImg)
         # wireframe image modality
-        screenWireframeImg = Image.open(os.path.join(self.wireframe_dir, screenId + ".png")).convert("RGB")
+        screenWireframeImg = Image.open(os.path.join(
+            self.wireframe_dir, screenId + ".png")).convert("RGB")
         if self.wireframe_noise:
-            screenWireframeImg = Image.fromarray(visual_robustness([np.array(screenWireframeImg)], noise_level=self.noise_level)[0])
+            screenWireframeImg = Image.fromarray(visual_robustness(
+                [np.array(screenWireframeImg)], noise_level=self.noise_level)[0])
         screenWireframeImg = self.img_transforms(screenWireframeImg)
         # label
         screenLabel = self.topic2Idx[example['topic']]
         return [screenImg, screenWireframeImg, screenLabel]
+
 
 def get_dataloader_robust(data_dir, batch_size=32, num_workers=0, img_noise=True, wireframe_noise=True):
     ds_test_img = []
@@ -132,10 +144,14 @@ def get_dataloader_robust(data_dir, batch_size=32, num_workers=0, img_noise=True
     dl_test = []
     if img_noise:
         for i in range(11):
-            ds_test_img.append(EnricoDataset(data_dir, img_noise=True, noise_level=i/10))
-        dl_test.append([DataLoader(test, shuffle=False, num_workers=num_workers, batch_size=batch_size) for test in ds_test_img])
+            ds_test_img.append(EnricoDataset(
+                data_dir, img_noise=True, noise_level=i/10))
+        dl_test.append([DataLoader(test, shuffle=False, num_workers=num_workers,
+                       batch_size=batch_size) for test in ds_test_img])
     if wireframe_noise:
         for i in range(11):
-            ds_test_wireframe.append(EnricoDataset(data_dir, wireframe_noise=True, noise_level=i/10))
-        dl_test.append([DataLoader(test, shuffle=False, num_workers=num_workers, batch_size=batch_size) for test in ds_test_wireframe])
+            ds_test_wireframe.append(EnricoDataset(
+                data_dir, wireframe_noise=True, noise_level=i/10))
+        dl_test.append([DataLoader(test, shuffle=False, num_workers=num_workers,
+                       batch_size=batch_size) for test in ds_test_wireframe])
     return dl_test

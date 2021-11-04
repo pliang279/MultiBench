@@ -64,7 +64,8 @@ class RockPaperScissors(RoomTask):
                 intelligence=5,
                 armour_class=1,
                 speed=1,
-                inventory=V.Inventory({I.Weapon: I.Unarmed(hit=100, damage='100')})
+                inventory=V.Inventory(
+                    {I.Weapon: I.Unarmed(hit=100, damage='100')})
             )
 
     def __init__(self, num_enemies=1, room_shape=(10, 10), featurizer=F.Progress(), partially_observable=False, max_iter=1000, max_placement=2, max_name=8, max_inv=10, max_wiki=80, max_task=40, time_penalty=-0.02, shuffle_wiki=False):
@@ -76,7 +77,8 @@ class RockPaperScissors(RoomTask):
         self.enemies = []
         self.items = []
         self.type_index = 0
-        super().__init__(room_shape, featurizer, partially_observable, max_iter, max_placement, max_name, max_inv, max_wiki, max_task, time_penalty, shuffle_wiki=shuffle_wiki)
+        super().__init__(room_shape, featurizer, partially_observable, max_iter, max_placement,
+                         max_name, max_inv, max_wiki, max_task, time_penalty, shuffle_wiki=shuffle_wiki)
 
     def set_types(self, labels):
         for i in range(len(labels)):
@@ -104,7 +106,8 @@ class RockPaperScissors(RoomTask):
     def get_wiki(self):
         facts = []
         for el in ALL_TYPES:
-            facts.append('{} beats {}.'.format(self.TYPE_TO_ITEM[el], self.TYPE_TO_MONSTER[el]))
+            facts.append('{} beats {}.'.format(
+                self.TYPE_TO_ITEM[el], self.TYPE_TO_MONSTER[el]))
         return ' '.join(facts)
 
     def build_vocab(self):
@@ -130,7 +133,8 @@ class RockPaperScissors(RoomTask):
 
         # create some dragons
         for i in range(self.num_enemies):
-            self.enemies.append(self.place_object(self.Dragon(monster_type, self.TYPE_TO_MONSTER[monster_type])))
+            self.enemies.append(self.place_object(self.Dragon(
+                monster_type, self.TYPE_TO_MONSTER[monster_type])))
 
         # create some items
         for t in ALL_TYPES:
@@ -160,7 +164,8 @@ class RockPaperScissorsMed(RockPaperScissors):
                 train_vocab |= set(trip)
             for trip in itertools.permutations([b, c, e]):
                 dev.append(trip)
-        dev = [(a, b, c) for a, b, c in dev if a in train_vocab and b in train_vocab and c in train_vocab]
+        dev = [(a, b, c) for a, b,
+               c in dev if a in train_vocab and b in train_vocab and c in train_vocab]
         return train, dev
 
 

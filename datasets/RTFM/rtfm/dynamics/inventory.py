@@ -93,7 +93,8 @@ class Inventory:
             if isinstance(item, s):
                 self.equip(s, item)
                 return
-        raise Exception('Cannot equip item {} because could not find appropriate slot.'.format(item))
+        raise Exception(
+            'Cannot equip item {} because could not find appropriate slot.'.format(item))
 
     def get_slot(self, slot):
         assert slot in self.slots

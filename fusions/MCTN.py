@@ -1,3 +1,11 @@
+from unimodals.common_models import MLP
+from torch.autograd import Variable
+import random
+import math
+from torch.nn.utils.rnn import pack_padded_sequence
+from torch.nn import functional as F
+from torch import nn
+import torch
 import sys
 import os
 
@@ -5,15 +13,6 @@ from torch.serialization import save
 
 sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
-import torch
-from torch import nn
-from torch.nn import functional as F
-from torch.nn.utils.rnn import pack_padded_sequence
-import math
-import random
-from torch.autograd import Variable
-
-from unimodals.common_models import MLP
 
 
 class Encoder(nn.Module):
@@ -53,7 +52,8 @@ class Attention(nn.Module):
 
     def score(self, hidden, encoder_outputs):
         # [B*T*2H]->[B*T*H]
-        energy = F.softmax(self.attn(torch.cat([hidden, encoder_outputs], 2)), dim=1)
+        energy = F.softmax(
+            self.attn(torch.cat([hidden, encoder_outputs], 2)), dim=1)
         energy = energy.transpose(1, 2)  # [B*H*T]
         v = self.v.repeat(encoder_outputs.size(0), 1).unsqueeze(1)  # [B*1*H]
         energy = torch.bmm(v, energy)  # [B*1*T]
@@ -100,12 +100,14 @@ class Seq2Seq(nn.Module):
         self.encoder = encoder
         self.decoder = decoder
 
-    def forward(self, src, trg, teacher_forcing_ratio=0.5):  # change teacher_forcing_ratio to 0.0 when evaluating
+    # change teacher_forcing_ratio to 0.0 when evaluating
+    def forward(self, src, trg, teacher_forcing_ratio=0.5):
         batch_size = src.size(1)
         max_len = src.size(0)
 
         output_size = self.decoder.output_size
-        outputs = Variable(torch.zeros(max_len, batch_size, output_size)).cuda()
+        outputs = Variable(torch.zeros(
+            max_len, batch_size, output_size)).cuda()
 
         encoder_output, hidden = self.encoder(src)
         hidden = hidden[:self.decoder.n_layers]

@@ -1,16 +1,16 @@
+from unimodals.common_models import GRU, MLP
+from get_data import get_dataloader
+from fusions.common_fusions import Concat
+from training_structures.Simple_Late_Fusion import train, test
+import torch
 import sys
 import os
 sys.path.append(os.getcwd())
 
-import torch
-
-from training_structures.Simple_Late_Fusion import train, test
-from fusions.common_fusions import Concat
-from get_data import get_dataloader
-from unimodals.common_models import GRU, MLP
 
 # Support mosi/mosi_unaligned/mosei/mosei_unaligned
-traindata, validdata, testdata = get_dataloader('../affect/processed/sarcasm_data.pkl')
+traindata, validdata, testdata = get_dataloader(
+    '../affect/processed/sarcasm_data.pkl')
 
 # sarcasm 371 81 300
 encoders = GRU(752, 1128, dropout=True, has_padding=True).cuda()
@@ -23,13 +23,11 @@ head = MLP(1128, 512, 1).cuda()
 fusion = Concat().cuda()
 
 # Support simple late_fusion and late_fusion with removing bias
-train(encoders, fusion, head, traindata, validdata, 1000, True, True, \
-    task="classification", optimtype=torch.optim.AdamW, lr=1e-5, save='sarcasm_lf_best.pt', \
-    weight_decay=0.01, criterion=torch.nn.MSELoss(), regularization=False)
+train(encoders, fusion, head, traindata, validdata, 1000, True, True,
+      task="classification", optimtype=torch.optim.AdamW, lr=1e-5, save='sarcasm_lf_best.pt',
+      weight_decay=0.01, criterion=torch.nn.MSELoss(), regularization=False)
 
 print("Testing:")
-model=torch.load('sarcasm_lf_best.pt').cuda()
+model = torch.load('sarcasm_lf_best.pt').cuda()
 test(model, testdata, True, torch.nn.L1Loss(), "regression")
 # test(model,testdata,True,)
-
-

@@ -51,10 +51,6 @@ class Cruel(BaseDamageModifier, BasePrefixModifier):
     level = 9
 
 
-
-
-
-
 class Craftsmanship(BaseDamageModifier, BaseSuffixModifier):
     level = 1
 

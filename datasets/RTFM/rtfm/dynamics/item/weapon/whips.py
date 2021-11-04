@@ -15,10 +15,12 @@ class BaseWhip(Weapon):
 class Bullwhip(BaseWhip):
 
     def __init__(self):
-        super().__init__('bullwhip', weight=20, damage=D.Dice.from_str('1'), material=M.Leather, hit=0)
+        super().__init__('bullwhip', weight=20,
+                         damage=D.Dice.from_str('1'), material=M.Leather, hit=0)
 
 
 class RubberHose(BaseWhip):
 
     def __init__(self):
-        super().__init__('rubber hose', weight=20, damage=D.Dice.from_str('d3'), material=M.Plastic, hit=0)
+        super().__init__('rubber hose', weight=20,
+                         damage=D.Dice.from_str('d3'), material=M.Plastic, hit=0)

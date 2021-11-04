@@ -1,3 +1,5 @@
+from robustness.timeseries_robust import timeseries_robustness
+from robustness.text_robust import text_robustness
 from types import new_class
 from typing import *
 import h5py
@@ -13,13 +15,11 @@ import torchtext as text
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import DataLoader, Dataset
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.getcwd()))))
-from robustness.text_robust import text_robustness
-from robustness.timeseries_robust import timeseries_robustness
 
 
 class Affectdataset(Dataset):
-    
-    def __init__(self, data:Dict, flatten_time_series:bool, aligned:bool=True, task:str=None) -> None:
+
+    def __init__(self, data: Dict, flatten_time_series: bool, aligned: bool = True, task: str = None) -> None:
         self.dataset = data
         self.flatten = flatten_time_series
         self.aligned = aligned
@@ -33,7 +33,7 @@ class Affectdataset(Dataset):
             try:
                 start = text.nonzero()[0][0]
             except:
-                print(text,ind)
+                print(text, ind)
                 exit()
             vision = vision[start:].float()
             audio = audio[start:].float()
@@ -45,7 +45,7 @@ class Affectdataset(Dataset):
         label = torch.tensor(self.dataset['labels'][ind]).round().long()+3 if self.task == "classification" else\
             torch.tensor(self.dataset['labels'][ind]).float()
         if self.flatten:
-            return [vision.flatten(), audio.flatten(), text.flatten(), ind,\
+            return [vision.flatten(), audio.flatten(), text.flatten(), ind,
                     label]
         else:
             return [vision, audio, text, ind, label]
@@ -80,17 +80,17 @@ def get_rawtext(path, data_kind, vids):
         print('Wrong data kind!')
 
 
-def load_pickle(pickle_file:str)->Dict:
-	try:
-		with open(pickle_file, 'rb') as f:
-			pickle_data = pickle.load(f)
-	except UnicodeDecodeError as e:
-		with open(pickle_file, 'rb') as f:
-			pickle_data = pickle.load(f, encoding='latin1')
-	except Exception as e:
-		print('Unable to load data ', pickle_file, ':', e)
-		raise
-	return pickle_data
+def load_pickle(pickle_file: str) -> Dict:
+    try:
+        with open(pickle_file, 'rb') as f:
+            pickle_data = pickle.load(f)
+    except UnicodeDecodeError as e:
+        with open(pickle_file, 'rb') as f:
+            pickle_data = pickle.load(f, encoding='latin1')
+    except Exception as e:
+        print('Unable to load data ', pickle_file, ':', e)
+        raise
+    return pickle_data
 
 
 def get_word2id(text_data, vids):
@@ -104,6 +104,7 @@ def get_word2id(text_data, vids):
             words.append(word2id[word])
         words = np.asarray(words)
         data_processed[vids[i]] = words
+
     def return_unk():
         return UNK
     word2id.default_factory = return_unk
@@ -154,12 +155,13 @@ def drop_entry(dataset):
 
 
 def get_dataloader(
-    filepath:str, dataFolder:str, dataset:str, batch_size:int=40, train_shuffle:bool=True, num_workers:int=8, flatten_time_series:bool=False,task=None)->DataLoader:
+        filepath: str, dataFolder: str, dataset: str, batch_size: int = 40, train_shuffle: bool = True, num_workers: int = 8, flatten_time_series: bool = False, task=None) -> DataLoader:
 
-    cmu_data = ['mosi', 'mosi_unalign', 'mosei', 'mosei_unalign', 'pom', 'pom_unalign']
+    cmu_data = ['mosi', 'mosi_unalign', 'mosei',
+                'mosei_unalign', 'pom', 'pom_unalign']
     pkl_data = ['urfunny', 'deception']
     vids = []
-    
+
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
     if dataset == 'sarcasm':
@@ -180,8 +182,10 @@ def get_dataloader(
 
     alldata['train'] = drop_entry(alldata['train'])
     alldata['valid'] = drop_entry(alldata['valid'])
-    train = DataLoader(Affectdataset(alldata['train'], flatten_time_series, task=task), shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size, collate_fn=process)
-    valid = DataLoader(Affectdataset(alldata['valid'], flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process)
+    train = DataLoader(Affectdataset(alldata['train'], flatten_time_series, task=task),
+                       shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size, collate_fn=process)
+    valid = DataLoader(Affectdataset(alldata['valid'], flatten_time_series, task=task),
+                       shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process)
 
     # Add text noises
     robust_text = []
@@ -189,70 +193,81 @@ def get_dataloader(
         test = dict()
         test['vision'] = alldata['test']["vision"]
         test['audio'] = alldata['test']["audio"]
-        test['text'] = glove_embeddings(text_robustness(rawtext, noise_level=i/10), vids)
+        test['text'] = glove_embeddings(
+            text_robustness(rawtext, noise_level=i/10), vids)
         test['labels'] = alldata['test']["label"]
         test = drop_entry(test)
-        robust_text.append(DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
-    
+        robust_text.append(DataLoader(Affectdataset(test, flatten_time_series, task=task),
+                           shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
+
     # Add visual noises
     robust_vision = []
     for i in range(10):
         test = dict()
-        test['vision'] = timeseries_robustness([alldata['test']['vision']], noise_level=i/10, rand_drop=False, struct_drop=False)
+        test['vision'] = timeseries_robustness(
+            [alldata['test']['vision']], noise_level=i/10, rand_drop=False, struct_drop=False)
         test['audio'] = alldata['test']["audio"]
         test['text'] = alldata['test']['text']
         test['labels'] = alldata['test']["label"]
         test = drop_entry(test)
-        robust_vision.append(DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
+        robust_vision.append(DataLoader(Affectdataset(test, flatten_time_series, task=task),
+                             shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
 
     # Add audio noises
     robust_audio = []
     for i in range(10):
         test = dict()
         test['vision'] = alldata['test']["vision"]
-        test['audio'] = timeseries_robustness([alldata['test']['audio']], noise_level=i/10, rand_drop=False)
+        test['audio'] = timeseries_robustness(
+            [alldata['test']['audio']], noise_level=i/10, rand_drop=False)
         test['text'] = alldata['test']['text']
         test['labels'] = alldata['test']["label"]
         test = drop_entry(test)
-        robust_audio.append(DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
+        robust_audio.append(DataLoader(Affectdataset(test, flatten_time_series, task=task),
+                            shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
 
     # Add timeseries noises
     for i, text in enumerate(robust_text):
-        alldata_test = timeseries_robustness([alldata['test']['vision'], alldata['test']['audio'], text], noise_level=i/10)
+        alldata_test = timeseries_robustness(
+            [alldata['test']['vision'], alldata['test']['audio'], text], noise_level=i/10)
         test.append(alldata_test)
 
     robust_timeseries = []
     alldata['test'] = drop_entry(alldata['test'])
     for i in range(10):
-        robust_timeseries_tmp = timeseries_robustness([alldata['test']['vision'], alldata['test']['audio'], alldata['test']['text']], noise_level=i/10)
+        robust_timeseries_tmp = timeseries_robustness(
+            [alldata['test']['vision'], alldata['test']['audio'], alldata['test']['text']], noise_level=i/10)
         test = dict()
         test['vision'] = robust_timeseries_tmp[0]
         test['audio'] = robust_timeseries_tmp[1]
         test['text'] = robust_timeseries_tmp[2]
         test['labels'] = alldata['test']['labels']
-        robust_timeseries.append(DataLoader(Affectdataset(test, flatten_time_series, task=task), shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
+        robust_timeseries.append(DataLoader(Affectdataset(test, flatten_time_series, task=task),
+                                 shuffle=False, num_workers=num_workers, batch_size=batch_size, collate_fn=process))
     return train, valid, robust_text, robust_vision, robust_audio, robust_timeseries
 
 
-def process(inputs:List):
+def process(inputs: List):
     processed_input = []
     processed_input_lengths = []
     inds = []
     labels = []
-    
+
     for i in range(len(inputs[0])-2):
         feature = []
         for sample in inputs:
             feature.append(sample[i])
-        processed_input_lengths.append(torch.as_tensor([v.size(0) for v in feature]))
+        processed_input_lengths.append(
+            torch.as_tensor([v.size(0) for v in feature]))
         processed_input.append(pad_sequence(feature, batch_first=True))
-    
+
     for sample in inputs:
         inds.append(sample[-2])
         if len(sample[-1].shape) > 1:
-            labels.append(torch.where(sample[-1][:,1]==1)[0])
+            labels.append(torch.where(sample[-1][:, 1] == 1)[0])
         else:
             labels.append(sample[-1])
 
     return processed_input, processed_input_lengths, \
-        torch.tensor(inds).view(len(inputs), 1), torch.tensor(labels).view(len(inputs))
+        torch.tensor(inds).view(len(inputs), 1), torch.tensor(
+            labels).view(len(inputs))

@@ -192,7 +192,8 @@ class Symbol(Featurizer):
         }
 
     def featurize(self, task):
-        mat = task.world.get_observation(perspective=task.perspective, max_placement=task.max_placement)
+        mat = task.world.get_observation(
+            perspective=task.perspective, max_placement=task.max_placement)
         smat = []
         for y in range(0, len(mat)):
             row = []
@@ -224,7 +225,8 @@ class Text(Featurizer):
         }
 
     def featurize(self, task, eos='pad', pad='pad'):
-        mat = task.world.get_observation(perspective=task.perspective, max_placement=task.max_placement)
+        mat = task.world.get_observation(
+            perspective=task.perspective, max_placement=task.max_placement)
         smat = []
         lmat = []
         for y in range(0, len(mat)):
@@ -235,16 +237,20 @@ class Text(Featurizer):
                 names = []
                 lengths = []
                 for o in mat[y][x]:
-                    n, l = self.lookup_sentence(o.describe(), task.vocab, max_len=task.max_name, eos=eos, pad=pad)
+                    n, l = self.lookup_sentence(
+                        o.describe(), task.vocab, max_len=task.max_name, eos=eos, pad=pad)
                     names.append(n)
                     lengths.append(l)
                 srow.append(names)
                 lrow.append(lengths)
             smat.append(srow)
             lmat.append(lrow)
-        wiki, wiki_length = self.lookup_sentence(task.get_tokenized_wiki() if hasattr(task, 'get_tokenized_wiki') else task.get_wiki(), task.vocab, max_len=task.max_wiki, eos=eos, pad=pad)
-        ins, ins_length = self.lookup_sentence(task.get_tokenized_task() if hasattr(task, 'get_tokenized_task') else task.get_task(), task.vocab, max_len=task.max_task, eos=eos, pad=pad)
-        inv, inv_length = self.lookup_sentence(task.get_inv(), task.vocab, max_len=task.max_inv, eos=eos, pad=pad)
+        wiki, wiki_length = self.lookup_sentence(task.get_tokenized_wiki() if hasattr(
+            task, 'get_tokenized_wiki') else task.get_wiki(), task.vocab, max_len=task.max_wiki, eos=eos, pad=pad)
+        ins, ins_length = self.lookup_sentence(task.get_tokenized_task() if hasattr(
+            task, 'get_tokenized_task') else task.get_task(), task.vocab, max_len=task.max_task, eos=eos, pad=pad)
+        inv, inv_length = self.lookup_sentence(
+            task.get_inv(), task.vocab, max_len=task.max_inv, eos=eos, pad=pad)
         ret = {
             'name': smat,
             'name_len': lmat,
@@ -273,7 +279,8 @@ class Text(Featurizer):
                 length = len(words)
                 if len(words) < max_len:
                     words += [pad] * (max_len - len(words))
-                self._cache[key] = vocab.word2index([w.strip() for w in words]), length
+                self._cache[key] = vocab.word2index(
+                    [w.strip() for w in words]), length
                 while len(self._cache) > self.max_cache:
                     keys = list(self._cache.keys())
                     del self._cache[random.choice(keys)]

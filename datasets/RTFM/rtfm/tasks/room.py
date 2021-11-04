@@ -14,7 +14,8 @@ class RoomTask(Task):
 
     def __init__(self, room_shape=(10, 10), featurizer=F.Progress(), partially_observable=False, max_iter=1000, max_placement=2, max_name=2, max_inv=10, max_wiki=80, max_task=40, time_penalty=-0.02, shuffle_wiki=False):
         self.world_shape = room_shape
-        super().__init__(featurizer, partially_observable, max_iter, max_placement, max_name, max_inv, max_wiki, max_task, time_penalty, shuffle_wiki=shuffle_wiki)
+        super().__init__(featurizer, partially_observable, max_iter, max_placement,
+                         max_name, max_inv, max_wiki, max_task, time_penalty, shuffle_wiki=shuffle_wiki)
         self.observation_space = self.featurizer.get_observation_space(self)
 
     def build_vocab(self):
@@ -31,4 +32,3 @@ class RoomTask(Task):
         super()._reset()
         r = W.Room(*self.world_shape)
         r.place((0, 0), self.world)
-

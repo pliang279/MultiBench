@@ -14,13 +14,13 @@ def process_data(filename, path, labels):
     with Image.open(filepath+".jpeg") as f:
         image = np.array(f.convert("RGB"))
         data["image"] = image
-    
+
     with open(filepath+".json", "r") as f:
         info = json.load(f)
-        
+
         plot = info["plot"]
         data["plot"] = plot
-        
+
         genre = np.zeros(len(labels))
         for label in info["genres"]:
             if label in labels:
@@ -30,8 +30,7 @@ def process_data(filename, path, labels):
     return data
 
 
-def get_dataloader(path:str,)->Tuple[Dict]:
-    
+def get_dataloader(path: str,) -> Tuple[Dict]:
     '''
     return: 
     {filename1:{
@@ -51,8 +50,8 @@ def get_dataloader(path:str,)->Tuple[Dict]:
 
     label_file = os.path.join(path, "labels.json")
     with open(label_file, "r") as f:
-        labels = json.load(f) 
-    
+        labels = json.load(f)
+
     dataset = os.path.join(path, "dataset")
 
     traindata = {}
@@ -66,4 +65,3 @@ def get_dataloader(path:str,)->Tuple[Dict]:
         testdata[name] = process_data(name, dataset, labels)
 
     return traindata, devdata, testdata
-

@@ -1,18 +1,17 @@
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
+from training_structures.gradient_blend import train, test
+from datasets.stocks.get_data import get_dataloader
+from unimodals.common_models import LSTM, Identity, Squeeze
+from fusions.common_fusions import Stack
+from torch import nn
+import training_structures.gradient_blend
+import torch.nn.functional as F
+import torch
+import numpy as np
+import argparse
 import sys
 import os
 sys.path.append(os.getcwd())
-
-import argparse
-import numpy as np
-import torch
-import torch.nn.functional as F
-import training_structures.gradient_blend
-from torch import nn
-from fusions.common_fusions import Stack
-from unimodals.common_models import LSTM, Identity, Squeeze
-from datasets.stocks.get_data import get_dataloader
-from training_structures.gradient_blend import train, test
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
 
 
 parser = argparse.ArgumentParser()
@@ -35,20 +34,26 @@ class IgnoreTrainingArg(nn.Module):
 
 
 stocks = sorted(args.input_stocks.split(' '))
-train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], cuda=False)
+train_loader, val_loader, test_loader = get_dataloader(
+    stocks, stocks, [args.target_stock], cuda=False)
 
 unimodal_models = [Identity().cuda() for x in stocks]
-multimodal_head = IgnoreTrainingArg(nn.Sequential(LSTM(len(stocks), 128,linear_layer_outdim=1), Squeeze())).cuda()
-unimodal_heads = [IgnoreTrainingArg(nn.Sequential(LSTM(1, 128, linear_layer_outdim=1), Squeeze())).cuda() for x in stocks]
+multimodal_head = IgnoreTrainingArg(nn.Sequential(
+    LSTM(len(stocks), 128, linear_layer_outdim=1), Squeeze())).cuda()
+unimodal_heads = [IgnoreTrainingArg(nn.Sequential(
+    LSTM(1, 128, linear_layer_outdim=1), Squeeze())).cuda() for x in stocks]
 fuse = Stack().cuda()
 allmodules = [*unimodal_models, multimodal_head, *unimodal_heads, fuse]
 
 training_structures.gradient_blend.criterion = nn.MSELoss()
 
+
 def trainprocess():
     train(unimodal_models,  multimodal_head,
           unimodal_heads, fuse, train_dataloader=train_loader, valid_dataloader=val_loader,
           classification=False, gb_epoch=2, num_epoch=4, lr=0.001, optimtype=torch.optim.Adam)
+
+
 all_in_one_train(trainprocess, allmodules)
 
 model = torch.load('best.pt').cuda()

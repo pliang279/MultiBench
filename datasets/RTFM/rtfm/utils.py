@@ -18,6 +18,3 @@ def get_all_subclasses(c):
     for cc in sub:
         ret += get_all_subclasses(cc)
     return ret + sub
-
-
-

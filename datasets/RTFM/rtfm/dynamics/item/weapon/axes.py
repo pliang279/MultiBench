@@ -21,4 +21,5 @@ class Axe(BaseAxe):
 class BattleAxe(BaseAxe):
 
     def __init__(self):
-        super().__init__('battle-axe', weight=120, damage=D.Dice.from_str('d6+2d4'), material=M.Iron, hit=0)
+        super().__init__('battle-axe', weight=120,
+                         damage=D.Dice.from_str('d6+2d4'), material=M.Iron, hit=0)

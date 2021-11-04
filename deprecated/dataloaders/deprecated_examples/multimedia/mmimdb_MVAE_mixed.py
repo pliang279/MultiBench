@@ -1,20 +1,21 @@
+from objective_functions.recon import elbo_loss, sigmloss1dcentercrop
+from unimodals.MVAE import LeNetEncoder, DeLeNet
+from training_structures.MVAE_mixed import train_MVAE, test_MVAE
+from datasets.avmnist.get_data import get_dataloader
+import torch
+from torch import nn
+from unimodals.common_models import MLP
+from fusions.MVAE import ProductOfExperts
 import sys
 import os
 sys.path.append(os.getcwd())
-from training_structures.MVAE_mixed import train_MVAE,test_MVAE
-from fusions.MVAE import ProductOfExperts
-from unimodals.common_models import MLP
-from unimodals.MVAE import LeNetEncoder,DeLeNet
-from torch import nn
-import torch
-from objective_functions.recon import elbo_loss,sigmloss1dcentercrop
-from datasets.avmnist.get_data import get_dataloader
 
-traindata, validdata, testdata = get_dataloader('/data/yiwei/avmnist/_MFAS/avmnist')
+traindata, validdata, testdata = get_dataloader(
+    '/data/yiwei/avmnist/_MFAS/avmnist')
 
-classes=10
-n_latent=200
-fuse=ProductOfExperts((1,40,n_latent))
+classes = 10
+n_latent = 200
+fuse = ProductOfExperts((1, 40, n_latent))
 
 # TODO
 # channels=6

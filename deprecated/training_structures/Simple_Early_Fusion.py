@@ -38,7 +38,7 @@ def train(
         encoders, fusion, head, train_dataloader, valid_dataloader, total_epochs, is_packed=False,
         early_stop=False, task="classification", optimtype=torch.optim.RMSprop, lr=0.001, weight_decay=0.0,
         criterion=nn.CrossEntropyLoss(), regularization=False, auprc=False, save='best.pt'):
-    
+
     model = MMDL(encoders, fusion, head, is_packed).cuda()
     op = optimtype(model.parameters(), lr=lr, weight_decay=weight_decay)
     # scheduler = ExponentialLR(op, 0.9)
@@ -61,22 +61,25 @@ def train(
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
-                    out = model([[i.cuda() for i in j[0]], j[1]], training=True)
+                    out = model([[i.cuda()
+                                for i in j[0]], j[1]], training=True)
                     # print(j[-1])
                     # print(out)
                     loss1 = criterion(out, j[-1].cuda())
-                    loss2 = regularize(out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
+                    loss2 = regularize(
+                        out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
                     loss = loss1 + loss2
             else:
-                out=model([i.float().cuda() for i in j[:-1]],training=True)
+                out = model([i.float().cuda() for i in j[:-1]], training=True)
                 #print(out, j[-1])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss1=criterion(out, j[-1].float().cuda())
+                    loss1 = criterion(out, j[-1].float().cuda())
                 else:
-                    if len(j[-1].size())>1:
+                    if len(j[-1].size()) > 1:
                         j[-1] = j[-1].squeeze()
-                    loss1=criterion(out, j[-1].long().cuda())
-                loss2=regularize(out, [i.float().cuda() for i in j[:-1]]) if regularization else 0
+                    loss1 = criterion(out, j[-1].long().cuda())
+                loss2 = regularize(out, [i.float().cuda()
+                                   for i in j[:-1]]) if regularization else 0
                 loss = loss1+loss2
             # print(loss)
             totalloss += loss * len(j[-1])
@@ -93,7 +96,8 @@ def train(
             print("Epoch " + str(epoch) + " train loss: " + str(totalloss1 / totals) + " reg loss: " + str(
                 totalloss2 / totals))
         else:
-            print("Epoch " + str(epoch) + " train loss: " + str(totalloss / totals))
+            print("Epoch " + str(epoch) +
+                  " train loss: " + str(totalloss / totals))
 
         model.eval()
         with torch.no_grad():
@@ -103,15 +107,17 @@ def train(
             pts = []
             for j in valid_dataloader:
                 if is_packed:
-                    out = model([[i.cuda() for i in j[0]], j[1]], training=False)
+                    out = model([[i.cuda()
+                                for i in j[0]], j[1]], training=False)
                 else:
-                    out = model([i.float().cuda() for i in j[:-1]], training=False)
+                    out = model([i.float().cuda()
+                                for i in j[:-1]], training=False)
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss = criterion(out, j[-1].float().cuda())
                 else:
-                    if len(j[-1].size())>1:
+                    if len(j[-1].size()) > 1:
                         j[-1] = j[-1].squeeze()
-                    loss=criterion(out, j[-1].long().cuda())
+                    loss = criterion(out, j[-1].long().cuda())
                 totalloss += loss * len(j[-1])
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
@@ -121,7 +127,8 @@ def train(
                 if auprc:
                     # pdb.set_trace()
                     sm = softmax(out, 1)
-                    pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+                    pts += [(sm[i][1].item(), j[-1][i].item())
+                            for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
         true = torch.cat(true, 0).cpu().numpy()
@@ -129,7 +136,7 @@ def train(
         valloss = totalloss / totals
         if task == "classification":
             acc = accuracy_score(true, pred)
-            print("Epoch " + str(epoch) + " valid loss: " + str(valloss) + \
+            print("Epoch " + str(epoch) + " valid loss: " + str(valloss) +
                   " acc: " + str(acc))
             if acc > bestacc:
                 patience = 0
@@ -141,7 +148,7 @@ def train(
         elif task == "multilabel":
             f1_micro = f1_score(true, pred, average="micro")
             f1_macro = f1_score(true, pred, average="macro")
-            print("Epoch " + str(epoch) + " valid loss: " + str(valloss) + \
+            print("Epoch " + str(epoch) + " valid loss: " + str(valloss) +
                   " f1_micro: " + str(f1_micro) + " f1_macro: " + str(f1_macro))
             if f1_macro > bestf1:
                 patience = 0
@@ -196,14 +203,17 @@ def test(
             if auprc:
                 # pdb.set_trace()
                 sm = softmax(out, 1)
-                pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+                pts += [(sm[i][1].item(), j[-1][i].item())
+                        for i in range(j[-1].size(0))]
 
-        if task=="classification":
+        if task == "classification":
             # eval mosi/mosei
             print('include 0:')
-            eval_mosei_senti(torch.cat(pred, 0), torch.cat(true, 0), exclude_zero=False)
+            eval_mosei_senti(torch.cat(pred, 0), torch.cat(
+                true, 0), exclude_zero=False)
             print('exclude 0:')
-            eval_mosei_senti(torch.cat(pred, 0), torch.cat(true, 0), exclude_zero=True)
+            eval_mosei_senti(torch.cat(pred, 0), torch.cat(
+                true, 0), exclude_zero=True)
 
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
@@ -216,11 +226,9 @@ def test(
             print("acc: " + str(accuracy_score(true, pred)))
             return accuracy_score(true, pred)
         elif task == "multilabel":
-            print(" f1_micro: " + str(f1_score(true, pred, average="micro")) + \
+            print(" f1_micro: " + str(f1_score(true, pred, average="micro")) +
                   " f1_macro: " + str(f1_score(true, pred, average="macro")))
             return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro")
         elif task == "regression":
             print("mse: " + str(testloss))
             return testloss.item()
-        
-

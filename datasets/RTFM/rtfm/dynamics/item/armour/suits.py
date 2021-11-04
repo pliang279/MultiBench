@@ -33,7 +33,8 @@ class OrcishRingMail(BaseSuit):
 class StuddedLeatherArmor(BaseSuit):
 
     def __init__(self):
-        super().__init__('studded leather armor', weight=200, armour_class=3, material=M.Leather)
+        super().__init__('studded leather armor',
+                         weight=200, armour_class=3, material=M.Leather)
 
 
 class RingMail(BaseSuit):
@@ -81,7 +82,8 @@ class BandedMail(BaseSuit):
 class DwarvishMithrilCoat(BaseSuit):
 
     def __init__(self):
-        super().__init__('dwarvish mithril-coat', weight=150, armour_class=6, material=M.Mithril)
+        super().__init__('dwarvish mithril-coat',
+                         weight=150, armour_class=6, material=M.Mithril)
 
 
 class BronzePlateMail(BaseSuit):

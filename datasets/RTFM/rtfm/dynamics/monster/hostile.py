@@ -25,9 +25,11 @@ class HostileMonster(BaseMonster):
         closer = []
         if random.random() < self.aggression:
             # find nearest agent that is observable
-            agents = [a for a in world.agents if self.position_is_observable(a.position)]
+            agents = [
+                a for a in world.agents if self.position_is_observable(a.position)]
             if agents:
-                agents.sort(key=lambda a: self.get_dist_to_position(a.position))
+                agents.sort(
+                    key=lambda a: self.get_dist_to_position(a.position))
                 target = agents[0]
                 # find moves that would make us closer to agent
                 x, y = self.position

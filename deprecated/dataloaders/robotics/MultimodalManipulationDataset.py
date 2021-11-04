@@ -49,7 +49,8 @@ class MultimodalManipulationDataset(Dataset):
 
         file_number, filename = self._parse_filename(filename)
 
-        unpaired_filename, unpaired_idx = self.paired_filenames[(list_index, dataset_index)]
+        unpaired_filename, unpaired_idx = self.paired_filenames[(
+            list_index, dataset_index)]
 
         if dataset_index >= self.episode_length - self.n_time_steps - 1:
             dataset_index = np.random.randint(
@@ -70,7 +71,8 @@ class MultimodalManipulationDataset(Dataset):
     ):
 
         dataset = h5py.File(dataset_name, "r", swmr=True, libver="latest")
-        unpaired_dataset = h5py.File(unpaired_filename, "r", swmr=True, libver="latest")
+        unpaired_dataset = h5py.File(
+            unpaired_filename, "r", swmr=True, libver="latest")
 
         if self.training_type == "selfsupervised":
 
@@ -148,16 +150,21 @@ class MultimodalManipulationDataset(Dataset):
                 while proprio_dist is None or proprio_dist < tolerance:
                     # Get a random idx, file that is not the same as current
                     unpaired_dataset_idx = np.random.randint(self.__len__())
-                    unpaired_filename, unpaired_idx, _ = self._idx_to_filename_idx(unpaired_dataset_idx)
+                    unpaired_filename, unpaired_idx, _ = self._idx_to_filename_idx(
+                        unpaired_dataset_idx)
 
                     while unpaired_filename == filename:
-                        unpaired_dataset_idx = np.random.randint(self.__len__())
-                        unpaired_filename, unpaired_idx, _ = self._idx_to_filename_idx(unpaired_dataset_idx)
+                        unpaired_dataset_idx = np.random.randint(
+                            self.__len__())
+                        unpaired_filename, unpaired_idx, _ = self._idx_to_filename_idx(
+                            unpaired_dataset_idx)
 
                     with h5py.File(unpaired_filename, "r", swmr=True, libver="latest") as unpaired_dataset:
-                        proprio_dist = np.linalg.norm(dataset['proprio'][idx][:3] - unpaired_dataset['proprio'][unpaired_idx][:3])
+                        proprio_dist = np.linalg.norm(
+                            dataset['proprio'][idx][:3] - unpaired_dataset['proprio'][unpaired_idx][:3])
 
-                self.paired_filenames[(list_index, idx)] = (unpaired_filename, unpaired_idx)
+                self.paired_filenames[(list_index, idx)] = (
+                    unpaired_filename, unpaired_idx)
                 all_combos.add((unpaired_filename, unpaired_idx))
 
             dataset.close()

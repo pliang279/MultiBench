@@ -1039,7 +1039,8 @@ def get_class_name(name):
 
 
 def initialize(group):
-    fname = os.path.join(mydir, '{}.py'.format(group.replace('-', '_').replace(' ', '_').lower()))
+    fname = os.path.join(mydir, '{}.py'.format(
+        group.replace('-', '_').replace(' ', '_').lower()))
     class_name = 'Base' + get_class_name(group)
     if class_name[-1] == 's':  # make singular
         class_name = class_name[:-1]
@@ -1057,14 +1058,16 @@ def initialize(group):
 def get_class(base_class, attributes):
     class_name = get_class_name(attributes['name'])
     attributes['material'] = 'M.{}'.format(attributes['material'].capitalize())
-    attributes['damage'] = 'D.Dice.from_str(\'{}\')'.format(attributes['damage'])
+    attributes['damage'] = 'D.Dice.from_str(\'{}\')'.format(
+        attributes['damage'])
 
     return [
         '',
         'class {}({}):'.format(class_name, base_class),
         '',
         '    def __init__(self):',
-        '        super().__init__(\'{name}\', weight={weight}, damage={damage}, material={material}, hit={hit})'.format(**attributes),
+        '        super().__init__(\'{name}\', weight={weight}, damage={damage}, material={material}, hit={hit})'.format(
+            **attributes),
         '',
     ]
 
@@ -1073,7 +1076,8 @@ if __name__ == '__main__':
     doc = html.fromstring(TABLE)
 
     trs = doc.xpath('//tr')
-    header = ['name', 'cost', 'weight', 'prob', 'damage_s', 'damage', 'material', 'appearance']
+    header = ['name', 'cost', 'weight', 'prob',
+              'damage_s', 'damage', 'material', 'appearance']
 
     current = {}
 
@@ -1095,12 +1099,15 @@ if __name__ == '__main__':
                 else:
                     with open(current['file'], 'wt') as f:
                         f.write(content)
-            current['rows'], current['base'], current['file'] = initialize(group)
+            current['rows'], current['base'], current['file'] = initialize(
+                group)
             all_files.append(current['file'])
         else:
             # this is an item row
-            attributes = {k: v for k, v in zip(header, [t.text_content().strip() for t in row])}
-            attributes['name'] = re.sub(r'(\(.+\))', '', attributes['name']).strip()
+            attributes = {k: v for k, v in zip(
+                header, [t.text_content().strip() for t in row])}
+            attributes['name'] = re.sub(
+                r'(\(.+\))', '', attributes['name']).strip()
             if current['base'] == 'BaseDagger':
                 attributes['hit'] = 2
             elif current['base'] == 'BaseKnive':
@@ -1113,5 +1120,6 @@ if __name__ == '__main__':
     content = '\n'.join(current['rows'])
     with open(current['file'], 'wt') as f:
         f.write(content)
-    create_init(['base_weapon', 'unarmed'] + [os.path.basename(f).replace('.py', '') for f in all_files])
+    create_init(['base_weapon', 'unarmed'] +
+                [os.path.basename(f).replace('.py', '') for f in all_files])
     print('done')

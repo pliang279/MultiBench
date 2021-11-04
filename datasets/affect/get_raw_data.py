@@ -1,3 +1,4 @@
+from mosi_split import train_fold, valid_fold, test_fold
 import pickle
 import sys
 import os
@@ -9,18 +10,18 @@ from collections import defaultdict
 import pickle
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 
-from mosi_split import train_fold, valid_fold, test_fold
-
 
 def lpad(this_array, seq_len):
-    temp_array=np.concatenate([np.zeros([seq_len]+list(this_array.shape[1:])),this_array],axis=0)[-seq_len:,...]
+    temp_array = np.concatenate([np.zeros(
+        [seq_len]+list(this_array.shape[1:])), this_array], axis=0)[-seq_len:, ...]
     return temp_array
 
 
-def detect_entry_fold(entry,folds):
-    entry_id=entry.split("[")[0]
+def detect_entry_fold(entry, folds):
+    entry_id = entry.split("[")[0]
     for i in range(len(folds)):
-        if entry_id in folds[i]: return i
+        if entry_id in folds[i]:
+            return i
     return None
 
 
@@ -71,7 +72,6 @@ def get_rawtext(path, data_kind, vids):
         print('Wrong data kind!')
 
 
-
 def get_word2id(text_data, vids):
     word2id = defaultdict(lambda: len(word2id))
     UNK = word2id['unk']
@@ -83,6 +83,7 @@ def get_word2id(text_data, vids):
             words.append(word2id[word])
         words = np.asarray(words)
         data_processed[vids[i]] = words
+
     def return_unk():
         return UNK
     word2id.default_factory = return_unk
@@ -130,20 +131,21 @@ def get_audio_visual_text(csds, seq_len, text_data, vids):
     data = [{} for _ in range(3)]
     output = [{} for _ in range(3)]
 
-    for i in range (len(folds)):
+    for i in range(len(folds)):
         for csd in csds:
-            data[i][csd]=[]
+            data[i][csd] = []
         data[i]['words'] = []
         data[i]['id'] = []
 
     for i, key in enumerate(vids):
-        which_fold=detect_entry_fold(key, folds)
+        which_fold = detect_entry_fold(key, folds)
         # print(which_fold)
-        if which_fold==None:
-            print("Key %s doesn't belong to any fold ... "%str(key),error=False)
+        if which_fold == None:
+            print("Key %s doesn't belong to any fold ... " %
+                  str(key), error=False)
             continue
         for csd in csds:
-            this_array=affect_data[csd][key]["features"]
+            this_array = affect_data[csd][key]["features"]
             if csd in labels:
                 data[which_fold][csd].append(this_array)
             else:
@@ -153,24 +155,29 @@ def get_audio_visual_text(csds, seq_len, text_data, vids):
 
     for i in range(len(folds)):
         for csd in csds:
-            output[i][csd]=np.array(data[i][csd])
+            output[i][csd] = np.array(data[i][csd])
         output[i]['words'] = np.stack(data[i]['words'])
         output[i]['id'] = data[i]['id']
 
-    fold_names = ["train","valid","test"]
+    fold_names = ["train", "valid", "test"]
     for i in range(3):
         for csd in csds:
-            print ("Shape of the %s computational sequence for %s fold is %s"%(csd, fold_names[i], output[i][csd].shape))
-        print ("Shape of the %s computational sequence for %s fold is %s"%('words', fold_names[i], output[i]['words'].shape))
+            print("Shape of the %s computational sequence for %s fold is %s" %
+                  (csd, fold_names[i], output[i][csd].shape))
+        print("Shape of the %s computational sequence for %s fold is %s" %
+              ('words', fold_names[i], output[i]['words'].shape))
     return output
 
-raw_text, vids = get_rawtext('/home/pliang/multibench/affect/mosi/mosi.hdf5', 'hdf5', keys)
+
+raw_text, vids = get_rawtext(
+    '/home/pliang/multibench/affect/mosi/mosi.hdf5', 'hdf5', keys)
 print(raw_text[0])
 print(vids[0])
 text_glove = glove_embeddings(raw_text, vids)
 print(text_glove.shape)
 
-audio_video_text = get_audio_visual_text(csds, seq_len=seq_len, text_data=text_glove, vids=vids)
+audio_video_text = get_audio_visual_text(
+    csds, seq_len=seq_len, text_data=text_glove, vids=vids)
 print(len(audio_video_text))
 print(audio_video_text[0].keys())
 
@@ -189,4 +196,3 @@ for i, fold in enumerate(fold_names):
 
 with open('mosi_raw.pkl', 'wb') as f:
     pickle.dump(all_data, f)
-

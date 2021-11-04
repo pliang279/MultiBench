@@ -5,7 +5,8 @@ import numpy as np
 # Audio
 def audio_robustness(tests, noise_level=0.3, noises=None):
     if noises == None:
-        noises = [additive_white_gaussian_noise, audio_random_dropout, audio_structured_dropout]
+        noises = [additive_white_gaussian_noise,
+                  audio_random_dropout, audio_structured_dropout]
     robustness_tests = np.zeros(tests.shape)
     for i in range(len(tests)):
         if np.random.sample() <= noise_level:
@@ -30,6 +31,7 @@ def audio_structured_dropout(sig, p, step=10):
             for j in range(step):
                 res[i+j] = 0
     return res
+
 
 def audio_random_dropout(sig, p):
     return audio_structured_dropout(sig, 1, p)

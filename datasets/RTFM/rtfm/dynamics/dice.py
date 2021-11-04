@@ -36,8 +36,10 @@ class Dice:
                     if num == '':
                         num = 1
                 else:
-                    raise Exception('could not parse dice string {} in main dice string {}'.format(sub, s))
-                dice.extend([SingleDice(max=int(max_roll)) for _ in range(int(num))])
+                    raise Exception(
+                        'could not parse dice string {} in main dice string {}'.format(sub, s))
+                dice.extend([SingleDice(max=int(max_roll))
+                            for _ in range(int(num))])
         return SumDice(dice) if len(dice) > 1 else dice[0]
 
 
