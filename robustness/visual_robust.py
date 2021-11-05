@@ -6,6 +6,21 @@ import colorsys
 ##############################################################################
 # Visual
 def add_visual_noise(tests, noise_level=0.3, gray=True, contrast=True, inv=True, temp=True, color=True, s_and_p=True, gaus=True, rot=True, flip=True, crop=True):
+    """
+    Add various types of noise to visual data.
+
+    :param noise_level: Probability of randomly applying noise to each audio signal, and standard deviation for gaussian noise, and structured dropout probability.
+    :param gray:
+    :param contract:
+    :param inv:
+    :param temp:
+    :param color:
+    :param s_and_p:
+    :param gaus:
+    :param rot:
+    :param flip:
+    :param crop:
+    """
     noises = []
     if gray:
         noises.append(grayscale)
@@ -40,6 +55,7 @@ def add_visual_noise(tests, noise_level=0.3, gray=True, contrast=True, inv=True,
 
 
 def grayscale(img, p):
+    """Randomly make an image grayscale."""
     if np.random.sample() <= p:
         return ImageOps.grayscale(img)
     else:
@@ -47,6 +63,7 @@ def grayscale(img, p):
 
 
 def low_contrast(img, p):
+    """Randomly reduce the contract of an image."""
     if np.random.sample() <= p:
         enhancer = ImageEnhance.Contrast(img)
         return enhancer.enhance(0.5)
@@ -55,6 +72,7 @@ def low_contrast(img, p):
 
 
 def inversion(img, p):
+    """Randomly invert an image."""
     if np.random.sample() <= p:
         return ImageOps.invert(img)
     else:
@@ -77,6 +95,7 @@ def WB(img, p):
 
 
 def colorize(img, p):
+    """Randomly tint the color of an image using an existing RGB channel."""
     if np.random.sample() <= p and img.mode == 'RGB':
         color = np.random.choice(['red', 'blue', 'green'])
         layer = Image.new('RGB', img.size, color)
@@ -86,6 +105,7 @@ def colorize(img, p):
 
 
 def salt_and_pepper(img, p):
+    """Randomly add salt-and-pepper noise to the image."""
     if np.random.sample() <= p:
         img = ImageOps.grayscale(img)
         output = np.copy(np.array(img))
