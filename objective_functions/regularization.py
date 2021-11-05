@@ -8,7 +8,7 @@ import torch
 
 class Perturbation:
     """
-    Class that in charge of the perturbation techniques
+    Class that in charge of tensor perturbation techniques
     """
     @classmethod
     def _add_noise_to_tensor(cls, tens: torch.Tensor, over_dim: int = 0) -> torch.Tensor:
@@ -209,7 +209,6 @@ class RegParameters(object):
     """
     This class controls all the regularization-related properties
     """
-
     def __init__(self, lambda_: float = 1e-10, norm: float = 2.0, estimation: str = 'ent',
                  optim_method: str = 'max_ent', n_samples: int = 10, grad: bool = True):
         self.lambda_ = lambda_
@@ -221,8 +220,15 @@ class RegParameters(object):
 
 
 class RegularizationLoss(torch.nn.Module):
-
+    """
+    Define the regularization loss.
+    """
     def __init__(self, loss: torch.nn.Module, model: torch.nn.Module, delta: float = 1e-10, is_pack: bool = True) -> None:
+        """
+        Initialize the Loss Module.
+        
+        #TODO: Define the parameters.
+        """
         super(RegularizationLoss, self).__init__()
         self.reg_params = RegParameters()
         self.criterion = loss
