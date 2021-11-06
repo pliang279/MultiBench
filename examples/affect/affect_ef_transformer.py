@@ -24,14 +24,10 @@ head = Sequential(Transformer(409, 300).cuda(),MLP(300, 128, 1)).cuda()
 # encoders = [Identity().cuda(),Identity().cuda(),Identity().cuda()]
 # head = Sequential(Transformer(752, 300).cuda(),MLP(300, 128, 1)).cuda()
 
-# all_modules = [*encoders, head]
 
 fusion = ConcatEarly().cuda()
 
-train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, is_packed=True, early_stop=True,
-        lr=1e-4, save='mosi_ef_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
-
-# all_in_one_train(trainprocess, all_modules)
+train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, is_packed=True, early_stop=True,lr=1e-4, save='mosi_ef_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
 print("Testing:")
 model = torch.load('mosi_ef_best.pt').cuda()
