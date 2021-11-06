@@ -15,4 +15,5 @@ class BaseShuriken(Weapon):
 class Shuriken(BaseShuriken):
 
     def __init__(self):
-        super().__init__('shuriken', weight=1, damage=D.Dice.from_str('d6'), material=M.Iron, hit=0)
+        super().__init__('shuriken', weight=1,
+                         damage=D.Dice.from_str('d6'), material=M.Iron, hit=0)

@@ -15,4 +15,5 @@ class BaseTrident(Weapon):
 class Trident(BaseTrident):
 
     def __init__(self):
-        super().__init__('trident', weight=25, damage=D.Dice.from_str('3d4'), material=M.Iron, hit=0)
+        super().__init__('trident', weight=25,
+                         damage=D.Dice.from_str('3d4'), material=M.Iron, hit=0)

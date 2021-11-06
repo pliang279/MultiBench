@@ -15,10 +15,12 @@ class BaseCrossbow(Weapon):
 class Crossbow(BaseCrossbow):
 
     def __init__(self):
-        super().__init__('crossbow', weight=50, damage=D.Dice.from_str('d2'), material=M.Wood, hit=0)
+        super().__init__('crossbow', weight=50,
+                         damage=D.Dice.from_str('d2'), material=M.Wood, hit=0)
 
 
 class CrossbowBolt(BaseCrossbow):
 
     def __init__(self):
-        super().__init__('crossbow bolt', weight=1, damage=D.Dice.from_str('d6+1'), material=M.Iron, hit=0)
+        super().__init__('crossbow bolt', weight=1,
+                         damage=D.Dice.from_str('d6+1'), material=M.Iron, hit=0)

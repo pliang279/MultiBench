@@ -100,7 +100,8 @@ class Door(Structure):
     def link(self, another, world):
         path = self.get_path_to(another, world, ignore={Wall})
         if path is None:
-            raise Exception('Path link error from {} to {}\nWorld\n{}'.format(self.position, another.position, world.render(' ')))
+            raise Exception('Path link error from {} to {}\nWorld\n{}'.format(
+                self.position, another.position, world.render(' ')))
         path = path[1:-1]
         path_nodes = set(path)
         for x, y in path:

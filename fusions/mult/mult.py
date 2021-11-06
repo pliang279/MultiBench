@@ -3,6 +3,7 @@ import torch.nn.functional as F
 from torch import nn
 from .modules.transformer import TransformerEncoder
 
+
 class MULTModel(nn.Module):
     # https://github.com/yaohungt/Multimodal-Transformer
 
@@ -40,18 +41,22 @@ class MULTModel(nn.Module):
 
         combined_dim = self.embed_dim * n_modalities * n_modalities
 
-        output_dim = hyp_params.output_dim        # This is actually not a hyperparameter :-)
+        # This is actually not a hyperparameter :-)
+        output_dim = hyp_params.output_dim
 
         # 1. Temporal convolutional layers
-        self.proj = [nn.Conv1d(n_features[i], self.embed_dim, kernel_size=1, padding=0, bias=False) for i in range(n_modalities)]
+        self.proj = [nn.Conv1d(n_features[i], self.embed_dim, kernel_size=1,
+                               padding=0, bias=False) for i in range(n_modalities)]
         self.proj = nn.ModuleList(self.proj)
 
         # 2. Crossmodal Attentions
-        self.trans = [nn.ModuleList([self.get_network(i, j, mem=False) for j in range(n_modalities)]) for i in range(n_modalities)]
+        self.trans = [nn.ModuleList([self.get_network(i, j, mem=False) for j in range(
+            n_modalities)]) for i in range(n_modalities)]
         self.trans = nn.ModuleList(self.trans)
 
         # 3. Self Attentions (Could be replaced by LSTMs, GRUs, etc.)
-        self.trans_mems = [self.get_network(i, i, mem=True, layers=3) for i in range(n_modalities)]
+        self.trans_mems = [self.get_network(
+            i, i, mem=True, layers=3) for i in range(n_modalities)]
         self.trans_mems = nn.ModuleList(self.trans_mems)
 
         # Projection layers
@@ -80,12 +85,14 @@ class MULTModel(nn.Module):
         """
         x: n_modalities * [batch_size, seq_len, n_features]
         """
-        x = [v.permute(0, 2, 1) for v in x] # n_modalities * [batch_size, n_features, seq_len]
+        x = [v.permute(0, 2, 1)
+             for v in x]  # n_modalities * [batch_size, n_features, seq_len]
 
         # Project the textual/visual/audio features
         proj_x = [self.proj[i](x[i]) for i in range(self.n_modalities)]
         proj_x = torch.stack(proj_x)
-        proj_x = proj_x.permute(0, 3, 1, 2) # [n_modalities, seq_len, batch_size, proj]
+        # [n_modalities, seq_len, batch_size, proj]
+        proj_x = proj_x.permute(0, 3, 1, 2)
 
         hs = []
         last_hs = []
@@ -103,13 +110,14 @@ class MULTModel(nn.Module):
                 last_hs.append(h[-1])
 
         if self.all_steps:
-            out = torch.cat(hs, dim=2) # [seq_len, batch_size, out_features]
-            out = out.permute(1, 0, 2) # [batch_size, seq_len, out_features]
+            out = torch.cat(hs, dim=2)  # [seq_len, batch_size, out_features]
+            out = out.permute(1, 0, 2)  # [batch_size, seq_len, out_features]
         else:
             out = torch.cat(last_hs, dim=1)
 
         # A residual block
-        out_proj = self.proj2(F.dropout(F.relu(self.proj1(out)), p=self.out_dropout, training=self.training))
+        out_proj = self.proj2(
+            F.dropout(F.relu(self.proj1(out)), p=self.out_dropout, training=self.training))
         out_proj += out
 
         out = self.out_layer(out_proj)

@@ -25,16 +25,19 @@ class BaseItem(O.WorldObject):
                 self.erosion[e] = value
                 self.apply_modifier(value)
                 return
-        raise Exception('Item {} does not support erosion {}'.format(self, value))
+        raise Exception(
+            'Item {} does not support erosion {}'.format(self, value))
 
     def add_prefix(self, modifier):
-        assert len(self.prefixes) < self.max_prefix, '{} already has max prefix of {}: {}'.format(self, self.max_prefix, self.prefixes)
+        assert len(self.prefixes) < self.max_prefix, '{} already has max prefix of {}: {}'.format(
+            self, self.max_prefix, self.prefixes)
         self.prefixes.append(modifier)
         self.apply_modifier(modifier)
         return self
 
     def add_suffix(self, modifier):
-        assert self.suffix is None, '{} already has suffix of {}'.format(self, self.suffix)
+        assert self.suffix is None, '{} already has suffix of {}'.format(
+            self, self.suffix)
         self.suffix = modifier
         self.apply_modifier(modifier)
         return self
@@ -44,8 +47,10 @@ class BaseItem(O.WorldObject):
 
     def describe(self):
         prefix = ' '.join([m.describe() for m in self.prefixes])
-        suffix = '' if self.suffix is None else 'of {}'.format(self.suffix.describe())
+        suffix = '' if self.suffix is None else 'of {}'.format(
+            self.suffix.describe())
         s = '{} {} {}'.format(prefix, self.name, suffix).strip()
         if self.erosion:
-            s = '{} {}'.format(' '.join([v.describe() for v in self.erosion.values()]), s)
+            s = '{} {}'.format(' '.join([v.describe()
+                               for v in self.erosion.values()]), s)
         return s

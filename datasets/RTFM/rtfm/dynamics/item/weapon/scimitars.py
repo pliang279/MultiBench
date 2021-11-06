@@ -15,4 +15,5 @@ class BaseScimitar(Weapon):
 class Scimitar(BaseScimitar):
 
     def __init__(self):
-        super().__init__('scimitar', weight=40, damage=D.Dice.from_str('d8'), material=M.Iron, hit=0)
+        super().__init__('scimitar', weight=40,
+                         damage=D.Dice.from_str('d8'), material=M.Iron, hit=0)

@@ -40,7 +40,8 @@ def depth_deconv(in_planes, out_planes):
             in_planes, 16, kernel_size=3, stride=1, padding=(3 - 1) // 2, bias=True
         ),
         nn.LeakyReLU(0.1, inplace=True),
-        nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=(3 - 1) // 2, bias=True),
+        nn.Conv2d(16, 16, kernel_size=3, stride=1,
+                  padding=(3 - 1) // 2, bias=True),
         nn.LeakyReLU(0.1, inplace=True),
         nn.ConvTranspose2d(
             16, out_planes, kernel_size=4, stride=2, padding=1, bias=True

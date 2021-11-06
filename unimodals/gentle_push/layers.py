@@ -63,12 +63,15 @@ def observation_image_layers(units: int, spanning_avg_pool: bool = False) -> nn.
     if spanning_avg_pool:
         # Architecture with full width/height average pools
         return nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, padding=2),
+            nn.Conv2d(in_channels=1, out_channels=32,
+                      kernel_size=5, padding=2),
             nn.ReLU(inplace=True),
             resblocks.Conv2d(channels=32, kernel_size=3),
-            nn.Conv2d(in_channels=32, out_channels=16, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=32, out_channels=16,
+                      kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels=16, out_channels=2, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=16, out_channels=2,
+                      kernel_size=3, padding=1),
             _DualSpanningAvgPool(rows=32, cols=32, reduce_size=2),
             nn.Linear(32 * 2, units),
             nn.ReLU(inplace=True),
@@ -77,12 +80,15 @@ def observation_image_layers(units: int, spanning_avg_pool: bool = False) -> nn.
     else:
         # Default model
         return nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=5, padding=2),
+            nn.Conv2d(in_channels=1, out_channels=32,
+                      kernel_size=5, padding=2),
             nn.ReLU(inplace=True),
             resblocks.Conv2d(channels=32, kernel_size=3),
-            nn.Conv2d(in_channels=32, out_channels=16, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=32, out_channels=16,
+                      kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(in_channels=16, out_channels=8, kernel_size=3, padding=1),
+            nn.Conv2d(in_channels=16, out_channels=8,
+                      kernel_size=3, padding=1),
             nn.Flatten(),  # 32 * 32 * 8
             nn.Linear(8 * 32 * 32, units),
             nn.ReLU(inplace=True),

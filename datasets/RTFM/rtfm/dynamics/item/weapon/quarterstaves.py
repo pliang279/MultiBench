@@ -15,4 +15,5 @@ class BaseQuarterstave(Weapon):
 class Quarterstaff(BaseQuarterstave):
 
     def __init__(self):
-        super().__init__('quarterstaff', weight=40, damage=D.Dice.from_str('d6'), material=M.Wood, hit=0)
+        super().__init__('quarterstaff', weight=40,
+                         damage=D.Dice.from_str('d6'), material=M.Wood, hit=0)

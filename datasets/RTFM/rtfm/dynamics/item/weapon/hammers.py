@@ -15,4 +15,5 @@ class BaseHammer(Weapon):
 class WarHammer(BaseHammer):
 
     def __init__(self):
-        super().__init__('war hammer', weight=50, damage=D.Dice.from_str('d4'), material=M.Iron, hit=0)
+        super().__init__('war hammer', weight=50,
+                         damage=D.Dice.from_str('d4'), material=M.Iron, hit=0)

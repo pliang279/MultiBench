@@ -11,4 +11,5 @@ from ... import dice as D, material as M
 class Unarmed(Weapon):
 
     def __init__(self, hit=0, damage='d2'):
-        super().__init__('unarmed', weight=0, hit=hit, damage=D.Dice.from_str(damage), material=M.Flesh)
+        super().__init__('unarmed', weight=0, hit=hit,
+                         damage=D.Dice.from_str(damage), material=M.Flesh)

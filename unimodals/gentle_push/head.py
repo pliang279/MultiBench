@@ -3,6 +3,7 @@
 import torch
 import torch.nn as nn
 
+
 class Head(nn.Module):
     def __init__(self, units: int = 64):
         super().__init__()
@@ -26,6 +27,7 @@ class Head(nn.Module):
         lstm_out, _ = self.lstm(fused_features)
         predicted_states = self.output_layers(lstm_out)
         return predicted_states
+
 
 class GentlePushLateLSTM(nn.Module):
     def __init__(self, input_size, hidden_size):

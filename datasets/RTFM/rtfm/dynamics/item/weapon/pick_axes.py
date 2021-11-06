@@ -15,10 +15,12 @@ class BasePickAxe(Weapon):
 class PickAxe(BasePickAxe):
 
     def __init__(self):
-        super().__init__('pick-axe', weight=100, damage=D.Dice.from_str('d3'), material=M.Iron, hit=0)
+        super().__init__('pick-axe', weight=100,
+                         damage=D.Dice.from_str('d3'), material=M.Iron, hit=0)
 
 
 class DwarvishMattock(BasePickAxe):
 
     def __init__(self):
-        super().__init__('dwarvish mattock', weight=120, damage=D.Dice.from_str('d8+2d6'), material=M.Iron, hit=0)
+        super().__init__('dwarvish mattock', weight=120,
+                         damage=D.Dice.from_str('d8+2d6'), material=M.Iron, hit=0)

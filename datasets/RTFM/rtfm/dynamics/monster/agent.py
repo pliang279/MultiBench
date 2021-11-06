@@ -54,5 +54,6 @@ class QueuedAgent(Agent):
         engine.queue_event(a)
 
     def queue_action(self, A):
-        assert A in self.valid_moves, '{} is not a valid move in {}'.format(A, self.valid_moves)
+        assert A in self.valid_moves, '{} is not a valid move in {}'.format(
+            A, self.valid_moves)
         self.queue.append(A(actor=self))

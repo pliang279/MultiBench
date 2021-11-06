@@ -40,9 +40,9 @@ class ClothoDataset(Dataset):
         """
         super(ClothoDataset, self).__init__()
         if split == 'evaluation':
-            splitstr='clotho_dataset_eva'
+            splitstr = 'clotho_dataset_eva'
         else:
-            splitstr='clotho_dataset_dev'
+            splitstr = 'clotho_dataset_dev'
         the_dir: Path = data_dir.joinpath(splitstr)
 
         self.examples: List[Path] = sorted(the_dir.iterdir())
@@ -77,7 +77,8 @@ class ClothoDataset(Dataset):
         if not self.load_into_memory:
             ex: recarray = np_load(str(ex), allow_pickle=True)
 
-        in_e, ou_e = [ex[i].item() for i in [self.input_name, self.output_name]]
+        in_e, ou_e = [ex[i].item()
+                      for i in [self.input_name, self.output_name]]
 
         return in_e, ou_e
 

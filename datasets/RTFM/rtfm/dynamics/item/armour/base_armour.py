@@ -29,12 +29,16 @@ class Armour(BaseItem):
 
     @classmethod
     def get_random(cls, p_prefix=0.5, p_suffix=0.5, p_erosion=0.5):
-        candidate_classes = [c for c in cls.get_all_subclasses(cls) if not c.__name__.startswith('Base')]
+        candidate_classes = [c for c in cls.get_all_subclasses(
+            cls) if not c.__name__.startswith('Base')]
         C = random.choice(candidate_classes)
         inst = C()
-        candidate_modifier_classes = [c for c in cls.get_all_subclasses(O.BaseArmourModifier) if not c.__name__.startswith('Base')]
-        candidate_suffix_classes = [c for c in candidate_modifier_classes if issubclass(c, O.BaseSuffixModifier)]
-        candidate_prefix_classes = [c for c in candidate_modifier_classes if issubclass(c, O.BasePrefixModifier)]
+        candidate_modifier_classes = [c for c in cls.get_all_subclasses(
+            O.BaseArmourModifier) if not c.__name__.startswith('Base')]
+        candidate_suffix_classes = [
+            c for c in candidate_modifier_classes if issubclass(c, O.BaseSuffixModifier)]
+        candidate_prefix_classes = [
+            c for c in candidate_modifier_classes if issubclass(c, O.BasePrefixModifier)]
 
         if inst.material.erosion and random.random() < p_erosion:
             erosion_base = random.choice(list(inst.material.erosion))
@@ -58,5 +62,6 @@ class Armour(BaseItem):
 
     def add_elemental_armour_class(self, element, ac):
         valid = E.Element.__subclasses__()
-        assert element in valid, '{} is not a valid element: {}'.format(element, valid)
+        assert element in valid, '{} is not a valid element: {}'.format(
+            element, valid)
         self.elemental_armour_class[element] += ac

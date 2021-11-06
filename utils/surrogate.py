@@ -78,7 +78,7 @@ class SurrogateDataloader():
             if datum_hash in self._dict_data[seq_len]:
                 # if the configuration is already stored, keep the max accuracy
                 self._dict_data[seq_len][datum_hash] = (
-                datum_conf, max(datum_acc, self._dict_data[seq_len][datum_hash][1]))
+                    datum_conf, max(datum_acc, self._dict_data[seq_len][datum_hash][1]))
             else:
                 self._dict_data[seq_len][datum_hash] = (datum_conf, datum_acc)
         else:
@@ -99,10 +99,12 @@ class SurrogateDataloader():
                 conf_list.append(datum[0])
                 acc_list.append(datum[1])
 
-            conf_list = np.transpose(np.asarray(conf_list, np.float32), (1, 0, 2))
+            conf_list = np.transpose(np.asarray(
+                conf_list, np.float32), (1, 0, 2))
 
             dataset_conf.append(np.array(conf_list, np.float32))
-            dataset_acc.append(np.expand_dims(np.array(acc_list, np.float32), 1))
+            dataset_acc.append(np.expand_dims(
+                np.array(acc_list, np.float32), 1))
 
         if to_torch:
             for index in range(len(dataset_conf)):
@@ -134,7 +136,7 @@ class SurrogateDataloader():
 def train_simple_surrogate(model, criterion, optimizer, data_tensors, num_epochs, device):
     for epoch in range(num_epochs):
 
-        model.train(True)  # Set model to training mode        
+        model.train(True)  # Set model to training mode
 
         # get the inputs
         for batch in range(len(data_tensors[0])):

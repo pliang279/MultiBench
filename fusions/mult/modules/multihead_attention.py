@@ -6,6 +6,7 @@ import sys
 
 # Code adapted from the fairseq repo.
 
+
 class MultiheadAttention(nn.Module):
     """Multi-headed attention.
     See "Attention Is All You Need" for more details.
@@ -18,7 +19,8 @@ class MultiheadAttention(nn.Module):
         self.num_heads = num_heads
         self.attn_dropout = attn_dropout
         self.head_dim = embed_dim // num_heads
-        assert self.head_dim * num_heads == self.embed_dim, "embed_dim must be divisible by num_heads"
+        assert self.head_dim * \
+            num_heads == self.embed_dim, "embed_dim must be divisible by num_heads"
         self.scaling = self.head_dim ** -0.5
 
         self.in_proj_weight = Parameter(torch.Tensor(3 * embed_dim, embed_dim))
@@ -89,7 +91,8 @@ class MultiheadAttention(nn.Module):
             k = torch.cat([k, self.bias_k.repeat(1, bsz, 1)])
             v = torch.cat([v, self.bias_v.repeat(1, bsz, 1)])
             if attn_mask is not None:
-                attn_mask = torch.cat([attn_mask, attn_mask.new_zeros(attn_mask.size(0), 1)], dim=1)
+                attn_mask = torch.cat(
+                    [attn_mask, attn_mask.new_zeros(attn_mask.size(0), 1)], dim=1)
 
         q = q.contiguous().view(tgt_len, bsz * self.num_heads, self.head_dim).transpose(0, 1)
         if k is not None:
@@ -101,13 +104,17 @@ class MultiheadAttention(nn.Module):
 
         if self.add_zero_attn:
             src_len += 1
-            k = torch.cat([k, k.new_zeros((k.size(0), 1) + k.size()[2:])], dim=1)
-            v = torch.cat([v, v.new_zeros((v.size(0), 1) + v.size()[2:])], dim=1)
+            k = torch.cat(
+                [k, k.new_zeros((k.size(0), 1) + k.size()[2:])], dim=1)
+            v = torch.cat(
+                [v, v.new_zeros((v.size(0), 1) + v.size()[2:])], dim=1)
             if attn_mask is not None:
-                attn_mask = torch.cat([attn_mask, attn_mask.new_zeros(attn_mask.size(0), 1)], dim=1)
-        
+                attn_mask = torch.cat(
+                    [attn_mask, attn_mask.new_zeros(attn_mask.size(0), 1)], dim=1)
+
         attn_weights = torch.bmm(q, k.transpose(1, 2))
-        assert list(attn_weights.size()) == [bsz * self.num_heads, tgt_len, src_len]
+        assert list(attn_weights.size()) == [
+            bsz * self.num_heads, tgt_len, src_len]
 
         if attn_mask is not None:
             try:
@@ -116,14 +123,17 @@ class MultiheadAttention(nn.Module):
                 print(attn_weights.shape)
                 print(attn_mask.unsqueeze(0).shape)
                 assert False
-                
-        attn_weights = F.softmax(attn_weights.float(), dim=-1).type_as(attn_weights)
+
+        attn_weights = F.softmax(attn_weights.float(),
+                                 dim=-1).type_as(attn_weights)
         # attn_weights = F.relu(attn_weights)
         # attn_weights = attn_weights / torch.max(attn_weights)
-        attn_weights = F.dropout(attn_weights, p=self.attn_dropout, training=self.training)
+        attn_weights = F.dropout(
+            attn_weights, p=self.attn_dropout, training=self.training)
 
         attn = torch.bmm(attn_weights, v)
-        assert list(attn.size()) == [bsz * self.num_heads, tgt_len, self.head_dim]
+        assert list(attn.size()) == [
+            bsz * self.num_heads, tgt_len, self.head_dim]
 
         attn = attn.transpose(0, 1).contiguous().view(tgt_len, bsz, embed_dim)
         attn = self.out_proj(attn)

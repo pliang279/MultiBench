@@ -15,4 +15,5 @@ class BaseLance(Weapon):
 class Lance(BaseLance):
 
     def __init__(self):
-        super().__init__('lance', weight=180, damage=D.Dice.from_str('d8'), material=M.Iron, hit=0)
+        super().__init__('lance', weight=180,
+                         damage=D.Dice.from_str('d8'), material=M.Iron, hit=0)

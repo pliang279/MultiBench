@@ -45,16 +45,21 @@ class Engine:
             if isinstance(event, E.Stay):
                 agent.move_to_pos(agent.position, world, self)
             elif isinstance(event, E.Up):
-                agent.move_to_pos((agent.position[0], agent.position[1]-1), world, self)
+                agent.move_to_pos(
+                    (agent.position[0], agent.position[1]-1), world, self)
             elif isinstance(event, E.Down):
-                agent.move_to_pos((agent.position[0], agent.position[1]+1), world, self)
+                agent.move_to_pos(
+                    (agent.position[0], agent.position[1]+1), world, self)
             elif isinstance(event, E.Left):
-                agent.move_to_pos((agent.position[0]-1, agent.position[1]), world, self)
+                agent.move_to_pos(
+                    (agent.position[0]-1, agent.position[1]), world, self)
             elif isinstance(event, E.Right):
-                agent.move_to_pos((agent.position[0]+1, agent.position[1]), world, self)
+                agent.move_to_pos(
+                    (agent.position[0]+1, agent.position[1]), world, self)
             elif isinstance(event, E.Death):
                 world.remove_object(agent)
-                self.event_queue = [e for e in self.event_queue if not e.contains_actor(agent)]
+                self.event_queue = [
+                    e for e in self.event_queue if not e.contains_actor(agent)]
             executed.append(event)
         return executed
 
