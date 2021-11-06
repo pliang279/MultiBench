@@ -1,16 +1,15 @@
+from training_structures.Supervised_Learning import train, test
+from fusions.mult import MULTModel
+from unimodals.common_models import Identity, MLP
+from datasets.affect.get_data import get_dataloader
+from fusions.common_fusions import Concat
+import torch
 import sys
 import os
 
 sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
-import torch
 
-from fusions.common_fusions import Concat
-from datasets.affect.get_data import get_dataloader
-
-from unimodals.common_models import Identity, MLP
-from fusions.mult import MULTModel
-from training_structures.Supervised_Learning import train, test
 
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
 # raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
@@ -31,7 +30,7 @@ class HParams():
         output_dim = 1
         all_steps = False
 
-encoders = [Identity().cuda(),Identity().cuda(),Identity().cuda()]
+encoders = [Identity().cuda(), Identity().cuda(), Identity().cuda()]
 fusion = MULTModel(3, [20, 5, 300], hyp_params=HParams).cuda()
 # fusion = MULTModel(3, [371, 81, 300], hyp_params=HParams).cuda()
 head = Identity().cuda()
@@ -41,5 +40,5 @@ train(encoders, fusion, head, traindata, validdata, 100, task="regression", opti
 print("Testing:")
 model = torch.load('mosi_mult_best.pt').cuda()
 
-test(model=model, test_dataloaders_all=test_robust, dataset='mosi', is_packed=False, criterion=torch.nn.L1Loss(), task='posneg-classification', no_robust=True)
-
+test(model=model, test_dataloaders_all=test_robust, dataset='mosi', is_packed=False,
+     criterion=torch.nn.L1Loss(), task='posneg-classification', no_robust=True)

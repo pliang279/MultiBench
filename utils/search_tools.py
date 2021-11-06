@@ -89,7 +89,8 @@ def merge_unfolded_with_sampled(previous_top_k_configurations, unfolded_configur
                 if layer < len(prev_conf):
                     new_conf[layer] = unfolded_conf
                 else:
-                    new_conf = np.concatenate([prev_conf, np.expand_dims(unfolded_conf, 0)], 0)
+                    new_conf = np.concatenate(
+                        [prev_conf, np.expand_dims(unfolded_conf, 0)], 0)
 
                 merged.append(new_conf)
 
@@ -101,14 +102,16 @@ def sample_k_configurations_directly(k, max_progression_levels, get_possible_lay
 
     possible_confs_per_layer = []
     for l in range(max_progression_levels):
-        possible_confs_per_layer.append(get_possible_layer_configurations_fun(l))
+        possible_confs_per_layer.append(
+            get_possible_layer_configurations_fun(l))
 
     for sample in range(k):
         num_layers_sample = random.randint(1, max_progression_levels)
 
         conf = []
         for layer in range(num_layers_sample):
-            random_layer_conf = sample_k_configurations_uniform(possible_confs_per_layer[l], 1)
+            random_layer_conf = sample_k_configurations_uniform(
+                possible_confs_per_layer[l], 1)
             conf.append(random_layer_conf)
 
         conf = np.array(conf)[:, 0, :]

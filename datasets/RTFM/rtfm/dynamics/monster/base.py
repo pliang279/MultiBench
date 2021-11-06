@@ -22,11 +22,15 @@ class BaseMonster(O.WorldObject):
     }
 
     # note that the monster's armour class is negative by convention... so we flip it here
-    armour_class_map = [3] * 4 + [2] * (6-4) + [1] * (8-6) + [0] * (15-8) + [-1, -2, -3, -4, -5] + [-6] * (22-20) + [-7] * (24-22) + [-8]
+    armour_class_map = [3] * 4 + [2] * (6-4) + [1] * (8-6) + [0] * (
+        15-8) + [-1, -2, -3, -4, -5] + [-6] * (22-20) + [-7] * (24-22) + [-8]
     armour_class_map = [-1 * x for x in armour_class_map]
-    strength_hit_map = [-2] * 4 + [-2] * (6-4) + [-1] * (8-6) + [0] * (17-8) + [1] * (19-17) + [3] * (26-19)
-    strength_dmg_map = [-1] * 6 + [0] * (16-6) + [1] * (18-16) + [2] + [6] * (25-19)
-    dexterity_hit_map = [-3] * 4 + [-2] * (6-4) + [-1] * (8-6) + [0] * (15-8) + [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    strength_hit_map = [-2] * 4 + [-2] * \
+        (6-4) + [-1] * (8-6) + [0] * (17-8) + [1] * (19-17) + [3] * (26-19)
+    strength_dmg_map = [-1] * 6 + [0] * \
+        (16-6) + [1] * (18-16) + [2] + [6] * (25-19)
+    dexterity_hit_map = [-3] * 4 + [-2] * (6-4) + [-1] * (8-6) + [0] * (15-8) + [
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
     combat_dice = D.SingleDice(20)
 
     def __init__(self, name=None, stats=None, inventory=None, **kwargs):
@@ -133,7 +137,8 @@ class BaseMonster(O.WorldObject):
             return True
         roll = cls.combat_dice.roll()
         if engine is not None:
-            engine.queue_immediate_event(E.Log('{} rolled a combat roll of {} for {} to_hit of {} ({}% hit rate)'.format(attacker, roll, to_hit, victim, to_hit/20*100)))
+            engine.queue_immediate_event(E.Log('{} rolled a combat roll of {} for {} to_hit of {} ({}% hit rate)'.format(
+                attacker, roll, to_hit, victim, to_hit/20*100)))
         return roll < to_hit
 
     @classmethod
@@ -143,11 +148,13 @@ class BaseMonster(O.WorldObject):
             v = max(0, v - victim.elemental_armour_class[k])
             dmg += v
         if engine is not None:
-            engine.queue_immediate_event(E.Log('{} attacked with {} damage to {} armour class of {}'.format(attacker, attacker.damage, victim, victim.armour_class)))
+            engine.queue_immediate_event(E.Log('{} attacked with {} damage to {} armour class of {}'.format(
+                attacker, attacker.damage, victim, victim.armour_class)))
         return dmg
 
     def attack(self, another, world, engine, override_success=False):
-        success = override_success or self.calculate_attack_success(self, another, engine=engine)
+        success = override_success or self.calculate_attack_success(
+            self, another, engine=engine)
         if success:
             damage = self.calculate_damage(self, another, engine=engine)
             another.hit_points -= damage

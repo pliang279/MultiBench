@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 
+
 class CCALoss(nn.Module):
     def __init__(self, outdim_size, use_all_singular_values, device):
         super(CCALoss, self).__init__()
@@ -19,8 +20,8 @@ class CCALoss(nn.Module):
         eps = 1e-9
 
         H1, H2 = H1.t(), H2.t()
-        #print(H1)
-        #print(H2)
+        # print(H1)
+        # print(H2)
         assert torch.isnan(H1).sum().item() == 0
         assert torch.isnan(H2).sum().item() == 0
 
@@ -78,10 +79,13 @@ class CCALoss(nn.Module):
         else:
             # just the top self.outdim_size singular values are used
             trace_TT = torch.matmul(Tval.t(), Tval)
-            trace_TT = torch.add(trace_TT, (torch.eye(trace_TT.shape[0])*r1).to(self.device)) # regularization for more stability
+            # regularization for more stability
+            trace_TT = torch.add(trace_TT, (torch.eye(
+                trace_TT.shape[0])*r1).to(self.device))
             U, V = torch.symeig(trace_TT, eigenvectors=True)
-            U = torch.where(U>eps, U, (torch.ones(U.shape).float()*eps).to(self.device))
+            U = torch.where(U > eps, U, (torch.ones(
+                U.shape).float()*eps).to(self.device))
             U = U.topk(self.outdim_size)[0]
             corr = torch.sum(torch.sqrt(U))
-        #print(corr)
+        # print(corr)
         return -corr

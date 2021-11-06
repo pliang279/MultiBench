@@ -1,4 +1,4 @@
-from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
+sfrom torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 import random
 import csv
 import os
@@ -10,7 +10,7 @@ from torchvision import transforms
 
 from PIL import Image
 import numpy as np
-from robustness.visual_robust import visual_robustness
+from robustness.visual_robust import add_visual_noise
 
 # helper function for extracting UI elements from hierarchy
 
@@ -132,19 +132,20 @@ class EnricoDataset(Dataset):
         screenImg = Image.open(os.path.join(
             self.img_dir, screenId + ".jpg")).convert("RGB")
         if self.img_noise:
-            screenImg = Image.fromarray(visual_robustness(
+            screenImg = Image.fromarray(add_visual_noise(
                 [np.array(screenImg)], noise_level=self.noise_level)[0])
         screenImg = self.img_transforms(screenImg)
         # wireframe image modality
         screenWireframeImg = Image.open(os.path.join(
             self.wireframe_dir, screenId + ".png")).convert("RGB")
         if self.wireframe_noise:
-            screenWireframeImg = Image.fromarray(visual_robustness(
+            screenWireframeImg = Image.fromarray(add_visual_noise(
                 [np.array(screenWireframeImg)], noise_level=self.noise_level)[0])
         screenWireframeImg = self.img_transforms(screenWireframeImg)
         # label
         screenLabel = self.topic2Idx[example['topic']]
         return [screenImg, screenWireframeImg, screenLabel]
+
 
 def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, return_class_weights=True):
     ds_train = EnricoDataset(data_dir, mode="train")
@@ -172,7 +173,7 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
         weights = []
         for i in range(len(ds_train.topic2Idx)):
             weights.append(class_counter[i])
-        
+
         weights2 = []
         for w in weights:
             weights2.append(1 / (w / sum(weights)))
@@ -181,9 +182,11 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
             weights3.append(w / sum(weights2))
         weights = weights3
 
-    dl_train = DataLoader(ds_train, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
+    dl_train = DataLoader(ds_train, num_workers=num_workers,
+                          sampler=sampler, batch_size=batch_size)
     # dl_train = DataLoader(ds_train, shuffle=train_shuffle, num_workers=num_workers, batch_size=batch_size)
-    dl_val = DataLoader(ds_val, shuffle=False, num_workers=num_workers, batch_size=batch_size)
+    dl_val = DataLoader(ds_val, shuffle=False,
+                        num_workers=num_workers, batch_size=batch_size)
     # dl_val = DataLoader(ds_val, num_workers=num_workers, sampler=sampler, batch_size=batch_size)
 
     ds_test_img = []
@@ -191,15 +194,17 @@ def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, r
     dl_test = dict()
     # Add image noise
     for i in range(11):
-        ds_test_img.append(EnricoDataset(data_dir, img_noise=True, noise_level=i/10))
+        ds_test_img.append(EnricoDataset(
+            data_dir, img_noise=True, noise_level=i/10))
     dl_test['image'] = [DataLoader(test, shuffle=False, num_workers=num_workers,
-                   batch_size=batch_size) for test in ds_test_img]
+                                   batch_size=batch_size) for test in ds_test_img]
     # Add wireframe image noise
     for i in range(11):
-        ds_test_wireframe.append(EnricoDataset(data_dir, wireframe_noise=True, noise_level=i/10))
+        ds_test_wireframe.append(EnricoDataset(
+            data_dir, wireframe_noise=True, noise_level=i/10))
     dl_test['wireframe image'] = [DataLoader(test, shuffle=False, num_workers=num_workers,
-                   batch_size=batch_size) for test in ds_test_wireframe]
-    
+                                             batch_size=batch_size) for test in ds_test_wireframe]
+
     dls = tuple([dl_train, dl_val, dl_test])
     if return_class_weights:
         return dls, weights

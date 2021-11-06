@@ -85,12 +85,13 @@ def inversion(img, p):
 
 def WB(img, p):
     if np.random.sample() <= p:
-        kelvin_table = {1000: (255,56,0), 1500: (255,109,0), 2000: (255,137,18), 2500: (255,161,72), 3000: (255,180,107), 3500: (255,196,137), 4000: (255,209,163), 4500: (255,219,186), 5000: (255,228,206), 5500: (255,236,224), 6000: (255,243,239), 6500: (255,249,253), 7000: (245,243,255), 7500: (235,238,255), 8000: (227,233,255), 8500: (220,229,255), 9000: (214,225,255), 9500: (208,222,255), 10000: (204,219,255)}
+        kelvin_table = {1000: (255, 56, 0), 1500: (255, 109, 0), 2000: (255, 137, 18), 2500: (255, 161, 72), 3000: (255, 180, 107), 3500: (255, 196, 137), 4000: (255, 209, 163), 4500: (255, 219, 186), 5000: (255, 228, 206), 5500: (
+            255, 236, 224), 6000: (255, 243, 239), 6500: (255, 249, 253), 7000: (245, 243, 255), 7500: (235, 238, 255), 8000: (227, 233, 255), 8500: (220, 229, 255), 9000: (214, 225, 255), 9500: (208, 222, 255), 10000: (204, 219, 255)}
         temp = np.random.choice(kelvin_table.keys())
         r, g, b = kelvin_table[temp]
-        matrix = ( r / 255.0, 0.0, 0.0, 0.0,
-                0.0, g / 255.0, 0.0, 0.0,
-                0.0, 0.0, b / 255.0, 0.0 )
+        matrix = (r / 255.0, 0.0, 0.0, 0.0,
+                  0.0, g / 255.0, 0.0, 0.0,
+                  0.0, 0.0, b / 255.0, 0.0)
         return img.convert('RGB', matrix)
     else:
         return img
@@ -109,11 +110,13 @@ def salt_and_pepper(img, p):
     if np.random.sample() <= p:
         output = np.copy(np.array(img))
         nb_salt = np.ceil(p*output.size*0.5)
-        coords = [np.random.randint(0, i-1, int(nb_salt)) for i in output.shape]
+        coords = [np.random.randint(0, i-1, int(nb_salt))
+                  for i in output.shape]
         for i in coords:
             output[i] = 1
         nb_pepper = np.ceil(p*output.size*0.5)
-        coords = [np.random.randint(0, i-1, int(nb_pepper)) for i in output.shape]
+        coords = [np.random.randint(0, i-1, int(nb_pepper))
+                  for i in output.shape]
         for i in coords:
             output[i] = 0
         return Image.fromarray(output)
@@ -166,8 +169,10 @@ def periodic(img, periodic_noise_filename="periodic_noise"):
     width = img.width
     output = []
     for i in range(6):
-        noise = Image.open("{}_{}.png".format(periodic_noise_filename, i+1)).convert("RGBA")
-        noise = random_crop(rotate(noise.resize((width*2, height*2)), np.random.random_sample()*360, 'white'), height, width)
+        noise = Image.open("{}_{}.png".format(
+            periodic_noise_filename, i+1)).convert("RGBA")
+        noise = random_crop(rotate(noise.resize(
+            (width*2, height*2)), np.random.random_sample()*360, 'white'), height, width)
         output.append(Image.blend(img.convert("RGBA"), noise, 0.3))
     return output
 
@@ -205,11 +210,13 @@ def last_char(word):
         if word[len(word)-1-i].isalpha():
             return len(word) - 1 - i
 
+
 def swap_letter(word):
     # swap two random adjacent letters
     last = last_char(word)
     pos = np.random.randint(last-2) + 1
     return word[:pos] + word[pos+1] + word[pos] + word[pos+2:]
+
 
 def random_mid(word):
     # randomly permute the middle chunk of a word (all letters except the first and last letter)
@@ -218,9 +225,11 @@ def random_mid(word):
     np.random.shuffle(mid)
     return word[0]+''.join(mid)+word[last:]
 
+
 def qwerty_typo(word, num_typo=1):
     # randomly replace num_typo number of letters of a word to a one adjacent to it on qwerty keyboard
-    qwerty = {'q':['w'], 'w':['q','e','s'], 'e':['w','r','d'], 'r':['e','t','f'], 't':['r','g','y'], 'y':['t','u','h'], 'u':['y','i','j'], 'i':['u','o','k'], 'o': ['i','p','l'], 'p':['o'], 'a': ['q','s','z'], 's':['a','w','d','x','z'], 'd':['s','e','f','x','c'], 'f':['d','r','g','c','v'], 'g':['f','t','h','v','b'], 'h':['g','y','j','b','n'], 'j':['h','u','k','n','m'], 'k':['j','i','l','m'], 'l':['k','o'], 'z':['a','s','x'], 'x':['z','s','d','c'], 'c':['x','d','f','v'], 'v':['c','f','g','b'], 'b':['v','g','h','n'], 'n':['b','h','m','j'], 'm':['n','j','k']}
+    qwerty = {'q': ['w'], 'w': ['q', 'e', 's'], 'e': ['w', 'r', 'd'], 'r': ['e', 't', 'f'], 't': ['r', 'g', 'y'], 'y': ['t', 'u', 'h'], 'u': ['y', 'i', 'j'], 'i': ['u', 'o', 'k'], 'o': ['i', 'p', 'l'], 'p': ['o'], 'a': ['q', 's', 'z'], 's': ['a', 'w', 'd', 'x', 'z'], 'd': ['s', 'e', 'f', 'x', 'c'], 'f': ['d', 'r', 'g', 'c', 'v'], 'g': [
+        'f', 't', 'h', 'v', 'b'], 'h': ['g', 'y', 'j', 'b', 'n'], 'j': ['h', 'u', 'k', 'n', 'm'], 'k': ['j', 'i', 'l', 'm'], 'l': ['k', 'o'], 'z': ['a', 's', 'x'], 'x': ['z', 's', 'd', 'c'], 'c': ['x', 'd', 'f', 'v'], 'v': ['c', 'f', 'g', 'b'], 'b': ['v', 'g', 'h', 'n'], 'n': ['b', 'h', 'm', 'j'], 'm': ['n', 'j', 'k']}
     last = last_char(word)
     typos = np.arange(last+1)
     np.random.shuffle(typos)
@@ -230,6 +239,7 @@ def qwerty_typo(word, num_typo=1):
         word = word[:typos[i]] + key + word[typos[i]+1:]
     return word
 
+
 def sticky_keys(word, num_sticky=1):
     # randomly repeat num_sticky number of letters of a word
     last = last_char(word)
@@ -238,6 +248,7 @@ def sticky_keys(word, num_sticky=1):
     for i in range(num_sticky):
         word = word[:sticky[i]] + word[sticky[i]] + word[sticky[i]:]
     return word
+
 
 def omission(word, num_omit=1):
     # randomly omit num_omit number of letters of a word
@@ -250,9 +261,12 @@ def omission(word, num_omit=1):
 
 ##############################################################################
 # Audio
+
+
 def audio_robustness(tests, noise_level=0.3, noises=None):
     if noises == None:
-        noises = [additive_white_gaussian_noise, audio_random_dropout, audio_structured_dropout]
+        noises = [additive_white_gaussian_noise,
+                  audio_random_dropout, audio_structured_dropout]
     robustness_tests = np.zeros(tests.shape)
     for i in range(len(tests)):
         if np.random.sample() <= noise_level:
@@ -278,6 +292,7 @@ def audio_structured_dropout(sig, p, step=10):
                 res[i+j] = 0
     return res
 
+
 def audio_random_dropout(sig, p):
     return audio_structured_dropout(sig, 1, p)
 
@@ -291,7 +306,7 @@ def timeseries_robustness(tests, noise_level=0.3, noise=True, rand_drop=True, st
     if rand_drop:
         robust_tests = random_drop(robust_tests, noise_level)
     if struct_drop:
-        robust_tests = structured_drop(robust_tests, noise_level, modality_map)  
+        robust_tests = structured_drop(robust_tests, noise_level, modality_map)
     return robust_tests
 
 
@@ -303,6 +318,8 @@ def white_noise(data, p):
     return data
 
 # each entry is dropped independently with probability p
+
+
 def random_drop(data, p):
     for i in range(len(data)):
         for time in range(len(data[i])):
@@ -320,7 +337,7 @@ def random_drop(data, p):
     return data
 
 
-# independently for each modality, each time step is chosen with probability p 
+# independently for each modality, each time step is chosen with probability p
 # at which all feature dimensions are dropped
 def structured_drop(data, p, modality_map):
     for i in range(len(data)):
@@ -342,7 +359,7 @@ def structured_drop(data, p, modality_map):
 
 ##############################################################################
 # Tabular
-def tabular_robustness(tests, noise_level=0.3, drop=True, swap=True):
+def add_tabular_noise(tests, noise_level=0.3, drop=True, swap=True):
     robust_tests = np.array(tests)
     if drop:
         robust_tests = drop_entry(robust_tests, noise_level)
@@ -381,24 +398,27 @@ if __name__ == '__main__':
     print('7. UR-Funny')
     print('8. Sarcasm')
     print('9. Deception')
-    
+
     opt = int(input('Input option: '))
     print('='*22)
     if opt == 1:
         data = read_h5_data_set('./mosi/mosi.hdf5')
-        modality_map = {'vision' : ['FACET_4.2', 'OpenFace_1'], 'text' : ['words'], 'vocal' : ['COVAREP', 'OpenSmile_emobase2010']}
+        modality_map = {'vision': ['FACET_4.2', 'OpenFace_1'], 'text': [
+            'words'], 'vocal': ['COVAREP', 'OpenSmile_emobase2010']}
     elif opt == 2:
         print("To be implemented!")
         # data = read_h5_data_set('./mosi/mosi_unalign.hdf5')
     elif opt == 3:
         data = read_h5_data_set('./mosei/mosei.hdf5')
-        modality_map = {'vision' : ['OpenFace_2'], 'text' : ['words'], 'vocal' : ['COVAREP']}
+        modality_map = {'vision': ['OpenFace_2'],
+                        'text': ['words'], 'vocal': ['COVAREP']}
     elif opt == 4:
         print("To be implemented!")
         # data = read_h5_data_set('./mosei/mosei_unalign.hdf5')
     elif opt == 5:
         data = read_h5_data_set('./pom/pom.hdf5')
-        modality_map = {'vision' : ['FACET_4.2', 'OpenFace2'], 'text' : ['words'], 'vocal' : ['COVAREP']}
+        modality_map = {'vision': ['FACET_4.2', 'OpenFace2'], 'text': [
+            'words'], 'vocal': ['COVAREP']}
     elif opt == 6:
         print("To be implemented!")
         # data = read_h5_data_set('./pom/pom_unalign.hdf5')
@@ -415,5 +435,3 @@ if __name__ == '__main__':
         # display_pkl_data_set('./deception/deception.pkl')
     else:
         print('Wrong Input!')
-    
-    

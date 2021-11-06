@@ -21,4 +21,5 @@ class Club(BaseClub):
 class Aklys(BaseClub):
 
     def __init__(self):
-        super().__init__('aklys', weight=15, damage=D.Dice.from_str('d3'), material=M.Iron, hit=0)
+        super().__init__('aklys', weight=15,
+                         damage=D.Dice.from_str('d3'), material=M.Iron, hit=0)

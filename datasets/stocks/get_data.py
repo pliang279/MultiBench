@@ -1,4 +1,4 @@
-from robustness.timeseries_robust import timeseries_robustness
+from robustness.timeseries_robust import add_timeseries_noise
 import copy
 import datetime
 from posixpath import split
@@ -99,7 +99,7 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     test_loader['timeseries'] = []
     for noise_level in range(9):
         X_robust = copy.deepcopy(X[test_split:].cpu().numpy())
-        X_robust = torch.tensor(timeseries_robustness(
+        X_robust = torch.tensor(add_timeseries_noise(
             X_robust, noise_level=noise_level/10), dtype=torch.float32)
         if cuda:
             X_robust = X_robust.cuda()

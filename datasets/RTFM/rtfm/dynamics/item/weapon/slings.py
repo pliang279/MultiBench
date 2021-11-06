@@ -15,10 +15,12 @@ class BaseSling(Weapon):
 class Sling(BaseSling):
 
     def __init__(self):
-        super().__init__('sling', weight=3, damage=D.Dice.from_str('d2'), material=M.Leather, hit=0)
+        super().__init__('sling', weight=3, damage=D.Dice.from_str(
+            'd2'), material=M.Leather, hit=0)
 
 
 class Flintstone(BaseSling):
 
     def __init__(self):
-        super().__init__('flintstone', weight=10, damage=D.Dice.from_str('d6'), material=M.Mineral, hit=0)
+        super().__init__('flintstone', weight=10,
+                         damage=D.Dice.from_str('d6'), material=M.Mineral, hit=0)

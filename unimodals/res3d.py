@@ -1,4 +1,4 @@
-#copied from https://github.com/kenshohara/3D-ResNets-PyTorch/blob/master/models/resnet2p1d.py
+# copied from https://github.com/kenshohara/3D-ResNets-PyTorch/blob/master/models/resnet2p1d.py
 
 import math
 from functools import partial
@@ -8,11 +8,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-def get_inplanes():
+def _get_inplanes():
     return [64, 128, 256, 512]
 
 
-def conv1x3x3(in_planes, mid_planes, stride=1):
+def _conv1x3x3(in_planes, mid_planes, stride=1):
     return nn.Conv3d(in_planes,
                      mid_planes,
                      kernel_size=(1, 3, 3),
@@ -21,7 +21,7 @@ def conv1x3x3(in_planes, mid_planes, stride=1):
                      bias=False)
 
 
-def conv3x1x1(mid_planes, planes, stride=1):
+def _conv3x1x1(mid_planes, planes, stride=1):
     return nn.Conv3d(mid_planes,
                      planes,
                      kernel_size=(3, 1, 1),
@@ -30,7 +30,7 @@ def conv3x1x1(mid_planes, planes, stride=1):
                      bias=False)
 
 
-def conv1x1x1(in_planes, out_planes, stride=1):
+def _conv1x1x1(in_planes, out_planes, stride=1):
     return nn.Conv3d(in_planes,
                      out_planes,
                      kernel_size=1,
@@ -47,17 +47,17 @@ class BasicBlock(nn.Module):
         n_3d_parameters1 = in_planes * planes * 3 * 3 * 3
         n_2p1d_parameters1 = in_planes * 3 * 3 + 3 * planes
         mid_planes1 = n_3d_parameters1 // n_2p1d_parameters1
-        self.conv1_s = conv1x3x3(in_planes, mid_planes1, stride)
+        self.conv1_s = _conv1x3x3(in_planes, mid_planes1, stride)
         self.bn1_s = nn.BatchNorm3d(mid_planes1)
-        self.conv1_t = conv3x1x1(mid_planes1, planes, stride)
+        self.conv1_t = _conv3x1x1(mid_planes1, planes, stride)
         self.bn1_t = nn.BatchNorm3d(planes)
 
         n_3d_parameters2 = planes * planes * 3 * 3 * 3
         n_2p1d_parameters2 = planes * 3 * 3 + 3 * planes
         mid_planes2 = n_3d_parameters2 // n_2p1d_parameters2
-        self.conv2_s = conv1x3x3(planes, mid_planes2)
+        self.conv2_s = _conv1x3x3(planes, mid_planes2)
         self.bn2_s = nn.BatchNorm3d(mid_planes2)
-        self.conv2_t = conv3x1x1(mid_planes2, planes)
+        self.conv2_t = _conv3x1x1(mid_planes2, planes)
         self.bn2_t = nn.BatchNorm3d(planes)
 
         self.relu = nn.ReLU(inplace=True)
@@ -95,18 +95,18 @@ class Bottleneck(nn.Module):
     def __init__(self, in_planes, planes, stride=1, downsample=None):
         super().__init__()
 
-        self.conv1 = conv1x1x1(in_planes, planes)
+        self.conv1 = _conv1x1x1(in_planes, planes)
         self.bn1 = nn.BatchNorm3d(planes)
 
         n_3d_parameters = planes * planes * 3 * 3 * 3
         n_2p1d_parameters = planes * 3 * 3 + 3 * planes
         mid_planes = n_3d_parameters // n_2p1d_parameters
-        self.conv2_s = conv1x3x3(planes, mid_planes, stride)
+        self.conv2_s = _conv1x3x3(planes, mid_planes, stride)
         self.bn2_s = nn.BatchNorm3d(mid_planes)
-        self.conv2_t = conv3x1x1(mid_planes, planes, stride)
+        self.conv2_t = _conv3x1x1(mid_planes, planes, stride)
         self.bn2_t = nn.BatchNorm3d(planes)
 
-        self.conv3 = conv1x1x1(planes, planes * self.expansion)
+        self.conv3 = _conv1x1x1(planes, planes * self.expansion)
         self.bn3 = nn.BatchNorm3d(planes * self.expansion)
         self.relu = nn.ReLU(inplace=True)
         self.downsample = downsample
@@ -228,7 +228,8 @@ class ResNet(nn.Module):
                                      stride=stride)
             else:
                 downsample = nn.Sequential(
-                    conv1x1x1(self.in_planes, planes * block.expansion, stride),
+                    _conv1x1x1(self.in_planes, planes *
+                              block.expansion, stride),
                     nn.BatchNorm3d(planes * block.expansion))
 
         layers = []
@@ -268,21 +269,22 @@ class ResNet(nn.Module):
 
 
 def generate_model(model_depth, **kwargs):
+    """Generate model given different standard model depths."""
     assert model_depth in [10, 18, 34, 50, 101, 152, 200]
 
     if model_depth == 10:
-        model = ResNet(BasicBlock, [1, 1, 1, 1], get_inplanes(), **kwargs)
+        model = ResNet(BasicBlock, [1, 1, 1, 1], _get_inplanes(), **kwargs)
     elif model_depth == 18:
-        model = ResNet(BasicBlock, [2, 2, 2, 2], get_inplanes(), **kwargs)
+        model = ResNet(BasicBlock, [2, 2, 2, 2], _get_inplanes(), **kwargs)
     elif model_depth == 34:
-        model = ResNet(BasicBlock, [3, 4, 6, 3], get_inplanes(), **kwargs)
+        model = ResNet(BasicBlock, [3, 4, 6, 3], _get_inplanes(), **kwargs)
     elif model_depth == 50:
-        model = ResNet(Bottleneck, [3, 4, 6, 3], get_inplanes(), **kwargs)
+        model = ResNet(Bottleneck, [3, 4, 6, 3], _get_inplanes(), **kwargs)
     elif model_depth == 101:
-        model = ResNet(Bottleneck, [3, 4, 23, 3], get_inplanes(), **kwargs)
+        model = ResNet(Bottleneck, [3, 4, 23, 3], _get_inplanes(), **kwargs)
     elif model_depth == 152:
-        model = ResNet(Bottleneck, [3, 8, 36, 3], get_inplanes(), **kwargs)
+        model = ResNet(Bottleneck, [3, 8, 36, 3], _get_inplanes(), **kwargs)
     elif model_depth == 200:
-        model = ResNet(Bottleneck, [3, 24, 36, 3], get_inplanes(), **kwargs)
+        model = ResNet(Bottleneck, [3, 24, 36, 3], _get_inplanes(), **kwargs)
 
     return model

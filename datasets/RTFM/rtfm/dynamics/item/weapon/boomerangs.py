@@ -15,4 +15,5 @@ class BaseBoomerang(Weapon):
 class Boomerang(BaseBoomerang):
 
     def __init__(self):
-        super().__init__('boomerang', weight=5, damage=D.Dice.from_str('d9'), material=M.Wood, hit=0)
+        super().__init__('boomerang', weight=5,
+                         damage=D.Dice.from_str('d9'), material=M.Wood, hit=0)

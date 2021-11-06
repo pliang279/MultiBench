@@ -15,4 +15,5 @@ class BaseUnicornHorn(Weapon):
 class UnicornHorn(BaseUnicornHorn):
 
     def __init__(self):
-        super().__init__('unicorn horn', weight=20, damage=D.Dice.from_str('d12'), material=M.Bone, hit=0)
+        super().__init__('unicorn horn', weight=20,
+                         damage=D.Dice.from_str('d12'), material=M.Bone, hit=0)

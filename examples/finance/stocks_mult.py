@@ -1,18 +1,17 @@
+from private_test_scripts.all_in_one import all_in_one_train
+from training_structures.unimodal import train, test
+from datasets.stocks.get_data import get_dataloader, Grouping
+from fusions.mult import MULTModel
+from unimodals.common_models import Identity
+from torch import nn
+import torch.nn.functional as F
+import torch
+import pmdarima
+import numpy as np
+import argparse
 import sys
 import os
 sys.path.append(os.getcwd())
-
-import argparse
-import numpy as np
-import pmdarima
-import torch
-import torch.nn.functional as F
-from torch import nn
-from unimodals.common_models import Identity
-from fusions.mult import MULTModel
-from datasets.stocks.get_data import get_dataloader, Grouping
-from training_structures.unimodal import train, test
-from private_test_scripts.all_in_one import all_in_one_train
 
 
 parser = argparse.ArgumentParser()
@@ -24,7 +23,8 @@ print('Target: ' + args.target_stock)
 
 
 stocks = sorted(args.input_stocks.split(' '))
-train_loader, val_loader, test_loader = get_dataloader(stocks, stocks, [args.target_stock], modality_first=False)
+train_loader, val_loader, test_loader = get_dataloader(
+    stocks, stocks, [args.target_stock], modality_first=False)
 
 n_modalities = 3
 grouping = Grouping(n_modalities)
@@ -36,13 +36,17 @@ model = nn.Sequential(grouping, MULTModel(n_modalities, n_features)).cuda()
 identity = Identity()
 allmodules = [model, identity]
 
+
 def trainprocess():
     train(model, identity, train_loader, val_loader,
           total_epochs=4, task='regression',
           optimtype=torch.optim.Adam, criterion=nn.MSELoss())
+
+
 all_in_one_train(trainprocess, allmodules)
 
 encoder = torch.load('encoder.pt').cuda()
 head = torch.load('head.pt').cuda()
 # dataset = 'finance F&B', finance tech', finance health'
-test(encoder, head, test_loader, dataset='finance F&B', task='regression', criterion=nn.MSELoss())
+test(encoder, head, test_loader, dataset='finance F&B',
+     task='regression', criterion=nn.MSELoss())

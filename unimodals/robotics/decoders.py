@@ -75,34 +75,39 @@ class OpticalFlowDecoder(nn.Module):
             self.img_deconv5(optical_flow_in_feat), out_img_conv5
         )
 
-        concat5 = torch.cat((out_img_conv5, out_img_deconv5, optical_flow6_up), 1)
+        concat5 = torch.cat(
+            (out_img_conv5, out_img_deconv5, optical_flow6_up), 1)
         optical_flow5 = self.predict_optical_flow5(concat5)
         optical_flow5_up = crop_like(
             self.upsampled_optical_flow5_to_4(optical_flow5), out_img_conv4
         )
         out_img_deconv4 = crop_like(self.img_deconv4(concat5), out_img_conv4)
 
-        concat4 = torch.cat((out_img_conv4, out_img_deconv4, optical_flow5_up), 1)
+        concat4 = torch.cat(
+            (out_img_conv4, out_img_deconv4, optical_flow5_up), 1)
         optical_flow4 = self.predict_optical_flow4(concat4)
         optical_flow4_up = crop_like(
             self.upsampled_optical_flow4_to_3(optical_flow4), out_img_conv3
         )
         out_img_deconv3 = crop_like(self.img_deconv3(concat4), out_img_conv3)
 
-        concat3 = torch.cat((out_img_conv3, out_img_deconv3, optical_flow4_up), 1)
+        concat3 = torch.cat(
+            (out_img_conv3, out_img_deconv3, optical_flow4_up), 1)
         optical_flow3 = self.predict_optical_flow3(concat3)
         optical_flow3_up = crop_like(
             self.upsampled_optical_flow3_to_2(optical_flow3), out_img_conv2
         )
         out_img_deconv2 = crop_like(self.img_deconv2(concat3), out_img_conv2)
 
-        concat2 = torch.cat((out_img_conv2, out_img_deconv2, optical_flow3_up), 1)
+        concat2 = torch.cat(
+            (out_img_conv2, out_img_deconv2, optical_flow3_up), 1)
 
         optical_flow2_unmasked = self.predict_optical_flow2(concat2)
 
         optical_flow2_mask = self.predict_optical_flow2_mask(concat2)
 
-        optical_flow2 = optical_flow2_unmasked * torch.sigmoid(optical_flow2_mask)
+        optical_flow2 = optical_flow2_unmasked * \
+            torch.sigmoid(optical_flow2_mask)
 
         return optical_flow2, optical_flow2_mask
 
@@ -130,8 +135,9 @@ class EeDeltaDecoder(nn.Module):
     def forward(self, mm_act_feat):
         return self.ee_delta_decoder(mm_act_feat)
 
+
 class ContactDecoder(nn.Module):
-    def __init__(self, z_dim, deterministic,head=1):
+    def __init__(self, z_dim, deterministic, head=1):
         '''
         Decodes everything
         '''
@@ -140,7 +146,7 @@ class ContactDecoder(nn.Module):
         self.deterministic = deterministic
         self.contact_fc = nn.Sequential(nn.Linear(z_dim, head))
 
-    def forward(self, input, training=False):
+    def forward(self, input):
         if self.deterministic:
             z, mm_act_feat, tiled_feat, img_out_convs = input
         else:

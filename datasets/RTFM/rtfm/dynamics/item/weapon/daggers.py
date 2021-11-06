@@ -15,28 +15,33 @@ class BaseDagger(Weapon):
 class OrcishDagger(BaseDagger):
 
     def __init__(self):
-        super().__init__('orcish dagger', weight=10, damage=D.Dice.from_str('d3'), material=M.Iron, hit=2)
+        super().__init__('orcish dagger', weight=10,
+                         damage=D.Dice.from_str('d3'), material=M.Iron, hit=2)
 
 
 class Dagger(BaseDagger):
 
     def __init__(self):
-        super().__init__('dagger', weight=10, damage=D.Dice.from_str('d3'), material=M.Iron, hit=2)
+        super().__init__('dagger', weight=10,
+                         damage=D.Dice.from_str('d3'), material=M.Iron, hit=2)
 
 
 class SilverDagger(BaseDagger):
 
     def __init__(self):
-        super().__init__('silver dagger', weight=12, damage=D.Dice.from_str('d3'), material=M.Silver, hit=2)
+        super().__init__('silver dagger', weight=12,
+                         damage=D.Dice.from_str('d3'), material=M.Silver, hit=2)
 
 
 class Athame(BaseDagger):
 
     def __init__(self):
-        super().__init__('athame', weight=10, damage=D.Dice.from_str('d3'), material=M.Iron, hit=2)
+        super().__init__('athame', weight=10,
+                         damage=D.Dice.from_str('d3'), material=M.Iron, hit=2)
 
 
 class ElvenDagger(BaseDagger):
 
     def __init__(self):
-        super().__init__('elven dagger', weight=10, damage=D.Dice.from_str('d3'), material=M.Wood, hit=2)
+        super().__init__('elven dagger', weight=10,
+                         damage=D.Dice.from_str('d3'), material=M.Wood, hit=2)

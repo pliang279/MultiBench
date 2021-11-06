@@ -5,6 +5,7 @@ import torch.nn as nn
 
 # Code adapted from the fairseq repo.
 
+
 def make_positions(tensor, padding_idx, left_pad):
     """Replace non-padding symbols with their position numbers.
     Position numbers begin at padding_idx+1.
@@ -16,13 +17,17 @@ def make_positions(tensor, padding_idx, left_pad):
     buf_name = f'range_buf_{device}'
     if not hasattr(make_positions, buf_name):
         setattr(make_positions, buf_name, tensor.new())
-    setattr(make_positions, buf_name, getattr(make_positions, buf_name).type_as(tensor))
+    setattr(make_positions, buf_name, getattr(
+        make_positions, buf_name).type_as(tensor))
     if getattr(make_positions, buf_name).numel() < max_pos:
-        torch.arange(padding_idx + 1, max_pos, out=getattr(make_positions, buf_name))
+        torch.arange(padding_idx + 1, max_pos,
+                     out=getattr(make_positions, buf_name))
     mask = tensor.ne(padding_idx)
-    positions = getattr(make_positions, buf_name)[:tensor.size(1)].expand_as(tensor)
+    positions = getattr(make_positions, buf_name)[
+        :tensor.size(1)].expand_as(tensor)
     if left_pad:
-        positions = positions - mask.size(1) + mask.long().sum(dim=1).unsqueeze(1)
+        positions = positions - \
+            mask.size(1) + mask.long().sum(dim=1).unsqueeze(1)
     new_tensor = tensor.clone()
     return new_tensor.masked_scatter_(mask, positions[mask]).long()
 
@@ -38,7 +43,8 @@ class SinusoidalPositionalEmbedding(nn.Module):
         self.embedding_dim = embedding_dim
         self.padding_idx = padding_idx
         self.left_pad = left_pad
-        self.weights = dict()   # device --> actual weight; due to nn.DataParallel :-(
+        # device --> actual weight; due to nn.DataParallel :-(
+        self.weights = dict()
         self.register_buffer('_float_tensor', torch.FloatTensor(1))
 
     @staticmethod
@@ -50,8 +56,10 @@ class SinusoidalPositionalEmbedding(nn.Module):
         half_dim = embedding_dim // 2
         emb = math.log(10000) / (half_dim - 1)
         emb = torch.exp(torch.arange(half_dim, dtype=torch.float) * -emb)
-        emb = torch.arange(num_embeddings, dtype=torch.float).unsqueeze(1) * emb.unsqueeze(0)
-        emb = torch.cat([torch.sin(emb), torch.cos(emb)], dim=1).view(num_embeddings, -1)
+        emb = torch.arange(num_embeddings, dtype=torch.float).unsqueeze(
+            1) * emb.unsqueeze(0)
+        emb = torch.cat([torch.sin(emb), torch.cos(emb)],
+                        dim=1).view(num_embeddings, -1)
         if embedding_dim % 2 == 1:
             # zero pad
             emb = torch.cat([emb, torch.zeros(num_embeddings, 1)], dim=1)

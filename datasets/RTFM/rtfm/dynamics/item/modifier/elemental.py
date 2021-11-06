@@ -30,7 +30,8 @@ class BasePoison(BaseElementalModifier, element_types.Poison):
 
 
 class BaseAllElement(BaseElementalModifier):
-    elements = [element_types.Fire, element_types.Cold, element_types.Poison, element_types.Lightning]
+    elements = [element_types.Fire, element_types.Cold,
+                element_types.Poison, element_types.Lightning]
 
 
 class BaseElementalWeaponModifier(BaseElementalModifier, BaseWeaponModifier):
@@ -47,8 +48,6 @@ class BaseElementalArmourModifier(BaseElementalModifier, BaseArmourModifier):
     def apply_armour(cls, armour):
         for e in cls.elements:
             armour.add_elemental_armour_class(e, cls.level)
-
-
 
 
 class Snowy(BaseCold, BaseElementalWeaponModifier, BasePrefixModifier):
@@ -97,10 +96,6 @@ class Glacier(BaseCold, BaseElementalWeaponModifier, BaseSuffixModifier):
 
 class Winter(BaseCold, BaseElementalWeaponModifier, BaseSuffixModifier):
     level = 4
-
-
-
-
 
 
 class Fiery(BaseFire, BaseElementalWeaponModifier, BasePrefixModifier):
@@ -155,9 +150,6 @@ class Incineration(BaseFire, BaseElementalWeaponModifier, BaseSuffixModifier):
     level = 4
 
 
-
-
-
 class Static(BaseLightning, BaseElementalWeaponModifier, BasePrefixModifier):
     level = 1
 
@@ -210,9 +202,6 @@ class Storms(BaseLightning, BaseElementalWeaponModifier, BaseSuffixModifier):
     level = 4
 
 
-
-
-
 class Septic(BasePoison, BaseElementalWeaponModifier, BasePrefixModifier):
     level = 1
 
@@ -263,10 +252,6 @@ class Pestilence(BasePoison, BaseElementalWeaponModifier, BaseSuffixModifier):
 
 class Anthrax(BasePoison, BaseElementalWeaponModifier, BaseSuffixModifier):
     level = 4
-
-
-
-
 
 
 class Shimmering(BaseAllElement, BaseElementalArmourModifier, BasePrefixModifier):
