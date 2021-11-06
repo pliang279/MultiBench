@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from transformers import AutoTokenizer, pipeline
+from transformers import AutoTokenizer, pipeline, BertModel
 import h5py
 import pickle
 import numpy  as np
@@ -8,13 +8,20 @@ import numpy  as np
 
 model_name = "bert-base-uncased" 
 tokenizer = AutoTokenizer.from_pretrained(model_name)
-features_extractor = pipeline('feature-extraction', model=model_name, tokenizer=model_name)
-
+# features_extractor = pipeline('feature-extraction', model=model_name, tokenizer=model_name)
+bert = BertModel.from_pretrained(model_name)
+bert.config.output_hidden_states = True
 
 # use pipline to extract all the features, (num_points, max_seq_length, feature_dim): np.ndarray
-def get_bert_features(bert_extractor, all_text):
-    bert_feartures = bert_extractor(all_text)
-    return np.array(bert_feartures)
+# contextual embedding:if True output the last hidden state of bert, if False, output the embedding of words
+def get_bert_features(all_text, contextual_embedding=False):
+    inputs = tokenizer(all_text, padding=True, truncation=True, return_tensors="pt")
+    bert_feartures = bert(**inputs)
+    outputs = bert_feartures.hidden_states
+    if contextual_embedding:
+        return outputs[-1].detach().numpy()
+    else:
+        return outputs[0].detach().numpy()
 
 
 # get raw text from the datasets
@@ -96,7 +103,7 @@ def bert_version_data(data, raw_path, keys, max_padding=50):
     file_type = raw_path.split('.')[-1]
     sarcasm_text, _ = get_rawtext(raw_path, file_type, keys)
 
-    bert_features = get_bert_features(features_extractor, sarcasm_text)  # (690, 74, 768) for sarcasm
+    bert_features = get_bert_features(sarcasm_text, contextual_embedding=False)  # (690, 74, 768) for sarcasm
     
     # get corresponding ids
     other_modality_ids = []
