@@ -129,13 +129,15 @@ def bert_version_data(data, raw_path, keys, max_padding=50):
         new_audio.append(tmp)
     new_audio = np.stack(new_audio)
 
-    assert bert_features.shape[1] >= max_padding
-
     new_bert_features = []
-    for b in bert_features:
-        new_bert_features.append(b[:max_padding, :])
+    if bert_features.shape[1] >= max_padding:
+        for b in bert_features:
+            new_bert_features.append(b[:max_padding, :])
+    else:
+        for b in bert_features:
+            new_bert_features.append(np.pad(b, ((0, max_padding-bert_features.shape[1]), (0, 0))))
     new_bert_features = np.stack(new_bert_features)
-
+    
     return {'vision': new_vision, 'audio': new_audio, 'text': new_bert_features}
 
 
