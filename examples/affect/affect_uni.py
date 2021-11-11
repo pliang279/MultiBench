@@ -10,6 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'
 
 
+# mosi_data.pkl, mosei_senti_data.pkl
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
 # traindata, validdata, testdata = get_dataloader('/home/pliang/multibench/affect/pack/mosi/mosi_raw.pkl', robust_test=False)
 traindata, validdata, testdata = get_dataloader(

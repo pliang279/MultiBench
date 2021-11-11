@@ -373,7 +373,10 @@ def process_1(inputs: List):
         # if len(sample[-2].shape) > 2:
         #     labels.append(torch.where(sample[-2][:, 1] == 1)[0])
         # else:
-        labels.append(sample[-1])
+        if sample[-1].shape[1] > 1:
+            labels.append(sample[-1].reshape(sample[-1].shape[1], sample[-1].shape[0])[0])
+        else:
+            labels.append(sample[-1])
 
     return processed_input, processed_input_lengths, \
            torch.tensor(inds).view(len(inputs), 1), torch.tensor(labels).view(len(inputs), 1)
@@ -397,7 +400,10 @@ def process_2(inputs: List):
         # if len(sample[-2].shape) > 2:
         #     labels.append(torch.where(sample[-2][:, 1] == 1)[0])
         # else:
-        labels.append(sample[-1])
+        if sample[-1].shape[1] > 1:
+            labels.append(sample[-1].reshape(sample[-1].shape[1], sample[-1].shape[0])[0])
+        else:
+            labels.append(sample[-1])
 
     return processed_input[0], processed_input[1], processed_input[2], torch.tensor(labels).view(len(inputs), 1)
 
