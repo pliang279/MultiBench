@@ -11,6 +11,7 @@ sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 
 
+# mosi_data.pkl, mosei_senti_data.pkl
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
 # raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
 traindata, validdata, test_robust = get_dataloader(

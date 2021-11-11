@@ -21,6 +21,7 @@ dim_1 = 74
 dim_2 = 300
 timestep = 50
 
+# mosi_data.pkl, mosei_senti_data.pkl
 # mosi_raw.pkl, mosei_raw.pkl, sarcasm.pkl, humor.pkl
 # raw_path: mosi.hdf5, mosei.hdf5, sarcasm_raw_text.pkl, humor_raw_text.pkl
 traindata, validdata, test_robust = get_dataloader(
