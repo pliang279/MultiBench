@@ -6,10 +6,13 @@ from torch.nn import functional as F
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence
 from torchvision import models as tmodels
 
-# One layer linear
+
 
 
 class Linear(torch.nn.Module):
+    """
+    Linear Layer with Xavier Initialization, and 0 Bias.
+    """
     def __init__(self, indim, outdim, xavier_init=False):
         super(Linear, self).__init__()
         self.fc = nn.Linear(indim, outdim)
@@ -20,10 +23,11 @@ class Linear(torch.nn.Module):
     def forward(self, x):
         return self.fc(x)
 
-# the squeeze module
-
 
 class Squeeze(torch.nn.Module):
+    """
+    Custom squeeze module for easier Sequential usage.
+    """
     def __init__(self, dim=None):
         super().__init__()
         self.dim = dim
@@ -34,10 +38,11 @@ class Squeeze(torch.nn.Module):
         else:
             return torch.squeeze(x, self.dim)
 
-# Sequential module
-
 
 class Sequential(nn.Sequential):
+    """
+    Custom sequential module for easier usage.
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -46,10 +51,11 @@ class Sequential(nn.Sequential):
             del kwargs['training']
         return super().forward(*args, **kwargs)
 
-# Reshaping module
-
 
 class Reshape(nn.Module):
+    """
+    Custom reshape module for easier Sequential usage.
+    """
     def __init__(self, shape):
         super().__init__()
         self.shape = shape
@@ -57,10 +63,11 @@ class Reshape(nn.Module):
     def forward(self, x):
         return torch.reshape(x, self.shape)
 
-# Transposing module
-
 
 class Transpose(nn.Module):
+    """
+    Custom transpose module for easier Sequential usage.
+    """
     def __init__(self, dim0, dim1):
         super().__init__()
         self.dim0 = dim0
@@ -69,10 +76,14 @@ class Transpose(nn.Module):
     def forward(self, x):
         return torch.transpose(x, self.dim0, self.dim1)
 
-# 2-layer MLP
+
 
 
 class MLP(torch.nn.Module):
+    """
+    Two layer MLP
+    """
+    
     def __init__(self, indim, hiddim, outdim, dropout=False, dropoutp=0.1, output_each_layer=False):
         super(MLP, self).__init__()
         self.fc = nn.Linear(indim, hiddim)
@@ -93,10 +104,12 @@ class MLP(torch.nn.Module):
             return [0, x, output, self.lklu(output2)]
         return output2
 
-# Wrapper for GRU
 
 
 class GRU(torch.nn.Module):
+    """
+    GRU Implementation.
+    """
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False, last_only=False):
         super(GRU, self).__init__()
         self.gru = nn.GRU(indim, hiddim, batch_first=True)
@@ -107,15 +120,15 @@ class GRU(torch.nn.Module):
         self.last_only = last_only
 
     def forward(self, x):
-        # print(x.size())
+        
         if self.has_padding:
             x = pack_padded_sequence(
                 x[0], x[1], batch_first=True, enforce_sorted=False)
             out = self.gru(x)[1][-1]
         elif self.last_only:
             out = self.gru(x)[1][0]
-            # print(out.size())
-            # print(out)
+            
+            
             return out
         else:
             out, l = self.gru(x)
@@ -124,12 +137,14 @@ class GRU(torch.nn.Module):
             out = self.dropout_layer(out)
         if self.flatten:
             out = torch.flatten(out, 1)
-        # print(out)
+        
         return out
 
 
-# GRU unit followed by a linear layer
 class GRUWithLinear(torch.nn.Module):
+    """
+    GRU with Linear Impl.
+    """
     def __init__(self, indim, hiddim, outdim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False, output_each_layer=False, batch_first=False):
         super(GRUWithLinear, self).__init__()
         self.gru = nn.GRU(indim, hiddim, batch_first=batch_first)
@@ -157,10 +172,12 @@ class GRUWithLinear(torch.nn.Module):
             return [0, torch.flatten(x, 1), torch.flatten(hidden, 1), self.lklu(out)]
         return out
 
-# LSTM
 
 
 class LSTM(torch.nn.Module):
+    """
+    LSTM.
+    """
     def __init__(self, indim, hiddim, linear_layer_outdim=None, dropout=False, dropoutp=0.1, flatten=False, has_padding=False):
         super(LSTM, self).__init__()
         self.lstm = nn.LSTM(indim, hiddim, batch_first=True)
@@ -190,10 +207,13 @@ class LSTM(torch.nn.Module):
             out = self.linear(out)
         return out
 
-# 2-layer LSTM
+
 
 
 class TwoLayersLSTM(torch.nn.Module):
+    """
+    2-layer LSTM.
+    """
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False,
                  LayNorm=True, isBidirectional=True):
         super(TwoLayersLSTM, self).__init__()
@@ -230,8 +250,12 @@ class TwoLayersLSTM(torch.nn.Module):
         return out
 
 
-# adapted from centralnet code https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py
+
 class LeNet(nn.Module):
+    """
+    Adapted from centralnet code https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py.
+    LeNet.
+    """
     def __init__(self, in_channels, args_channels, additional_layers, output_each_layer=False, linear=None, squeeze_output=True):
         super(LeNet, self).__init__()
         self.output_each_layer = output_each_layer
@@ -263,7 +287,7 @@ class LeNet(nn.Module):
             out = F.max_pool2d(out, 2)
             gp = self.gps[i](out)
             tempouts.append(gp)
-            # print(out.size())
+            
         if self.linear is not None:
             out = self.linear(out)
         tempouts.append(out)
@@ -287,7 +311,10 @@ class VGG16(nn.Module):
         return self.model(x)
 
 
-class VGG16Slim(nn.Module):  # slimmer version of vgg16 model with fewer layers in classifier
+class VGG16Slim(nn.Module):  
+    """
+    Slimmer version of vgg16 model with fewer layers in classifier.
+    """
     def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
         super(VGG16Slim, self).__init__()
         self.hiddim = hiddim
@@ -307,7 +334,10 @@ class VGG16Slim(nn.Module):  # slimmer version of vgg16 model with fewer layers 
         return self.model(x)
 
 
-class VGG11Slim(nn.Module):  # slimmer version of vgg11 model with fewer layers in classifier
+class VGG11Slim(nn.Module): 
+    """
+    Slimmer version of vgg11 model with fewer layers in classifier.
+    """
     def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True, freeze_features=True):
         super(VGG11Slim, self).__init__()
         self.hiddim = hiddim
@@ -329,8 +359,10 @@ class VGG11Slim(nn.Module):  # slimmer version of vgg11 model with fewer layers 
         return self.model(x)
 
 
-# slimmer version of vgg11 model with fewer layers in classifier
 class VGG11Pruned(nn.Module):
+    """
+    Slimmer version of vgg11 model with fewer layers in classifier.
+    """
     def __init__(self, hiddim, dropout=True, prune_factor=0.25, dropoutp=0.2):
         super(VGG11Pruned, self).__init__()
         self.hiddim = hiddim
@@ -362,8 +394,11 @@ class VGG11Pruned(nn.Module):
         return self.model(x)
 
 
-# slimmer version of vgg11 model with fewer layers in classifier
+
 class VGG16Pruned(nn.Module):
+    """
+    Slimmer version of vgg11 model with fewer layers in classifier.
+    """
     def __init__(self, hiddim, dropout=True, prune_factor=0.25, dropoutp=0.2):
         super(VGG16Pruned, self).__init__()
         self.hiddim = hiddim
@@ -396,6 +431,9 @@ class VGG16Pruned(nn.Module):
 
 
 class VGG(nn.Module):
+    """
+    VGG net module.
+    """
     def __init__(self, num_outputs):
         super(VGG, self).__init__()
 
@@ -432,13 +470,16 @@ class VGG(nn.Module):
 
         out = self.classifier(bn_4)
 
-        # print()
-        # print(out_4, out)
+        
+        
 
         return out_1, out_2, out_3, out_4, out
 
 
 class Maxout(nn.Module):
+    """
+    Maxout module.
+    """
     def __init__(self, d, m, k):
         super(Maxout, self).__init__()
         self.d_in, self.d_out, self.pool_size = d, m, k
@@ -455,7 +496,9 @@ class Maxout(nn.Module):
 
 
 class MaxOut_MLP(nn.Module):
-
+    """
+    Maxout w/ MLP module
+    """
     def __init__(
             self, num_outputs, first_hidden=64, number_input_feats=300, second_hidden=None, linear_layer=True):
         super(MaxOut_MLP, self).__init__()
@@ -521,9 +564,12 @@ class Identity(nn.Module):
         return x
 
 
-# deep averaging network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
-# deep sets: https://arxiv.org/abs/1703.06114
+
 class DAN(torch.nn.Module):
+    """
+    Deep Averaging Network: https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf
+    Deep Sets: https://arxiv.org/abs/1703.06114
+    """
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=3, has_padding=False):
         super(DAN, self).__init__()
         self.dropout_layer = torch.nn.Dropout(dropoutp)

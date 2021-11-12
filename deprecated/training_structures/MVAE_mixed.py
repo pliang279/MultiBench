@@ -39,12 +39,12 @@ def train_MVAE(encoders, decoders, head, fusion_method, train_dataloader, valid_
                 recons.append(recon[i])
                 mus.append(mu)
                 vars.append(var)
-                # print(mu)
-                # print(var)
+                
+                
             # exit(0)
             total_loss = backbone_objective(
                 reconsjoint, trains, mujoint, varjoint)
-            # print(total_loss)
+            
 
             for i in range(len(trains)):
                 total_loss += (backbone_objective(allnonebuti(i,

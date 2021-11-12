@@ -15,7 +15,7 @@ import colorsys
 #     d = {time : dict() for time in time_stamps}
 #     for feature in list(f.keys()):
 #         if hasattr(f[feature], 'keys'):
-#             print("Start reading feature {}...".format(feature))
+
 #             for time in tqdm(list(f[feature].keys())):
 #                 k = list(f[feature][time].keys())[0]
 #                 d[time][feature] = np.array(f[feature][time][k])
@@ -28,7 +28,7 @@ import colorsys
 #     d = {time : dict() for time in time_stamps}
 #     for feature in list(f.keys()):
 #         if hasattr(f[feature], 'keys'):
-#             print("Start reading feature {}...".format(feature))
+
 #             for time in tqdm(list(f[feature].keys())):
 #                 if hasattr(f[feature][time], 'keys'):
 #                     for k in list(f[feature][time].keys()):
@@ -426,7 +426,7 @@ if __name__ == '__main__':
         data = read_pkl_data_set('./urfunny/urfunny.pkl')
         # time = data[list(data.keys())[0]]
         # k = data[list(data[time].keys())[0]]
-        # print(len(data), len(data[time]), data[time][k].shape)
+        
     elif opt == 8:
         print("To be implemented!")
         # display_sarcasm_data_set('./sarcasm/sarcasm.pkl')

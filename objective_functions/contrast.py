@@ -241,7 +241,7 @@ class MultiSimilarityLoss(nn.Module):
 
                     if len(neg_pair) < 1 or len(pos_pair) < 1:
                         continue
-                    #print(-self.scale_pos * (pos_pair - self.thresh))
+                    
                     # weighting step
                     pos_loss = 1.0 / self.scale_pos * torch.log(
                         1 + torch.sum(torch.exp(-self.scale_pos * (pos_pair - self.thresh))))

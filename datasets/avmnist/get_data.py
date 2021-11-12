@@ -55,13 +55,13 @@ def saveimg(outa):
             pixcol = j % 28
             t[imrow*30+pixrow][imcol*30+pixcol] = outa[i][j]
     newimage = Image.new('L', (300, 300))  # type, size
-    # print(t)
+    
     newimage.putdata(t.reshape((90000,)))
     newimage.save("samples.png")
 
 
 def saveaudio(outa):
-    # print(outa.shape)
+    
     from PIL import Image
     t = np.zeros((340, 340))
     for i in range(0, 9):
@@ -72,6 +72,6 @@ def saveaudio(outa):
             pixcol = j % 112
             t[imrow*114+pixrow][imcol*114+pixcol] = outa[i][j]
     newimage = Image.new('L', (340, 340))  # type, size
-    # print(t)
+    
     newimage.putdata(t.reshape((340*340,)))
     newimage.save("samples2.png")

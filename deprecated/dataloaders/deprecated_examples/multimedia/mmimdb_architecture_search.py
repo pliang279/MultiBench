@@ -15,6 +15,6 @@ traindata, validdata, testdata = get_dataloader(
 #         traindata,validdata,surr.SimpleRecurrentSurrogate().cuda(),(3,5,2),epochs=6)
 
 
-# print("Testing:")
+
 # model=torch.load('best.pt').cuda()
 # test(model,testdata)

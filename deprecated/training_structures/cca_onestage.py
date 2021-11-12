@@ -28,7 +28,7 @@ class MMDL(nn.Module):
             for i in range(len(inputs)):
                 outs.append(self.encoders[i](inputs[i], training=training))
         out = self.fuse(outs, training=training)
-        # print(out)
+        
         return outs, self.head(out, training=training)
 
 
@@ -55,13 +55,13 @@ def train(
         totals = 0
         model.train()
         for j in train_dataloader:
-            #print([i for i in j[:-1]])
+            
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
                     out1, out2 = model(
                         [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()], training=True)
-                    # print(j[-1])
+                    
                     loss1 = criterion(out2, j[-1].cuda())
                     loss2 = cca_criterion(out1[0], out1[1])
                     loss = loss1+1e-3*loss2
@@ -76,7 +76,7 @@ def train(
                     loss1 = criterion(out2, j[-1].long().cuda())
                 loss2 = cca_criterion(out1[0], out1[1])
                 loss = loss1+1e-3*loss2
-            # print(loss)
+            
             totalloss += loss * len(j[-1])
             totals += len(j[-1])
             totalloss1 += loss1 * len(j[-1])
@@ -107,7 +107,7 @@ def train(
                         j[-1] = j[-1].squeeze()
                     loss = criterion(out, j[-1].long().cuda())
                 totalloss += loss*len(j[-1])
-                # print(totalloss)
+                
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
                 elif task == "multilabel":
@@ -186,7 +186,7 @@ def test(
                 loss = criterion(out, j[-1].float().cuda())
             else:
                 loss = criterion(out, j[-1].cuda())
-            # print(torch.cat([out,j[-1].cuda()],dim=1))
+            
             totalloss += loss*len(j[-1])
             if task == "classification":
                 pred.append(torch.argmax(out, 1))

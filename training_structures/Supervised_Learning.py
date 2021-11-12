@@ -33,7 +33,7 @@ class MMDL(nn.Module):
                 outs.append(self.encoders[i](inputs[i], training=training))
         self.reps = outs
         if self.has_padding:
-            # print(outs[0])
+            
             if isinstance(outs[0], torch.Tensor):
                 out = self.fuse(outs, training=training)
             else:
@@ -160,7 +160,7 @@ def train(
                     loss = deal_with_objective(
                         objective, out, j[-1], objective_args_dict)
                     totalloss += loss*len(j[-1])
-                    # print(totalloss)
+                    
                     if task == "classification":
                         pred.append(torch.argmax(out, 1))
                     elif task == "multilabel":

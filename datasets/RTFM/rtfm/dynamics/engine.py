@@ -29,9 +29,9 @@ class Engine:
         random.shuffle(monsters)
         monsters.sort(key=lambda m: m.speed, reverse=True)
 
-        # print('World entities:')
+        
         # for m in monsters:
-        #     print(repr(m))
+        
 
         for agent in monsters:
             agent.act(world, self)

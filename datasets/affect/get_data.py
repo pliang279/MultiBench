@@ -33,7 +33,7 @@ def drop_entry(dataset):
     #     if k.sum() == 0:
     #         if ind not in drop:
     #             drop.append(ind)
-    # print(drop)
+    
     for modality in list(dataset.keys()):
         dataset[modality] = np.delete(dataset[modality], drop, 0)
     return dataset
@@ -117,7 +117,7 @@ def get_word_embeddings(word2id, save=False):
     tokens = []
     for w, _ in word2id.items():
         tokens.append(w)
-    # print('Vocab Length: {}'.format(len(tokens)))
+    
     ret = vec.get_vecs_by_tokens(tokens, lower_case_backup=True)
     return ret
 
@@ -144,7 +144,7 @@ def glove_embeddings(text_data, vids, paddings=50):
         # try:
         #     tmp = [looks_up[x] for x in d]
         # except:
-        #     print(d)
+        
         embedd_data.append(np.array(tmp))
     return np.array(embedd_data)
 
@@ -172,9 +172,9 @@ class Affectdataset(Dataset):
         audio = torch.tensor(self.dataset['audio'][ind])
         text = torch.tensor(self.dataset['text'][ind])
 
-        # print(vision.shape)
-        # print(audio.shape)
-        # print(text.shape)
+        
+        
+        
 
         if self.aligned:
             try:
@@ -289,7 +289,7 @@ def get_dataloader(
         for i in range(10):
             test = dict()
             test['vision'] = timeseries_robustness([alldata['test']['vision'].copy()], noise_level=i / 10, rand_drop=False)[0]
-            # print('vision shape: {}'.format(test['vision'].shape))
+            
             test['audio'] = alldata['test']["audio"].copy()
             test['text'] = alldata['test']['text'].copy()
             test['labels'] = alldata['test']["labels"]
@@ -318,7 +318,7 @@ def get_dataloader(
         # Add timeseries noises
 
         # for i, text in enumerate(robust_text_numpy):
-        #     print(text.shape)
+        
         #     alldata_test = timeseries_robustness([alldata['test']['vision'], alldata['test']['audio'], text], noise_level=i/10)
         #     test.append(alldata_test)
 
@@ -328,7 +328,7 @@ def get_dataloader(
             robust_timeseries_tmp = timeseries_robustness(
                 [alldata['test']['vision'].copy(), alldata['test']['audio'].copy(), alldata['test']['text'].copy()],
                 noise_level=i / (10 * 3), rand_drop=False)
-            # print('shape: {}'.format(robust_timeseries_tmp[1].shape))
+            
             test = dict()
             test['vision'] = robust_timeseries_tmp[0]
             test['audio'] = robust_timeseries_tmp[1]
@@ -368,7 +368,7 @@ def process_1(inputs: List):
         processed_input.append(pad_seq)
 
     for sample in inputs:
-        # print(sample[-1].shape)
+        
         inds.append(sample[-2])
         # if len(sample[-2].shape) > 2:
         #     labels.append(torch.where(sample[-2][:, 1] == 1)[0])
@@ -396,7 +396,7 @@ def process_2(inputs: List):
         processed_input.append(torch.stack(feature))
 
     for sample in inputs:
-        # print(sample[-1].shape)
+        
         # if len(sample[-2].shape) > 2:
         #     labels.append(torch.where(sample[-2][:, 1] == 1)[0])
         # else:
@@ -413,15 +413,15 @@ if __name__ == '__main__':
     get_dataloader('/home/pliang/multibench/humor.pkl', robust_test=False, max_pad=True, task='classification', data_type='humor', max_seq_len=40)
 
     # keys = list(test_robust.keys())
-    # print(keys)
+    
 
     # for batch in traindata:
-    #     print(batch[0][0].shape)
-    #     print(batch[0][1].shape)
-    #     print(batch[0][2].shape)
-    #     print(len(batch[1]))
-    #     print(batch[2].shape)
-    #     print(batch[3].shape)
+    
+    
+    
+    
+    
+    
     #     break
 
     for batch in traindata:
@@ -436,9 +436,9 @@ if __name__ == '__main__':
         print(batch[-1])
         break
         # for b in batch:
-            # print(b.shape)
-            # print(b)
-        #     print(b[0].shape)
-        # print(batch[1])
-        # print(batch[-1])
+            
+            
+        
+        
+        
         # break

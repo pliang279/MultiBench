@@ -6,7 +6,7 @@ from torch.nn import functional as F
 from torch.optim.lr_scheduler import ExponentialLR
 
 from utils.AUPRC import AUPRC
-#import pdb
+
 
 
 softmax = nn.Softmax()
@@ -100,20 +100,20 @@ def train(
         model.train()
 
         for j in train_dataloader:
-            #print([i for i in j[:-1]])
+            
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
                     out1, out2 = model(
                         [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()], training=True)
-                    # print(j[-1])
+                    
                     # loss1=contrast_criterion(out1)
                     # loss2=contrast_criterion(out2)
                     # loss = loss1+loss2
                     loss = 0
             else:
                 out = model([i.float().cuda() for i in j[:-1]], training=True)
-                # print(j[-1])
+                
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss_cl = criterion(out[0], j[-1].float().cuda())
                 else:
@@ -122,7 +122,7 @@ def train(
                 for i in range(len(out[3])):
                     loss_self += ss_criterion(out[3][i], j[i].float().cuda(),
                                               torch.ones(out[3][i].size(0)).cuda())
-                #print(loss_cl, loss_contrast, loss_self)
+                
                 loss = loss_cl+0.1*loss_self
             totalloss += loss * len(j[-1])
             totals += len(j[-1])
@@ -230,7 +230,7 @@ def test(
                 loss = criterion(out, j[-1].float().cuda())
             else:
                 loss = criterion(out, j[-1].cuda())
-            # print(torch.cat([out,j[-1].cuda()],dim=1))
+            
             totalloss += loss*len(j[-1])
             if task == "classification":
                 pred.append(torch.argmax(out, 1))

@@ -47,6 +47,6 @@ general_test(testprocess, filename, robustdata, multi_measure=True)
 # train(encoders,fusion,head,traindata,validdata,1000, early_stop=True,task="multilabel", regularization=False,\
 #    save="best_lf.pt", optimtype=torch.optim.AdamW,lr=5e-5,weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
 
-# print("Testing:")
+
 # model=torch.load('best_lf.pt').cuda()
 # test(model,testdata,criterion=torch.nn.BCEWithLogitsLoss(),task="multilabel")

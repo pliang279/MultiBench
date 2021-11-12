@@ -19,10 +19,10 @@ def getloss(model, head, data, monum, batch_size):
             train_y = j[-1].cuda()
             out = model(train_x)
             # if (monum==1):
-            #    print(out.size())
+            
             out = head(out)
             loss = criterion(out, train_y.squeeze())
-            # print(len(j[0]))
+            
             losses += loss*len(j[0])
     return losses/total
 
@@ -241,9 +241,9 @@ def train(unimodal_models,  multimodal_classification_head,
                 outs = multimodalcompute(unimodal_models, train_x)
                 for iii in range(len(train_y)):
                     aa = [x[iii].cpu() for x in outs]
-                    # print(aa)
+                    
                     aa.append(train_y[iii].cpu())
-                    # print(aa)
+                    
                     finetunetrains.append(aa)
         print("Length of ftt_dataloader: "+str(len(finetunetrains)))
         ftt_dataloader = DataLoader(

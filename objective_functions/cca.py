@@ -8,7 +8,7 @@ class CCALoss(nn.Module):
         self.outdim_size = outdim_size
         self.use_all_singular_values = use_all_singular_values
         self.device = device
-        # print(device)
+        
 
     def forward(self, H1, H2):
         """
@@ -20,15 +20,15 @@ class CCALoss(nn.Module):
         eps = 1e-9
 
         H1, H2 = H1.t(), H2.t()
-        # print(H1)
-        # print(H2)
+        
+        
         assert torch.isnan(H1).sum().item() == 0
         assert torch.isnan(H2).sum().item() == 0
 
         o1 = o2 = H1.size(0)
 
         m = H1.size(1)
-#         print(H1.size())
+
 
         H1bar = H1 - H1.mean(dim=1).unsqueeze(dim=1)
         H2bar = H2 - H2.mean(dim=1).unsqueeze(dim=1)
@@ -59,8 +59,8 @@ class CCALoss(nn.Module):
         posInd2 = torch.gt(D2, eps).nonzero()[:, 0]
         D2 = D2[posInd2]
         V2 = V2[:, posInd2]
-        # print(posInd1.size())
-        # print(posInd2.size())
+        
+        
 
         SigmaHat11RootInv = torch.matmul(
             torch.matmul(V1, torch.diag(D1 ** -0.5)), V1.t())
@@ -69,7 +69,7 @@ class CCALoss(nn.Module):
 
         Tval = torch.matmul(torch.matmul(SigmaHat11RootInv,
                                          SigmaHat12), SigmaHat22RootInv)
-#         print(Tval.size())
+
 
         if self.use_all_singular_values:
             # all singular values are used to calculate the correlation
@@ -87,5 +87,5 @@ class CCALoss(nn.Module):
                 U.shape).float()*eps).to(self.device))
             U = U.topk(self.outdim_size)[0]
             corr = torch.sum(torch.sqrt(U))
-        # print(corr)
+        
         return -corr

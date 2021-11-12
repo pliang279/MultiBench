@@ -166,7 +166,7 @@ class Searchable(nn.Module):
                 aout = feats
             if layer == 0:
                 fused = torch.cat(aout, 1)
-                # print(fused.size())
+                
                 out = self.fusion_layers[layer](fused)
             else:
                 aout.append(out)
