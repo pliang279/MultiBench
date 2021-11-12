@@ -1,13 +1,9 @@
-from eval_scripts.complexity import all_in_one_train, all_in_one_test
+from eval_scripts.complexity import all_in_one_test
 from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
-from fusions.MCTN import Encoder, Decoder, Seq2Seq, L2_MCTN
-from utils.evaluation_metric import eval_mosei_senti_return, eval_mosei_senti
+from fusions.MCTN import Seq2Seq, L2_MCTN
+from utils.evaluation_metric import eval_mosei_senti_return
 from unimodals.common_models import MLP
 from tqdm import tqdm
-from torch.autograd import Variable
-import random
-import math
-from torch.nn.utils.rnn import pack_padded_sequence
 from torch.nn import functional as F
 from torch import nn
 import torch

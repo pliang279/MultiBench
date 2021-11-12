@@ -81,7 +81,6 @@ def gettrainmloss(models, head, fuse, batch_size, num_workers):
                 datas, shuffle=True, batch_size=batch_size, num_workers=num_workers)
             for j in train_dataloader:
                 total += len(j[0])
-                # train_x = [x.float().cuda(device) for x in j[:-1]]
                 train_x = [j[0].float().cuda(
                     device), j[1].unsqueeze(1).float().cuda(device)]
                 train_y = j[-1].cuda(device)
@@ -98,7 +97,6 @@ def getvalmloss(models, head, fuse, loaders):
         for loader in loaders:
             for j in loader:
                 total += len(j[0])
-                # train_x = [x.float().cuda(device) for x in j[:-1]]
                 train_x = [j[0].float().cuda(
                     device), j[1].unsqueeze(1).float().cuda(device)]
                 train_y = j[-1].cuda(device)
@@ -322,7 +320,6 @@ for ep in tqdm(range(num_epoch//gb_epoch)):
             train_dataloader = DataLoader(
                 datas, shuffle=True, batch_size=batch_size, num_workers=num_workers)
             for j in train_dataloader:
-                # train_x = [x.float().cuda(device) for x in j[:-1]]
                 train_x = [j[0].float().cuda(
                     device), j[1].unsqueeze(1).float().cuda(device)]
                 train_y = j[2].cuda(device)
@@ -367,7 +364,6 @@ for ep in tqdm(range(num_epoch//gb_epoch)):
         totalloss = 0.0
         for j in ftt_dataloader:
             optimi.zero_grad()
-            # train_x = [x.float().cuda(device) for x in j[:-1]]
             train_x = [j[0].float().cuda(
                 device), j[1].unsqueeze(1).float().cuda(device)]
             train_y = j[-1].cuda(device)
@@ -383,7 +379,6 @@ for ep in tqdm(range(num_epoch//gb_epoch)):
             corrects = 0
             for valid_dataloader in valid_dataloaders:
                 for j in valid_dataloader:
-                    # valid_x = [x.float().cuda(device) for x in j[:-1]]
                     valid_x = [j[0].float().cuda(
                         device), j[1].unsqueeze(1).float().cuda(device)]
                     valid_y = j[-1].cuda(device)
@@ -419,7 +414,6 @@ for fid in range(3):
         datas, shuffle=False, batch_size=batch_size, num_workers=num_workers)
     with torch.no_grad():
         for j in test_dataloader:
-            # valid_x = [x.float().cuda(device) for x in j[:-1]]
             valid_x = [j[0].float().cuda(
                 device), j[1].unsqueeze(1).float().cuda(device)]
             valid_y = j[-1].cuda(device)

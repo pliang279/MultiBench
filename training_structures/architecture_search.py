@@ -2,10 +2,6 @@ from utils.AUPRC import AUPRC
 import torch
 import torch.optim as op
 import numpy as np
-from torch.utils.data import DataLoader
-import torchvision
-import torchvision.transforms as transforms
-from torch.utils.data.dataset import Subset
 
 import utils.surrogate as surr
 import utils.search_tools as tools

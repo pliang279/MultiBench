@@ -1,7 +1,6 @@
 
 import torch
 from torch import nn
-from torch.optim.lr_scheduler import ExponentialLR
 import time
 from eval_scripts.performance import AUPRC, f1_score, accuracy, eval_affect
 from eval_scripts.complexity import all_in_one_train, all_in_one_test

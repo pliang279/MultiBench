@@ -2,7 +2,6 @@ import sklearn.metrics
 import torch
 from torch import nn
 import copy
-import random
 from torch.utils.data import DataLoader, Subset
 from eval_scripts.performance import AUPRC, f1_score, accuracy
 from eval_scripts.complexity import all_in_one_train, all_in_one_test

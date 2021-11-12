@@ -1,11 +1,8 @@
 from unimodals.common_models import LeNet
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
-from torch.autograd import Variable
 from torch.nn import functional as F
-from torch.nn.parameter import Parameter
-import math
+
 
 
 class MLPEncoder(torch.nn.Module):
@@ -15,7 +12,7 @@ class MLPEncoder(torch.nn.Module):
         self.fc2 = nn.Linear(hiddim, 2*outdim)
         self.outdim = outdim
 
-    def forward(self, x, training=False):
+    def forward(self, x):
         output = self.fc(x)
         output = F.relu(output)
         output = self.fc2(output)
@@ -36,7 +33,7 @@ class TSEncoder(torch.nn.Module):
             self.linear = nn.Linear(outdim*timestep, finaldim)
         self.returnvar = returnvar
 
-    def forward(self, x, training=False, muvar=True):
+    def forward(self, x):
         batch = len(x)
         input = x.reshape(batch, self.ts, self.indim).transpose(0, 1)
         output = self.gru(input)[0].transpose(0, 1)
@@ -54,7 +51,7 @@ class TSDecoder(torch.nn.Module):
         self.ts = timestep
         self.indim = indim
 
-    def forward(self, x, training=False):
+    def forward(self, x):
         
         hidden = self.linear(x).unsqueeze(0)
         next = torch.zeros(1, len(x), self.indim).cuda()
@@ -81,7 +78,7 @@ class DeLeNet(nn.Module):
         self.deconvs = nn.ModuleList(self.deconvs)
         self.bns = nn.ModuleList(self.bns)
 
-    def forward(self, x, training=False):
+    def forward(self, x):
         out = self.linear(x).unsqueeze(2).unsqueeze(3)
         for i in range(len(self.deconvs)):
             out = self.deconvs[i](out)
