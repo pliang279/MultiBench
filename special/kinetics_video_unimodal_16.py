@@ -1,6 +1,4 @@
-from unimodals.common_models import MLP
 import torch
-import torchvision
 import sys
 import os
 from torch.utils.data import DataLoader

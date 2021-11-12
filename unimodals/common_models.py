@@ -77,8 +77,6 @@ class Transpose(nn.Module):
         return torch.transpose(x, self.dim0, self.dim1)
 
 
-
-
 class MLP(torch.nn.Module):
     """
     Two layer MLP

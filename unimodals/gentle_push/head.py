@@ -1,6 +1,4 @@
 # https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/push_models/lstm.py
-
-import torch
 import torch.nn as nn
 
 
