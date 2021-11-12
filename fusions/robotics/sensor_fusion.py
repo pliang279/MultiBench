@@ -217,11 +217,11 @@ class roboticsConcat(nn.Module):
         self.name = name
 
     def forward(self, x, training=False):
-        # print(x[0][0].size())
-        # print(x[1].size())
-        # print(x[2].size())
-        # print(x[3][0].size())
-        # print(x[4].size())
+        
+        
+        
+        
+        
         if self.name == "noconcat":
             return [x[0][0].squeeze(), x[1].squeeze(), x[2].squeeze(), x[3][0].squeeze(), x[4]]
         if self.name == "image":

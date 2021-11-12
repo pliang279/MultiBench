@@ -64,7 +64,7 @@ def train(ep=0):
         print("epoch "+str(ep)+" subiter "+str(fid))
         datas = torch.load(
             '/home/pliang/yiwei/kinetics_small/train/batch_37'+str(fid)+'.pdt')
-        # print(datas[0][0].shape) # 3, 150, 112, 112
+        
         train_dataloader = DataLoader(
             datas, shuffle=True, batch_size=batch_size, num_workers=num_workers)
         for j in train_dataloader:
@@ -78,7 +78,7 @@ def train(ep=0):
     print("Epoch "+str(ep)+" train loss: "+str(totalloss/total))
 
 # mem = max(memory_usage(proc=train))
-# print(mem)
+
 
 
 epochs = 15

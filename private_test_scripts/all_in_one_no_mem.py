@@ -17,7 +17,7 @@ def all_in_one_train(trainprocess, trainmodules):
     endtime = time.time()
 
     print("Training Time: "+str(endtime-starttime))
-    #print("Training Peak Mem: "+str(mem))
+    
     print("Training Params: "+str(getallparams(trainmodules)))
 
 

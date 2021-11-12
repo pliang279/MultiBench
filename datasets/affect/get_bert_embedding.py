@@ -22,7 +22,7 @@ def get_bert_features(all_text, contextual_embedding=False, batch_size=500, max_
     print(len(all_text))
 
     for i in range(0, len(all_text), batch_size):
-        # print(i)
+        
         inputs = tokenizer(all_text[i: i+batch_size], padding='max_length', truncation=True, max_length=max_len, return_tensors="pt")
 
         bert_feartures = bert(**inputs)
@@ -182,5 +182,5 @@ if __name__ == '__main__':
 
     # ori = ['so', 'how', 'she\'s', 'aad', 'it', 'go']
     # test = ['so', 'how', 'she', '\'', 's', 'aa',  '##d', 'it', 'go']
-    # print(test)
-    # print(corresponding_other_modality_ids(ori, test))
+    
+    

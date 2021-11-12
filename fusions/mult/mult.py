@@ -5,8 +5,9 @@ from .modules.transformer import TransformerEncoder
 
 
 class MULTModel(nn.Module):
-    # https://github.com/yaohungt/Multimodal-Transformer
-
+    """
+    https://github.com/yaohungt/Multimodal-Transformer
+    """
     class DefaultHyperParams():
         num_heads = 3
         layers = 3

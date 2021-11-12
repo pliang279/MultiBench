@@ -1,14 +1,11 @@
 import torch
 from torch import nn
-from torch.utils.data import DataLoader
 from torch.autograd import Variable
-from torch.nn import functional as F
-from torch.nn.parameter import Parameter
-import math
 
 
 class ProductOfExperts(nn.Module):
-    """Return parameters for product of independent experts.
+    """
+    Return parameters for product of independent experts.
     See https://arxiv.org/pdf/1410.7827.pdf for equations.
     """
 
@@ -17,9 +14,9 @@ class ProductOfExperts(nn.Module):
         self.size = size
 
     def forward(self, mus, logvars, eps=1e-8, training=False):
-        mu, logvar = prior_expert(self.size, len(mus[0]))
+        mu, logvar = _prior_expert(self.size, len(mus[0]))
         for i in range(len(mus)):
-            # print(mu.shape)
+            
             mu = torch.cat((mu, mus[i].unsqueeze(0)), dim=0)
             logvar = torch.cat((logvar, logvars[i].unsqueeze(0)), dim=0)
 
@@ -33,7 +30,8 @@ class ProductOfExperts(nn.Module):
 
 
 class ProductOfExperts_Zipped(nn.Module):
-    """Return parameters for product of independent experts.
+    """
+    Return parameters for product of independent experts.
     See https://arxiv.org/pdf/1410.7827.pdf for equations.
     """
 
@@ -44,7 +42,7 @@ class ProductOfExperts_Zipped(nn.Module):
     def forward(self, zipped, eps=1e-8, training=False):
         mus = [i[0] for i in zipped]
         logvars = [i[1] for i in zipped]
-        mu, logvar = prior_expert(self.size, len(mus[0]))
+        mu, logvar = _prior_expert(self.size, len(mus[0]))
         for i in range(len(mus)):
             mu = torch.cat((mu, mus[i].unsqueeze(0)), dim=0)
             logvar = torch.cat((logvar, logvars[i].unsqueeze(0)), dim=0)
@@ -57,8 +55,9 @@ class ProductOfExperts_Zipped(nn.Module):
         return pd_mu, pd_logvar
 
 
-def prior_expert(size, batch_size):
-    """Universal prior expert. Here we use a spherical
+def _prior_expert(size, batch_size):
+    """
+    Universal prior expert. Here we use a spherical
     Gaussian: N(0, 1)
     """
     size = (size[0], batch_size, size[2])

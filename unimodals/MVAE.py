@@ -55,7 +55,7 @@ class TSDecoder(torch.nn.Module):
         self.indim = indim
 
     def forward(self, x, training=False):
-        # print(x.size())
+        
         hidden = self.linear(x).unsqueeze(0)
         next = torch.zeros(1, len(x), self.indim).cuda()
         nexts = []
@@ -85,7 +85,7 @@ class DeLeNet(nn.Module):
         out = self.linear(x).unsqueeze(2).unsqueeze(3)
         for i in range(len(self.deconvs)):
             out = self.deconvs[i](out)
-            # print(out.size())
+            
             if i < len(self.deconvs)-1:
                 out = self.bns[i](out)
         return out

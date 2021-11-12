@@ -30,7 +30,7 @@ class MMDL(nn.Module):
             #out = self.encoder(input_data, training=training)
             out = input_data
 
-        # print(out)
+        
         return self.head(out, training=training)
 
 
@@ -57,21 +57,21 @@ def train(
         totals = 0
         model.train()
         for j in train_dataloader:
-            # print([i for i in j[:-1]])
+            
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
                     out = model([[i.cuda()
                                 for i in j[0]], j[1]], training=True)
-                    # print(j[-1])
-                    # print(out)
+                    
+                    
                     loss1 = criterion(out, j[-1].cuda())
                     loss2 = regularize(
                         out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
                     loss = loss1 + loss2
             else:
                 out = model([i.float().cuda() for i in j[:-1]], training=True)
-                #print(out, j[-1])
+                
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss1 = criterion(out, j[-1].float().cuda())
                 else:
@@ -81,7 +81,7 @@ def train(
                 loss2 = regularize(out, [i.float().cuda()
                                    for i in j[:-1]]) if regularization else 0
                 loss = loss1+loss2
-            # print(loss)
+            
             totalloss += loss * len(j[-1])
             totals += len(j[-1])
             if regularization:
@@ -191,7 +191,7 @@ def test(
                 loss = criterion(out, j[-1].float().cuda())
             else:
                 loss = criterion(out, j[-1].cuda())
-            # print(torch.cat([out,j[-1].cuda()],dim=1))
+            
             totalloss += loss * len(j[-1])
             if task == "classification":
                 pred.append(torch.argmax(out, 1))

@@ -18,7 +18,7 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
         for j in train_dataloader:
             op.zero_grad()
             out = model(j[modalnum].float().cuda())
-            # print(j[-1])
+            
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                 loss = criterion(out, j[-1].float().cuda())
             else:

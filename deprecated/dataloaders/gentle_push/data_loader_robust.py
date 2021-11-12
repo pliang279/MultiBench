@@ -488,7 +488,7 @@ def _load_trajectories(
             del raw_trajectory
 
     # Uncomment this line to generate the lines required to normalize data
-    # _print_normalization(trajectories)
+    
 
     return trajectories
 

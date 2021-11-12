@@ -30,7 +30,7 @@ class MVAE(nn.Module):
 
     def forward(self, inputs, training=False):
         mu, logvar = self.infer(inputs, training=training)
-        # print(mu.size())
+        
         # reparametrization trick to sample
         z = self.reparametrize(mu, logvar)
 
@@ -41,7 +41,7 @@ class MVAE(nn.Module):
         return z, recons, mu, logvar
 
     def infer(self, inputs, training=False):
-        # print(inputs)
+        
         mus = []
         logvars = []
         for i in range(len(inputs)):

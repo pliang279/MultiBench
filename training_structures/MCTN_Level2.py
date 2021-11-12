@@ -1,6 +1,6 @@
 from eval_scripts.complexity import all_in_one_train, all_in_one_test
 from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
-from fusions.MCTN import Encoder, Decoder, Seq2Seq, L2_MCTN, process_input_L2
+from fusions.MCTN import Encoder, Decoder, Seq2Seq, L2_MCTN
 from utils.evaluation_metric import eval_mosei_senti_return, eval_mosei_senti
 from unimodals.common_models import MLP
 from tqdm import tqdm
@@ -60,7 +60,7 @@ def train(
         sum_reg_loss = 0
         total_batch = 0
         for i, inputs in enumerate(traindata):
-            src, trg0, trg1, labels, f_dim = process_input_L2(
+            src, trg0, trg1, labels, f_dim = _process_input_L2(
                 inputs, max_seq_len)
             translation_loss_0 = 0
             cyclic_loss = 0
@@ -110,7 +110,7 @@ def train(
         with torch.no_grad():
             for i, inputs in enumerate(validdata):
                 # process input
-                src, trg0, trg1, labels, feature_dim = process_input_L2(
+                src, trg0, trg1, labels, feature_dim = _process_input_L2(
                     inputs, max_seq_len)
 
                 #  We only need the source text as input! No need for target!
@@ -149,7 +149,7 @@ def single_test(model, testdata, max_seq_len=20):
     with torch.no_grad():
         for i, inputs in enumerate(testdata):
             # process input
-            src, _, _, labels, _ = process_input_L2(inputs, max_seq_len)
+            src, _, _, labels, _ = _process_input_L2(inputs, max_seq_len)
 
             #  We only need the source text as input! No need for target!
             _, _, _, head_out = model(src)
@@ -199,3 +199,21 @@ def test(model, test_dataloaders_all, dataset, method_name='My method', is_packe
                 single_plot(robustness_result, robustness_key, xlabel='Noise level',
                             ylabel=measure, fig_name=fig_name, method=method_name)
                 print("Plot saved as "+fig_name)
+
+
+def _process_input_L2(inputs, max_seq=20):
+    src = inputs[0][2][:, :max_seq, :]
+    trg0 = inputs[0][0][:, :max_seq, :]
+    trg1 = inputs[0][1][:, :max_seq, :]
+    feature_dim = max(src.size(-1), trg0.size(-1), trg1.size(-1))
+
+    src = F.pad(src, (0, feature_dim - src.size(-1)))
+    trg0 = F.pad(trg0, (0, feature_dim - trg0.size(-1)))
+    trg1 = F.pad(trg1, (0, feature_dim - trg1.size(-1)))
+
+    src = src.transpose(1, 0).cuda()
+    trg0 = trg0.transpose(1, 0).cuda()
+    trg1 = trg1.transpose(1, 0).cuda()
+    labels = inputs[-1].cuda()
+
+    return src, trg0, trg1, labels, feature_dim

@@ -116,7 +116,7 @@ def get_word_embeddings(word2id, save=False):
     tokens = []
     for w, _ in word2id.items():
         tokens.append(w)
-    # print('Vocab Length: {}'.format(len(tokens)))
+    
     ret = vec.get_vecs_by_tokens(tokens, lower_case_backup=True)
     return ret
 
@@ -139,7 +139,7 @@ def glove_embeddings(text_data, vids, paddings=50):
         # try:
         #     tmp = [looks_up[x] for x in d]
         # except:
-        #     print(d)
+        
         embedd_data.append(np.array(tmp))
     return np.array(embedd_data)
 

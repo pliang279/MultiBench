@@ -66,7 +66,7 @@ class MMDL(nn.Module):
             outs.append(self.encoders[0](inputs[0], training=training))
             outs.append(self.encoders[1](inputs[1].unsqueeze(1)))
         out = self.fuse(outs, training=training)
-        # print(out)
+        
         return self.head(out, training=training)
 
 
@@ -94,7 +94,7 @@ def train(ep=0):
         datas = torch.load(
             '/home/pliang/yiwei/kinetics_small/train/batch_37'+str(fid)+'.pdt')
         print(len(datas))
-        # print(datas[0][0].shape) # 3, 150, 112, 112
+        
         train_dataloader = DataLoader(
             datas, shuffle=True, batch_size=batch_size, num_workers=num_workers)
         for j in train_dataloader:
@@ -109,7 +109,7 @@ def train(ep=0):
     print("Epoch "+str(ep)+" train loss: "+str(totalloss/total))
 
 # mem = max(memory_usage(proc=train))
-# print(mem)
+
 
 
 num_data = 0

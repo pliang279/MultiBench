@@ -29,7 +29,7 @@ class MMDL(nn.Module):
             for i in range(len(inputs)):
                 outs.append(self.encoders[i](inputs[i], training=training))
         out = self.fuse(outs, training=training)
-        # print(out)
+        
         return self.head1(out, training=training), self.head2(out, training=training)
 
 
@@ -60,14 +60,14 @@ def train(
         totals = 0
         model.train()
         for j in train_dataloader:
-            #print([i for i in j[:-1]])
+            
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
                     out = model([[i.cuda()
                                 for i in j[0]], j[1]], training=True)
-                    # print(j[-1])
-                    # print(out)
+                    
+                    
                     loss1 = criterion(out, j[-1].cuda())
                     loss2 = regularize(
                         out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
@@ -81,12 +81,12 @@ def train(
                 j[3] = torch.LongTensor([l2, l2, l2, l2])
                 out1, out2 = model([i.float().cuda()
                                    for i in j[:-2]], training=True)
-                #print(out, j[-1])
+                
                 loss1 = criterion(out1, j[-2].long().cuda())
                 loss2 = criterion(out2, j[-1].long().cuda())
                 #loss = loss1+loss2
                 loss = loss1
-            # print(loss)
+            
             totalloss += loss * len(j[-1])
             totals += len(j[-1])
             loss.backward()
@@ -124,7 +124,7 @@ def train(
                 totalloss += loss*len(j[-1])
                 out1 = sftmax(out1).view(-1, 4, 6).sum(dim=1)
                 out2 = sftmax(out2).view(-1, 4, 2).sum(dim=1)
-                # print(totalloss)
+                
                 if task == "classification":
                     pred1.append(torch.argmax(out1, 1))
                     pred2.append(torch.argmax(out2, 1))
@@ -209,7 +209,7 @@ def test(
                                    for i in j[:-2]], training=False)
             loss1 = criterion(out1, l1.cuda())
             loss2 = criterion(out2, l2.cuda())
-            # print(torch.cat([out,j[-1].cuda()],dim=1))
+            
             #totalloss += loss*len(j[-1])
             out1 = sftmax(out1).view(-1, 4, 6).sum(dim=1)
             out2 = sftmax(out2).view(-1, 4, 2).sum(dim=1)

@@ -86,4 +86,4 @@ def general_test(testprocess, filename, robustdatasets, encoder=False, multi_mea
             measure = result
         measures.append(measure)
         print("Different noise levels:", measure)
-    # print("Different noise levels:", list(np.mean(np.array(measures), axis=0)))
+    

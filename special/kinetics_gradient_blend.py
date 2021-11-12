@@ -160,7 +160,7 @@ class MMDL(nn.Module):
             outs.append(self.encoders[0](inputs[0], training=training))
             outs.append(self.encoders[1](inputs[1].unsqueeze(1)))
         out = self.fuse(outs, training=training)
-        # print(out)
+        
         return self.head(out, training=training)
 
 

@@ -28,7 +28,7 @@ with torch.no_grad():
         train_dataloader = DataLoader(datas, shuffle=True, batch_size=5)
         for j in train_dataloader:
             out = model(j[0].cuda())
-            # print(out)
+            
             for ii in range(len(j[0])):
                 train_data.append([out[ii].cpu(), j[1][ii]])
     with torch.no_grad():

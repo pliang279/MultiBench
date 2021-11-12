@@ -79,7 +79,7 @@ def train(ep=0):
     return totalloss/total
 
 # mem = max(memory_usage(proc=train))
-# print(mem)
+
 
 
 bestvaloss = 1000

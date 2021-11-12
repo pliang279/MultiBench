@@ -18,10 +18,10 @@ class MFM(nn.Module):
         outs = []
         for i in range(len(inputs)):
             outs.append(self.encoders[i](inputs[i]))
-        # print(outs[0].size())
-        # print(outs[1].size())
+        
+        
         fused = self.fuse(outs)
-        # print(fused.size())
+        
         combined = self.intermediates[-1](fused)
         recons = []
         for i in range(len(outs)):
@@ -55,9 +55,9 @@ def train_MFM(
                 loss = criterion(outs, j[-1].float().cuda())*ce_weight
             else:
                 loss = criterion(outs, j[-1].cuda())*ce_weight
-            # print(loss)
+            
             loss += recon_loss_func(recons, trains)
-            # print(loss)
+            
             loss.backward()
             totalloss += loss*len(trains[0])
             optim.step()

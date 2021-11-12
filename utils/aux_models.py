@@ -174,7 +174,7 @@ class CellBlock(nn.Module):
 
         xb, xb_dropped = self.dp2(self.op2(x2), xa_dropped)
 
-        # print('dropped: {}, {}'.format(xa_dropped, xb_dropped))
+        
 
         return xa + xb
 

@@ -28,7 +28,7 @@ for ep in range(epochs):
         for j in train_dataloader:
             optim.zero_grad()
             out = model(j[0].cuda())
-            # print(out)
+            
             loss = criterion(out, j[1].cuda())
             loss.backward()
             optim.step()
