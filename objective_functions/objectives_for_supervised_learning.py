@@ -4,7 +4,7 @@ from objective_functions.cca import CCALoss
 from objective_functions.regularization import RegularizationLoss
 
 
-def criterioning(pred, truth, criterion):
+def _criterioning(pred, truth, criterion):
     """Handle criterion ideosyncracies."""
     if isinstance(criterion, torch.nn.CrossEntropyLoss):
         truth = truth.squeeze() if len(truth.shape) == len(pred.shape) else truth
@@ -34,7 +34,7 @@ def MFM_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tru
         for i in range(len(reps)):
             recons.append(decoders[i](
                 torch.cat([ints[i](reps[i]), fused], dim=1)))
-        ce_loss = criterioning(pred, truth, criterion)
+        ce_loss = _criterioning(pred, truth, criterion)
         if input_to_float:
             inputs = [i.float().cuda() for i in inps]
         else:
@@ -91,7 +91,7 @@ def MVAE_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tr
             recon = decoders[i](reparameterize(mu, logvar, training))
             total_loss += recon_loss_func(allnonebuti(i, recon),
                                           allnonebuti(i, inputs[i]), mu, logvar)
-        total_loss += ce_weight * criterioning(pred, truth, criterion)
+        total_loss += ce_weight * _criterioning(pred, truth, criterion)
         return total_loss
     return actualfunc
 
@@ -108,7 +108,7 @@ def CCA_objective(out_dim, cca_weight=0.001, criterion=torch.nn.CrossEntropyLoss
     lossfunc = CCALoss(out_dim, False, device=torch.device("cuda"))
 
     def actualfunc(pred, truth, args):
-        ce_loss = criterioning(pred, truth, criterion)
+        ce_loss = _criterioning(pred, truth, criterion)
         outs = args['reps']
         cca_loss = lossfunc(outs[0], outs[1])
         return cca_loss * cca_weight + ce_loss
@@ -127,7 +127,7 @@ def RefNet_objective(ref_weight, criterion=torch.nn.CrossEntropyLoss(), input_to
     ss_criterion = torch.nn.CosineEmbeddingLoss()
 
     def actualfunc(pred, truth, args):
-        ce_loss = criterioning(pred, truth, criterion)
+        ce_loss = _criterioning(pred, truth, criterion)
         refiner = args['refiner']
         fused = args['fused']
         inps = args['inputs']
@@ -162,7 +162,7 @@ def RMFE_object(reg_weight=1e-10, criterion=torch.nn.BCEWithLogitsLoss(), is_pac
     def regfunc(pred, truth, args):
         model = args['model']
         lossfunc = RegularizationLoss(criterion, model, reg_weight, is_packed)
-        ce_loss = criterioning(pred, truth, criterion)
+        ce_loss = _criterioning(pred, truth, criterion)
         inps = args['inputs']
         try:
             reg_loss = lossfunc(pred, [i.cuda() for i in inps])

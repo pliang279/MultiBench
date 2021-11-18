@@ -1,5 +1,5 @@
 #from unimodals.common_models import LeNet, MLP, Constant
-from training_structures.architecture_search import train, test
+from .training_structures.architecture_search import train, test
 import utils.surrogate as surr
 import torch
 from torch import nn

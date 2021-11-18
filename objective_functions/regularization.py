@@ -79,7 +79,6 @@ class Regularization(object):
         :param loss: [batch, number of evaluate samples]
         :return: variance of a given batch of loss values
         """
-
         return torch.var(loss, dim=1)
 
     @classmethod

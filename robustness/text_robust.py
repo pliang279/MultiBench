@@ -2,7 +2,8 @@ import numpy as np
 import re
 from tqdm import tqdm
 
-
+def add_text_noise():
+    return 
 ##############################################################################
 # Text
 def add_text_noise(tests, noise_level=0.3, swap=True, rand_mid=True, typo=True, sticky=True, omit=True):
