@@ -1,0 +1,5 @@
+vocab>=0.0.4
+embeddings>=0.0.7
+revtok>=0.0.3
+gym>=0.15.4
+py-getch==1.0.1

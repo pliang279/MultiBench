@@ -5,6 +5,7 @@
 """
 
 # %%
+from random import random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -26,7 +27,8 @@ class Tensor1DLateralPadding(nn.Module):
 
     def forward(self, inputs):
         sz = inputs.size()
-        padding = torch.autograd.Variable(torch.zeros(sz[0], self.pad), requires_grad=False)
+        padding = torch.autograd.Variable(
+            torch.zeros(sz[0], self.pad), requires_grad=False)
         if inputs.is_cuda:
             padding = padding.cuda()
 
@@ -42,7 +44,8 @@ class ChannelPadding(nn.Module):
 
     def forward(self, inputs):
         sz = inputs.size()
-        padding = torch.autograd.Variable(torch.zeros(sz[0], self.pad, sz[2], sz[3]), requires_grad=False)
+        padding = torch.autograd.Variable(torch.zeros(
+            sz[0], self.pad, sz[2], sz[3]), requires_grad=False)
         if inputs.is_cuda:
             padding = padding.cuda()
 
@@ -97,12 +100,14 @@ class AlphaScalarMultiplication(nn.Module):
         self.size_alpha_y = size_alpha_y
 
         # self.alpha_x = torch.tensor([float(1)], requires_grad=True)
-        self.alpha_x = nn.Parameter(torch.from_numpy(np.zeros((1), np.float32)))
+        self.alpha_x = nn.Parameter(
+            torch.from_numpy(np.zeros((1), np.float32)))
 
     def forward(self, x, y):
         bsz = x.size()[0]
         factorx = torch.sigmoid(self.alpha_x.expand(bsz, self.size_alpha_x))
-        factory = 1.0 - torch.sigmoid(self.alpha_x.expand(bsz, self.size_alpha_y))
+        factory = 1.0 - \
+            torch.sigmoid(self.alpha_x.expand(bsz, self.size_alpha_y))
 
         x = x * factorx
         y = y * factory
@@ -115,7 +120,8 @@ class AlphaVectorMultiplication(nn.Module):
         super(AlphaVectorMultiplication, self).__init__()
         self.size_alpha = size_alpha
 
-        self.alpha = nn.Parameter(torch.from_numpy(np.zeros((1, size_alpha), np.float32)))
+        self.alpha = nn.Parameter(torch.from_numpy(
+            np.zeros((1, size_alpha), np.float32)))
 
     def forward(self, x):
         bsz = x.size()[0]
@@ -168,7 +174,7 @@ class CellBlock(nn.Module):
 
         xb, xb_dropped = self.dp2(self.op2(x2), xa_dropped)
 
-        # print('dropped: {}, {}'.format(xa_dropped, xb_dropped))
+        
 
         return xa + xb
 
@@ -198,10 +204,12 @@ class Cell(nn.Module):
         # apply blocks according to the connections
         for block_index, block_connection in enumerate(self._connections):
             conn = self._conn(block_connection)
-            block_outputs.append(self.blocks[block_index](block_outputs[conn[0]], block_outputs[conn[1]]))
+            block_outputs.append(self.blocks[block_index](
+                block_outputs[conn[0]], block_outputs[conn[1]]))
 
         # check which blocks were not used and concatenate the outputs (first two outputs are not blocks, hence the :2)
-        output = [block_output for b_i, block_output in enumerate(block_outputs[2:]) if not self.block_used[b_i]]
+        output = [block_output for b_i, block_output in enumerate(
+            block_outputs[2:]) if not self.block_used[b_i]]
 
         # sum during search for some reason. for fixedcell they are concated
         output = sum(output)
@@ -258,14 +266,17 @@ class FixedCell(nn.Module):
         # apply blocks according to the connections
         for block_index, block_connection in enumerate(self._connections):
             conn = self._conn(block_connection)
-            block_outputs.append(self.blocks[block_index](block_outputs[conn[0]], block_outputs[conn[1]]))
+            block_outputs.append(self.blocks[block_index](
+                block_outputs[conn[0]], block_outputs[conn[1]]))
 
         # check which blocks were not used and concatenate the outputs (first two outputs are not blocks, hence the :2)
-        output = [block_output for b_i, block_output in enumerate(block_outputs[2:]) if not self.block_used[b_i]]
+        output = [block_output for b_i, block_output in enumerate(
+            block_outputs[2:]) if not self.block_used[b_i]]
 
         # ToDO: use this only for final network
         # if output:
-        output = torch.cat(output, dim=1)  # concatenate all selected outputs depthwise
+        # concatenate all selected outputs depthwise
+        output = torch.cat(output, dim=1)
         # else:
         #    raise TypeError("Something went wrong. No outputs!")
         output = self.dim_reduc(output)
@@ -398,7 +409,8 @@ class ConvBranch(nn.Module):
 
         if separable:
             self.out_conv = nn.Sequential(
-                SeparableConvOld(out_planes, out_planes, kernel_size=kernel_size, bias=False),
+                SeparableConvOld(out_planes, out_planes,
+                                 kernel_size=kernel_size, bias=False),
                 nn.BatchNorm2d(out_planes),
                 nn.ReLU())
         else:
@@ -423,7 +435,8 @@ class SeparableConvOld(nn.Module):
         padding = (kernel_size - 1) // 2
         self.depthwise = nn.Conv2d(in_planes, in_planes, kernel_size=kernel_size,
                                    padding=padding, groups=in_planes, bias=bias)
-        self.pointwise = nn.Conv2d(in_planes, out_planes, kernel_size=1, bias=bias)
+        self.pointwise = nn.Conv2d(
+            in_planes, out_planes, kernel_size=1, bias=bias)
 
     def forward(self, x):
         out = self.depthwise(x)
@@ -446,7 +459,8 @@ class SeparableConv(nn.Module):
             nn.ReLU(inplace=False),
             nn.Conv2d(out_planes, out_planes, kernel_size=kernel_size, stride=1,
                       padding=padding, groups=out_planes, bias=bias),
-            nn.Conv2d(out_planes, out_planes, kernel_size=1, padding=0, bias=False),
+            nn.Conv2d(out_planes, out_planes,
+                      kernel_size=1, padding=0, bias=False),
             nn.BatchNorm2d(out_planes, eps=1e-3),
             nn.ReLU(inplace=False)
         )
@@ -473,19 +487,26 @@ def CreateOp(conv_type, input_planes=64, output_planes=64):
             nn.ReLU())
         op = nn.Sequential(inp_conv, IdentityModule())
     elif conv_type == 1 or conv_type == '1x1 conv':
-        op = ConvBranch(input_planes, output_planes, kernel_size=1, separable=False)
+        op = ConvBranch(input_planes, output_planes,
+                        kernel_size=1, separable=False)
     elif conv_type == 2 or conv_type == '3x3 conv':
-        op = ConvBranch(input_planes, output_planes, kernel_size=3, separable=False)
+        op = ConvBranch(input_planes, output_planes,
+                        kernel_size=3, separable=False)
     elif conv_type == 3 or conv_type == '5x5 conv':
-        op = ConvBranch(input_planes, output_planes, kernel_size=5, separable=False)
+        op = ConvBranch(input_planes, output_planes,
+                        kernel_size=5, separable=False)
     elif conv_type == 4 or conv_type == '7x7 conv':
-        op = ConvBranch(input_planes, output_planes, kernel_size=7, separable=False)
+        op = ConvBranch(input_planes, output_planes,
+                        kernel_size=7, separable=False)
     elif conv_type == 5 or conv_type == '3x3 depthconv':
-        op = ConvBranch(input_planes, output_planes, kernel_size=3, separable=True)
+        op = ConvBranch(input_planes, output_planes,
+                        kernel_size=3, separable=True)
     elif conv_type == 6 or conv_type == '5x5 depthconv':
-        op = ConvBranch(input_planes, output_planes, kernel_size=5, separable=True)
+        op = ConvBranch(input_planes, output_planes,
+                        kernel_size=5, separable=True)
     elif conv_type == 7 or conv_type == '7x7 depthconv':
-        op = ConvBranch(input_planes, output_planes, kernel_size=7, separable=True)
+        op = ConvBranch(input_planes, output_planes,
+                        kernel_size=7, separable=True)
     elif conv_type == 8 or conv_type == '3x3 maxpool':
         op = PoolBranch(input_planes, output_planes, 'max')
     elif conv_type == 9 or conv_type == '3x3 avgpool':
@@ -520,7 +541,6 @@ class AuxiliaryHead(nn.Module):
 
 
 # %%
-from random import random
 
 
 class DropPath(nn.Module):

@@ -10,6 +10,7 @@ class AliasMethod(object):
     """
     From: https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/
     """
+
     def __init__(self, probs):
 
         if probs.sum() > 1:
@@ -59,7 +60,8 @@ class AliasMethod(object):
         """
         K = self.alias.size(0)
 
-        kk = torch.zeros(N, dtype=torch.long, device=self.prob.device).random_(0, K)
+        kk = torch.zeros(N, dtype=torch.long,
+                         device=self.prob.device).random_(0, K)
         prob = self.prob.index_select(0, kk)
         alias = self.alias.index_select(0, kk)
         # b is whether a random number is greater than q
@@ -83,8 +85,10 @@ class NCEAverage(nn.Module):
 
         self.register_buffer('params', torch.tensor([K, T, -1, -1, momentum]))
         stdv = 1. / math.sqrt(inputSize / 3)
-        self.register_buffer('memory_l', torch.rand(outputSize, inputSize).mul_(2 * stdv).add_(-stdv))
-        self.register_buffer('memory_ab', torch.rand(outputSize, inputSize).mul_(2 * stdv).add_(-stdv))
+        self.register_buffer('memory_l', torch.rand(
+            outputSize, inputSize).mul_(2 * stdv).add_(-stdv))
+        self.register_buffer('memory_ab', torch.rand(
+            outputSize, inputSize).mul_(2 * stdv).add_(-stdv))
 
     def forward(self, l, ab, y, idx=None):
         K = int(self.params[0].item())
@@ -99,14 +103,16 @@ class NCEAverage(nn.Module):
 
         # score computation
         if idx is None:
-            idx = self.multinomial.draw(batchSize * (self.K + 1)).view(batchSize, -1)
+            idx = self.multinomial.draw(
+                batchSize * (self.K + 1)).view(batchSize, -1)
             idx.select(1, 0).copy_(y.view(-1))
         # sample
         weight_l = torch.index_select(self.memory_l, 0, idx.view(-1)).detach()
         weight_l = weight_l.view(batchSize, K + 1, inputSize)
         out_ab = torch.bmm(weight_l, ab.view(batchSize, inputSize, 1))
         # sample
-        weight_ab = torch.index_select(self.memory_ab, 0, idx.view(-1)).detach()
+        weight_ab = torch.index_select(
+            self.memory_ab, 0, idx.view(-1)).detach()
         weight_ab = weight_ab.view(batchSize, K + 1, inputSize)
         out_l = torch.bmm(weight_ab, l.view(batchSize, inputSize, 1))
 
@@ -123,11 +129,13 @@ class NCEAverage(nn.Module):
             if Z_l < 0:
                 self.params[2] = out_l.mean() * outputSize
                 Z_l = self.params[2].clone().detach().item()
-                print("normalization constant Z_l is set to {:.1f}".format(Z_l))
+                print(
+                    "normalization constant Z_l is set to {:.1f}".format(Z_l))
             if Z_ab < 0:
                 self.params[3] = out_ab.mean() * outputSize
                 Z_ab = self.params[3].clone().detach().item()
-                print("normalization constant Z_ab is set to {:.1f}".format(Z_ab))
+                print(
+                    "normalization constant Z_ab is set to {:.1f}".format(Z_ab))
             # compute out_l, out_ab
             out_l = torch.div(out_l, Z_l).contiguous()
             out_ab = torch.div(out_ab, Z_ab).contiguous()
@@ -155,6 +163,7 @@ class NCECriterion(nn.Module):
     """
     Eq. (12): L_{NCE}
     """
+
     def __init__(self, n_data):
         super(NCECriterion, self).__init__()
         self.n_data = n_data
@@ -172,7 +181,8 @@ class NCECriterion(nn.Module):
 
         # loss for K negative pair
         P_neg = x.narrow(1, 1, m)
-        log_D0 = torch.div(P_neg.clone().fill_(m * Pn), P_neg.add(m * Pn + eps)).log_()
+        log_D0 = torch.div(P_neg.clone().fill_(m * Pn),
+                           P_neg.add(m * Pn + eps)).log_()
 
         loss = - (log_D1.sum(0) + log_D0.view(-1, 1).sum(0)) / bsz
 
@@ -181,6 +191,7 @@ class NCECriterion(nn.Module):
 
 class NCESoftmaxLoss(nn.Module):
     """Softmax cross-entropy loss (a.k.a., info-NCE loss in CPC paper)"""
+
     def __init__(self):
         super(NCESoftmaxLoss, self).__init__()
         self.criterion = nn.CrossEntropyLoss()
@@ -219,16 +230,18 @@ class MultiSimilarityLoss(nn.Module):
                     pos_pair_ = sim_mat[i][labels[:, k] == 1]
                     pos_pair_ = pos_pair_[pos_pair_ < 1 - epsilon]
                     neg_pair_ = sim_mat[i][labels[:, k] == 0]
-                    
+
                     if pos_pair_.size(0) == 0:
                         neg_pair = neg_pair_
                     else:
-                        neg_pair = neg_pair_[neg_pair_ + self.margin > min(pos_pair_)]
-                    pos_pair = pos_pair_[pos_pair_ - self.margin < max(neg_pair_)]
+                        neg_pair = neg_pair_[neg_pair_ +
+                                             self.margin > min(pos_pair_)]
+                    pos_pair = pos_pair_[pos_pair_ -
+                                         self.margin < max(neg_pair_)]
 
                     if len(neg_pair) < 1 or len(pos_pair) < 1:
                         continue
-                    #print(-self.scale_pos * (pos_pair - self.thresh))
+                    
                     # weighting step
                     pos_loss = 1.0 / self.scale_pos * torch.log(
                         1 + torch.sum(torch.exp(-self.scale_pos * (pos_pair - self.thresh))))

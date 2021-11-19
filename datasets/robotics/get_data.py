@@ -14,14 +14,15 @@ from torch.utils.data import DataLoader
 from torch.utils.data.sampler import SubsetRandomSampler
 from torchvision import transforms
 
-def combine_modalitiesbuilder(unimodal,output):
+
+def combine_modalitiesbuilder(unimodal, output):
     def combine_modalities(data):
-        if unimodal=="force":
-            return [data['force'],data['action'],data[output]]
-        if unimodal=="proprio":
-            return [data['proprio'],data['action'],data[output]]
-        if unimodal=="image":
-            return [data['image'],data['depth'].transpose(0, 2).transpose(1, 2),data['action'],data[output]]
+        if unimodal == "force":
+            return [data['force'], data['action'], data[output]]
+        if unimodal == "proprio":
+            return [data['proprio'], data['action'], data[output]]
+        if unimodal == "image":
+            return [data['image'], data['depth'].transpose(0, 2).transpose(1, 2), data['action'], data[output]]
         return [
             data['image'],
             data['force'],
@@ -32,7 +33,8 @@ def combine_modalitiesbuilder(unimodal,output):
         ]
     return combine_modalities
 
-def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next'):
+
+def get_data(device, configs, filedirprefix="", unimodal=None, output='contact_next'):
     filename_list = []
     for file in os.listdir(configs['dataset']):
         if file.endswith(".h5"):
@@ -53,7 +55,8 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
 
     while val_index.size > 0:
         filename_list.pop(val_index[0])
-        val_index = np.where(val_index > val_index[0], val_index - 1, val_index)
+        val_index = np.where(
+            val_index > val_index[0], val_index - 1, val_index)
         val_index = val_index[1:]
 
     print("Initial finished")
@@ -84,7 +87,7 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
                 ProcessForce(32, "force", tanh=True),
                 ProcessForce(32, "unpaired_force", tanh=True),
                 ToTensor(device=device),
-                combine_modalitiesbuilder(unimodal,output),
+                combine_modalitiesbuilder(unimodal, output),
             ]
         ),
         episode_length=configs['ep_length'],
@@ -100,7 +103,7 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
                 ProcessForce(32, "force", tanh=True),
                 ProcessForce(32, "unpaired_force", tanh=True),
                 ToTensor(device=device),
-                combine_modalitiesbuilder(unimodal,output),
+                combine_modalitiesbuilder(unimodal, output),
             ]
         ),
         episode_length=configs['ep_length'],
@@ -134,7 +137,7 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
                         ProcessForce(32, "force", tanh=True),
                         ProcessForce(32, "unpaired_force", tanh=True),
                         ToTensor(device=device),
-                        combine_modalitiesbuilder(unimodal,output),
+                        combine_modalitiesbuilder(unimodal, output),
                     ]
                 ),
                 episode_length=configs['ep_length'],
@@ -142,7 +145,7 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
                 action_dim=configs['action_dim'],
                 noise_level=i/10,
                 image_noise=True
-                )
+            )
             )
     if prop_noise:
         for i in range(10):
@@ -153,7 +156,7 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
                         ProcessForce(32, "force", tanh=True),
                         ProcessForce(32, "unpaired_force", tanh=True),
                         ToTensor(device=device),
-                        combine_modalitiesbuilder(unimodal,output),
+                        combine_modalitiesbuilder(unimodal, output),
                     ]
                 ),
                 episode_length=configs['ep_length'],
@@ -161,7 +164,7 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
                 action_dim=configs['action_dim'],
                 noise_level=i/10,
                 prop_noise=True
-                )
+            )
             )
     if force_noise:
         for i in range(10):
@@ -172,7 +175,7 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
                         ProcessForce(32, "force", tanh=True),
                         ProcessForce(32, "unpaired_force", tanh=True),
                         ToTensor(device=device),
-                        combine_modalitiesbuilder(unimodal,output),
+                        combine_modalitiesbuilder(unimodal, output),
                     ]
                 ),
                 episode_length=configs['ep_length'],
@@ -180,7 +183,7 @@ def get_data(device, configs,filedirprefix="",unimodal=None,output='contact_next
                 action_dim=configs['action_dim'],
                 noise_level=i/10,
                 force_noise=True
-                )
+            )
             )
 
     print("Dataset finished")

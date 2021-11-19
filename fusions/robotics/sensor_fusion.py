@@ -55,10 +55,12 @@ class SensorFusion(nn.Module):
             # -----------------------
             # 4 Total modalities each (2 * z_dim)
             self.fusion_fc1 = nn.Sequential(
-                nn.Linear(4 * 2 * self.z_dim, 128), nn.LeakyReLU(0.1, inplace=True)
+                nn.Linear(4 * 2 * self.z_dim,
+                          128), nn.LeakyReLU(0.1, inplace=True)
             )
             self.fusion_fc2 = nn.Sequential(
-                nn.Linear(self.z_dim, self.z_dim), nn.LeakyReLU(0.1, inplace=True)
+                nn.Linear(self.z_dim, self.z_dim), nn.LeakyReLU(
+                    0.1, inplace=True)
             )
 
         # -----------------------
@@ -86,7 +88,8 @@ class SensorFusion(nn.Module):
 
         if self.deterministic:
             # multimodal embedding
-            mm_f1 = torch.cat([img_out, frc_out, proprio_out, depth_out], 1).squeeze()
+            mm_f1 = torch.cat(
+                [img_out, frc_out, proprio_out, depth_out], 1).squeeze()
             mm_f2 = self.fusion_fc1(mm_f1)
             z = self.fusion_fc2(mm_f2)
 
@@ -101,15 +104,18 @@ class SensorFusion(nn.Module):
             # Modality Mean and Variances
             mu_z_img, var_z_img = gaussian_parameters(img_out, dim=1)
             mu_z_frc, var_z_frc = gaussian_parameters(frc_out, dim=1)
-            mu_z_proprio, var_z_proprio = gaussian_parameters(proprio_out, dim=1)
+            mu_z_proprio, var_z_proprio = gaussian_parameters(
+                proprio_out, dim=1)
             mu_z_depth, var_z_depth = gaussian_parameters(depth_out, dim=1)
 
             # Tile distribution parameters using concatonation
             m_vect = torch.cat(
-                [mu_z_img, mu_z_frc, mu_z_proprio, mu_z_depth, mu_prior_resized], dim=2
+                [mu_z_img, mu_z_frc, mu_z_proprio,
+                    mu_z_depth, mu_prior_resized], dim=2
             )
             var_vect = torch.cat(
-                [var_z_img, var_z_frc, var_z_proprio, var_z_depth, var_prior_resized],
+                [var_z_img, var_z_frc, var_z_proprio,
+                    var_z_depth, var_prior_resized],
                 dim=2,
             )
 
@@ -168,11 +174,13 @@ class SensorFusionSelfSupervised(SensorFusion):
 
         if self.encoder_bool:
             # returning latent space representation if model is set in encoder mode
-            z = self.forward_encoder(img_encoded, frc_encoded, proprio_encoded, depth_encoded, action_encoded)
+            z = self.forward_encoder(
+                img_encoded, frc_encoded, proprio_encoded, depth_encoded, action_encoded)
             return z
 
         elif action_encoded is None:
-            z = self.forward_encoder(img_encoded, frc_encoded, proprio_encoded, depth_encoded, None)
+            z = self.forward_encoder(
+                img_encoded, frc_encoded, proprio_encoded, depth_encoded, None)
             pair_out = self.pair_fc(z)
             return pair_out
 
@@ -194,27 +202,30 @@ class SensorFusionSelfSupervised(SensorFusion):
 
         # tile state-action features and append to conv map
         batch_dim = mm_act_feat.size(0)  # batch size
-        tiled_feat = mm_act_feat.view(batch_dim, self.z_dim, 1, 1).expand(-1, -1, 2, 2)
+        tiled_feat = mm_act_feat.view(
+            batch_dim, self.z_dim, 1, 1).expand(-1, -1, 2, 2)
 
         if self.deterministic:
             return z, mm_act_feat, tiled_feat, img_out_convs
         else:
             return z, mm_act_feat, tiled_feat, img_out_convs, mu_z, var_z, mu_prior, var_prior
 
+
 class roboticsConcat(nn.Module):
-    def __init__(self,name=None):
-        super(roboticsConcat,self).__init__()
-        self.name=name
-    def forward(self,x,training=False):
-        #print(x[0][0].size())
-        #print(x[1].size())
-        #print(x[2].size())
-        #print(x[3][0].size())
-        #print(x[4].size())
-        if self.name=="noconcat":
-            return [x[0][0].squeeze(),x[1].squeeze(),x[2].squeeze(),x[3][0].squeeze(),x[4]]
-        if self.name=="image":
-            return torch.cat([x[0][0].squeeze(),x[1][0].squeeze(),x[2]],1)
-        if self.name=="simple":
-            return torch.cat([x[0].squeeze(),x[1]],1)
-        return torch.cat([x[0][0].squeeze(),x[1].squeeze(),x[2].squeeze(),x[3][0].squeeze(),x[4]],1)
+    def __init__(self, name=None):
+        super(roboticsConcat, self).__init__()
+        self.name = name
+
+    def forward(self, x, training=False):
+        
+        
+        
+        
+        
+        if self.name == "noconcat":
+            return [x[0][0].squeeze(), x[1].squeeze(), x[2].squeeze(), x[3][0].squeeze(), x[4]]
+        if self.name == "image":
+            return torch.cat([x[0][0].squeeze(), x[1][0].squeeze(), x[2]], 1)
+        if self.name == "simple":
+            return torch.cat([x[0].squeeze(), x[1]], 1)
+        return torch.cat([x[0][0].squeeze(), x[1].squeeze(), x[2].squeeze(), x[3][0].squeeze(), x[4]], 1)

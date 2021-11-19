@@ -18,7 +18,7 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
         for j in train_dataloader:
             op.zero_grad()
             out = model(j[modalnum].float().cuda())
-            #print(j[-1])
+            
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                 loss = criterion(out, j[-1].float().cuda())
             else:
@@ -47,9 +47,10 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
                     pred.append(torch.sigmoid(out).round())
                 true.append(j[-1])
                 if auprc:
-                    #pdb.set_trace()
-                    sm=softmax(out)
-                    pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+                    # pdb.set_trace()
+                    sm = softmax(out)
+                    pts += [(sm[i][1].item(), j[-1][i].item())
+                            for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
         true = torch.cat(true, 0).cpu().numpy()
@@ -57,8 +58,8 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
         valloss = totalloss/totals
         if task == "classification":
             acc = accuracy_score(true, pred)
-            print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
-                " acc: "+str(acc))
+            print("Epoch "+str(epoch)+" valid loss: "+str(valloss) +
+                  " acc: "+str(acc))
             if acc > bestacc:
                 patience = 0
                 bestacc = acc
@@ -70,11 +71,11 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
         elif task == "multilabel":
             f1_micro = f1_score(true, pred, average="micro")
             f1_macro = f1_score(true, pred, average="macro")
-            print("Epoch "+str(epoch)+" valid loss: "+str(valloss)+\
-                " f1_micro: "+str(f1_micro)+" f1_macro: "+str(f1_macro))
-            if f1_macro>bestf1:
+            print("Epoch "+str(epoch)+" valid loss: "+str(valloss) +
+                  " f1_micro: "+str(f1_micro)+" f1_macro: "+str(f1_macro))
+            if f1_macro > bestf1:
                 patience = 0
-                bestf1=f1_macro
+                bestf1 = f1_macro
                 print("Saving Best")
                 torch.save(encoder, save_encoder)
                 torch.save(head, save_head)
@@ -82,16 +83,16 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
                 patience += 1
         elif task == "regression":
             print("Epoch "+str(epoch)+" valid loss: "+str(valloss))
-            if valloss<bestvalloss:
+            if valloss < bestvalloss:
                 patience = 0
-                bestvalloss=valloss
+                bestvalloss = valloss
                 print("Saving Best")
                 torch.save(encoder, save_encoder)
                 torch.save(head, save_head)
             else:
                 patience += 1
         if early_stop and patience > 7:
-                break
+            break
         if auprc:
             print("AUPRC: "+str(AUPRC(pts)))
 
@@ -114,9 +115,10 @@ def test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classifi
                 pred.append(torch.sigmoid(out).round())
             true.append(j[-1])
             if auprc:
-                #pdb.set_trace()
-                sm=softmax(out)
-                pts += [(sm[i][1].item(), j[-1][i].item()) for i in range(j[-1].size(0))]
+                # pdb.set_trace()
+                sm = softmax(out)
+                pts += [(sm[i][1].item(), j[-1][i].item())
+                        for i in range(j[-1].size(0))]
         if pred:
             pred = torch.cat(pred, 0).cpu().numpy()
         true = torch.cat(true, 0).cpu().numpy()
@@ -129,8 +131,8 @@ def test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classifi
             print("acc: "+str(accuracy_score(true, pred)))
             return accuracy_score(true, pred)
         elif task == "multilabel":
-            print(" f1_micro: "+str(f1_score(true, pred, average="micro"))+\
-                " f1_macro: "+str(f1_score(true, pred, average="macro")))
+            print(" f1_micro: "+str(f1_score(true, pred, average="micro")) +
+                  " f1_macro: "+str(f1_score(true, pred, average="macro")))
             return f1_score(true, pred, average="micro"), f1_score(true, pred, average="macro"), accuracy_score(true, pred)
         else:
             return (totalloss / totals).item()
