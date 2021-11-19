@@ -1,3 +1,9 @@
+from torch.autograd import Variable
+import random
+import math
+from torch.nn import functional as F
+from torch import nn
+import torch
 import sys
 import os
 
@@ -5,15 +11,6 @@ from torch.serialization import save
 
 sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
-import torch
-from torch import nn
-from torch.nn import functional as F
-from torch.nn.utils.rnn import pack_padded_sequence
-import math
-import random
-from torch.autograd import Variable
-
-from unimodals.common_models import MLP
 
 
 class Encoder(nn.Module):
@@ -53,7 +50,8 @@ class Attention(nn.Module):
 
     def score(self, hidden, encoder_outputs):
         # [B*T*2H]->[B*T*H]
-        energy = F.softmax(self.attn(torch.cat([hidden, encoder_outputs], 2)), dim=1)
+        energy = F.softmax(
+            self.attn(torch.cat([hidden, encoder_outputs], 2)), dim=1)
         energy = energy.transpose(1, 2)  # [B*H*T]
         v = self.v.repeat(encoder_outputs.size(0), 1).unsqueeze(1)  # [B*1*H]
         energy = torch.bmm(v, energy)  # [B*1*T]
@@ -77,7 +75,7 @@ class Decoder(nn.Module):
     def forward(self, input, last_hidden, encoder_outputs):
         # Get the embedding of the current input word (last output word)
         embedded = input.unsqueeze(0)  # (1,B,N)
-        # print('Embedded: {}'.format(embedded.shape))
+        
 
         # Calculate attention weights and apply to encoder outputs
         attn_weights = self.attention(last_hidden[-1], encoder_outputs)
@@ -100,26 +98,28 @@ class Seq2Seq(nn.Module):
         self.encoder = encoder
         self.decoder = decoder
 
-    def forward(self, src, trg, teacher_forcing_ratio=0.5):  # change teacher_forcing_ratio to 0.0 when evaluating
+    # change teacher_forcing_ratio to 0.0 when evaluating
+    def forward(self, src, trg, teacher_forcing_ratio=0.5):
         batch_size = src.size(1)
         max_len = src.size(0)
 
         output_size = self.decoder.output_size
-        outputs = Variable(torch.zeros(max_len, batch_size, output_size)).cuda()
+        outputs = Variable(torch.zeros(
+            max_len, batch_size, output_size)).cuda()
 
         encoder_output, hidden = self.encoder(src)
         hidden = hidden[:self.decoder.n_layers]
 
-        # print('Hidden: {}'.format(hidden.shape))
-        # print('Encoder output: {}'.format(encoder_output.shape))
+        
+        
 
         if self.training:
             output = Variable(
                 torch.zeros_like(trg.data[0, :]))  # solve the bug of input.size must be equal to input_size
         else:
             output = Variable(torch.zeros_like(src.data[0, :]))
-        # print('Output: {}'.format(output.shape))
-        # print('max_len: {}'.format(max_len))
+        
+        
         for t in range(0, max_len):
             output, hidden, attn_weights = self.decoder(
                 output, hidden, encoder_output)
@@ -145,17 +145,17 @@ class MCTN(nn.Module):
     def forward(self, src, trg=None):
         # get the cyclic joint embedding!
         reout = None
-        # print('Training: {}'.format(self.training))
+        
         if self.training:
             out, _ = self.seq2seq(src, trg)
-            # print('in training process!!')
+            
             reout, joint_embbed = self.seq2seq(out, src)
         else:
             # Set teacher_forcing_ratio to zero to get rid of the input of target during inference stage
             out, _ = self.seq2seq(src, trg, teacher_forcing_ratio=0.0)
             joint_embbed, _ = self.seq2seq.encoder(out)
         _, reg = self.regression(joint_embbed)
-        # print(reg)
+        
         reg = self.dropout(reg)
         head_out = self.head(reg)[0]
         head_out = self.dropout(head_out)
@@ -177,10 +177,10 @@ class L2_MCTN(nn.Module):
         rereout = None
         if self.training:
             out, _ = self.seq2seq0(src, trg0)
-            # print(out.shape)
+            
             reout, joint_embbed0 = self.seq2seq0(out, src)
-            # print(reout.shape)
-            # print('Joint Embbed: {}'.format(joint_embbed0.shape))
+            
+            
             rereout, joint_embbed1 = self.seq2seq1(joint_embbed0, trg1)
         else:
             out, _ = self.seq2seq0(src, trg0, teacher_forcing_ratio=0.0)
@@ -197,7 +197,7 @@ def process_input(inputs, max_seq=20):
     src = inputs[0][2][:, :max_seq, :]
     trg = inputs[0][1][:, :max_seq, :]
     feature_dim = max(src.size(-1), trg.size(-1))
-    # print(trg.size(0))
+    
 
     if src.size(-1) > trg.size(-1):
         trg = F.pad(trg, (0, src.size(-1) - trg.size(-1)))
@@ -212,19 +212,4 @@ def process_input(inputs, max_seq=20):
     return src, trg, labels, feature_dim
 
 
-def process_input_L2(inputs, max_seq=20):
-    src = inputs[0][2][:, :max_seq, :]
-    trg0 = inputs[0][0][:, :max_seq, :]
-    trg1 = inputs[0][1][:, :max_seq, :]
-    feature_dim = max(src.size(-1), trg0.size(-1), trg1.size(-1))
 
-    src = F.pad(src, (0, feature_dim - src.size(-1)))
-    trg0 = F.pad(trg0, (0, feature_dim - trg0.size(-1)))
-    trg1 = F.pad(trg1, (0, feature_dim - trg1.size(-1)))
-
-    src = src.transpose(1, 0).cuda()
-    trg0 = trg0.transpose(1, 0).cuda()
-    trg1 = trg1.transpose(1, 0).cuda()
-    labels = inputs[-1].cuda()
-
-    return src, trg0, trg1, labels, feature_dim

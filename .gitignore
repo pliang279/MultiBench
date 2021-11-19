@@ -1,6 +1,9 @@
 
 # Created by https://www.gitignore.io/api/macos,python,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=macos,python,visualstudiocode
+.idea/
+.vscode/
+
 
 ### macOS ###
 # General
@@ -8,6 +11,7 @@
 .AppleDouble
 .LSOverride
 best*.pt
+datasets/robotics/triangle_real_data
 
 # Icon must end with two \r
 Icon
@@ -149,3 +153,7 @@ dmypy.json
 
 # End of https://www.gitignore.io/api/macos,python,visualstudiocode.DS_Store
 *.pt
+*.pkl
+*.hdf5
+*.png
+.vector_cache/*

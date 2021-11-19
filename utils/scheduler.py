@@ -16,7 +16,9 @@ class LRCosineAnnealingScheduler():
         self.Tm = Tmultiplier
 
     def _compute_rule(self):
-        self.eta = self.eta_min + 0.5 * (self.eta_max - self.eta_min) * (1 + np.cos(np.pi * self.Tcur / self.Ti))
+        self.eta = self.eta_min + 0.5 * \
+            (self.eta_max - self.eta_min) * \
+            (1 + np.cos(np.pi * self.Tcur / self.Ti))
         return self.eta
 
     def step(self):

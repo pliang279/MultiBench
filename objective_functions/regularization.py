@@ -8,7 +8,7 @@ import torch
 
 class Perturbation:
     """
-    Class that in charge of the perturbation techniques
+    Class that in charge of tensor perturbation techniques
     """
     @classmethod
     def _add_noise_to_tensor(cls, tens: torch.Tensor, over_dim: int = 0) -> torch.Tensor:
@@ -79,7 +79,6 @@ class Regularization(object):
         :param loss: [batch, number of evaluate samples]
         :return: variance of a given batch of loss values
         """
-
         return torch.var(loss, dim=1)
 
     @classmethod
@@ -100,7 +99,8 @@ class Regularization(object):
         :return: a tensor holds the functional entropy for a batch
         """
         loss = torch.nn.functional.normalize(loss, p=1, dim=1)
-        loss = torch.mean(loss * loss.log()) - (torch.mean(loss) * torch.mean(loss).log())
+        loss = torch.mean(loss * loss.log()) - \
+            (torch.mean(loss) * torch.mean(loss).log())
 
         return loss
 
@@ -123,7 +123,8 @@ class Regularization(object):
         elif estimation == 'dif_ent':
             batch_statistics = cls._get_differential_entropy(loss)
         else:
-            raise NotImplementedError(f'{estimation} is unknown regularization, please use "var" or "ent".')
+            raise NotImplementedError(
+                f'{estimation} is unknown regularization, please use "var" or "ent".')
 
         return torch.mean(batch_statistics)
 
@@ -207,6 +208,7 @@ class RegParameters(object):
     """
     This class controls all the regularization-related properties
     """
+
     def __init__(self, lambda_: float = 1e-10, norm: float = 2.0, estimation: str = 'ent',
                  optim_method: str = 'max_ent', n_samples: int = 10, grad: bool = True):
         self.lambda_ = lambda_
@@ -218,8 +220,16 @@ class RegParameters(object):
 
 
 class RegularizationLoss(torch.nn.Module):
+    """
+    Define the regularization loss.
+    """
 
-    def __init__(self, loss: torch.nn.Module, model: torch.nn.Module, delta: float=1e-10, is_pack: bool=True) -> None:
+    def __init__(self, loss: torch.nn.Module, model: torch.nn.Module, delta: float = 1e-10, is_pack: bool = True) -> None:
+        """
+        Initialize the Loss Module.
+
+        #TODO: Define the parameters.
+        """
         super(RegularizationLoss, self).__init__()
         self.reg_params = RegParameters()
         self.criterion = loss
@@ -229,27 +239,33 @@ class RegularizationLoss(torch.nn.Module):
 
     def forward(self, logits, inputs):
 
-        expanded_logits = Perturbation.get_expanded_logits(logits, self.reg_params.n_samples)
+        expanded_logits = Perturbation.get_expanded_logits(
+            logits, self.reg_params.n_samples)
 
         inf_inputs = []
         if self.pack:
             inf_inputs_len = []
             for ind, i in enumerate(inputs[0]):
-                inf_inputs.append(Perturbation.perturb_tensor(i, self.reg_params.n_samples).float().cuda())
-                inf_inputs_len.append(Perturbation.perturb_tensor(inputs[1][ind], self.reg_params.n_samples,False))
-            inf_output = self.model([inf_inputs, inf_inputs_len], training=True)
+                inf_inputs.append(Perturbation.perturb_tensor(
+                    i, self.reg_params.n_samples).float().cuda())
+                inf_inputs_len.append(Perturbation.perturb_tensor(
+                    inputs[1][ind], self.reg_params.n_samples, False))
+            inf_output = self.model(
+                [inf_inputs, inf_inputs_len], training=True)
         else:
             for ind, i in enumerate(inputs):
-                inf_inputs.append(Perturbation.perturb_tensor(i, self.reg_params.n_samples).float().cuda())
+                inf_inputs.append(Perturbation.perturb_tensor(
+                    i, self.reg_params.n_samples).float().cuda())
             inf_output = self.model(inf_inputs, training=True)
         inf_loss = self.criterion(inf_output, expanded_logits)
-        
-        gradients = torch.autograd.grad(inf_loss, inf_inputs, create_graph=True)
+
+        gradients = torch.autograd.grad(
+            inf_loss, inf_inputs, create_graph=True)
         grads = [Regularization.get_batch_norm(gradients[k], loss=inf_loss,
-                                            estimation=self.reg_params.estimation) for k in range(2)]
+                                               estimation=self.reg_params.estimation) for k in range(2)]
 
         inf_scores = torch.stack(grads)
         reg_term = Regularization.get_regularization_term(inf_scores, norm=self.reg_params.norm,
-                                                        optim_method=self.reg_params.optim_method)
+                                                          optim_method=self.reg_params.optim_method)
 
         return self.delta * reg_term
