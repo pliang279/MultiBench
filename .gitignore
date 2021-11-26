@@ -12,6 +12,7 @@
 .LSOverride
 best*.pt
 datasets/robotics/triangle_real_data
+sarcasm*
 
 # Icon must end with two \r
 Icon
