@@ -108,7 +108,7 @@ class GRU(torch.nn.Module):
     """
     GRU Implementation.
     """
-    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False, last_only=False):
+    def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False, last_only=False,batch_first=True):
         super(GRU, self).__init__()
         self.gru = nn.GRU(indim, hiddim, batch_first=True)
         self.dropout = dropout
@@ -116,12 +116,13 @@ class GRU(torch.nn.Module):
         self.flatten = flatten
         self.has_padding = has_padding
         self.last_only = last_only
+        self.batch_first = batch_first
 
     def forward(self, x):
         
         if self.has_padding:
             x = pack_padded_sequence(
-                x[0], x[1], batch_first=True, enforce_sorted=False)
+                x[0], x[1], batch_first=self.batch_first, enforce_sorted=False)
             out = self.gru(x)[1][-1]
         elif self.last_only:
             out = self.gru(x)[1][0]
