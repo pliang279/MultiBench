@@ -1,12 +1,15 @@
-import torch
-from torch import nn
-from unimodals.common_models import MLP, GRU
-from datasets.mimic.get_data import get_dataloader
-from fusions.common_fusions import MultiplicativeInteractions2Modal
-from training_structures.Supervised_Learning import train, test
 import sys
 import os
+import torch
+from torch import nn
+
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import MLP, GRU # noqa
+from datasets.mimic.get_data import get_dataloader # noqa
+from fusions.common_fusions import MultiplicativeInteractions2Modal # noqa
+from training_structures.Supervised_Learning import train, test # noqa
+
 
 filename = 'besttensor.pt'
 

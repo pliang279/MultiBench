@@ -1,12 +1,15 @@
 import torch
 from torch import nn
-from unimodals.common_models import MLP, GRU
-from datasets.mimic.get_data import get_dataloader
-from fusions.common_fusions import Concat
-from training_structures.gradient_blend import train, test
 import sys
 import os
+
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import MLP, GRU  # noqa
+from datasets.mimic.get_data import get_dataloader  # noqa
+from fusions.common_fusions import Concat  # noqa
+from training_structures.gradient_blend import train, test  # noqa
+
 
 filename = 'bbest10.pt'
 

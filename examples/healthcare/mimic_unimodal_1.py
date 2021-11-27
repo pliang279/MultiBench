@@ -1,11 +1,13 @@
 import torch
 from torch import nn
-from unimodals.common_models import MLP, GRUWithLinear
-from datasets.mimic.get_data import get_dataloader
-from training_structures.unimodal import train, test
 import sys
 import os
+
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import MLP, GRUWithLinear # noqa
+from datasets.mimic.get_data import get_dataloader # noqa
+from training_structures.unimodal import train, test # noqa
 
 # get dataloader for icd9 classification task 7
 traindata, validdata, testdata = get_dataloader(

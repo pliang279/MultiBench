@@ -1,11 +1,4 @@
 # From https://github.com/brentyi/multimodalfilter/blob/master/scripts/push_task/train_push.py
-
-from training_structures.Supervised_Learning import train, test
-from fusions.common_fusions import ConcatWithLinear
-from unimodals.gentle_push.head import GentlePushLateLSTM
-from unimodals.common_models import Sequential, Transpose, Reshape, MLP, Identity
-from datasets.gentle_push.data_loader import PushTask
-import unimodals.gentle_push.layers as layers
 import torch.optim as optim
 import torch.nn as nn
 import torch
@@ -14,7 +7,15 @@ import datetime
 import argparse
 import sys
 import os
+
 sys.path.insert(0, os.getcwd())
+
+from training_structures.Supervised_Learning import train, test # noqa
+from fusions.common_fusions import ConcatWithLinear # noqa
+from unimodals.gentle_push.head import GentlePushLateLSTM # noqa
+from unimodals.common_models import Sequential, Transpose, Reshape, MLP, Identity # noqa
+from datasets.gentle_push.data_loader import PushTask # noqa
+import unimodals.gentle_push.layers as layers # noqa
 
 
 Task = PushTask

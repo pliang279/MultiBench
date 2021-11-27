@@ -1,15 +1,17 @@
-from unimodals.common_models import VGG16, VGG16Slim, DAN, Linear, MLP, VGG11Slim, VGG11Pruned
-import torch
-from memory_profiler import memory_usage
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
-from datasets.enrico.get_data import get_dataloader
-from fusions.common_fusions import Concat
-from objective_functions.objectives_for_supervised_learning import CCA_objective
-from training_structures.Supervised_Learning import train, test
 import sys
 import os
 from torch import nn
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import VGG16, VGG16Slim, DAN, Linear, MLP, VGG11Slim, VGG11Pruned # noqa
+import torch # noqa
+from memory_profiler import memory_usage # noqa
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test # noqa
+from datasets.enrico.get_data import get_dataloader # noqa
+from fusions.common_fusions import Concat # noqa
+from objective_functions.objectives_for_supervised_learning import CCA_objective # noqa
+from training_structures.Supervised_Learning import train, test # noqa
+
 
 
 dls, weights = get_dataloader('datasets/enrico/dataset')
