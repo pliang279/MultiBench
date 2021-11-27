@@ -1,17 +1,18 @@
-from unimodals.MVAE import TSEncoder, TSDecoder
-from utils.helper_modules import Sequential2
-from objective_functions.objectives_for_supervised_learning import MFM_objective
-from torch import nn
-from unimodals.common_models import MLP
-from training_structures.Supervised_Learning import train, test
-from datasets.affect.get_data import get_dataloader
-from fusions.common_fusions import Concat
 import torch
 import sys
 import os
 
 sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
+
+from unimodals.MVAE import TSEncoder, TSDecoder # noqa
+from utils.helper_modules import Sequential2 # noqa
+from objective_functions.objectives_for_supervised_learning import MFM_objective # noqa
+from torch import nn # noqa
+from unimodals.common_models import MLP # noqa
+from training_structures.Supervised_Learning import train, test # noqa
+from datasets.affect.get_data import get_dataloader # noqa
+from fusions.common_fusions import Concat # noqa
 
 
 classes = 2

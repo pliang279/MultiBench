@@ -1,13 +1,13 @@
-from unimodals.common_models import GRU, MLP, Sequential, Identity
-from training_structures.Supervised_Learning import train, test
-from datasets.affect.get_data import get_dataloader
-from fusions.common_fusions import ConcatEarly
 import torch
 import sys
 import os
 sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 os.environ['CUDA_VISIBLE_DEVICES'] = '1'
+from unimodals.common_models import GRU, MLP, Sequential, Identity  # noqa
+from training_structures.Supervised_Learning import train, test  # noqa
+from datasets.affect.get_data import get_dataloader  # noqa
+from fusions.common_fusions import ConcatEarly  # noqa
 
 
 # mosi_data.pkl, mosei_senti_data.pkl

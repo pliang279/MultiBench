@@ -1,9 +1,3 @@
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
-from training_structures.Supervised_Learning import train, test
-from datasets.stocks.get_data import get_dataloader
-from unimodals.common_models import Identity
-from fusions.finance.early_fusion import EarlyFusionTransformer
-from fusions.common_fusions import Stack
 from torch import nn
 import torch.nn.functional as F
 import torch
@@ -13,6 +7,13 @@ import argparse
 import sys
 import os
 sys.path.append(os.getcwd())
+
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test # noqa
+from training_structures.Supervised_Learning import train, test # noqa
+from datasets.stocks.get_data import get_dataloader # noqa
+from unimodals.common_models import Identity # noqa
+from fusions.finance.early_fusion import EarlyFusionTransformer # noqa
+from fusions.common_fusions import Stack # noqa
 
 
 parser = argparse.ArgumentParser()

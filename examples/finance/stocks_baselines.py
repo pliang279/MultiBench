@@ -1,6 +1,3 @@
-from datasets.stocks.get_data import get_dataloader
-from unimodals.common_models import LSTM
-from fusions.common_fusions import Stack
 from torch import nn
 import torch.nn.functional as F
 import torch
@@ -10,6 +7,11 @@ import argparse
 import sys
 import os
 sys.path.append(os.getcwd())
+
+from datasets.stocks.get_data import get_dataloader # noqa
+from unimodals.common_models import LSTM # noqa
+from fusions.common_fusions import Stack # noqa
+
 
 
 parser = argparse.ArgumentParser()

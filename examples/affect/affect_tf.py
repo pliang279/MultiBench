@@ -1,14 +1,15 @@
-from private_test_scripts.all_in_one import all_in_one_train
-from training_structures.Supervised_Learning import train, test
-from unimodals.common_models import GRUWithLinear, MLP
-from datasets.affect.get_data import get_dataloader
-from fusions.common_fusions import Concat, TensorFusion
 import torch
 import sys
 import os
 
 sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
+
+from private_test_scripts.all_in_one import all_in_one_train  # noqa
+from training_structures.Supervised_Learning import train, test  # noqa
+from unimodals.common_models import GRUWithLinear, MLP  # noqa
+from datasets.affect.get_data import get_dataloader  # noqa
+from fusions.common_fusions import Concat, TensorFusion  # noqa
 
 
 # mosi_data.pkl, mosei_senti_data.pkl
