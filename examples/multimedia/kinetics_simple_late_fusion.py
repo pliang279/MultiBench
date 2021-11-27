@@ -1,16 +1,17 @@
 # NOTE dataloader needs to be implemented
 #   Please use special/kinetics_simple_late_fusion.py for now
-
-from unimodals.common_models import ResNetLSTMEnc, MLP
-from datasets.kinetics.get_data import get_dataloader
-from fusions.common_fusions import Concat
-from training_structures.Supervised_Learning import train, test
 import sys
 import os
 import torch
 import torchvision
 
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import ResNetLSTMEnc, MLP
+from datasets.kinetics.get_data import get_dataloader
+from fusions.common_fusions import Concat
+from training_structures.Supervised_Learning import train, test
+
 
 
 traindata, validdata, testdata = get_dataloader(sys.argv[1])

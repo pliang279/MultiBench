@@ -1,10 +1,13 @@
-from unimodals.common_models import MLP
-from datasets.imdb.get_data import get_dataloader
-from training_structures.unimodal import train, test
 import torch
 import sys
 import os
+
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import MLP
+from datasets.imdb.get_data import get_dataloader
+from training_structures.unimodal import train, test
+
 
 
 encoderfile = "encoder_image.pt"

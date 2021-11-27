@@ -1,11 +1,13 @@
+import torch
+import sys
+import os
+
+sys.path.append(os.getcwd())
+
 from unimodals.common_models import MaxOut_MLP, Identity
 from datasets.imdb.get_data import get_dataloader
 from fusions.common_fusions import Concat
 from training_structures.Supervised_Learning import train, test
-import torch
-import sys
-import os
-sys.path.append(os.getcwd())
 
 
 filename = "best_ef.pt"

@@ -1,12 +1,14 @@
+import torch
+import sys
+import os
+
+sys.path.append(os.getcwd())
+
 from unimodals.common_models import MLP, MaxOut_MLP, Linear
 from datasets.imdb.get_data import get_dataloader
 from fusions.common_fusions import Concat
 from objective_functions.objectives_for_supervised_learning import RefNet_objective
 from training_structures.Supervised_Learning import train, test
-import torch
-import sys
-import os
-sys.path.append(os.getcwd())
 
 
 filename = "best_contrast.pt"

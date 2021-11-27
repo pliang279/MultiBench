@@ -1,3 +1,8 @@
+import time
+import sys
+import os
+sys.path.insert(0, os.getcwd())
+
 from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised, roboticsConcat
 from torchvision import transforms
 from torch.utils.data.sampler import SubsetRandomSampler
@@ -16,10 +21,6 @@ import torch.optim as optim
 import torch.nn as nn
 import torch
 import numpy as np
-import time
-import sys
-import os
-sys.path.insert(0, os.getcwd())
 
 
 class selfsupervised:

@@ -1,3 +1,8 @@
+import sys
+import os
+
+sys.path.append(os.getcwd())
+
 from objective_functions.recon import elbo_loss, sigmloss1dcentercrop
 from unimodals.MVAE import LeNetEncoder, DeLeNet
 from training_structures.Supervised_Learning import train, test
@@ -7,9 +12,7 @@ import torch
 from torch import nn
 from unimodals.common_models import MLP
 from fusions.MVAE import ProductOfExperts_Zipped
-import sys
-import os
-sys.path.append(os.getcwd())
+
 
 traindata, validdata, testdata = get_dataloader(
     '/home/pliang/yiwei/avmnist/_MFAS/avmnist')

@@ -1,12 +1,13 @@
+import sys
+import os
+sys.path.append(os.getcwd())
 from unimodals.common_models import LeNet, MLP, Constant
 import torch
 from torch import nn
 from datasets.avmnist.get_data import get_dataloader
 from fusions.common_fusions import Concat
 from training_structures.Supervised_Learning import train, test
-import sys
-import os
-sys.path.append(os.getcwd())
+
 
 traindata, validdata, testdata = get_dataloader(
     '/home/paul/yiwei/avmnist/_MFAS/avmnist')

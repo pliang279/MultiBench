@@ -1,11 +1,12 @@
+import sys
+import os
+sys.path.append(os.getcwd())
+
 from unimodals.common_models import LeNet, MLP, Constant
 import torch
 from torch import nn
 from datasets.avmnist.get_data import get_dataloader
 from training_structures.unimodal import train, test
-import sys
-import os
-sys.path.append(os.getcwd())
 
 modalnum = 0
 traindata, validdata, testdata = get_dataloader(
