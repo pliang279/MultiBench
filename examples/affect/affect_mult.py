@@ -1,14 +1,15 @@
-from training_structures.Supervised_Learning import train, test
-from fusions.mult import MULTModel
-from unimodals.common_models import Identity, MLP
-from datasets.affect.get_data import get_dataloader
-from fusions.common_fusions import Concat
 import torch
 import sys
 import os
 
 sys.path.append(os.getcwd())
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
+
+from training_structures.Supervised_Learning import train, test # noqa
+from fusions.mult import MULTModel # noqa
+from unimodals.common_models import Identity, MLP # noqa
+from datasets.affect.get_data import get_dataloader # noqa
+from fusions.common_fusions import Concat # noqa
 
 
 # mosi_data.pkl, mosei_senti_data.pkl

@@ -1,8 +1,3 @@
-from private_test_scripts.all_in_one import all_in_one_train
-from training_structures.unimodal import train, test
-from datasets.stocks.get_data import get_dataloader, Grouping
-from fusions.mult import MULTModel
-from unimodals.common_models import Identity
 from torch import nn
 import torch.nn.functional as F
 import torch
@@ -11,7 +6,14 @@ import numpy as np
 import argparse
 import sys
 import os
+
 sys.path.append(os.getcwd())
+
+from private_test_scripts.all_in_one import all_in_one_train # noqa
+from training_structures.unimodal import train, test # noqa
+from datasets.stocks.get_data import get_dataloader, Grouping # noqa
+from fusions.mult import MULTModel # noqa
+from unimodals.common_models import Identity # noqa
 
 
 parser = argparse.ArgumentParser()
