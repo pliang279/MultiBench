@@ -1,14 +1,16 @@
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
-from memory_profiler import memory_usage
-import torch
-from torch import nn
-from unimodals.common_models import MLP, GRU
-from datasets.mimic.get_data import get_dataloader
-from fusions.common_fusions import Concat
-from training_structures.Supervised_Learning import train, test
 import sys
 import os
+import torch
+from torch import nn
 sys.path.append(os.getcwd())
+
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test # noqa
+from memory_profiler import memory_usage # noqa
+from unimodals.common_models import MLP, GRU # noqa
+from datasets.mimic.get_data import get_dataloader # noqa
+from fusions.common_fusions import Concat # noqa
+from training_structures.Supervised_Learning import train, test # noqa
+
 # get dataloader for icd9 classification task 7
 traindata, validdata, testdata = get_dataloader(
     7, imputed_path='datasets/mimic/im.pk')

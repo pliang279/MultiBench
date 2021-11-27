@@ -1,13 +1,15 @@
-from unimodals.common_models import VGG16, VGG16Slim, DAN, Linear, MLP, VGG11Slim, VGG11Pruned
-import torch
-from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test
-from datasets.enrico.get_data import get_dataloader
-from fusions.common_fusions import Concat
-from training_structures.gradient_blend import train, test
 import sys
 import os
 from torch import nn
+import torch
+
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import VGG16, VGG16Slim, DAN, Linear, MLP, VGG11Slim, VGG11Pruned # noqa
+from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test # noqa
+from datasets.enrico.get_data import get_dataloader # noqa
+from fusions.common_fusions import Concat # noqa
+from training_structures.gradient_blend import train, test # noqa
 
 
 dls, weights = get_dataloader('datasets/enrico/dataset')

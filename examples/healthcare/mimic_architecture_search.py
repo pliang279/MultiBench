@@ -1,13 +1,15 @@
-from unimodals.common_models import LeNet, MLP, Constant, GRUWithLinear
-import utils.surrogate as surr
-import torch
-from torch import nn
-from datasets.mimic.get_data import get_dataloader
-from fusions.common_fusions import Concat
-from training_structures.architecture_search import train
 import sys
 import os
+import torch
+from torch import nn
+
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import LeNet, MLP, Constant, GRUWithLinear # noqa
+import utils.surrogate as surr # noqa
+from datasets.mimic.get_data import get_dataloader # noqa
+from fusions.common_fusions import Concat # noqa
+from training_structures.architecture_search import train # noqa
 
 traindata, validdata, testdata = get_dataloader(
     1, imputed_path='datasets/mimic/im.pk')

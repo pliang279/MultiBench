@@ -1,12 +1,15 @@
 import torch
 from torch import nn
-from unimodals.common_models import MLP, GRU
-from datasets.mimic.get_data import get_dataloader
-from fusions.common_fusions import LowRankTensorFusion
-from training_structures.Simple_Late_Fusion import train, test
 import sys
 import os
+
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import MLP, GRU # noqa
+from datasets.mimic.get_data import get_dataloader # noqa
+from fusions.common_fusions import LowRankTensorFusion # noqa
+from training_structures.Simple_Late_Fusion import train, test # noqa
+
 
 # get dataloader for icd9 classification task 7
 traindata, validdata, testdata = get_dataloader(
