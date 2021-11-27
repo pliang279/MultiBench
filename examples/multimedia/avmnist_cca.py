@@ -1,15 +1,18 @@
+import sys
+import os
+from torch import nn
+import torch
+
+sys.path.append(os.getcwd())
+
 from unimodals.common_models import LeNet, MLP, Constant
 from utils.helper_modules import Sequential2
 from unimodals.common_models import MLP, VGG16, Linear, MaxOut_MLP
 from fusions.common_fusions import Concat
 from training_structures.Supervised_Learning import train, test
-from torch import nn
 from datasets.avmnist.get_data import get_dataloader
-import torch
 from objective_functions.objectives_for_supervised_learning import CCA_objective
-import sys
-import os
-sys.path.append(os.getcwd())
+
 
 traindata, validdata, testdata = get_dataloader(
     '/home/pliang/yiwei/avmnist/_MFAS/avmnist', batch_size=800)

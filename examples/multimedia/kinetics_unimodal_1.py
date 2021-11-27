@@ -1,15 +1,15 @@
 # NOTE dataloader needs to be implemented
 #   Please use special/kinetics_audio_unimodal.py for now
-
-from unimodals.common_models import MLP
-from datasets.kinetics.get_data import get_dataloader
-from training_structures.unimodal import train, test
 import os
 import sys
 import torch
 import torchvision
 
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import MLP
+from datasets.kinetics.get_data import get_dataloader
+from training_structures.unimodal import train, test
 
 
 modalnum = 1

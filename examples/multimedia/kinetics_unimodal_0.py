@@ -1,14 +1,15 @@
 # NOTE dataloader needs to be implemented
 #   Please use special/kinetics_video_unimodal.py for now
-
-from unimodals.common_models import ResNetLSTMEnc, MLP
-from datasets.kinetics.get_data import get_dataloader
-from training_structures.unimodal import train, test
 import os
 import sys
 import torch
 
 sys.path.append(os.getcwd())
+
+from unimodals.common_models import ResNetLSTMEnc, MLP
+from datasets.kinetics.get_data import get_dataloader
+from training_structures.unimodal import train, test
+
 
 
 modalnum = 0

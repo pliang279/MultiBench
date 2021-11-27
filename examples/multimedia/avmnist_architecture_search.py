@@ -1,13 +1,16 @@
-from unimodals.common_models import LeNet, MLP, Constant
-import utils.surrogate as surr
+import sys
+import os
 import torch
 from torch import nn
+
+sys.path.append(os.getcwd())
+
+from unimodals.common_models import LeNet, MLP, Constant
+import utils.surrogate as surr
 from datasets.avmnist.get_data import get_dataloader
 from fusions.common_fusions import Concat
 from training_structures.architecture_search import train
-import sys
-import os
-sys.path.append(os.getcwd())
+
 
 traindata, validdata, testdata = get_dataloader(
     '/data/yiwei/avmnist/_MFAS/avmnist', batch_size=32)

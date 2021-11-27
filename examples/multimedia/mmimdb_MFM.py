@@ -1,3 +1,9 @@
+import torch
+import sys
+import os
+
+sys.path.append(os.getcwd())
+
 from utils.helper_modules import Sequential2
 from unimodals.common_models import Linear, MLP, MaxOut_MLP
 from datasets.imdb.get_data import get_dataloader
@@ -5,11 +11,6 @@ from fusions.common_fusions import Concat
 from objective_functions.objectives_for_supervised_learning import MFM_objective
 from objective_functions.recon import sigmloss1d
 from training_structures.Supervised_Learning import train, test
-import torch
-import sys
-import os
-sys.path.append(os.getcwd())
-
 
 filename = "best_mfm.pt"
 traindata, validdata, testdata = get_dataloader(
