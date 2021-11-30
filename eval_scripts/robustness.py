@@ -11,7 +11,7 @@ def effective_robustness(robustness_result, task):
     return get_robustness_metric(robustness_result, task, 'effective')
 
 
-def get_metric(robustness_result, task, metric):
+def get_robustness_metric(robustness_result, task, metric):
     if metric == 'effective' and task not in robustness['LF']:
         return "Invalid example name!"
     else:
