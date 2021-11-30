@@ -100,7 +100,7 @@ class Grouping(nn.Module):
         super().__init__()
         self.n_groups = n_groups
 
-    def forward(self, x, training=False):
+    def forward(self, x):
         x = x.permute(2, 0, 1)
 
         n_modalities = len(x)

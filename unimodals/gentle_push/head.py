@@ -21,7 +21,7 @@ class Head(nn.Module):
             nn.Linear(units, self.state_dim),
         )
 
-    def forward(self, fused_features, training=False):
+    def forward(self, fused_features):
         lstm_out, _ = self.lstm(fused_features)
         predicted_states = self.output_layers(lstm_out)
         return predicted_states
@@ -32,6 +32,6 @@ class GentlePushLateLSTM(nn.Module):
         super().__init__()
         self.lstm = nn.LSTM(input_size, hidden_size)
 
-    def forward(self, x, training=False):
+    def forward(self, x):
         x, _ = self.lstm(x)
         return x

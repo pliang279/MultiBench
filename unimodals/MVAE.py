@@ -102,7 +102,7 @@ class LeNetEncoder(nn.Module):
 
         self.twoout = twooutput
 
-    def forward(self, x, training=False):
+    def forward(self, x):
         out = self.lenet(x)
         out = self.linear(out)
         if self.twoout:

@@ -4,7 +4,7 @@ from torch import nn
 from torch.optim.lr_scheduler import ExponentialLR
 import time
 from utils.AUPRC import AUPRC
-#from objective_functions.regularization import RegularizationLoss
+from objective_functions.regularization import RegularizationLoss
 #import pdb
 
 softmax = nn.Softmax()
@@ -19,18 +19,18 @@ class MMDL(nn.Module):
         self.head2 = head2
         self.has_padding = has_padding
 
-    def forward(self, inputs, training=False):
+    def forward(self, inputs):
         outs = []
         if self.has_padding:
             for i in range(len(inputs[0])):
                 outs.append(self.encoders[i](
-                    [inputs[0][i], inputs[1][i]], training=training))
+                    [inputs[0][i], inputs[1][i]]))
         else:
             for i in range(len(inputs)):
-                outs.append(self.encoders[i](inputs[i], training=training))
-        out = self.fuse(outs, training=training)
+                outs.append(self.encoders[i](inputs[i]))
+        out = self.fuse(outs)
         
-        return self.head1(out, training=training), self.head2(out, training=training)
+        return self.head1(out), self.head2(out)
 
 
 sftmax = nn.Softmax(dim=1).cuda()
@@ -65,7 +65,7 @@ def train(
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
                     out = model([[i.cuda()
-                                for i in j[0]], j[1]], training=True)
+                                for i in j[0]], j[1]])
                     
                     
                     loss1 = criterion(out, j[-1].cuda())
@@ -80,7 +80,7 @@ def train(
                 j[2] = torch.LongTensor([l1, l1, l1, l1])
                 j[3] = torch.LongTensor([l2, l2, l2, l2])
                 out1, out2 = model([i.float().cuda()
-                                   for i in j[:-2]], training=True)
+                                   for i in j[:-2]])
                 
                 loss1 = criterion(out1, j[-2].long().cuda())
                 loss2 = criterion(out2, j[-1].long().cuda())
@@ -115,10 +115,10 @@ def train(
                 l2 = j[3].repeat_interleave(4)
                 if is_packed:
                     out = model([[i.cuda()
-                                for i in j[0]], j[1]], training=False)
+                                for i in j[0]], j[1]])
                 else:
                     out1, out2 = model([i.float().cuda()
-                                       for i in j[:-2]], training=False)
+                                       for i in j[:-2]])
                 loss1 = criterion(out1, l1.long().cuda())
                 loss2 = criterion(out2, l2.long().cuda())
                 totalloss += loss*len(j[-1])
@@ -197,16 +197,17 @@ def test(
         true1 = []
         true2 = []
         pts = []
+        model.eval()
         for j in test_dataloader:
             j[0] = j[0].repeat_interleave(4, dim=0)
             j[1] = j[1].view(-1, 6, 12)
             l1 = j[2].repeat_interleave(4)
             l2 = j[3].repeat_interleave(4)
             if is_packed:
-                out = model([[i.cuda() for i in j[0]], j[1]], training=False)
+                out = model([[i.cuda() for i in j[0]], j[1]])
             else:
                 out1, out2 = model([i.float().cuda()
-                                   for i in j[:-2]], training=False)
+                                   for i in j[:-2]])
             loss1 = criterion(out1, l1.cuda())
             loss2 = criterion(out2, l2.cuda())
             

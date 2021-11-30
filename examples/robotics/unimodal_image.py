@@ -2,7 +2,6 @@ import time
 import sys
 import os
 sys.path.insert(0, os.getcwd())
-
 from fusions.robotics.sensor_fusion import SensorFusionSelfSupervised, roboticsConcat
 from torchvision import transforms
 from torch.utils.data.sampler import SubsetRandomSampler

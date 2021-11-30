@@ -14,7 +14,7 @@ class MFM(nn.Module):
         self.fuse = fusionmodule
         self.head = head
 
-    def forward(self, inputs, training=True):
+    def forward(self, inputs):
         outs = []
         for i in range(len(inputs)):
             outs.append(self.encoders[i](inputs[i]))
@@ -50,7 +50,8 @@ def train_MFM(
             optim.zero_grad()
             trains = [x.float().cuda() for x in j[:-1]]
             total += len(trains[0])
-            recons, outs = mvae(trains, training=True)
+            mvae.train()
+            recons, outs = mvae(trains)
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                 loss = criterion(outs, j[-1].float().cuda())*ce_weight
             else:
@@ -69,7 +70,8 @@ def train_MFM(
                 true = []
                 for j in valid_dataloader:
                     trains = [x.float().cuda() for x in j[:-1]]
-                    _, outs = mvae(trains, training=False)
+                    mvae.train()
+                    _, outs = mvae(trains)
                     if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                         loss = criterion(outs, j[-1].float().cuda())
                     else:
@@ -120,7 +122,8 @@ def test_MFM(model, test_dataloader, auprc=False, task="classification"):
         xes = [x.float().cuda() for x in j[:-1]]
         y_batch = j[-1].cuda()
         with torch.no_grad():
-            _, outs = model(xes, training=False)
+            model.eval()
+            _, outs = model(xes)
         if task == "classification":
             a = nn.Softmax()(outs)
             for ii in range(len(outs)):

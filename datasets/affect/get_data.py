@@ -8,7 +8,8 @@ from numpy.core.numeric import zeros_like
 from torch.nn.functional import pad
 from torch.nn import functional as F
 
-sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
+sys.path.append(os.getcwd())
+
 import torch
 import torchtext as text
 from collections import defaultdict
@@ -410,7 +411,7 @@ def process_2(inputs: List):
 
 if __name__ == '__main__':
     traindata, validdata, test_robust = \
-    get_dataloader('/home/pliang/multibench/humor.pkl', robust_test=False, max_pad=True, task='classification', data_type='humor', max_seq_len=40)
+    get_dataloader('./humor.pkl', robust_test=False, max_pad=True, task='classification', data_type='humor', max_seq_len=40)
 
     # keys = list(test_robust.keys())
     
