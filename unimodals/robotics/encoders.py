@@ -26,7 +26,7 @@ class ProprioEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, proprio, training=False):
+    def forward(self, proprio):
         return self.proprio_encoder(self.alpha * proprio).unsqueeze(2)
 
 
@@ -55,7 +55,7 @@ class ForceEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, force, training=False):
+    def forward(self, force):
         return self.frc_encoder(self.alpha * force)
 
 
@@ -80,7 +80,7 @@ class ImageEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, vis_in, training=False):
+    def forward(self, vis_in):
         image = rescaleImage(vis_in)
 
         # image encoding layers
@@ -129,7 +129,7 @@ class DepthEncoder(nn.Module):
         if initialize_weights:
             init_weights(self.modules())
 
-    def forward(self, depth_in, training=False):
+    def forward(self, depth_in):
         depth = filter_depth(depth_in)
 
         # depth encoding layers
@@ -169,7 +169,7 @@ class ActionEncoder(nn.Module):
             nn.LeakyReLU(0.1, inplace=True),
         )
 
-    def forward(self, action, training=False):
+    def forward(self, action):
         if action is None:
             return None
         return self.action_encoder(action)

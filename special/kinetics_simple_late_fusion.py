@@ -34,7 +34,7 @@ class ResNetLSTMEnc(torch.nn.Module):
         self.dropoutp = dropoutp
         self.dropout = dropout
 
-    def forward(self, x, training=True):  # x is (cbatch_size, 3, 150, 112, 112)
+    def forward(self, x):  # x is (cbatch_size, 3, 150, 112, 112)
         cbatch_size = x.shape[0]
         x = x.permute([0, 2, 1, 3, 4])  # (cbatch_size, 150, 3, 112, 112)
         x = x.reshape(-1, 3, 112, 112)  # (cbatch_size*150, 3, 112, 112)
@@ -44,7 +44,7 @@ class ResNetLSTMEnc(torch.nn.Module):
         hidden = hidden.permute([1, 2, 0])
         hidden = hidden.reshape([hidden.size()[0], -1])
         if self.dropout:
-            hidden = F.dropout(hidden, p=self.dropoutp, training=training)
+            hidden = F.dropout(hidden, p=self.dropoutp)
         return hidden
 
 
@@ -56,7 +56,7 @@ class MMDL(nn.Module):
         self.head = head
         self.has_padding = has_padding
 
-    def forward(self, inputs, training=False):
+    def forward(self, inputs):
         outs = []
         if self.has_padding:
             for i in range(len(inputs[0])):

@@ -33,7 +33,7 @@ class ResNetLSTM(torch.nn.Module):
         self.dropoutp = dropoutp
         self.dropout = dropout
 
-    def forward(self, x, training=True):  # x is (cbatch_size, 3, 150, 112, 112)
+    def forward(self, x):  # x is (cbatch_size, 3, 150, 112, 112)
         cbatch_size = x.shape[0]
         x = x.permute([0, 2, 1, 3, 4])  # (cbatch_size, 150, 3, 112, 112)
         x = x.reshape(-1, 3, 112, 112)  # (cbatch_size*150, 3, 112, 112)
@@ -43,7 +43,7 @@ class ResNetLSTM(torch.nn.Module):
         hidden = hidden.permute([1, 2, 0])
         hidden = hidden.reshape([hidden.size()[0], -1])
         if self.dropout:
-            hidden = F.dropout(hidden, p=self.dropoutp, training=training)
+            hidden = F.dropout(hidden, p=self.dropoutp)
         out = self.linear(hidden)
         return out
 
@@ -69,6 +69,7 @@ def train(ep=0):
             datas, shuffle=True, batch_size=batch_size, num_workers=num_workers)
         for j in train_dataloader:
             optim.zero_grad()
+            model.train()
             out = model(j[0].cuda(device))
             loss = criterion(out, j[2].cuda(device))
             loss.backward()
@@ -100,6 +101,7 @@ for ep in tqdm(range(epochs)):
     with torch.no_grad():
         for valid_dataloader in valid_dataloaders:
             for j in valid_dataloader:
+                model.train()
                 out = model(j[0].cuda(device))
                 loss = criterion(out, j[2].cuda(device))
                 totalloss += loss*len(j[0])
@@ -129,6 +131,7 @@ for fid in range(3):
         datas, shuffle=False, batch_size=batch_size, num_workers=num_workers)
     with torch.no_grad():
         for j in test_dataloader:
+            model.eval()
             out = model(j[0].cuda(device))
             loss = criterion(out, j[2].cuda(device))
             totalloss += loss

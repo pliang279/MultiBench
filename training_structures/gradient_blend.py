@@ -166,9 +166,9 @@ class completeModule(nn.Module):
         self.fuse = fuse
         self.head = head
 
-    def forward(self, x, training=False):
+    def forward(self, x):
         outs = multimodalcondense(self.encoders, self.fuse, x)
-        return self.head(outs, training=training)
+        return self.head(outs)
 
 
 def calcAUPRC(pts):
@@ -241,9 +241,11 @@ def train(unimodal_models,  multimodal_classification_head,
                     train_y = j[-1].cuda()
                     optim.zero_grad()
                     outs = multimodalcompute(unimodal_models, train_x)
-                    catout = fuse(outs, training=True)
+                    fuse.train()
+                    multimodal_classification_head.train()
+                    catout = fuse(outs)
                     blendloss = criterion(multimodal_classification_head(
-                        catout, training=True), train_y.squeeze())*weights[-1]
+                        catout), train_y.squeeze())*weights[-1]
                     for ii in range(len(unimodal_models)):
                         loss = criterion(unimodal_classification_heads[ii](
                             outs[ii]), train_y.squeeze())
@@ -275,8 +277,10 @@ def train(unimodal_models,  multimodal_classification_head,
                     optimi.zero_grad()
                     train_x = [x.float().cuda() for x in j[:-1]]
                     train_y = j[-1].cuda()
+                    finetunehead.train()
+                    fusehead.train()
                     blendloss = criterion(finetunehead(
-                        fusehead(train_x, training=True), training=True), train_y.squeeze())
+                        fusehead(train_x)), train_y.squeeze())
                     totalloss += blendloss * len(j[0])
                     blendloss.backward()
                     optimi.step()
@@ -290,8 +294,10 @@ def train(unimodal_models,  multimodal_classification_head,
                         valid_x = [x.float().cuda() for x in j[:-1]]
                         valid_y = j[-1].cuda()
                         outs = multimodalcompute(unimodal_models, valid_x)
-                        catout = fusehead(outs, training=False)
-                        predicts = finetunehead(catout, training=False)
+                        fusehead.eval()
+                        catout = fusehead(outs)
+                        finetunehead.eval()
+                        predicts = finetunehead(catout)
                         blendloss = criterion(predicts, valid_y.squeeze())
                         totalloss += blendloss*len(j[0])
                         predictlist = predicts.tolist()

@@ -21,30 +21,30 @@ class MMDL(nn.Module):
         self.fuseout = None
         self.reps = []
 
-    def forward(self, inputs, training=False):
+    def forward(self, inputs):
         outs = []
         if self.has_padding:
             for i in range(len(inputs[0])):
                 outs.append(self.encoders[i](
-                    [inputs[0][i], inputs[1][i]], training=training))
+                    [inputs[0][i], inputs[1][i]]))
         else:
             for i in range(len(inputs)):
-                outs.append(self.encoders[i](inputs[i], training=training))
+                outs.append(self.encoders[i](inputs[i]))
         self.reps = outs
         if self.has_padding:
             
             if isinstance(outs[0], torch.Tensor):
-                out = self.fuse(outs, training=training)
+                out = self.fuse(outs)
             else:
-                out = self.fuse([i[0] for i in outs], training=training)
+                out = self.fuse([i[0] for i in outs])
         else:
-            out = self.fuse(outs, training=training)
+            out = self.fuse(outs)
         self.fuseout = out
         if type(out) is tuple:
             out = out[0]
         if self.has_padding and not isinstance(outs[0], torch.Tensor):
-            return self.head([out, inputs[1][0]], training=training)
-        return self.head(out, training=training)
+            return self.head([out, inputs[1][0]])
+        return self.head(out)
 
 
 def deal_with_objective(objective, pred, truth, args):
@@ -113,12 +113,14 @@ def train(
                 op.zero_grad()
                 if is_packed:
                     with torch.backends.cudnn.flags(enabled=False):
+                        model.train()
                         out = model([[processinput(i).cuda()
-                                    for i in j[0]], j[1]], training=True)
+                                    for i in j[0]], j[1]])
 
                 else:
+                    model.train()
                     out = model([processinput(i).cuda()
-                                for i in j[:-1]], training=True)
+                                for i in j[:-1]])
                 if not (objective_args_dict is None):
                     objective_args_dict['reps'] = model.reps
                     objective_args_dict['fused'] = model.fuseout
@@ -145,11 +147,13 @@ def train(
                 pts = []
                 for j in valid_dataloader:
                     if is_packed:
+                        model.train()
                         out = model([[processinput(i).cuda()
-                                    for i in j[0]], j[1]], training=False)
+                                    for i in j[0]], j[1]])
                     else:
+                        model.train()
                         out = model([processinput(i).cuda()
-                                    for i in j[:-1]], training=False)
+                                    for i in j[:-1]])
 
                     if not (objective_args_dict is None):
                         objective_args_dict['reps'] = model.reps
@@ -235,12 +239,13 @@ def single_test(
         true = []
         pts = []
         for j in test_dataloader:
+            model.eval()
             if is_packed:
                 out = model([[processinput(i).cuda()
-                            for i in j[0]], j[1]], training=False)
+                            for i in j[0]], j[1]])
             else:
                 out = model([processinput(i).float().cuda()
-                            for i in j[:-1]], training=False)
+                            for i in j[:-1]])
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss or type(criterion) == torch.nn.MSELoss:
                 loss = criterion(out, j[-1].float().cuda())
 

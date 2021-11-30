@@ -1,6 +1,6 @@
 from private_test_scripts.all_in_one import all_in_one_train
 from training_structures.Supervised_Learning import train, test
-from fusions.mult import MULTModel
+from fusions.import MULTModel
 from unimodals.common_models import MLP
 from datasets.affect.get_data import get_dataloader
 from fusions.common_fusions import ConcatEarly

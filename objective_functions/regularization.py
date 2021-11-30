@@ -250,13 +250,15 @@ class RegularizationLoss(torch.nn.Module):
                     i, self.reg_params.n_samples).float().cuda())
                 inf_inputs_len.append(Perturbation.perturb_tensor(
                     inputs[1][ind], self.reg_params.n_samples, False))
+            self.model.train()
             inf_output = self.model(
-                [inf_inputs, inf_inputs_len], training=True)
+                [inf_inputs, inf_inputs_len])
         else:
             for ind, i in enumerate(inputs):
                 inf_inputs.append(Perturbation.perturb_tensor(
                     i, self.reg_params.n_samples).float().cuda())
-            inf_output = self.model(inf_inputs, training=True)
+            self.model.train()
+            inf_output = self.model(inf_inputs)
         inf_loss = self.criterion(inf_output, expanded_logits)
 
         gradients = torch.autograd.grad(

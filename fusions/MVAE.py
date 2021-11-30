@@ -13,7 +13,7 @@ class ProductOfExperts(nn.Module):
         super(ProductOfExperts, self).__init__()
         self.size = size
 
-    def forward(self, mus, logvars, eps=1e-8, training=False):
+    def forward(self, mus, logvars, eps=1e-8):
         mu, logvar = _prior_expert(self.size, len(mus[0]))
         for i in range(len(mus)):
             
@@ -39,7 +39,7 @@ class ProductOfExperts_Zipped(nn.Module):
         super(ProductOfExperts_Zipped, self).__init__()
         self.size = size
 
-    def forward(self, zipped, eps=1e-8, training=False):
+    def forward(self, zipped, eps=1e-8):
         mus = [i[0] for i in zipped]
         logvars = [i[1] for i in zipped]
         mu, logvar = _prior_expert(self.size, len(mus[0]))

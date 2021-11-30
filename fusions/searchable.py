@@ -152,7 +152,7 @@ class Searchable(nn.Module):
             if isinstance(m, aux.AlphaScalarMultiplication):
                 nn.init.normal_(m.alpha_x, 0.0, 0.1)
 
-    def forward(self, inputs, training=False):
+    def forward(self, inputs):
         features = []
         for i in range(len(inputs)):
             feat = self.encoders[i](inputs[i])[1:]

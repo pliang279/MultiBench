@@ -10,7 +10,7 @@ class Concat(nn.Module):
     def __init__(self):
         super(Concat, self).__init__()
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         flattened = []
         for modality in modalities:
             flattened.append(torch.flatten(modality, start_dim=1))
@@ -22,7 +22,7 @@ class ConcatEarly(nn.Module):
     def __init__(self):
         super(ConcatEarly, self).__init__()
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         return torch.cat(modalities, dim=2)
 
 
@@ -31,7 +31,7 @@ class Stack(nn.Module):
     def __init__(self):
         super().__init__()
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         flattened = []
         for modality in modalities:
             flattened.append(torch.flatten(modality, start_dim=1))
@@ -46,7 +46,7 @@ class ConcatWithLinear(nn.Module):
         self.concat_dim = concat_dim
         self.fc = nn.Linear(input_dim, output_dim)
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         return self.fc(torch.cat(modalities, dim=self.concat_dim))
 
 
@@ -60,7 +60,7 @@ class FiLM(nn.Module):
         self.ggen_modal = gamma_generate_modal
         self.bgen_modal = beta_generate_modal
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         gamma = self.g_net(modalities[self.ggen_modal])
         beta = self.b_net(modalities[self.bgen_modal])
         return gamma * modalities[self.base_modal] + beta
@@ -77,7 +77,7 @@ class MultiplicativeInteractions3Modal(nn.Module):
         self.b = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
                                                   output_dim, 'matrix')
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         return torch.matmul(modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
 
 
@@ -151,7 +151,7 @@ class MultiplicativeInteractions2Modal(nn.Module):
     def repeatHorizontally(self, tensor, dim):
         return tensor.repeat(dim).view(dim, -1).transpose(0, 1)
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         if len(modalities) == 1:
             return modalities[0]
         elif len(modalities) > 2:
@@ -195,8 +195,8 @@ class MultiplicativeInteractions2Modal(nn.Module):
         elif self.output == 'scalar':
             Wprime = torch.matmul(m1, self.W.unsqueeze(1)).squeeze(1) + self.V
             bprime = torch.matmul(m1, self.U.unsqueeze(1)).squeeze(1) + self.b
-            output = repeatHorizontally(
-                Wprime, self.input_dims[1]) * m2 + repeatHorizontally(bprime, self.input_dims[1])
+            output = self.repeatHorizontally(
+                Wprime, self.input_dims[1]) * m2 + self.repeatHorizontally(bprime, self.input_dims[1])
         return output
 
 
@@ -205,7 +205,7 @@ class TensorFusion(nn.Module):
     def __init__(self):
         super().__init__()
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         if len(modalities) == 1:
             return modalities[0]
 
@@ -252,7 +252,7 @@ class LowRankTensorFusion(nn.Module):
         nn.init.xavier_normal(self.fusion_weights)
         self.fusion_bias.data.fill_(0)
 
-    def forward(self, modalities, training=False):
+    def forward(self, modalities):
         batch_size = modalities[0].shape[0]
         # next we perform low-rank multimodal fusion
         # here is a more efficient implementation than the one the paper describes
@@ -295,7 +295,7 @@ class NLgate(torch.nn.Module):
         self.tf_dim = tf_dim
         self.softmax = nn.Softmax(dim=2)
 
-    def forward(self, x, training=False):
+    def forward(self, x):
         q = x[0]
         k = x[1]
         v = x[1]
@@ -304,11 +304,11 @@ class NLgate(torch.nn.Module):
         else:
             qin = self.qli(q).view(-1, self.thw_dim, self.c_dim)
         if self.kli is None:
-            kin = k.view(-1, c_dim, tf_dim)
+            kin = k.view(-1, self.c_dim, self.tf_dim)
         else:
             kin = self.kli(k).view(-1, self.c_dim, self.tf_dim)
         if self.vli is None:
-            vin = v.view(-1, tf_dim, c_dim)
+            vin = v.view(-1, self.tf_dim, self.c_dim)
         else:
             vin = self.vli(v).view(-1, self.tf_dim, self.c_dim)
         matmulled = torch.matmul(qin, kin)

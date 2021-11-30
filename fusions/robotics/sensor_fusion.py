@@ -169,7 +169,7 @@ class SensorFusionSelfSupervised(SensorFusion):
 
         self.deterministic = deterministic
 
-    def forward(self, input, training=False):
+    def forward(self, input):
         img_encoded, frc_encoded, proprio_encoded, depth_encoded, action_encoded = input
 
         if self.encoder_bool:
@@ -216,12 +216,7 @@ class roboticsConcat(nn.Module):
         super(roboticsConcat, self).__init__()
         self.name = name
 
-    def forward(self, x, training=False):
-        
-        
-        
-        
-        
+    def forward(self, x):
         if self.name == "noconcat":
             return [x[0][0].squeeze(), x[1].squeeze(), x[2].squeeze(), x[3][0].squeeze(), x[4]]
         if self.name == "image":

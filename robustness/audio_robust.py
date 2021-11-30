@@ -41,7 +41,7 @@ def audio_structured_dropout(signal, p, step=10):
 
     :param signal: Audio signal to permute.
     :param p: Dropout probability.
-    :param step: number of time steps to drop the signal.
+    :param step: Number of time steps to drop the signal.
     """
     res = [signal[i] for i in range(len(signal))]
     for i in range(len(res)-step+1):

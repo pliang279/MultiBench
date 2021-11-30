@@ -20,22 +20,22 @@ class MMDL(nn.Module):
         self.refiner = refiner
         self.has_padding = has_padding
 
-    def forward(self, inputs, training=False):
+    def forward(self, inputs):
         outs = []
         input_num = len(inputs[0]) if self.has_padding else len(inputs)
         for i in range(input_num):
             if self.has_padding:
                 outs.append(self.encoders[i](
-                    [inputs[0][i], inputs[1][i]], training=training))
+                    [inputs[0][i], inputs[1][i]]))
             else:
-                outs.append(self.encoders[i](inputs[i], training=training))
+                outs.append(self.encoders[i](inputs[i]))
 
-        fuse = self.fuse(outs, training=training)
-        logit = self.head(fuse, training=training)
+        fuse = self.fuse(outs)
+        logit = self.head(fuse)
         sizes = [torch.flatten(ii, start_dim=1).size(1) for ii in inputs]
         rec_features = []
-        if training:
-            rec_feature = self.refiner(fuse, training=training)
+        if self.training:
+            rec_feature = self.refiner(fuse)
             curr = 0
             for i in range(input_num):
                 if self.has_padding:
@@ -105,14 +105,16 @@ def train(
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
+                    model.train()
                     out1, out2 = model(
-                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()], training=True)
+                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()])
                     
                     loss1 = contrast_criterion(out1)
                     loss2 = contrast_criterion(out2)
                     loss = loss1+loss2
             else:
-                out = model([i.float().cuda() for i in j[:-1]], training=True)
+                model.train()
+                out = model([i.float().cuda() for i in j[:-1]])
                 
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss_cl = criterion(out[0], j[-1].float().cuda())
@@ -148,11 +150,13 @@ def train(
             pts = []
             for j in valid_dataloader:
                 if is_packed:
+                    model.eval()
                     out = model(
-                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()], True, training=False)
+                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()], True)
                 else:
+                    model.eval()
                     out, _, _, _ = model([i.float().cuda()
-                                         for i in j[:-1]], training=False)
+                                         for i in j[:-1]])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                     loss = criterion(out, j[-1].float().cuda())
                 elif task == 'regression':
@@ -228,10 +232,12 @@ def test(
         pts = []
         for j in test_dataloader:
             if is_packed:
-                out = model([[i.cuda() for i in j[0]], j[1]], training=False)
+                model.eval()
+                out = model([[i.cuda() for i in j[0]], j[1]])
             else:
+                model.eval()
                 out, _, _, _ = model([i.float().cuda()
-                                     for i in j[:-1]], training=False)
+                                     for i in j[:-1]])
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
                 loss = criterion(out, j[-1].float().cuda())
             else:
