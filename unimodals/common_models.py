@@ -186,6 +186,7 @@ class LSTM(torch.nn.Module):
         self.dropout = dropout
         self.flatten = flatten
         self.has_padding = has_padding
+        self.linear_layer_outdim = linear_layer_outdim
 
     def forward(self, x):
         if self.has_padding:
