@@ -201,12 +201,13 @@ class Affectdataset(Dataset):
         def get_class(flag, data_type=self.data_type):
             if data_type in ['mosi', 'mosei', 'sarcasm']:
                 if flag > 0:
-                    return 1
+                    return [[1]]
                 else:
-                    return 0
+                    return [[0]]
             else:
-                return flag
+                return [flag]
         
+        tmp_label = self.dataset['labels'][ind]
         if self.data_type == 'humor':
             if (self.task == None) or (self.task == 'regression'):
                 if self.dataset['labels'][ind] == 0:
@@ -401,6 +402,7 @@ def process_2(inputs: List):
         # if len(sample[-2].shape) > 2:
         #     labels.append(torch.where(sample[-2][:, 1] == 1)[0])
         # else:
+        # print(sample[-1].shape)
         if sample[-1].shape[1] > 1:
             labels.append(sample[-1].reshape(sample[-1].shape[1], sample[-1].shape[0])[0])
         else:
