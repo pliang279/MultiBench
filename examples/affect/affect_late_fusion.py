@@ -20,9 +20,9 @@ traindata, validdata, test_robust = get_dataloader(
 #     get_dataloader('/home/pliang/multibench/affect/sarcasm.pkl', robust_test=False)
 
 # mosi/mosei
-encoders = [GRU(35, 70, dropout=True, has_padding=False, batch_first=True).cuda(),
-            GRU(74, 200, dropout=True, has_padding=False, batch_first=True).cuda(),
-            GRU(300, 600, dropout=True, has_padding=False, batch_first=True).cuda()]
+encoders = [GRU(35, 70, dropout=True, has_padding=True, batch_first=True).cuda(),
+            GRU(74, 200, dropout=True, has_padding=True, batch_first=True).cuda(),
+            GRU(300, 600, dropout=True, has_padding=True, batch_first=True).cuda()]
 head = MLP(870, 870, 1).cuda()
 
 # encoders=[GRU(20,40,dropout=True,has_padding=True).cuda(), \
