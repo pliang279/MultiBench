@@ -20,7 +20,7 @@ modality_num = 2
 
 # mosi/mosei
 encoder = GRU(300, 600, dropout=True, has_padding=False,
-              batch_first=True).cuda()
+              batch_first=True, last_only=True).cuda()
 head = MLP(600, 512, 1).cuda()
 
 
