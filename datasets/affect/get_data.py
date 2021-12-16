@@ -208,12 +208,12 @@ class Affectdataset(Dataset):
                 return [flag]
         
         tmp_label = self.dataset['labels'][ind]
-        if self.data_type == 'humor':
+        if self.data_type == 'humor' or self.data_type == 'sarcasm':
             if (self.task == None) or (self.task == 'regression'):
-                if self.dataset['labels'][ind] == 0:
-                    tmp_label = -1
+                if self.dataset['labels'][ind] < 1:
+                    tmp_label = [[-1]]
                 else:
-                    tmp_label = 1
+                    tmp_label = [[1]]
         else:
             tmp_label = self.dataset['labels'][ind]
 

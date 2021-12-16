@@ -70,14 +70,17 @@ class FiLM(nn.Module):
 class MultiplicativeInteractions3Modal(nn.Module):
     # input_dims: list or tuple of 3 integers indicating sizes of input
     # output_dim: size of output
-    def __init__(self, input_dims, output_dim):
+    def __init__(self, input_dims, output_dim, task=None):
         super(MultiplicativeInteractions3Modal, self).__init__()
         self.a = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
                                                   [input_dims[2], output_dim], 'matrix3D')
         self.b = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
                                                   output_dim, 'matrix')
+        self.task = task
 
     def forward(self, modalities):
+        if self.task == 'affect':
+            return torch.einsum('bm, bmp -> bp', modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
         return torch.matmul(modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
 
 
