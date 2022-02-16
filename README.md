@@ -18,6 +18,22 @@ Correspondence to:
   - [Ruslan Salakhutdinov](https://www.cs.cmu.edu/~rsalakhu/) (rsalakhu@cs.cmu.edu)
   - [Louis-Philippe Morency](https://www.cs.cmu.edu/~morency/) (morency@cs.cmu.edu)
 
+## Paper
+
+[**MultiBench: Multiscale Benchmarks for Multimodal Representation Learning**](https://arxiv.org/abs/2107.07502)<br>
+Paul Pu Liang, Yiwei Lyu, Xiang Fan, Zetian Wu, Yun Cheng, Jason Wu, Leslie Chen, Peter Wu, Michelle A. Lee, Yuke Zhu, Ruslan Salakhutdinov, Louis-Philippe Morency<br>
+NeurIPS 2021 Datasets and Benchmarks Track.
+
+If you find this repository useful, please cite our paper:
+```
+@inproceedings{liang2021multibench,
+  title={MultiBench: Multiscale Benchmarks for Multimodal Representation Learning},
+  author={Liang, Paul Pu and Lyu, Yiwei and Fan, Xiang and Wu, Zetian and Cheng, Yun and Wu, Jason and Chen, Leslie Yufan and Wu, Peter and Lee, Michelle A and Zhu, Yuke and others},
+  booktitle={Thirty-fifth Conference on Neural Information Processing Systems Datasets and Benchmarks Track (Round 1)},
+  year={2021}
+}
+```
+
 ## Overview
 
 ![](/images/overview.png)
