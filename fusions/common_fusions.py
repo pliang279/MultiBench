@@ -377,9 +377,10 @@ class LowRankTensorFusion(nn.Module):
 
 class NLgate(torch.nn.Module):
     """
-    Implementation of NLgate Fusion.
+    Implementation of Non-Local Gate-based Fusion
+
     
-    See section F4 of "What makes training MM classification networks hard" for details
+    See section F4 of https://arxiv.org/pdf/1905.12681.pdf for details
     """
     def __init__(self, thw_dim, c_dim, tf_dim, q_linear=None, k_linear=None, v_linear=None):
         """

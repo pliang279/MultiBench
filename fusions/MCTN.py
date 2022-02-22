@@ -14,8 +14,18 @@ sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 
 
 class Encoder(nn.Module):
+    """
+    Applies a gated GRU to encode the input vector
+    Paper/Code Sourced From: https://arxiv.org/pdf/1812.07809.pdf
+    """
     def __init__(self, input_size, hidden_size,
                  n_layers=1, dropout=0.2):
+        """
+        :param input_size: Encoder input size
+        :param hidden_size: Hidden state size for internal GRU
+        :param n_layers: Number of layers in recurrent unit
+        :param dropout: Dropout Probability
+        """
         super(Encoder, self).__init__()
         self.input_size = input_size
         self.hidden_size = hidden_size
@@ -24,6 +34,10 @@ class Encoder(nn.Module):
                           dropout=dropout, bidirectional=True)
 
     def forward(self, src, hidden=None):
+        """
+        :param src: Encoder Input
+        :param hidden: Encoder Hidden State
+        """
         outputs, hidden = self.gru(src, hidden)
 
         # sum bidirectional outputs
