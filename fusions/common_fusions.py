@@ -384,13 +384,14 @@ class NLgate(torch.nn.Module):
     def __init__(self, thw_dim, c_dim, tf_dim, q_linear=None, k_linear=None, v_linear=None):
         """
         q_linear, k_linear, v_linear are none if no linear layer applied before q,k,v.
-        Otherwise, a tuple of (indim,outdim) is required for each of these 3 arguments
-        :param thw_dim:
-        :param c_dim:
-        :param tf_dim: 
-        :param q_linear:
-        :param k_linear:
-        :param v_linear:
+        Otherwise, a tuple of (indim,outdim) is required for each of these 3 arguments.
+        
+        :param thw_dim: TODO
+        :param c_dim: TODO 
+        :param tf_dim: TODO
+        :param q_linear: TODO
+        :param k_linear: TODO
+        :param v_linear: TODO
         """
         super(NLgate, self).__init__()
         self.qli = None
