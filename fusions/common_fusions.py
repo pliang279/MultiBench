@@ -5,12 +5,20 @@ import pdb
 from torch.autograd import Variable
 
 
-# Simple concatenation on dim 1
+
 class Concat(nn.Module):
+    """
+    Concatenation of input data on dimension 1.
+    """
     def __init__(self):
         super(Concat, self).__init__()
 
     def forward(self, modalities):
+        """
+        Forward Pass of Concat.
+        
+        :param modalities: A iterable of modalities to combine
+        """
         flattened = []
         for modality in modalities:
             flattened.append(torch.flatten(modality, start_dim=1))
