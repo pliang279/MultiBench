@@ -153,15 +153,17 @@ class MultiplicativeInteractions3Modal(nn.Module):
 class MultiplicativeInteractions2Modal(nn.Module):
     """
     Implementation of 2-way Modal Multiplicative Interactions
-    :param input_dims: list or tuple of 2 integers indicating input dimensions of the 2 modalities
-    :param output_dim: output dimension
-    :param output: type of MI, options from 'matrix3D','matrix','vector','scalar'
-    :param flatten: whether we need to flatten the input modalities
-    :param clip: clip parameter values, None if no clip
-    :param grad_clip: clip grad values, None if no clip
-    :param flip: whether to swap the two input modalities in forward function or not
     """
     def __init__(self, input_dims, output_dim, output, flatten=False, clip=None, grad_clip=None, flip=False):
+        """
+        :param input_dims: list or tuple of 2 integers indicating input dimensions of the 2 modalities
+        :param output_dim: output dimension
+        :param output: type of MI, options from 'matrix3D','matrix','vector','scalar'
+        :param flatten: whether we need to flatten the input modalities
+        :param clip: clip parameter values, None if no clip
+        :param grad_clip: clip grad values, None if no clip
+        :param flip: whether to swap the two input modalities in forward function or not
+        """
         super(MultiplicativeInteractions2Modal, self).__init__()
         self.input_dims = input_dims
         self.clip = clip
