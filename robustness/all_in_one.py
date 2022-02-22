@@ -3,6 +3,20 @@ import torch
 
 
 def stocks_train(num_training, trainprocess, algorithm, encoder=False):
+    """Augments stock training data with noise.
+    
+    Blah blah blah.
+    
+    Args:
+        num_training:
+        trainprocess:
+        algorithm:
+        encoder:
+    
+    Returns:
+        blah.
+    
+    """
     if encoder:
         filenames_encoder = []
         filenames_head = []
