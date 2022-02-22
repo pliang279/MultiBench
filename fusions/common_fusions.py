@@ -17,7 +17,7 @@ class Concat(nn.Module):
         """
         Forward Pass of Concat.
         
-        :param modalities: A iterable of modalities to combine
+        :param modalities: An iterable of modalities to combine
         """
         flattened = []
         for modality in modalities:
@@ -25,10 +25,10 @@ class Concat(nn.Module):
         return torch.cat(flattened, dim=1)
 
 
-# Simple Early concatenation on dim 2
+
 class ConcatEarly(nn.Module):
     """
-    Concatenation of input data on dimension 1.
+    Concatenation of input data on dimension 2.
     """
     def __init__(self):
         super(ConcatEarly, self).__init__()
@@ -37,38 +37,72 @@ class ConcatEarly(nn.Module):
         """
         Forward Pass of ConcatEarly.
         
-        :param modalities: A iterable of modalities to combine
+        :param modalities: An iterable of modalities to combine
         """
         return torch.cat(modalities, dim=2)
 
 
 # Stacking modalities
 class Stack(nn.Module):
+    """
+    Stacking modalities together on dimension 1.
+    """
     def __init__(self):
         super().__init__()
 
     def forward(self, modalities):
+        """
+        Forward Pass of Stack.
+        
+        :param modalities: An iterable of modalities to combine
+        """
         flattened = []
         for modality in modalities:
             flattened.append(torch.flatten(modality, start_dim=1))
         return torch.stack(flattened, dim=2)
 
 
-# Concatenation with a linear layer
 class ConcatWithLinear(nn.Module):
-    # input dim, output_dim: the in/out dim of the linear layer
+    """
+    Concatenation with a linear layer.
+    """
     def __init__(self, input_dim, output_dim, concat_dim=1):
+        """
+        Initialize ConcatWithLinear Module
+        
+        :param input_dim: The input dimension for the linear layer
+        :param output_dim: The output dimension for the linear layer
+        :concat_dim: The concatentation dimension for the modalities.
+        """
         super(ConcatWithLinear, self).__init__()
         self.concat_dim = concat_dim
         self.fc = nn.Linear(input_dim, output_dim)
 
     def forward(self, modalities):
+        """
+        Forward Pass of Stack.
+        
+        :param modalities: An iterable of modalities to combine
+        """
         return self.fc(torch.cat(modalities, dim=self.concat_dim))
 
 
 class FiLM(nn.Module):
-    # See https://arxiv.org/pdf/1709.07871.pdf
+    """
+    Implementation of FiLM - Feature-Wise Affine Transformations of the Input.
+    
+    See https://arxiv.org/pdf/1709.07871.pdf for more details.
+    """
     def __init__(self, gamma_generation_network, beta_generation_network, base_modal=0, gamma_generate_modal=1, beta_generate_modal=1):
+        """
+        Initialize FiLM layer. 
+        
+        :param gamma_generation_network: Network which generates gamma_parameters from gamma_generation_modal data.
+        :param beta_generation_network: Network which generates beta_parameters from beta_generation_modal data.
+        :param base_modal: Modality to apply affine transformation to.
+        :param gamma_generate_modal: Modality to generate gamma portion of affine transformation from.
+        :param beta_generate_modal: Modality to generate beta portion of affine transformation from.
+        """
         super(FiLM, self).__init__()
         self.g_net = gamma_generation_network
         self.b_net = beta_generation_network
@@ -77,16 +111,27 @@ class FiLM(nn.Module):
         self.bgen_modal = beta_generate_modal
 
     def forward(self, modalities):
+        """
+        Forward Pass of FiLM.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         gamma = self.g_net(modalities[self.ggen_modal])
         beta = self.b_net(modalities[self.bgen_modal])
         return gamma * modalities[self.base_modal] + beta
 
 
-# 3-modal Multiplicative Interactions
+
 class MultiplicativeInteractions3Modal(nn.Module):
-    # input_dims: list or tuple of 3 integers indicating sizes of input
-    # output_dim: size of output
+    """
+    Implementation of 3-Way Modal Multiplicative Interactions
+    """
     def __init__(self, input_dims, output_dim, task=None):
+        """
+        :param input_dims: list or tuple of 3 integers indicating sizes of input
+        :param output_dim: size of outputs
+        :param task: Set to "affect" when working with social data.
+        """
         super(MultiplicativeInteractions3Modal, self).__init__()
         self.a = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
                                                   [input_dims[2], output_dim], 'matrix3D')
@@ -95,6 +140,11 @@ class MultiplicativeInteractions3Modal(nn.Module):
         self.task = task
 
     def forward(self, modalities):
+        """
+        Forward Pass of MultiplicativeInteractions3Modal.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         if self.task == 'affect':
             return torch.einsum('bm, bmp -> bp', modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
         return torch.matmul(modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
