@@ -54,7 +54,7 @@
 <li class="toctree-l4"><a class="reference internal" href="datasets.stocks.html">datasets.stocks package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#module-datasets">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -102,23 +102,310 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="datasets-rtfm-rtfm-dynamics-monster-agent-module">
-<h2>datasets.RTFM.rtfm.dynamics.monster.agent module<a class="headerlink" href="#datasets-rtfm-rtfm-dynamics-monster-agent-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.dynamics.monster.agent">
+<span id="datasets-rtfm-rtfm-dynamics-monster-agent-module"></span><h2>datasets.RTFM.rtfm.dynamics.monster.agent module<a class="headerlink" href="#module-datasets.RTFM.rtfm.dynamics.monster.agent" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.Agent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.agent.</span></span><span class="sig-name descname"><span class="pre">Agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Agent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.monster.base.BaseMonster</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.Agent.char">
+<span class="sig-name descname"><span class="pre">char</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'&#64;'</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Agent.char" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.Agent.describe_class">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">describe_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Agent.describe_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.Agent.target_is_portable">
+<span class="sig-name descname"><span class="pre">target_is_portable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Agent.target_is_portable" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.Player">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.agent.</span></span><span class="sig-name descname"><span class="pre">Player</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Player" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Agent" title="datasets.RTFM.rtfm.dynamics.monster.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.agent.Agent</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.Player.act">
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Player.act" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.Player.keymap">
+<span class="sig-name descname"><span class="pre">keymap</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'</span> <span class="pre">':</span> <span class="pre">rtfm.dynamics.event.Stay,</span> <span class="pre">'a':</span> <span class="pre">rtfm.dynamics.event.Left,</span> <span class="pre">'d':</span> <span class="pre">rtfm.dynamics.event.Right,</span> <span class="pre">'s':</span> <span class="pre">rtfm.dynamics.event.Down,</span> <span class="pre">'w':</span> <span class="pre">rtfm.dynamics.event.Up}</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Player.keymap" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.agent.</span></span><span class="sig-name descname"><span class="pre">QueuedAgent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.dynamics.monster.agent.Agent" title="datasets.RTFM.rtfm.dynamics.monster.agent.Agent"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.agent.Agent</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent.act">
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent.act" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent.queue_action">
+<span class="sig-name descname"><span class="pre">queue_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">A</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent.queue_action" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="datasets-rtfm-rtfm-dynamics-monster-base-module">
-<h2>datasets.RTFM.rtfm.dynamics.monster.base module<a class="headerlink" href="#datasets-rtfm-rtfm-dynamics-monster-base-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.dynamics.monster.base">
+<span id="datasets-rtfm-rtfm-dynamics-monster-base-module"></span><h2>datasets.RTFM.rtfm.dynamics.monster.base module<a class="headerlink" href="#module-datasets.RTFM.rtfm.dynamics.monster.base" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.base.</span></span><span class="sig-name descname"><span class="pre">BaseMonster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.world_object.WorldObject</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.act">
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.act" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.armour_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">armour_class</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.armour_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.armour_class_map">
+<span class="sig-name descname"><span class="pre">armour_class_map</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-3,</span> <span class="pre">-3,</span> <span class="pre">-3,</span> <span class="pre">-3,</span> <span class="pre">-2,</span> <span class="pre">-2,</span> <span class="pre">-1,</span> <span class="pre">-1,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">7,</span> <span class="pre">8]</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.armour_class_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.attack">
+<span class="sig-name descname"><span class="pre">attack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">another</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">override_success</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.attack" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.calculate_attack_success">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_attack_success</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attacker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">victim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.calculate_attack_success" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.calculate_damage">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_damage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attacker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">victim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.calculate_damage" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.calculate_to_hit">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">calculate_to_hit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attacker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">victim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.calculate_to_hit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.can_inhabit_cell">
+<span class="sig-name descname"><span class="pre">can_inhabit_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.can_inhabit_cell" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.can_inhabit_pos">
+<span class="sig-name descname"><span class="pre">can_inhabit_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.can_inhabit_pos" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.carrying_capacity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">carrying_capacity</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.carrying_capacity" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.char">
+<span class="sig-name descname"><span class="pre">char</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'m'</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.char" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.combat_dice">
+<span class="sig-name descname"><span class="pre">combat_dice</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">20</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.combat_dice" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.damage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">damage</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.damage" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.describe">
+<span class="sig-name descname"><span class="pre">describe</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.describe" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.descriptors">
+<span class="sig-name descname"><span class="pre">descriptors</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'armour_class':</span> <span class="pre">['naked',</span> <span class="pre">'covered',</span> <span class="pre">'armored',</span> <span class="pre">'well</span> <span class="pre">protected'],</span> <span class="pre">'damage':</span> <span class="pre">['weak',</span> <span class="pre">'fledgling',</span> <span class="pre">'strong',</span> <span class="pre">'hulking'],</span> <span class="pre">'hit':</span> <span class="pre">['uncoordinated',</span> <span class="pre">'coordinated',</span> <span class="pre">'accurate',</span> <span class="pre">'precise'],</span> <span class="pre">'hit_points':</span> <span class="pre">['near</span> <span class="pre">death',</span> <span class="pre">'wounded',</span> <span class="pre">'hurt',</span> <span class="pre">'healthy']}</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.descriptors" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.dexterity_hit_map">
+<span class="sig-name descname"><span class="pre">dexterity_hit_map</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-3,</span> <span class="pre">-3,</span> <span class="pre">-3,</span> <span class="pre">-3,</span> <span class="pre">-2,</span> <span class="pre">-2,</span> <span class="pre">-1,</span> <span class="pre">-1,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">3,</span> <span class="pre">4,</span> <span class="pre">5,</span> <span class="pre">6,</span> <span class="pre">7,</span> <span class="pre">8,</span> <span class="pre">9,</span> <span class="pre">10,</span> <span class="pre">11]</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.dexterity_hit_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.elemental_armour_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elemental_armour_class</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.elemental_armour_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.elemental_damage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">elemental_damage</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.elemental_damage" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.encumbrance">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">encumbrance</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.encumbrance" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.get_valid_moves">
+<span class="sig-name descname"><span class="pre">get_valid_moves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.get_valid_moves" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.hit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hit</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.hit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.is_alive">
+<span class="sig-name descname"><span class="pre">is_alive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.is_alive" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.max_hit_points">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_hit_points</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.max_hit_points" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.move_to_pos">
+<span class="sig-name descname"><span class="pre">move_to_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.move_to_pos" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.natural_armour_class">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">natural_armour_class</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.natural_armour_class" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.natural_damage">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">natural_damage</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.natural_damage" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.natural_hit">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">natural_hit</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.natural_hit" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.pickup">
+<span class="sig-name descname"><span class="pre">pickup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">another</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.pickup" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.place">
+<span class="sig-name descname"><span class="pre">place</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.place" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.position_is_observable">
+<span class="sig-name descname"><span class="pre">position_is_observable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">position</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.position_is_observable" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.sight">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sight</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.sight" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.speed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">speed</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.speed" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.strength_dmg_map">
+<span class="sig-name descname"><span class="pre">strength_dmg_map</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-1,</span> <span class="pre">-1,</span> <span class="pre">-1,</span> <span class="pre">-1,</span> <span class="pre">-1,</span> <span class="pre">-1,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">2,</span> <span class="pre">6,</span> <span class="pre">6,</span> <span class="pre">6,</span> <span class="pre">6,</span> <span class="pre">6,</span> <span class="pre">6]</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.strength_dmg_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.strength_hit_map">
+<span class="sig-name descname"><span class="pre">strength_hit_map</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[-2,</span> <span class="pre">-2,</span> <span class="pre">-2,</span> <span class="pre">-2,</span> <span class="pre">-2,</span> <span class="pre">-2,</span> <span class="pre">-1,</span> <span class="pre">-1,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">3,</span> <span class="pre">3]</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.strength_hit_map" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.target_is_attackable">
+<span class="sig-name descname"><span class="pre">target_is_attackable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.target_is_attackable" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.target_is_portable">
+<span class="sig-name descname"><span class="pre">target_is_portable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.target_is_portable" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.valid_moves">
+<span class="sig-name descname"><span class="pre">valid_moves</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[rtfm.dynamics.event.Stay,</span> <span class="pre">rtfm.dynamics.event.Up,</span> <span class="pre">rtfm.dynamics.event.Down,</span> <span class="pre">rtfm.dynamics.event.Left,</span> <span class="pre">rtfm.dynamics.event.Right]</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.valid_moves" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.weight">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">weight</span></span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.base.BaseMonster.weight" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="datasets-rtfm-rtfm-dynamics-monster-hostile-module">
-<h2>datasets.RTFM.rtfm.dynamics.monster.hostile module<a class="headerlink" href="#datasets-rtfm-rtfm-dynamics-monster-hostile-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.dynamics.monster.hostile">
+<span id="datasets-rtfm-rtfm-dynamics-monster-hostile-module"></span><h2>datasets.RTFM.rtfm.dynamics.monster.hostile module<a class="headerlink" href="#module-datasets.RTFM.rtfm.dynamics.monster.hostile" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.hostile.HostileMonster">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.hostile.</span></span><span class="sig-name descname"><span class="pre">HostileMonster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.hostile.HostileMonster" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.monster.base.BaseMonster</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.hostile.HostileMonster.act">
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.hostile.HostileMonster.act" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.hostile.HostileMonster.target_is_attackable">
+<span class="sig-name descname"><span class="pre">target_is_attackable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.hostile.HostileMonster.target_is_attackable" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="datasets-rtfm-rtfm-dynamics-monster-random-module">
-<h2>datasets.RTFM.rtfm.dynamics.monster.random module<a class="headerlink" href="#datasets-rtfm-rtfm-dynamics-monster-random-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.dynamics.monster.random">
+<span id="datasets-rtfm-rtfm-dynamics-monster-random-module"></span><h2>datasets.RTFM.rtfm.dynamics.monster.random module<a class="headerlink" href="#module-datasets.RTFM.rtfm.dynamics.monster.random" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.random.RandomMonster">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.random.</span></span><span class="sig-name descname"><span class="pre">RandomMonster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.random.RandomMonster" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.monster.base.BaseMonster</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.random.RandomMonster.act">
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.random.RandomMonster.act" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="datasets-rtfm-rtfm-dynamics-monster-stationary-module">
-<h2>datasets.RTFM.rtfm.dynamics.monster.stationary module<a class="headerlink" href="#datasets-rtfm-rtfm-dynamics-monster-stationary-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.dynamics.monster.stationary">
+<span id="datasets-rtfm-rtfm-dynamics-monster-stationary-module"></span><h2>datasets.RTFM.rtfm.dynamics.monster.stationary module<a class="headerlink" href="#module-datasets.RTFM.rtfm.dynamics.monster.stationary" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.stationary.StationaryMonster">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.stationary.</span></span><span class="sig-name descname"><span class="pre">StationaryMonster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.stationary.StationaryMonster" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.monster.hostile.HostileMonster</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.dynamics.monster.stationary.StationaryMonster.act">
+<span class="sig-name descname"><span class="pre">act</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">engine</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.dynamics.monster.stationary.StationaryMonster.act" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.dynamics.monster">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datasets.RTFM.rtfm.dynamics.monster" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

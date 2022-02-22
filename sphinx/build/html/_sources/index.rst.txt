@@ -10,21 +10,13 @@ Welcome to MultiBench's documentation!
    :maxdepth: 2
    :caption: Contents:
    
-   datasets/index.rst
    datasets/modules
-   eval_scripts/index.rst
    eval_scripts/modules
-   fusions/index.rst
    fusions/modules
-   objective_functions/index.rst
    objective_functions/modules
-   robustness/index.rst
    robustness/modules
-   training_structures/index.rst
    training_structures/modules
-   unimodals/index.rst
    unimodals/modules
-   utils/index.rst
    utils/modules
 
 

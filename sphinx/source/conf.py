@@ -12,14 +12,8 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../datasets'))
-sys.path.insert(0, os.path.abspath('../eval_scripts'))
-sys.path.insert(0, os.path.abspath('../fusions'))
-sys.path.insert(0, os.path.abspath('../objective_functions'))
-sys.path.insert(0, os.path.abspath('../robustness'))
-sys.path.insert(0, os.path.abspath('../training_structures'))
-sys.path.insert(0, os.path.abspath('../unimodals'))
-sys.path.insert(0, os.path.abspath('../utils'))
+sys.path.insert(0, os.path.abspath('../../'))
+sys.path.insert(0, os.path.abspath('../../robustness'))
 # -- Project information -----------------------------------------------------
 
 project = 'MultiBench'
@@ -46,7 +40,9 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-
+autodoc_mock_imports = ['torch','tqdm', 'h5py', 'theano', 'numpy', 'torchvision','sklearn', 'rtfm',
+                        'gym', 'PIL', 'memory_profiler', 'revtok', 'matplotlib', 'pandas', 'getch',
+                        'lxml','torchtext','transformers','fannypack', 'gensim']
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

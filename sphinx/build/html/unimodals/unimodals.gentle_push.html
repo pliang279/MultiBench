@@ -53,10 +53,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="unimodals.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="unimodals.html#unimodals-mvae-module">unimodals.MVAE module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="unimodals.html#unimodals-common-models-module">unimodals.common_models module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="unimodals.html#unimodals-res3d-module">unimodals.res3d module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-unimodals.MVAE">unimodals.MVAE module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-unimodals.common_models">unimodals.common_models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-unimodals.res3d">unimodals.res3d module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-unimodals">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -95,14 +95,104 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="unimodals-gentle-push-head-module">
-<h2>unimodals.gentle_push.head module<a class="headerlink" href="#unimodals-gentle-push-head-module" title="Permalink to this headline"></a></h2>
+<section id="module-unimodals.gentle_push.head">
+<span id="unimodals-gentle-push-head-module"></span><h2>unimodals.gentle_push.head module<a class="headerlink" href="#module-unimodals.gentle_push.head" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.gentle_push.head.GentlePushLateLSTM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.head.</span></span><span class="sig-name descname"><span class="pre">GentlePushLateLSTM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.GentlePushLateLSTM" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.gentle_push.head.GentlePushLateLSTM.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.GentlePushLateLSTM.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.gentle_push.head.Head">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.head.</span></span><span class="sig-name descname"><span class="pre">Head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.Head" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.gentle_push.head.Head.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fused_features</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.Head.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="unimodals-gentle-push-layers-module">
-<h2>unimodals.gentle_push.layers module<a class="headerlink" href="#unimodals-gentle-push-layers-module" title="Permalink to this headline"></a></h2>
+<section id="module-unimodals.gentle_push.layers">
+<span id="unimodals-gentle-push-layers-module"></span><h2>unimodals.gentle_push.layers module<a class="headerlink" href="#module-unimodals.gentle_push.layers" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.gentle_push.layers.control_layers">
+<span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.layers.</span></span><span class="sig-name descname"><span class="pre">control_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.nn.Module</span></span></span><a class="headerlink" href="#unimodals.gentle_push.layers.control_layers" title="Permalink to this definition"></a></dt>
+<dd><p>Create a control command encoder block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>units</strong> (<em>int</em>) – # of hidden units in network layers.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Encoder block.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.gentle_push.layers.observation_image_layers">
+<span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.layers.</span></span><span class="sig-name descname"><span class="pre">observation_image_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spanning_avg_pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.nn.Module</span></span></span><a class="headerlink" href="#unimodals.gentle_push.layers.observation_image_layers" title="Permalink to this definition"></a></dt>
+<dd><p>Create an image encoder block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>units</strong> (<em>int</em>) – # of hidden units in network layers.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Encoder block.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.gentle_push.layers.observation_pos_layers">
+<span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.layers.</span></span><span class="sig-name descname"><span class="pre">observation_pos_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.nn.Module</span></span></span><a class="headerlink" href="#unimodals.gentle_push.layers.observation_pos_layers" title="Permalink to this definition"></a></dt>
+<dd><p>Create an end effector position encoder block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>units</strong> (<em>int</em>) – # of hidden units in network layers.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Encoder block.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.gentle_push.layers.observation_sensors_layers">
+<span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.layers.</span></span><span class="sig-name descname"><span class="pre">observation_sensors_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.nn.Module</span></span></span><a class="headerlink" href="#unimodals.gentle_push.layers.observation_sensors_layers" title="Permalink to this definition"></a></dt>
+<dd><p>Create an F/T sensor encoder block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>units</strong> (<em>int</em>) – # of hidden units in network layers.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Encoder block.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="module-unimodals.gentle_push">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unimodals.gentle_push" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

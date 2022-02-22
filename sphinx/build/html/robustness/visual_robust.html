@@ -82,8 +82,91 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="visual-robust-module">
-<h1>visual_robust module<a class="headerlink" href="#visual-robust-module" title="Permalink to this headline"></a></h1>
+  <section id="module-visual_robust">
+<span id="visual-robust-module"></span><h1>visual_robust module<a class="headerlink" href="#module-visual_robust" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.WB">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">WB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.WB" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.add_visual_noise">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">add_visual_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_and_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.add_visual_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to visual data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Probability of randomly applying noise to each audio signal, and standard deviation for gaussian noise, and structured dropout probability.</p></li>
+<li><p><strong>gray</strong> – </p></li>
+<li><p><strong>contract</strong> – </p></li>
+<li><p><strong>inv</strong> – </p></li>
+<li><p><strong>temp</strong> – </p></li>
+<li><p><strong>color</strong> – </p></li>
+<li><p><strong>s_and_p</strong> – </p></li>
+<li><p><strong>gaus</strong> – </p></li>
+<li><p><strong>rot</strong> – </p></li>
+<li><p><strong>flip</strong> – </p></li>
+<li><p><strong>crop</strong> – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.colorize">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">colorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.colorize" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly tint the color of an image using an existing RGB channel.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.gaussian">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.gaussian" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.grayscale">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.grayscale" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly make an image grayscale.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.horizontal_flip">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">horizontal_flip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.horizontal_flip" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.inversion">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">inversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.inversion" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly invert an image.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.low_contrast">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">low_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.low_contrast" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly reduce the contract of an image.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.periodic">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic_noise_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'periodic_noise'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.periodic" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.random_crop">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">random_crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.random_crop" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.rotate">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.rotate" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visual_robust.salt_and_pepper">
+<span class="sig-prename descclassname"><span class="pre">visual_robust.</span></span><span class="sig-name descname"><span class="pre">salt_and_pepper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visual_robust.salt_and_pepper" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly add salt-and-pepper noise to the image.</p>
+</dd></dl>
+
 </section>
 
 

@@ -82,8 +82,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="audio-robust-module">
-<h1>audio_robust module<a class="headerlink" href="#audio-robust-module" title="Permalink to this headline"></a></h1>
+  <section id="module-audio_robust">
+<span id="audio-robust-module"></span><h1>audio_robust module<a class="headerlink" href="#module-audio_robust" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="audio_robust.add_audio_noise">
+<span class="sig-prename descclassname"><span class="pre">audio_robust.</span></span><span class="sig-name descname"><span class="pre">add_audio_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#audio_robust.add_audio_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to audio data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Probability of randomly applying noise to each audio signal, and standard deviation for gaussian noise, and structured dropout probability.</p></li>
+<li><p><strong>noises</strong> – list of noises to add. # TODO: Change this to use either a list of enums or if statements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="audio_robust.additive_white_gaussian_noise">
+<span class="sig-prename descclassname"><span class="pre">audio_robust.</span></span><span class="sig-name descname"><span class="pre">additive_white_gaussian_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#audio_robust.additive_white_gaussian_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add gaussian white noise to audio signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> – Audio signal to permute.</p></li>
+<li><p><strong>noise_level</strong> – standard deviation of the gaussian noise.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="audio_robust.audio_random_dropout">
+<span class="sig-prename descclassname"><span class="pre">audio_robust.</span></span><span class="sig-name descname"><span class="pre">audio_random_dropout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#audio_robust.audio_random_dropout" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly drop the signal for a single time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> – Audio signal to transform.</p></li>
+<li><p><strong>p</strong> – Dropout probability.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="audio_robust.audio_structured_dropout">
+<span class="sig-prename descclassname"><span class="pre">audio_robust.</span></span><span class="sig-name descname"><span class="pre">audio_structured_dropout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#audio_robust.audio_structured_dropout" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly drop signal for <cite>step</cite> time steps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> – Audio signal to permute.</p></li>
+<li><p><strong>p</strong> – Dropout probability.</p></li>
+<li><p><strong>step</strong> – Number of time steps to drop the signal.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

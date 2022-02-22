@@ -54,7 +54,7 @@
 <li class="toctree-l4"><a class="reference internal" href="datasets.stocks.html">datasets.stocks package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#module-datasets">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -101,23 +101,500 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="datasets-rtfm-rtfm-tasks-groups-module">
-<h2>datasets.RTFM.rtfm.tasks.groups module<a class="headerlink" href="#datasets-rtfm-rtfm-tasks-groups-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.tasks.groups">
+<span id="datasets-rtfm-rtfm-tasks-groups-module"></span><h2>datasets.RTFM.rtfm.tasks.groups module<a class="headerlink" href="#module-datasets.RTFM.rtfm.tasks.groups" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">Groups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.tasks.room.RoomTask</span></code></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.Agent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.Agent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.monster.QueuedAgent</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.Monster">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Monster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.Monster" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.monster.HostileMonster</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.Monster.char">
+<span class="sig-name descname"><span class="pre">char</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'!'</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.Monster.char" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.build_vocab">
+<span class="sig-name descname"><span class="pre">build_vocab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.build_vocab" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.default_max_iter">
+<span class="sig-name descname"><span class="pre">default_max_iter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.default_max_iter" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.get_reward_finish_win">
+<span class="sig-name descname"><span class="pre">get_reward_finish_win</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.get_reward_finish_win" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.get_task">
+<span class="sig-name descname"><span class="pre">get_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.get_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.get_wiki">
+<span class="sig-name descname"><span class="pre">get_wiki</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.get_wiki" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.get_wiki_extract">
+<span class="sig-name descname"><span class="pre">get_wiki_extract</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.get_wiki_extract" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.groups">
+<span class="sig-name descname"><span class="pre">groups</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['star</span> <span class="pre">alliance',</span> <span class="pre">'order</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">forest',</span> <span class="pre">'rebel</span> <span class="pre">enclave']</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.groups" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.items">
+<span class="sig-name descname"><span class="pre">items</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['sword',</span> <span class="pre">'axe',</span> <span class="pre">'morningstar',</span> <span class="pre">'polearm',</span> <span class="pre">'knife',</span> <span class="pre">'katana',</span> <span class="pre">'cutlass',</span> <span class="pre">'spear']</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.items" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.modifiers">
+<span class="sig-name descname"><span class="pre">modifiers</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['grandmasters',</span> <span class="pre">'blessed',</span> <span class="pre">'shimmering',</span> <span class="pre">'gleaming',</span> <span class="pre">'fanatical',</span> <span class="pre">'mysterious',</span> <span class="pre">'soldiers',</span> <span class="pre">'arcane']</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.modifiers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.monsters">
+<span class="sig-name descname"><span class="pre">monsters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['wolf',</span> <span class="pre">'jaguar',</span> <span class="pre">'panther',</span> <span class="pre">'goblin',</span> <span class="pre">'bat',</span> <span class="pre">'imp',</span> <span class="pre">'shaman',</span> <span class="pre">'ghost',</span> <span class="pre">'zombie']</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.monsters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.Groups.place_object">
+<span class="sig-name descname"><span class="pre">place_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.Groups.place_object" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.Groups" title="datasets.RTFM.rtfm.tasks.groups.Groups"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.Groups</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsNL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsNL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsNL" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups" title="datasets.RTFM.rtfm.tasks.groups.NLGroups"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.NLGroups</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsNL.use_cache">
+<span class="sig-name descname"><span class="pre">use_cache</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsNL.use_cache" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsNLDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsNLDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsNLDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsNL" title="datasets.RTFM.rtfm.tasks.groups.GroupsNL"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsNL</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsNLDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsNLDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsNLDev.default_max_iter">
+<span class="sig-name descname"><span class="pre">default_max_iter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsNLDev.default_max_iter" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsNLDev.use_cache">
+<span class="sig-name descname"><span class="pre">use_cache</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsNLDev.use_cache" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimple">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimple" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.Groups" title="datasets.RTFM.rtfm.tasks.groups.Groups"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.Groups</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimple.modifiers">
+<span class="sig-name descname"><span class="pre">modifiers</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['grandmasters',</span> <span class="pre">'blessed',</span> <span class="pre">'shimmering',</span> <span class="pre">'gleaming']</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimple.modifiers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimple.monsters">
+<span class="sig-name descname"><span class="pre">monsters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['wolf',</span> <span class="pre">'jaguar',</span> <span class="pre">'panther']</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimple.monsters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimple" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimple"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimple</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleNL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNL" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups" title="datasets.RTFM.rtfm.tasks.groups.NLGroups"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.NLGroups</span></code></a>, <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimple" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimple"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimple</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNLDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleNLDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNLDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNL" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNL"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNL</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNLDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleNLDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleStationary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationary" title="datasets.RTFM.rtfm.tasks.groups.GroupsStationary"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsStationary</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary.modifiers">
+<span class="sig-name descname"><span class="pre">modifiers</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['grandmasters',</span> <span class="pre">'blessed',</span> <span class="pre">'shimmering',</span> <span class="pre">'gleaming']</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary.modifiers" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary.monsters">
+<span class="sig-name descname"><span class="pre">monsters</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['wolf',</span> <span class="pre">'jaguar',</span> <span class="pre">'panther']</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary.monsters" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationaryDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleStationaryDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationaryDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationaryDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationaryDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationaryNL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleStationaryNL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationaryNL" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups" title="datasets.RTFM.rtfm.tasks.groups.NLGroups"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.NLGroups</span></code></a>, <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItem">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleStationarySingleItem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItem" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItemDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleStationarySingleItemDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItemDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItem" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItem"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItem</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItemDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleItemDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonster">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleStationarySingleMonster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonster" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationary</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonsterDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsSimpleStationarySingleMonsterDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonsterDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonster" title="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonster"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonster</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonsterDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsSimpleStationarySingleMonsterDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsStationary">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsStationary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationary" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.Groups" title="datasets.RTFM.rtfm.tasks.groups.Groups"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.Groups</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsStationary.Monster">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Monster</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationary.Monster" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.monster.StationaryMonster</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsStationary.Monster.char">
+<span class="sig-name descname"><span class="pre">char</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'!'</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationary.Monster.char" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsStationaryDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsStationaryDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationaryDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationary" title="datasets.RTFM.rtfm.tasks.groups.GroupsStationary"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsStationary</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsStationaryDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationaryDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsStationaryNL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNL" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups" title="datasets.RTFM.rtfm.tasks.groups.NLGroups"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.NLGroups</span></code></a>, <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationary" title="datasets.RTFM.rtfm.tasks.groups.GroupsStationary"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsStationary</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNLDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">GroupsStationaryNLDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNLDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNL" title="datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNL"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNL</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNLDev.config_index">
+<span class="sig-name descname"><span class="pre">config_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.GroupsStationaryNLDev.config_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">NLGroups</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.groups.Groups" title="datasets.RTFM.rtfm.tasks.groups.Groups"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.groups.Groups</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.get_beat_utterance">
+<span class="sig-name descname"><span class="pre">get_beat_utterance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.get_beat_utterance" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.get_group_utterance">
+<span class="sig-name descname"><span class="pre">get_group_utterance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monsters</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.get_group_utterance" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.get_task">
+<span class="sig-name descname"><span class="pre">get_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.get_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.get_tokenized_task">
+<span class="sig-name descname"><span class="pre">get_tokenized_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.get_tokenized_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.get_tokenized_wiki">
+<span class="sig-name descname"><span class="pre">get_tokenized_wiki</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.get_tokenized_wiki" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.get_wiki">
+<span class="sig-name descname"><span class="pre">get_wiki</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.get_wiki" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.split_utterance">
+<span class="sig-name descname"><span class="pre">split_utterance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">words</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_from</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_to</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.split_utterance" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.tokenize">
+<span class="sig-name descname"><span class="pre">tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.tokenize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.NLGroups.use_cache">
+<span class="sig-name descname"><span class="pre">use_cache</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.NLGroups.use_cache" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.groups.generate_all">
+<span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.groups.</span></span><span class="sig-name descname"><span class="pre">generate_all</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_monsters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_groups</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_modifiers</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.groups.generate_all" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="datasets-rtfm-rtfm-tasks-groups-templates-module">
-<h2>datasets.RTFM.rtfm.tasks.groups_templates module<a class="headerlink" href="#datasets-rtfm-rtfm-tasks-groups-templates-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.tasks.groups_templates">
+<span id="datasets-rtfm-rtfm-tasks-groups-templates-module"></span><h2>datasets.RTFM.rtfm.tasks.groups_templates module<a class="headerlink" href="#module-datasets.RTFM.rtfm.tasks.groups_templates" title="Permalink to this headline"></a></h2>
 </section>
-<section id="datasets-rtfm-rtfm-tasks-rock-paper-scissors-module">
-<h2>datasets.RTFM.rtfm.tasks.rock_paper_scissors module<a class="headerlink" href="#datasets-rtfm-rtfm-tasks-rock-paper-scissors-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.tasks.rock_paper_scissors">
+<span id="datasets-rtfm-rtfm-tasks-rock-paper-scissors-module"></span><h2>datasets.RTFM.rtfm.tasks.rock_paper_scissors module<a class="headerlink" href="#module-datasets.RTFM.rtfm.tasks.rock_paper_scissors" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.</span></span><span class="sig-name descname"><span class="pre">RockPaperScissors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.room.RoomTask" title="datasets.RTFM.rtfm.tasks.room.RoomTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.room.RoomTask</span></code></a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.Agent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Agent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.Agent" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="datasets.RTFM.rtfm.dynamics.monster.html#datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent" title="datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.dynamics.monster.agent.QueuedAgent</span></code></a></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.Dragon">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Dragon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.Dragon" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.dynamics.monster.hostile.HostileMonster</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.Dragon.char">
+<span class="sig-name descname"><span class="pre">char</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'!'</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.Dragon.char" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.build_vocab">
+<span class="sig-name descname"><span class="pre">build_vocab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.build_vocab" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.compute_labels">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.compute_labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.get_reward_finish_win">
+<span class="sig-name descname"><span class="pre">get_reward_finish_win</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.get_reward_finish_win" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.get_task">
+<span class="sig-name descname"><span class="pre">get_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.get_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.get_wiki">
+<span class="sig-name descname"><span class="pre">get_wiki</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.get_wiki" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.place_object">
+<span class="sig-name descname"><span class="pre">place_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">o</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.place_object" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.set_types">
+<span class="sig-name descname"><span class="pre">set_types</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.set_types" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.split_index">
+<span class="sig-name descname"><span class="pre">split_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors.split_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.</span></span><span class="sig-name descname"><span class="pre">RockPaperScissorsDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors" title="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsDev.split_index">
+<span class="sig-name descname"><span class="pre">split_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsDev.split_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHard">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.</span></span><span class="sig-name descname"><span class="pre">RockPaperScissorsHard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHard" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors" title="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHard.compute_labels">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHard.compute_labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHardDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.</span></span><span class="sig-name descname"><span class="pre">RockPaperScissorsHardDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHardDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHard" title="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHard"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHard</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHardDev.split_index">
+<span class="sig-name descname"><span class="pre">split_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsHardDev.split_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMed">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.</span></span><span class="sig-name descname"><span class="pre">RockPaperScissorsMed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMed" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors" title="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissors</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMed.compute_labels">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMed.compute_labels" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMedDev">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.</span></span><span class="sig-name descname"><span class="pre">RockPaperScissorsMedDev</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMedDev" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMed" title="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMed"><code class="xref py py-class docutils literal notranslate"><span class="pre">datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMed</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMedDev.split_index">
+<span class="sig-name descname"><span class="pre">split_index</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.rock_paper_scissors.RockPaperScissorsMedDev.split_index" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="datasets-rtfm-rtfm-tasks-room-module">
-<h2>datasets.RTFM.rtfm.tasks.room module<a class="headerlink" href="#datasets-rtfm-rtfm-tasks-room-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.tasks.room">
+<span id="datasets-rtfm-rtfm-tasks-room-module"></span><h2>datasets.RTFM.rtfm.tasks.room module<a class="headerlink" href="#module-datasets.RTFM.rtfm.tasks.room" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.room.RoomTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.RTFM.rtfm.tasks.room.</span></span><span class="sig-name descname"><span class="pre">RoomTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.room.RoomTask" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">rtfm.tasks.task.Task</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.room.RoomTask.build_vocab">
+<span class="sig-name descname"><span class="pre">build_vocab</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.room.RoomTask.build_vocab" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.room.RoomTask.get_task">
+<span class="sig-name descname"><span class="pre">get_task</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.room.RoomTask.get_task" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.RTFM.rtfm.tasks.room.RoomTask.get_wiki">
+<span class="sig-name descname"><span class="pre">get_wiki</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.rtfm.tasks.room.RoomTask.get_wiki" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="datasets-rtfm-rtfm-tasks-task-module">
 <h2>datasets.RTFM.rtfm.tasks.task module<a class="headerlink" href="#datasets-rtfm-rtfm-tasks-task-module" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.RTFM.rtfm.tasks">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datasets.RTFM.rtfm.tasks" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

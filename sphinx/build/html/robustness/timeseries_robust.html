@@ -82,8 +82,66 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="timeseries-robust-module">
-<h1>timeseries_robust module<a class="headerlink" href="#timeseries-robust-module" title="Permalink to this headline"></a></h1>
+  <section id="module-timeseries_robust">
+<span id="timeseries-robust-module"></span><h1>timeseries_robust module<a class="headerlink" href="#module-timeseries_robust" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="timeseries_robust.add_timeseries_noise">
+<span class="sig-prename descclassname"><span class="pre">timeseries_robust.</span></span><span class="sig-name descname"><span class="pre">add_timeseries_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussian_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rand_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#timeseries_robust.add_timeseries_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to timeseries data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Standard deviation of gaussian noise, and drop probability in random drop and structural drop</p></li>
+<li><p><strong>gauss_noise</strong> – Add Gaussian noise to the time series ( default: True )</p></li>
+<li><p><strong>rand_drop</strong> – Add randomized dropout to the time series ( default: True )</p></li>
+<li><p><strong>struct_drop</strong> – Add randomized structural dropout to the time series ( default: True )</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="timeseries_robust.random_drop">
+<span class="sig-prename descclassname"><span class="pre">timeseries_robust.</span></span><span class="sig-name descname"><span class="pre">random_drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#timeseries_robust.random_drop" title="Permalink to this definition"></a></dt>
+<dd><p>Drop each time series entry independently with probability p.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to process.</p></li>
+<li><p><strong>p</strong> – Probability to drop feature.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="timeseries_robust.structured_drop">
+<span class="sig-prename descclassname"><span class="pre">timeseries_robust.</span></span><span class="sig-name descname"><span class="pre">structured_drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#timeseries_robust.structured_drop" title="Permalink to this definition"></a></dt>
+<dd><p>Drop each time series entry independently with probability p, but drop all modalities if you drop an element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to process.</p></li>
+<li><p><strong>p</strong> – Probability to drop entire element of time series.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="timeseries_robust.white_noise">
+<span class="sig-prename descclassname"><span class="pre">timeseries_robust.</span></span><span class="sig-name descname"><span class="pre">white_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#timeseries_robust.white_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add noise sampled from zero-mean Gaussian with standard deviation p at every time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to process.</p></li>
+<li><p><strong>p</strong> – Standard deviation of added Gaussian noise.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

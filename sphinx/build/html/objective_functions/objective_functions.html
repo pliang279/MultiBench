@@ -45,12 +45,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">objective_functions</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">objective_functions package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#objective-functions-cca-module">objective_functions.cca module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#objective-functions-contrast-module">objective_functions.contrast module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#objective-functions-objectives-for-supervised-learning-module">objective_functions.objectives_for_supervised_learning module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#objective-functions-recon-module">objective_functions.recon module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#objective-functions-regularization-module">objective_functions.regularization module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-objective_functions.cca">objective_functions.cca module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-objective_functions.contrast">objective_functions.contrast module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-objective_functions.objectives_for_supervised_learning">objective_functions.objectives_for_supervised_learning module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-objective_functions.recon">objective_functions.recon module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-objective_functions.regularization">objective_functions.regularization module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-objective_functions">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -91,23 +91,306 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="objective-functions-cca-module">
-<h2>objective_functions.cca module<a class="headerlink" href="#objective-functions-cca-module" title="Permalink to this headline"></a></h2>
+<section id="module-objective_functions.cca">
+<span id="objective-functions-cca-module"></span><h2>objective_functions.cca module<a class="headerlink" href="#module-objective_functions.cca" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.cca.CCALoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.cca.</span></span><span class="sig-name descname"><span class="pre">CCALoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.cca.CCALoss" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.cca.CCALoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">H1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.cca.CCALoss.forward" title="Permalink to this definition"></a></dt>
+<dd><p>It is the loss function of CCA as introduced in the original paper. There can be other formulations.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="objective-functions-contrast-module">
-<h2>objective_functions.contrast module<a class="headerlink" href="#objective-functions-contrast-module" title="Permalink to this headline"></a></h2>
+<section id="module-objective_functions.contrast">
+<span id="objective-functions-contrast-module"></span><h2>objective_functions.contrast module<a class="headerlink" href="#module-objective_functions.contrast" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.contrast.AliasMethod">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.contrast.</span></span><span class="sig-name descname"><span class="pre">AliasMethod</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">probs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.AliasMethod" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>From: <a class="reference external" href="https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/">https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.contrast.AliasMethod.cuda">
+<span class="sig-name descname"><span class="pre">cuda</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.AliasMethod.cuda" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.contrast.AliasMethod.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.AliasMethod.draw" title="Permalink to this definition"></a></dt>
+<dd><p>Draw N samples from multinomial
+:param N: number of samples
+:return: samples</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.contrast.MultiSimilarityLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.contrast.</span></span><span class="sig-name descname"><span class="pre">MultiSimilarityLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.MultiSimilarityLoss" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.contrast.MultiSimilarityLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.MultiSimilarityLoss.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.contrast.NCEAverage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.contrast.</span></span><span class="sig-name descname"><span class="pre">NCEAverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.NCEAverage" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.contrast.NCEAverage.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ab</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.NCEAverage.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.contrast.NCECriterion">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.contrast.</span></span><span class="sig-name descname"><span class="pre">NCECriterion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.NCECriterion" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Eq. (12): L_{NCE}</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.contrast.NCECriterion.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.NCECriterion.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.contrast.NCESoftmaxLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.contrast.</span></span><span class="sig-name descname"><span class="pre">NCESoftmaxLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.NCESoftmaxLoss" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Softmax cross-entropy loss (a.k.a., info-NCE loss in CPC paper)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.contrast.NCESoftmaxLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.contrast.NCESoftmaxLoss.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="objective-functions-objectives-for-supervised-learning-module">
-<h2>objective_functions.objectives_for_supervised_learning module<a class="headerlink" href="#objective-functions-objectives-for-supervised-learning-module" title="Permalink to this headline"></a></h2>
+<section id="module-objective_functions.objectives_for_supervised_learning">
+<span id="objective-functions-objectives-for-supervised-learning-module"></span><h2>objective_functions.objectives_for_supervised_learning module<a class="headerlink" href="#module-objective_functions.objectives_for_supervised_learning" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.objectives_for_supervised_learning.CCA_objective">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.objectives_for_supervised_learning.</span></span><span class="sig-name descname"><span class="pre">CCA_objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cca_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.CrossEntropyLoss</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.objectives_for_supervised_learning.CCA_objective" title="Permalink to this definition"></a></dt>
+<dd><p>Define loss function for CCA.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>out_dim</strong> – output dimension</p></li>
+<li><p><strong>cca_weight</strong> – weight of cca loss</p></li>
+<li><p><strong>criterion</strong> – criterion for supervised loss</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.objectives_for_supervised_learning.MFM_objective">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.objectives_for_supervised_learning.</span></span><span class="sig-name descname"><span class="pre">MFM_objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ce_weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal_loss_funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recon_weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_to_float</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.CrossEntropyLoss</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.objectives_for_supervised_learning.MFM_objective" title="Permalink to this definition"></a></dt>
+<dd><p>Define objective for MFM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ce_weight</strong> – the weight of simple supervised loss</p></li>
+<li><p><strong>model_loss_funcs</strong> – list of functions that takes in reconstruction and input of each modality and compute reconstruction loss</p></li>
+<li><p><strong>recon_weights</strong> – list of float values indicating the weight of reconstruction loss of each modality</p></li>
+<li><p><strong>criterion</strong> – the loss function for supervised loss (default CrossEntropyLoss)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.objectives_for_supervised_learning.MVAE_objective">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.objectives_for_supervised_learning.</span></span><span class="sig-name descname"><span class="pre">MVAE_objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ce_weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modal_loss_funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recon_weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_to_float</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annealing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.CrossEntropyLoss</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.objectives_for_supervised_learning.MVAE_objective" title="Permalink to this definition"></a></dt>
+<dd><p>Define objective for MVAE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ce_weight</strong> – the weight of simple supervised loss</p></li>
+<li><p><strong>model_loss_funcs</strong> – list of functions that takes in reconstruction and input of each modality and compute reconstruction loss</p></li>
+<li><p><strong>recon_weights</strong> – list of float values indicating the weight of reconstruction loss of each modality</p></li>
+<li><p><strong>input_to_float</strong> – boolean deciding if we should convert input to float or not.</p></li>
+<li><p><strong>annealing</strong> – the annealing factor, i.e. the weight of kl.</p></li>
+<li><p><strong>criterion</strong> – the loss function for supervised loss (default CrossEntropyLoss)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.objectives_for_supervised_learning.RMFE_object">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.objectives_for_supervised_learning.</span></span><span class="sig-name descname"><span class="pre">RMFE_object</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reg_weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.BCEWithLogitsLoss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_packed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.objectives_for_supervised_learning.RMFE_object" title="Permalink to this definition"></a></dt>
+<dd><p>Define loss function for RMFE.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – model used for inference</p></li>
+<li><p><strong>reg_weight</strong> – weight of regularization term</p></li>
+<li><p><strong>criterion</strong> – criterion for supervised loss</p></li>
+<li><p><strong>is_packed</strong> – packed for LSTM or not</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.objectives_for_supervised_learning.RefNet_objective">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.objectives_for_supervised_learning.</span></span><span class="sig-name descname"><span class="pre">RefNet_objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref_weight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.CrossEntropyLoss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_to_float</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.objectives_for_supervised_learning.RefNet_objective" title="Permalink to this definition"></a></dt>
+<dd><p>Define loss function for RefNet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ref_weight</strong> – weight of refiner loss</p></li>
+<li><p><strong>criterion</strong> – criterion for supervised loss</p></li>
+<li><p><strong>input_to_float</strong> – whether to convert input to float or not</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.objectives_for_supervised_learning.reparameterize">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.objectives_for_supervised_learning.</span></span><span class="sig-name descname"><span class="pre">reparameterize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logvar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.objectives_for_supervised_learning.reparameterize" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="objective-functions-recon-module">
-<h2>objective_functions.recon module<a class="headerlink" href="#objective-functions-recon-module" title="Permalink to this headline"></a></h2>
+<section id="module-objective_functions.recon">
+<span id="objective-functions-recon-module"></span><h2>objective_functions.recon module<a class="headerlink" href="#module-objective_functions.recon" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.recon.elbo_loss">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.recon.</span></span><span class="sig-name descname"><span class="pre">elbo_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modal_loss_funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annealing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.recon.elbo_loss" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.recon.nosigmloss1d">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.recon.</span></span><span class="sig-name descname"><span class="pre">nosigmloss1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.recon.nosigmloss1d" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.recon.recon_weighted_sum">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.recon.</span></span><span class="sig-name descname"><span class="pre">recon_weighted_sum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modal_loss_funcs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.recon.recon_weighted_sum" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.recon.sigmloss1d">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.recon.</span></span><span class="sig-name descname"><span class="pre">sigmloss1d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.recon.sigmloss1d" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="objective_functions.recon.sigmloss1dcentercrop">
+<span class="sig-prename descclassname"><span class="pre">objective_functions.recon.</span></span><span class="sig-name descname"><span class="pre">sigmloss1dcentercrop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">adim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bdim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.recon.sigmloss1dcentercrop" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="objective-functions-regularization-module">
-<h2>objective_functions.regularization module<a class="headerlink" href="#objective-functions-regularization-module" title="Permalink to this headline"></a></h2>
+<section id="module-objective_functions.regularization">
+<span id="objective-functions-regularization-module"></span><h2>objective_functions.regularization module<a class="headerlink" href="#module-objective_functions.regularization" title="Permalink to this headline"></a></h2>
+<dl class="simple">
+<dt>An implementation of the paper: “Removing Bias in Multi-modal Classifiers: Regularization by Maximizing Functional</dt><dd><p>Entropies” NeurIPS 2020.</p>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.regularization.Perturbation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.regularization.</span></span><span class="sig-name descname"><span class="pre">Perturbation</span></span><a class="headerlink" href="#objective_functions.regularization.Perturbation" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that in charge of tensor perturbation techniques</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.regularization.Perturbation.get_expanded_logits">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_expanded_logits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logits</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logits_flg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#objective_functions.regularization.Perturbation.get_expanded_logits" title="Permalink to this definition"></a></dt>
+<dd><p>Perform Softmax and then expand the logits depends on the num_eval_samples
+:param logits_flg: whether the input is logits or softmax
+:param logits: tensor holds logits outputs from the model
+:param n_samples: times to duplicate
+:return:</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.regularization.Perturbation.perturb_tensor">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">perturb_tensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">perturbation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#objective_functions.regularization.Perturbation.perturb_tensor" title="Permalink to this definition"></a></dt>
+<dd><p>Flatting the tensor, expanding it, perturbing and reconstructing to the original shape.
+Note, this function assumes that the batch is the first dimension.
+:param tens:
+:param n_samples: times to perturb
+:param perturbation: False - only duplicating the tensor
+:return: tensor in the shape of [batch, samples * num_eval_samples]</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.regularization.RegParameters">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.regularization.</span></span><span class="sig-name descname"><span class="pre">RegParameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lambda_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ent'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optim_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'max_ent'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.regularization.RegParameters" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>This class controls all the regularization-related properties</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.regularization.Regularization">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.regularization.</span></span><span class="sig-name descname"><span class="pre">Regularization</span></span><a class="headerlink" href="#objective_functions.regularization.Regularization" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class that in charge of the regularization techniques</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.regularization.Regularization.get_batch_norm">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_batch_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grad</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">torch.Tensor</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ent'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#objective_functions.regularization.Regularization.get_batch_norm" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the expectation of the batch gradient
+:param loss:
+:param estimation:
+:param grad: tensor holds the gradient batch
+:return: approximation of the required expectation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.regularization.Regularization.get_batch_statistics">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_batch_statistics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_samples</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'ent'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#objective_functions.regularization.Regularization.get_batch_statistics" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate the expectation of the batch gradient
+:param n_samples:
+:param loss:
+:param estimation:
+:return: Influence expectation</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.regularization.Regularization.get_regularization_term">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_regularization_term</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inf_scores</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">torch.Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optim_method</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'max_ent'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.Tensor</span></span></span><a class="headerlink" href="#objective_functions.regularization.Regularization.get_regularization_term" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the regularization term given a batch of information scores
+:param inf_scores: tensor holding a batch of information scores
+:param norm: defines which norm to use (1 or 2)
+:param optim_method: Define optimization method (possible methods: “min_ent”, “max_ent”, “max_ent_minus”,</p>
+<blockquote>
+<div><p>“normalized”)</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="objective_functions.regularization.RegularizationLoss">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">objective_functions.regularization.</span></span><span class="sig-name descname"><span class="pre">RegularizationLoss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.regularization.RegularizationLoss" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Define the regularization loss.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="objective_functions.regularization.RegularizationLoss.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#objective_functions.regularization.RegularizationLoss.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="module-objective_functions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-objective_functions" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

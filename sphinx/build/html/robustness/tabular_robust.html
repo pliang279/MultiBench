@@ -82,8 +82,51 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="tabular-robust-module">
-<h1>tabular_robust module<a class="headerlink" href="#tabular-robust-module" title="Permalink to this headline"></a></h1>
+  <section id="module-tabular_robust">
+<span id="tabular-robust-module"></span><h1>tabular_robust module<a class="headerlink" href="#module-tabular_robust" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="tabular_robust.add_tabular_noise">
+<span class="sig-prename descclassname"><span class="pre">tabular_robust.</span></span><span class="sig-name descname"><span class="pre">add_tabular_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tabular_robust.add_tabular_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to tabular data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Probability of randomly applying noise to each element.</p></li>
+<li><p><strong>drop</strong> – Drop elements with probability <cite>noise_level</cite></p></li>
+<li><p><strong>swap</strong> – Swap elements with probability <cite>noise_level</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tabular_robust.drop_entry">
+<span class="sig-prename descclassname"><span class="pre">tabular_robust.</span></span><span class="sig-name descname"><span class="pre">drop_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tabular_robust.drop_entry" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly drop elements in <cite>data</cite> with probability <cite>p</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to drop elements from.</p></li>
+<li><p><strong>p</strong> – Probability of dropping elements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="tabular_robust.swap_entry">
+<span class="sig-prename descclassname"><span class="pre">tabular_robust.</span></span><span class="sig-name descname"><span class="pre">swap_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#tabular_robust.swap_entry" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly swap adjacent elements in <cite>data</cite> with probability <cite>p</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to swap elems.</p></li>
+<li><p><strong>p</strong> – Probability of swapping elements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 

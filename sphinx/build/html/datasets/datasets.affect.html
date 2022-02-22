@@ -54,7 +54,7 @@
 <li class="toctree-l4"><a class="reference internal" href="datasets.stocks.html">datasets.stocks package</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="datasets.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#module-datasets">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -99,17 +99,93 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="datasets-affect-get-bert-embedding-module">
-<h2>datasets.affect.get_bert_embedding module<a class="headerlink" href="#datasets-affect-get-bert-embedding-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.affect.get_bert_embedding">
+<span id="datasets-affect-get-bert-embedding-module"></span><h2>datasets.affect.get_bert_embedding module<a class="headerlink" href="#module-datasets.affect.get_bert_embedding" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_bert_embedding.bert_version_data">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_bert_embedding.</span></span><span class="sig-name descname"><span class="pre">bert_version_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bert_max_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_bert_embedding.bert_version_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_bert_embedding.corresponding_other_modality_ids">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_bert_embedding.</span></span><span class="sig-name descname"><span class="pre">corresponding_other_modality_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orig_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tokenized_text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_bert_embedding.corresponding_other_modality_ids" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_bert_embedding.get_bert_features">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_bert_embedding.</span></span><span class="sig-name descname"><span class="pre">get_bert_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">all_text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contextual_embedding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_bert_embedding.get_bert_features" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_bert_embedding.get_rawtext">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_bert_embedding.</span></span><span class="sig-name descname"><span class="pre">get_rawtext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_bert_embedding.get_rawtext" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_bert_embedding.max_seq_len">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_bert_embedding.</span></span><span class="sig-name descname"><span class="pre">max_seq_len</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">id_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_bert_embedding.max_seq_len" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="datasets-affect-get-data-module">
-<h2>datasets.affect.get_data module<a class="headerlink" href="#datasets-affect-get-data-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.affect.get_data">
+<span id="datasets-affect-get-data-module"></span><h2>datasets.affect.get_data module<a class="headerlink" href="#module-datasets.affect.get_data" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.affect.get_data.Affectdataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">Affectdataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.Affectdataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.drop_entry">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">drop_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.drop_entry" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.get_dataloader">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_shuffle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten_time_series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robust_test</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mosi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'/home/van/backup/pack/mosi/mosi.hdf5'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.utils.data.DataLoader</span></span></span><a class="headerlink" href="#datasets.affect.get_data.get_dataloader" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.get_rawtext">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">get_rawtext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.get_rawtext" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.get_word2id">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">get_word2id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.get_word2id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.get_word_embeddings">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">get_word_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word2id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.get_word_embeddings" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.glove_embeddings">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">glove_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paddings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.glove_embeddings" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.process_1">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">process_1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.process_1" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.process_2">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">process_2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.process_2" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_data.z_norm">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">z_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_seq_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.z_norm" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="datasets-affect-get-raw-data-module">
 <h2>datasets.affect.get_raw_data module<a class="headerlink" href="#datasets-affect-get-raw-data-module" title="Permalink to this headline"></a></h2>
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.affect">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datasets.affect" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 

@@ -53,10 +53,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="unimodals.html#submodules">Submodules</a></li>
-<li class="toctree-l3"><a class="reference internal" href="unimodals.html#unimodals-mvae-module">unimodals.MVAE module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="unimodals.html#unimodals-common-models-module">unimodals.common_models module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="unimodals.html#unimodals-res3d-module">unimodals.res3d module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-contents">Module contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-unimodals.MVAE">unimodals.MVAE module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-unimodals.common_models">unimodals.common_models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-unimodals.res3d">unimodals.res3d module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="unimodals.html#module-unimodals">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -95,20 +95,220 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="unimodals-robotics-decoders-module">
-<h2>unimodals.robotics.decoders module<a class="headerlink" href="#unimodals-robotics-decoders-module" title="Permalink to this headline"></a></h2>
+<section id="module-unimodals.robotics.decoders">
+<span id="unimodals-robotics-decoders-module"></span><h2>unimodals.robotics.decoders module<a class="headerlink" href="#module-unimodals.robotics.decoders" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.decoders.ContactDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.decoders.</span></span><span class="sig-name descname"><span class="pre">ContactDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.ContactDecoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.decoders.ContactDecoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.ContactDecoder.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.decoders.EeDeltaDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.decoders.</span></span><span class="sig-name descname"><span class="pre">EeDeltaDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.EeDeltaDecoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.decoders.EeDeltaDecoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mm_act_feat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.EeDeltaDecoder.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.decoders.OpticalFlowDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.decoders.</span></span><span class="sig-name descname"><span class="pre">OpticalFlowDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.OpticalFlowDecoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.decoders.OpticalFlowDecoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tiled_feat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_out_convs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.OpticalFlowDecoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Predicts the optical flow and optical flow mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tiled_feat</strong> – action conditioned z (output of fusion + action network)</p></li>
+<li><p><strong>img_out_convs</strong> – outputs of the image encoders (skip connections)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="unimodals-robotics-encoders-module">
-<h2>unimodals.robotics.encoders module<a class="headerlink" href="#unimodals-robotics-encoders-module" title="Permalink to this headline"></a></h2>
+<section id="module-unimodals.robotics.encoders">
+<span id="unimodals-robotics-encoders-module"></span><h2>unimodals.robotics.encoders module<a class="headerlink" href="#module-unimodals.robotics.encoders" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.ActionEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">ActionEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ActionEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.ActionEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ActionEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.DepthEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">DepthEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.DepthEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.DepthEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth_in</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.DepthEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.ForceEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">ForceEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ForceEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.ForceEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ForceEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.ImageEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">ImageEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ImageEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.ImageEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vis_in</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ImageEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.ProprioEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">ProprioEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ProprioEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.encoders.ProprioEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proprio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ProprioEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="unimodals-robotics-layers-module">
-<h2>unimodals.robotics.layers module<a class="headerlink" href="#unimodals-robotics-layers-module" title="Permalink to this headline"></a></h2>
+<section id="module-unimodals.robotics.layers">
+<span id="unimodals-robotics-layers-module"></span><h2>unimodals.robotics.layers module<a class="headerlink" href="#module-unimodals.robotics.layers" title="Permalink to this headline"></a></h2>
+<p>Neural network layers.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.CausalConv1D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">CausalConv1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.CausalConv1D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Conv1d</span></code></p>
+<p>A causal 1D convolution.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.CausalConv1D.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.CausalConv1D.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.Flatten">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">Flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.Flatten" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Flattens convolutional feature maps for fc layers.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.Flatten.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.Flatten.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.ResidualBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">ResidualBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.ResidualBlock" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>A simple residual block.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.ResidualBlock.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.ResidualBlock.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.View">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">View</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.View" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.View.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.View.forward" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.conv2d">
+<span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">conv2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.conv2d" title="Permalink to this definition"></a></dt>
+<dd><p><cite>same</cite> convolution with LeakyReLU, i.e. output shape equals input shape.
+:param in_planes: The number of input feature maps.
+:type in_planes: int
+:param out_planes: The number of output feature maps.
+:type out_planes: int
+:param kernel_size: The filter size.
+:type kernel_size: int
+:param dilation: The filter dilation factor.
+:type dilation: int
+:param stride: The filter stride.
+:type stride: int</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.crop_like">
+<span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">crop_like</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.crop_like" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.deconv">
+<span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">deconv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_planes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.deconv" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.robotics.layers.predict_flow">
+<span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">predict_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.predict_flow" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="unimodals-robotics-models-utils-module">
-<h2>unimodals.robotics.models_utils module<a class="headerlink" href="#unimodals-robotics-models-utils-module" title="Permalink to this headline"></a></h2>
+<section id="module-unimodals.robotics.models_utils">
+<span id="unimodals-robotics-models-utils-module"></span><h2>unimodals.robotics.models_utils module<a class="headerlink" href="#module-unimodals.robotics.models_utils" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.robotics.models_utils.filter_depth">
+<span class="sig-prename descclassname"><span class="pre">unimodals.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">filter_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.models_utils.filter_depth" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.robotics.models_utils.init_weights">
+<span class="sig-prename descclassname"><span class="pre">unimodals.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">init_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.models_utils.init_weights" title="Permalink to this definition"></a></dt>
+<dd><p>Weight initialization from original SensorFusion Code</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.robotics.models_utils.rescaleImage">
+<span class="sig-prename descclassname"><span class="pre">unimodals.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">rescaleImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00392156862745098</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.models_utils.rescaleImage" title="Permalink to this definition"></a></dt>
+<dd><p>Rescale the image in a sample to a given size.
+:param output_size: Desired output size. If tuple, output is</p>
+<blockquote>
+<div><p>matched to output_size. If int, smaller of image edges is matched
+to output_size keeping aspect ratio the same.</p>
+</div></blockquote>
+<dl class="field-list simple">
+</dl>
+</dd></dl>
+
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline"></a></h2>
+<section id="module-unimodals.robotics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unimodals.robotics" title="Permalink to this headline"></a></h2>
 </section>
 </section>
 
