@@ -27,10 +27,18 @@ class Concat(nn.Module):
 
 # Simple Early concatenation on dim 2
 class ConcatEarly(nn.Module):
+    """
+    Concatenation of input data on dimension 1.
+    """
     def __init__(self):
         super(ConcatEarly, self).__init__()
 
     def forward(self, modalities):
+        """
+        Forward Pass of ConcatEarly.
+        
+        :param modalities: A iterable of modalities to combine
+        """
         return torch.cat(modalities, dim=2)
 
 
