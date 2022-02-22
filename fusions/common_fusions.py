@@ -150,16 +150,20 @@ class MultiplicativeInteractions3Modal(nn.Module):
         return torch.matmul(modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
 
 
-# Multiplicative Interactions for 2 Modal
 class MultiplicativeInteractions2Modal(nn.Module):
-    # input_dims: list or tuple of 2 integers indicating input dimensions of the 2 modalities
-    # output_dim: output dimension
-    # output: type of MI, options from 'matrix3D','matrix','vector','scalar'
-    # flatten: whether we need to flatten the input modalities
-    # clip: clip parameter values, None if no clip
-    # grad_clip: clip grad values, None if no clip
-    # flip: whether to swap the two input modalities in forward function or not
+    """
+    Implementation of 2-way Modal Multiplicative Interactions
+    """
     def __init__(self, input_dims, output_dim, output, flatten=False, clip=None, grad_clip=None, flip=False):
+        """
+        :param input_dims: list or tuple of 2 integers indicating input dimensions of the 2 modalities
+        :param output_dim: output dimension
+        :param output: type of MI, options from 'matrix3D','matrix','vector','scalar'
+        :param flatten: whether we need to flatten the input modalities
+        :param clip: clip parameter values, None if no clip
+        :param grad_clip: clip grad values, None if no clip
+        :param flip: whether to swap the two input modalities in forward function or not
+        """
         super(MultiplicativeInteractions2Modal, self).__init__()
         self.input_dims = input_dims
         self.clip = clip
@@ -221,6 +225,11 @@ class MultiplicativeInteractions2Modal(nn.Module):
         return tensor.repeat(dim).view(dim, -1).transpose(0, 1)
 
     def forward(self, modalities):
+        """
+        Forward Pass of MultiplicativeInteractions2Modal.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         if len(modalities) == 1:
             return modalities[0]
         elif len(modalities) > 2:
@@ -270,11 +279,20 @@ class MultiplicativeInteractions2Modal(nn.Module):
 
 
 class TensorFusion(nn.Module):
-    # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
+    """
+    Implementation of TensorFusion Networks.
+    
+    See https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py for more and the original code.
+    """
     def __init__(self):
         super().__init__()
 
     def forward(self, modalities):
+        """
+        Forward Pass of TensorFusion.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         if len(modalities) == 1:
             return modalities[0]
 
@@ -293,11 +311,19 @@ class TensorFusion(nn.Module):
 
 
 class LowRankTensorFusion(nn.Module):
-    # https://github.com/Justin1904/Low-rank-Multimodal-Fusion
-    # input_dims: list or tuple of integers indicating input dimensions of the modalities
-    # output_dim: output dimension
-    # rank: a hyperparameter of LRTF. See link above for details
+    """
+    Implementation of Low-Rank Tensor Fusion.
+    
+    See https://github.com/Justin1904/Low-rank-Multimodal-Fusion for more information.
+    """
+
     def __init__(self, input_dims, output_dim, rank, flatten=True):
+        """
+        :param input_dims: list or tuple of integers indicating input dimensions of the modalities
+        :param output_dim: output dimension
+        :param rank: a hyperparameter of LRTF. See link above for details
+        :param flatten: Boolean to dictate if output should be flattened or not. Default: True
+        """
         super(LowRankTensorFusion, self).__init__()
 
         # dimensions are specified in the order of audio, video and text
@@ -322,6 +348,11 @@ class LowRankTensorFusion(nn.Module):
         self.fusion_bias.data.fill_(0)
 
     def forward(self, modalities):
+        """
+        Forward Pass of Low-Rank TensorFusion.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         batch_size = modalities[0].shape[0]
         # next we perform low-rank multimodal fusion
         # here is a more efficient implementation than the one the paper describes
@@ -345,10 +376,22 @@ class LowRankTensorFusion(nn.Module):
 
 
 class NLgate(torch.nn.Module):
-    # q_linear, k_linear, v_linear are none of no linear layer applied before q,k,v;
-    # otherwise, a tuple of (indim,outdim) is inputted for each of these 3 arguments
-    # See section F4 of "What makes training MM classification networks hard for details"
+    """
+    Implementation of NLgate Fusion.
+    
+    See section F4 of "What makes training MM classification networks hard" for details
+    """
     def __init__(self, thw_dim, c_dim, tf_dim, q_linear=None, k_linear=None, v_linear=None):
+        """
+        q_linear, k_linear, v_linear are none if no linear layer applied before q,k,v.
+        Otherwise, a tuple of (indim,outdim) is required for each of these 3 arguments
+        :param thw_dim:
+        :param c_dim:
+        :param tf_dim: 
+        :param q_linear:
+        :param k_linear:
+        :param v_linear:
+        """
         super(NLgate, self).__init__()
         self.qli = None
         if q_linear is not None:
@@ -365,6 +408,11 @@ class NLgate(torch.nn.Module):
         self.softmax = nn.Softmax(dim=2)
 
     def forward(self, x):
+        """
+        Forward Pass of Low-Rank TensorFusion.
+        
+        :param x: An iterable of modalities to combine. 
+        """
         q = x[0]
         k = x[1]
         v = x[1]
