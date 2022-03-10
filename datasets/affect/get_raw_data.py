@@ -169,30 +169,32 @@ def get_audio_visual_text(csds, seq_len, text_data, vids):
     return output
 
 
-raw_text, vids = get_rawtext(
-    '/home/pliang/multibench/affect/mosi/mosi.hdf5', 'hdf5', keys)
-print(raw_text[0])
-print(vids[0])
-text_glove = glove_embeddings(raw_text, vids)
-print(text_glove.shape)
+if __name__ == "__main__":
 
-audio_video_text = get_audio_visual_text(
-    csds, seq_len=seq_len, text_data=text_glove, vids=vids)
-print(len(audio_video_text))
-print(audio_video_text[0].keys())
+    raw_text, vids = get_rawtext(
+        '/home/pliang/multibench/affect/mosi/mosi.hdf5', 'hdf5', keys)
+    print(raw_text[0])
+    print(vids[0])
+    text_glove = glove_embeddings(raw_text, vids)
+    print(text_glove.shape)
 
-all_data = {}
-fold_names = ["train", "valid", "test"]
-key_sets = ['audio', 'vision', 'text', 'labels', 'id']
+    audio_video_text = get_audio_visual_text(
+        csds, seq_len=seq_len, text_data=text_glove, vids=vids)
+    print(len(audio_video_text))
+    print(audio_video_text[0].keys())
 
-for i, fold in enumerate(fold_names):
-    all_data[fold] = {}
-    all_data[fold]['vision'] = audio_video_text[i][VIDEO]
-    all_data[fold]['audio'] = audio_video_text[i][AUDIO]
-    all_data[fold]['text'] = audio_video_text[i]['words']
-    all_data[fold]['labels'] = audio_video_text[i][labels[0]]
-    all_data[fold]['id'] = audio_video_text[i]['id']
+    all_data = {}
+    fold_names = ["train", "valid", "test"]
+    key_sets = ['audio', 'vision', 'text', 'labels', 'id']
+
+    for i, fold in enumerate(fold_names):
+        all_data[fold] = {}
+        all_data[fold]['vision'] = audio_video_text[i][VIDEO]
+        all_data[fold]['audio'] = audio_video_text[i][AUDIO]
+        all_data[fold]['text'] = audio_video_text[i]['words']
+        all_data[fold]['labels'] = audio_video_text[i][labels[0]]
+        all_data[fold]['id'] = audio_video_text[i]['id']
 
 
-with open('mosi_raw.pkl', 'wb') as f:
-    pickle.dump(all_data, f)
+    with open('mosi_raw.pkl', 'wb') as f:
+        pickle.dump(all_data, f)

@@ -627,8 +627,8 @@ def split_trajectories(
 
 class SubsequenceDataset(Dataset):
     """A data preprocessor for producing training subsequences from
-    a list of trajectories.
-    Thin wrapper around `torchfilter.data.split_trajectories()`.
+    a list of trajectories. Thin wrapper around `torchfilter.data.split_trajectories()`.
+    
     Args:
         trajectories (list): list of trajectories, where each is a tuple of
             `(states, observations, controls)`. Each tuple member should be
