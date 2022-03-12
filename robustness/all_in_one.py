@@ -3,18 +3,16 @@ import torch
 
 
 def stocks_train(num_training, trainprocess, algorithm, encoder=False):
-    """Augments stock training data with noise.
-    
-    Blah blah blah.
+    """Train model on stocks data.
     
     Args:
-        num_training:
-        trainprocess:
-        algorithm:
-        encoder:
+        num_training: >1 to enable multiple training to reduce model variance.
+        trainprocess: Training function.
+        algorithm: Algorithm name.
+        encoder: True if the model has an encoder. ( default: False )
     
     Returns:
-        blah.
+        A list of filenames of the best saved models trained on stocks data.
     
     """
     if encoder:
@@ -37,6 +35,15 @@ def stocks_train(num_training, trainprocess, algorithm, encoder=False):
 
 
 def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
+    """Test model on noisy stocks data.
+
+        Args:
+            num_training: >1 to enable multiple training to reduce model variance.
+            models: Models loaded with pre-trained weights.
+            noisy_range: A range of noise level, e.g. 0 (no noise) - 1 (completely noisy).
+            testprocess: Testing function.
+            encoder: True if the model has an encoder. ( default: False )
+    """
     loss = []
     print("Robustness testing:")
     if encoder:
@@ -64,6 +71,17 @@ def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
 
 
 def general_train(trainprocess, algorithm, encoder=False):
+    """Train model on data.
+
+        Args:
+            trainprocess: Training function.
+            algorithm: Algorithm name.
+            encoder: True if the model has an encoder. ( default: False )
+
+        Returns:
+            Filename of the best saved model trained on training data.
+
+    """
     if encoder:
         filename_encoder = "{}_encoder.pt".format(algorithm)
         filename_head = "{}_head.pt".format(algorithm)
@@ -76,6 +94,15 @@ def general_train(trainprocess, algorithm, encoder=False):
 
 
 def general_test(testprocess, filename, robustdatasets, encoder=False, multi_measure=False):
+    """Test model on noisy data.
+
+        Args:
+            testprocess: Testing function.
+            filename: Filename of the saved model.
+            robustdatasets: A list of dataloaders of noisy test data.
+            encoder: True if the model has an encoder. ( default: False )
+            multi_measure: True if multiple evaluation metrics are used. ( default: False )
+    """
     measures = []
     for robustdata in robustdatasets:
         measure = []

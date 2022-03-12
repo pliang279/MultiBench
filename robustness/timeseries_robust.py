@@ -49,6 +49,13 @@ def random_drop(data, p):
 
 
 def _random_drop_helper(data, p, level):
+    """
+    Helper function that implements random drop for 2-/higher-dimentional timeseris data.
+
+    :param data: Data to process.
+    :param p: Probability to drop feature.
+    :param level: Dimensionality.
+    """
     if level == 2:
         for i in range(len(data)):
             if np.random.random_sample() < p:

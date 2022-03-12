@@ -9,17 +9,8 @@ def add_visual_noise(tests, noise_level=0.3, gray=True, contrast=True, inv=True,
     """
     Add various types of noise to visual data.
 
-    :param noise_level: Probability of randomly applying noise to each audio signal, and standard deviation for gaussian noise, and structured dropout probability.
-    :param gray:
-    :param contract:
-    :param inv:
-    :param temp:
-    :param color:
-    :param s_and_p:
-    :param gaus:
-    :param rot:
-    :param flip:
-    :param crop:
+    :param noise_level: Probability of randomly applying visual imperfections or transformations, and standard deviation for gaussian noise.
+    :param noises: list of noises to add. # TODO: Change this to use either a list of enums or if statements.
     """
     noises = []
     if gray:
@@ -80,6 +71,7 @@ def inversion(img, p):
 
 
 def WB(img, p):
+    """Randomly change the white-balance by increasing/decreasing the temperature."""
     if np.random.sample() <= p and img.mode == 'RGB':
         kelvin_table = {1000: (255, 56, 0), 1500: (255, 109, 0), 2000: (255, 137, 18), 2500: (255, 161, 72), 3000: (255, 180, 107), 3500: (255, 196, 137), 4000: (255, 209, 163), 4500: (255, 219, 186), 5000: (255, 228, 206), 5500: (
             255, 236, 224), 6000: (255, 243, 239), 6500: (255, 249, 253), 7000: (245, 243, 255), 7500: (235, 238, 255), 8000: (227, 233, 255), 8500: (220, 229, 255), 9000: (214, 225, 255), 9500: (208, 222, 255), 10000: (204, 219, 255)}
@@ -125,6 +117,7 @@ def salt_and_pepper(img, p):
 
 
 def gaussian(img, p):
+    """Randomly add Gaussian/electronic noise that normalizes histogram with respect to the gray values."""
     if np.random.sample() <= p:
         dim = np.array(img).shape
         gauss = np.random.normal(0, p, (dim[0], dim[1]))
@@ -134,6 +127,7 @@ def gaussian(img, p):
 
 
 def rotate(img, p):
+    """Randomly rotate the image by a random angle in [20, 40]."""
     if np.random.sample() <= p:
         angle = np.random.random_sample()*40-20
         return img.rotate(angle, Image.BILINEAR)
@@ -142,6 +136,7 @@ def rotate(img, p):
 
 
 def horizontal_flip(img, p):
+    """Randomly flip the image horizontally."""
     if np.random.sample() <= p:
         return img.transpose(Image.FLIP_LEFT_RIGHT)
     else:
@@ -149,6 +144,7 @@ def horizontal_flip(img, p):
 
 
 def random_crop(img, p):
+    """Randomly apply cropping changes."""
     if np.random.sample() <= p:
         dim = np.array(img).shape
         height = dim[0]
@@ -165,6 +161,7 @@ def random_crop(img, p):
 
 
 def periodic(img, periodic_noise_filename="periodic_noise"):
+    """Randomly expose the image to periodic pattern/noise."""
     height = img.height
     width = img.width
     output = []
