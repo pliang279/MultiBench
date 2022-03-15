@@ -777,7 +777,7 @@ class MaxOut_MLP(nn.Module):
     
     def __init__(
             self, num_outputs, first_hidden=64, number_input_feats=300, second_hidden=None, linear_layer=True):
-        """Instantiates MaxOut_MLP Module
+        """Instantiate MaxOut_MLP Module.
 
         Args:
             num_outputs (int): Output dimension
@@ -807,6 +807,14 @@ class MaxOut_MLP(nn.Module):
             self.hid2val = None
 
     def forward(self, x):
+        """Apply module to layer input
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         o0 = self.op0(x)
         o1 = self.op1(o0)
         o2 = self.op2(o1)
@@ -820,10 +828,21 @@ class MaxOut_MLP(nn.Module):
 
 
 class GlobalPooling2D(nn.Module):
+    """Implements 2D Global Pooling."""
+    
     def __init__(self):
+        """Initializes GlobalPooling2D Module."""
         super(GlobalPooling2D, self).__init__()
 
     def forward(self, x):
+        """Apply 2D Global Pooling to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         # apply global average pooling
         x = x.view(x.size(0), x.size(1), -1)
         x = torch.mean(x, 2)
@@ -941,7 +960,16 @@ class DAN(torch.nn.Module):
 
 
 class ResNetLSTMEnc(torch.nn.Module):
+    """Implements an encoder which applies as ResNet first, and then an LSTM."""
+    
     def __init__(self, hiddim, dropout=False, dropoutp=0.1):
+        """Instantiates ResNetLSTMEnc Module
+
+        Args:
+            hiddim (int): Hidden dimension size of LSTM.
+            dropout (bool, optional): Whether to apply dropout or not.. Defaults to False.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.1.
+        """
         super(ResNetLSTMEnc, self).__init__()
         self.enc = torchvision.models.resnet18(pretrained=True)
         self.lstm = nn.LSTM(1000, hiddim, batch_first=True)
