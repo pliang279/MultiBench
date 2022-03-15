@@ -777,6 +777,15 @@ class MaxOut_MLP(nn.Module):
     
     def __init__(
             self, num_outputs, first_hidden=64, number_input_feats=300, second_hidden=None, linear_layer=True):
+        """Instantiates MaxOut_MLP Module
+
+        Args:
+            num_outputs (int): Output dimension
+            first_hidden (int, optional): First hidden layer dimension. Defaults to 64.
+            number_input_feats (int, optional): Input dimension. Defaults to 300.
+            second_hidden (_type_, optional): Second hidden layer dimension. Defaults to None.
+            linear_layer (bool, optional): Whether to include an output hidden layer or not. Defaults to True.
+        """
         super(MaxOut_MLP, self).__init__()
 
         if second_hidden is None:
