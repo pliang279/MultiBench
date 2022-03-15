@@ -1,3 +1,4 @@
+"""Implements common unimodal encoders."""
 import torch
 import torchvision
 
@@ -10,10 +11,17 @@ from torchvision import models as tmodels
 
 
 class Linear(torch.nn.Module):
-    """
-    Linear Layer with Xavier Initialization, and 0 Bias.
-    """
+    """Linear Layer with Xavier Initialization, and 0 Bias."""
+    
     def __init__(self, indim, outdim, xavier_init=False):
+        """Initialize Linear Layer w/ Xavier Init.
+
+        Args:
+            indim (int): Input Dimension
+            outdim (int): Output Dimension
+            xavier_init (bool, optional): Whether to apply Xavier Initialization to Layer. Defaults to False.
+        
+        """
         super(Linear, self).__init__()
         self.fc = nn.Linear(indim, outdim)
         if xavier_init:
@@ -21,18 +29,39 @@ class Linear(torch.nn.Module):
             self.fc.bias.data.fill_(0.0)
 
     def forward(self, x):
+        """Apply Linear Layer to Input.
+
+        Args:
+            x (torch.Tensor): Input Tensor
+
+        Returns:
+            torch.Tensor: Output Tensor
+        
+        """
         return self.fc(x)
 
 
 class Squeeze(torch.nn.Module):
-    """
-    Custom squeeze module for easier Sequential usage.
-    """
+    """Custom squeeze module for easier Sequential usage."""
+    
     def __init__(self, dim=None):
+        """Initialize Squeeze Module.
+
+        Args:
+            dim (int, optional): Dimension to Squeeze on. Defaults to None.
+        """ 
         super().__init__()
         self.dim = dim
 
     def forward(self, x):
+        """Apply Squeeze Layer to Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         if self.dim is None:
             return torch.squeeze(x)
         else:
@@ -40,49 +69,82 @@ class Squeeze(torch.nn.Module):
 
 
 class Sequential(nn.Sequential):
-    """
-    Custom sequential module for easier usage.
-    """
+    """Custom Sequential module for easier usage."""
+    
     def __init__(self, *args, **kwargs):
+        """Initialize Sequential Layer."""
         super().__init__(*args, **kwargs)
 
     def forward(self, *args, **kwargs):
+        """Apply args to Sequential Layer."""
         if 'training' in kwargs:
             del kwargs['training']
         return super().forward(*args, **kwargs)
 
 
 class Reshape(nn.Module):
-    """
-    Custom reshape module for easier Sequential usage.
-    """
+    """Custom reshape module for easier Sequential usage."""
+    
     def __init__(self, shape):
+        """Initialize Reshape Module.
+
+        Args:
+            shape (tuple): Tuple to reshape input to
+        """
         super().__init__()
         self.shape = shape
 
     def forward(self, x):
+        """Apply Reshape Module to Input.
+
+        Args:
+            x (torch.Tensor): Layer Input 
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return torch.reshape(x, self.shape)
 
 
 class Transpose(nn.Module):
-    """
-    Custom transpose module for easier Sequential usage.
-    """
+    """Custom transpose module for easier Sequential usage."""
     def __init__(self, dim0, dim1):
+        """Initialize Transpose Module.
+
+        Args:
+            dim0 (int): Dimension 1 of Torch.Transpose
+            dim1 (int): Dimension 2 of Torch.Transpose
+        """
         super().__init__()
         self.dim0 = dim0
         self.dim1 = dim1
 
     def forward(self, x):
+        """Apply Transpose Module to Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return torch.transpose(x, self.dim0, self.dim1)
 
 
 class MLP(torch.nn.Module):
-    """
-    Two layer MLP
-    """
+    """Two layered perceptron."""
     
     def __init__(self, indim, hiddim, outdim, dropout=False, dropoutp=0.1, output_each_layer=False):
+        """Initialize two-layered perceptron.
+
+        Args:
+            indim (int): Input dimension
+            hiddim (int): Hidden layer dimension
+            outdim (int): Output layer dimension
+            dropout (bool, optional): Whether to apply dropout or not. Defaults to False.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.1.
+            output_each_layer (bool, optional): Whether to return outputs of each layer as a list. Defaults to False.
+        """
         super(MLP, self).__init__()
         self.fc = nn.Linear(indim, hiddim)
         self.fc2 = nn.Linear(hiddim, outdim)
@@ -92,6 +154,14 @@ class MLP(torch.nn.Module):
         self.lklu = nn.LeakyReLU(0.2)
 
     def forward(self, x):
+        """Apply MLP to Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         output = F.relu(self.fc(x))
         if self.dropout:
             output = self.dropout_layer(output)
@@ -105,10 +175,21 @@ class MLP(torch.nn.Module):
 
 
 class GRU(torch.nn.Module):
-    """
-    GRU Implementation.
-    """
+    """Implements Gated Recurrent Unit (GRU)."""
+    
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False, last_only=False,batch_first=True):
+        """Initialize GRU Module.
+
+        Args:
+            indim (int): Input dimension
+            hiddim (int): Hidden dimension
+            dropout (bool, optional): Whether to apply dropout layer or not. Defaults to False.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.1.
+            flatten (bool, optional): Whether to flatten output before returning. Defaults to False.
+            has_padding (bool, optional): Whether the input has padding or not. Defaults to False.
+            last_only (bool, optional): Whether to return only the last output of the GRU. Defaults to False.
+            batch_first (bool, optional): Whether to batch before applying or not. Defaults to True.
+        """
         super(GRU, self).__init__()
         self.gru = nn.GRU(indim, hiddim, batch_first=True)
         self.dropout = dropout
@@ -119,7 +200,14 @@ class GRU(torch.nn.Module):
         self.batch_first = batch_first
 
     def forward(self, x):
-        
+        """Apply GRU to input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         if self.has_padding:
             x = pack_padded_sequence(
                 x[0], x[1], batch_first=self.batch_first, enforce_sorted=False)
@@ -141,10 +229,22 @@ class GRU(torch.nn.Module):
 
 
 class GRUWithLinear(torch.nn.Module):
-    """
-    GRU with Linear Impl.
-    """
+    """Implements a GRU with Linear Post-Processing."""
+    
     def __init__(self, indim, hiddim, outdim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False, output_each_layer=False, batch_first=False):
+        """Initialize GRUWithLinear Module.
+
+        Args:
+            indim (int): Input Dimension
+            hiddim (int): Hidden Dimension
+            outdim (int): Output Dimension
+            dropout (bool, optional): Whether to apply dropout or not. Defaults to False.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.1.
+            flatten (bool, optional): Whether to flatten output before returning. Defaults to False.
+            has_padding (bool, optional): Whether input has padding. Defaults to False.
+            output_each_layer (bool, optional): Whether to return the output of every intermediate layer. Defaults to False.
+            batch_first (bool, optional): Whether to apply batching before GRU. Defaults to False.
+        """
         super(GRUWithLinear, self).__init__()
         self.gru = nn.GRU(indim, hiddim, batch_first=batch_first)
         self.linear = nn.Linear(hiddim, outdim)
@@ -156,6 +256,14 @@ class GRUWithLinear(torch.nn.Module):
         self.lklu = nn.LeakyReLU(0.2)
 
     def forward(self, x):
+        """Apply GRUWithLinear to Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         if self.has_padding:
             x = pack_padded_sequence(
                 x[0], x[1], batch_first=True, enforce_sorted=False)
@@ -174,10 +282,20 @@ class GRUWithLinear(torch.nn.Module):
 
 
 class LSTM(torch.nn.Module):
-    """
-    LSTM.
-    """
+    """Extends nn.LSTM with dropout and other features."""
+    
     def __init__(self, indim, hiddim, linear_layer_outdim=None, dropout=False, dropoutp=0.1, flatten=False, has_padding=False):
+        """Initialize LSTM Object.
+
+        Args:
+            indim (int): Input Dimension
+            hiddim (int): Hidden Layer Dimension
+            linear_layer_outdim (int, optional): Linear Layer Output Dimension. Defaults to None.
+            dropout (bool, optional): Whether to apply dropout to layer output. Defaults to False.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.1.
+            flatten (bool, optional): Whether to flatten out. Defaults to False.
+            has_padding (bool, optional): Whether input has padding. Defaults to False.
+        """
         super(LSTM, self).__init__()
         self.lstm = nn.LSTM(indim, hiddim, batch_first=True)
         if linear_layer_outdim is not None:
@@ -189,6 +307,14 @@ class LSTM(torch.nn.Module):
         self.linear_layer_outdim = linear_layer_outdim
 
     def forward(self, x):
+        """Apply LSTM to layer input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         if self.has_padding:
             x = pack_padded_sequence(
                 x[0], x[1], batch_first=True, enforce_sorted=False)
@@ -211,11 +337,21 @@ class LSTM(torch.nn.Module):
 
 
 class TwoLayersLSTM(torch.nn.Module):
-    """
-    2-layer LSTM.
-    """
+    """Implements and Extends nn.LSTM for 2-layer LSTMs."""
+    
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.1, flatten=False, has_padding=False,
                  LayNorm=True, isBidirectional=True):
+        """Initialize TwoLayersLSTM Object.
+
+        Args:
+            indim (int): Input dimension
+            hiddim (int): Hidden layer dimension
+            dropout (bool, optional): Whether to apply dropout to layer output. Defaults to False.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.1.
+            flatten (bool, optional): Whether to flatten layer output before returning. Defaults to False.
+            has_padding (bool, optional): Whether input has padding or not. Defaults to False.
+            isBidirectional (bool, optional): Whether internal LSTMs are bidirectional. Defaults to True.
+        """
         super(TwoLayersLSTM, self).__init__()
         self.lstm_0 = nn.LSTM(indim, hiddim, batch_first=True,
                               bidirectional=isBidirectional)
@@ -226,9 +362,17 @@ class TwoLayersLSTM(torch.nn.Module):
         self.dropout = dropout
         self.flatten = flatten
         self.has_padding = has_padding
-        self.LayerNorm = LayNorm
+        #self.LayerNorm = LayNorm
 
     def forward(self, x):
+        """Apply TwoLayersLSTM to input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         if self.has_padding:
             x = pack_padded_sequence(
                 x[0], x[1], batch_first=True, enforce_sorted=False)
@@ -252,11 +396,22 @@ class TwoLayersLSTM(torch.nn.Module):
 
 
 class LeNet(nn.Module):
-    """
+    """Implements LeNet.
+    
     Adapted from centralnet code https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py.
-    LeNet.
     """
+    
     def __init__(self, in_channels, args_channels, additional_layers, output_each_layer=False, linear=None, squeeze_output=True):
+        """Initialize LeNet.
+
+        Args:
+            in_channels (int): Input channel number.
+            args_channels (int): Output channel number for block.
+            additional_layers (int): Number of additional blocks for LeNet.
+            output_each_layer (bool, optional): Whether to return the output of all layers. Defaults to False.
+            linear (tuple, optional): Tuple of (input_dim, output_dim) for optional linear layer post-processing. Defaults to None.
+            squeeze_output (bool, optional): Whether to squeeze output before returning. Defaults to True.
+        """
         super(LeNet, self).__init__()
         self.output_each_layer = output_each_layer
         self.convs = [
@@ -280,6 +435,14 @@ class LeNet(nn.Module):
                 nn.init.kaiming_uniform_(m.weight)
 
     def forward(self, x):
+        """Apply LeNet to layer input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         tempouts = []
         out = x
         for i in range(len(self.convs)):
@@ -301,21 +464,47 @@ class LeNet(nn.Module):
 
 
 class VGG16(nn.Module):
+    """Extends VGG16 for encoding."""
+    
     def __init__(self, hiddim, pretrained=True):
+        """Initialize VGG16 Object.
+
+        Args:
+            hiddim (int): Size of post-processing layer
+            pretrained (bool, optional): Whether to instantiate VGG16 from pretrained. Defaults to True.
+        """
         super(VGG16, self).__init__()
         self.hiddim = hiddim
         self.model = tmodels.vgg16_bn(pretrained=pretrained)
         self.model.classifier[6] = nn.Linear(4096, hiddim)
 
     def forward(self, x):
+        """Apply VGG16 to Input.
+
+        Args:
+            x (torch.Tensor): Layer Input 
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return self.model(x)
 
 
 class VGG16Slim(nn.Module):  
-    """
+    """Extends VGG16 with a fewer layers in the classifier.
+    
     Slimmer version of vgg16 model with fewer layers in classifier.
     """
+    
     def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True):
+        """Initialize VGG16Slim object.
+
+        Args:
+            hiddim (int): Hidden dimension size
+            dropout (bool, optional): Whether to apply dropout to ReLU output. Defaults to True.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.2.
+            pretrained (bool, optional): Whether to initialize VGG16 from pretrained. Defaults to True.
+        """
         super(VGG16Slim, self).__init__()
         self.hiddim = hiddim
         self.model = tmodels.vgg16_bn(pretrained=pretrained)
@@ -331,14 +520,33 @@ class VGG16Slim(nn.Module):
             self.model.features = nn.Sequential(*new_feats_list)
 
     def forward(self, x):
+        """Apply VGG16Slim to model input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return self.model(x)
 
 
 class VGG11Slim(nn.Module): 
-    """
+    """Extends VGG11 with a fewer layers in the classifier.
+    
     Slimmer version of vgg11 model with fewer layers in classifier.
     """
+    
     def __init__(self, hiddim, dropout=True, dropoutp=0.2, pretrained=True, freeze_features=True):
+        """Initialize VGG11Slim Object.
+
+        Args:
+            hiddim (int): Hidden dimension size
+            dropout (bool, optional): Whether to apply dropout to output of ReLU. Defaults to True.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.2.
+            pretrained (bool, optional): Whether to instantiate VGG11 from Pretrained. Defaults to True.
+            freeze_features (bool, optional): Whether to keep VGG11 features frozen. Defaults to True.
+        """
         super(VGG11Slim, self).__init__()
         self.hiddim = hiddim
         self.model = tmodels.vgg11_bn(pretrained=pretrained)
@@ -356,14 +564,32 @@ class VGG11Slim(nn.Module):
             p.requires_grad = (not freeze_features)
 
     def forward(self, x):
+        """Apply VGG11Slim to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return self.model(x)
 
 
 class VGG11Pruned(nn.Module):
-    """
+    """Extends VGG11 and prunes layers to make it even smaller.
+    
     Slimmer version of vgg11 model with fewer layers in classifier.
     """
+    
     def __init__(self, hiddim, dropout=True, prune_factor=0.25, dropoutp=0.2):
+        """Initialize VGG11Pruned Object.
+
+        Args:
+            hiddim (int): Hidden Layer Dimension
+            dropout (bool, optional): Whether to apply dropout after ReLU. Defaults to True.
+            prune_factor (float, optional): Percentage of channels to prune. Defaults to 0.25.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.2.
+        """
         super(VGG11Pruned, self).__init__()
         self.hiddim = hiddim
         self.model = tmodels.vgg11_bn(pretrained=False)
@@ -391,15 +617,33 @@ class VGG11Pruned(nn.Module):
             self.model.features = nn.Sequential(*new_feats_list)
 
     def forward(self, x):
+        """Apply VGG11Pruned to layer input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return self.model(x)
 
 
 
 class VGG16Pruned(nn.Module):
+    """Extends VGG16 and prunes layers to make it even smaller.
+    
+    Slimmer version of vgg16 model with fewer layers in classifier.
     """
-    Slimmer version of vgg11 model with fewer layers in classifier.
-    """
+    
     def __init__(self, hiddim, dropout=True, prune_factor=0.25, dropoutp=0.2):
+        """Initialize VGG16Pruned Object.
+
+        Args:
+            hiddim (int): Hidden Layer Dimension
+            dropout (bool, optional): Whether to apply dropout after ReLU. Defaults to True.
+            prune_factor (float, optional): Percentage of channels to prune. Defaults to 0.25.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.2.
+        """
         super(VGG16Pruned, self).__init__()
         self.hiddim = hiddim
         self.model = tmodels.vgg16_bn(pretrained=False)
@@ -427,14 +671,26 @@ class VGG16Pruned(nn.Module):
             self.model.features = nn.Sequential(*new_feats_list)
 
     def forward(self, x):
+        """Apply VGG16Pruned to layer input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return self.model(x)
 
 
 class VGG(nn.Module):
-    """
-    VGG net module.
-    """
+    """Extends tmodels.vgg19 module with Global Pooling, BatchNorm, and a Linear Output."""
+    
     def __init__(self, num_outputs):
+        """Initialize VGG Object.
+
+        Args:
+            num_outputs (int): Output Dimension
+        """
         super(VGG, self).__init__()
 
         # self.vgg = tmodels.vgg19(pretrained='imagenet')
@@ -450,7 +706,14 @@ class VGG(nn.Module):
         self.classifier = nn.Linear(512, num_outputs)
 
     def forward(self, x):
+        """Apply VGG Module to Input.
 
+        Args:
+            x (torch.Tensor): Input Tensor
+
+        Returns:
+            torch.Tensor: Output Tensor
+        """
         for i_l, layer in enumerate(self.vgg):
 
             x = layer(x)
@@ -477,15 +740,29 @@ class VGG(nn.Module):
 
 
 class Maxout(nn.Module):
-    """
-    Maxout module.
-    """
+    """Implements Maxout module."""
+    
     def __init__(self, d, m, k):
+        """Initialize Maxout object.
+
+        Args:
+            d (int): (Unused)
+            m (int): Number of features remeaining after Maxout.
+            k (int): Pool Size
+        """
         super(Maxout, self).__init__()
         self.d_in, self.d_out, self.pool_size = d, m, k
         self.lin = nn.Linear(d, m * k)
 
     def forward(self, inputs):
+        """Apply Maxout to inputs.
+
+        Args:
+            inputs (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         shape = list(inputs.size())
         shape[-1] = self.d_out
         shape.append(self.pool_size)
@@ -496,11 +773,19 @@ class Maxout(nn.Module):
 
 
 class MaxOut_MLP(nn.Module):
-    """
-    Maxout w/ MLP module
-    """
+    """Implements Maxout w/ MLP."""
+    
     def __init__(
             self, num_outputs, first_hidden=64, number_input_feats=300, second_hidden=None, linear_layer=True):
+        """Instantiate MaxOut_MLP Module.
+
+        Args:
+            num_outputs (int): Output dimension
+            first_hidden (int, optional): First hidden layer dimension. Defaults to 64.
+            number_input_feats (int, optional): Input dimension. Defaults to 300.
+            second_hidden (_type_, optional): Second hidden layer dimension. Defaults to None.
+            linear_layer (bool, optional): Whether to include an output hidden layer or not. Defaults to True.
+        """
         super(MaxOut_MLP, self).__init__()
 
         if second_hidden is None:
@@ -522,6 +807,14 @@ class MaxOut_MLP(nn.Module):
             self.hid2val = None
 
     def forward(self, x):
+        """Apply module to layer input
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         o0 = self.op0(x)
         o1 = self.op1(o0)
         o2 = self.op2(o1)
@@ -535,10 +828,21 @@ class MaxOut_MLP(nn.Module):
 
 
 class GlobalPooling2D(nn.Module):
+    """Implements 2D Global Pooling."""
+    
     def __init__(self):
+        """Initializes GlobalPooling2D Module."""
         super(GlobalPooling2D, self).__init__()
 
     def forward(self, x):
+        """Apply 2D Global Pooling to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         # apply global average pooling
         x = x.view(x.size(0), x.size(1), -1)
         x = torch.mean(x, 2)
@@ -548,19 +852,45 @@ class GlobalPooling2D(nn.Module):
 
 
 class Constant(nn.Module):
+    """Implements a module that returns a constant no matter the input."""
+    
     def __init__(self, out_dim):
+        """Initialize Constant Module.
+
+        Args:
+            out_dim (int): Output Dimension.
+        """
         super(Constant, self).__init__()
         self.out_dim = out_dim
 
     def forward(self, x):
+        """Apply Constant to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return torch.zeros(self.out_dim).cuda()
 
 
 class Identity(nn.Module):
+    """Identity Module."""
+    
     def __init__(self):
+        """Initialize Identity Module."""
         super().__init__()
 
     def forward(self, x):
+        """Apply Identity to Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return x
 
 
@@ -571,6 +901,16 @@ class DAN(torch.nn.Module):
     Deep Sets: https://arxiv.org/abs/1703.06114
     """
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=3, has_padding=False):
+        """Initializes DAN Object.
+
+        Args:
+            indim (int): Input Dimension
+            hiddim (int): Hidden Dimension
+            dropout (bool, optional): Whether to apply dropout to layer output. Defaults to False.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.25.
+            nlayers (int, optional): Number of layers. Defaults to 3.
+            has_padding (bool, optional): Whether the input has padding. Defaults to False.
+        """
         super(DAN, self).__init__()
         self.dropout_layer = torch.nn.Dropout(dropoutp)
         self.dropout = dropout
@@ -585,6 +925,14 @@ class DAN(torch.nn.Module):
         self.mlp = nn.ModuleList(mlp)
 
     def forward(self, x):
+        """Apply DAN to input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         # x_vals: B x S x P
         if self.has_padding:
             x_vals = x[0]
@@ -612,7 +960,16 @@ class DAN(torch.nn.Module):
 
 
 class ResNetLSTMEnc(torch.nn.Module):
+    """Implements an encoder which applies as ResNet first, and then an LSTM."""
+    
     def __init__(self, hiddim, dropout=False, dropoutp=0.1):
+        """Instantiates ResNetLSTMEnc Module
+
+        Args:
+            hiddim (int): Hidden dimension size of LSTM.
+            dropout (bool, optional): Whether to apply dropout or not.. Defaults to False.
+            dropoutp (float, optional): Dropout probability. Defaults to 0.1.
+        """
         super(ResNetLSTMEnc, self).__init__()
         self.enc = torchvision.models.resnet18(pretrained=True)
         self.lstm = nn.LSTM(1000, hiddim, batch_first=True)
@@ -634,8 +991,15 @@ class ResNetLSTMEnc(torch.nn.Module):
 
 
 class Transformer(nn.Module):
-
+    """Extends nn.Transformer."""
+    
     def __init__(self, n_features, dim):
+        """Initialize Transformer object.
+
+        Args:
+            n_features (int): Number of features in the input.
+            dim (int): Dimension which to embed upon / Hidden dimension size.
+        """
         super().__init__()
         self.embed_dim = dim
         self.conv = nn.Conv1d(n_features, self.embed_dim,
@@ -644,6 +1008,14 @@ class Transformer(nn.Module):
         self.transformer = nn.TransformerEncoder(layer, num_layers=5)
 
     def forward(self, x):
+        """Apply Transformer to Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         if type(x) is list:
             x = x[0]
         x = self.conv(x.permute([0, 2, 1]))

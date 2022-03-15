@@ -1,4 +1,8 @@
-# copied from https://github.com/kenshohara/3D-ResNets-PyTorch/blob/master/models/resnet2p1d.py
+"""Implements 3dResnet.
+
+Copied from https://github.com/kenshohara/3D-ResNets-PyTorch/blob/master/models/resnet2p1d.py
+"""
+
 from functools import partial
 
 import torch
@@ -37,9 +41,19 @@ def _conv1x1x1(in_planes, out_planes, stride=1):
 
 
 class BasicBlock(nn.Module):
+    """Implements basic block of a resnet."""
+    
     expansion = 1
 
     def __init__(self, in_planes, planes, stride=1, downsample=None):
+        """Instantiate BasicBlock Module.
+
+        Args:
+            in_planes (int): Number of input channels
+            planes (int): Number of output channels
+            stride (int, optional): Convolution Stride. Defaults to 1.
+            downsample (nn.Module, optional): Optional Downsampling Layer. Defaults to None.
+        """
         super().__init__()
 
         n_3d_parameters1 = in_planes * planes * 3 * 3 * 3
@@ -63,6 +77,14 @@ class BasicBlock(nn.Module):
         self.stride = stride
 
     def forward(self, x):
+        """Apply Block to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         residual = x
 
         out = self.conv1_s(x)
@@ -88,9 +110,19 @@ class BasicBlock(nn.Module):
 
 
 class Bottleneck(nn.Module):
+    """Implements bottleneck block of a resnet."""
+    
     expansion = 4
 
     def __init__(self, in_planes, planes, stride=1, downsample=None):
+        """Instantiate Bottleneck Module.
+
+        Args:
+            in_planes (int): Number of input channels
+            planes (int): Number of output channels
+            stride (int, optional): Convolution Stride. Defaults to 1.
+            downsample (nn.Module, optional): Optional Downsampling Layer. Defaults to None.
+        """
         super().__init__()
 
         self.conv1 = _conv1x1x1(in_planes, planes)
@@ -111,6 +143,14 @@ class Bottleneck(nn.Module):
         self.stride = stride
 
     def forward(self, x):
+        """Apply Bottleneck to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         residual = x
 
         out = self.conv1(x)
@@ -137,6 +177,7 @@ class Bottleneck(nn.Module):
 
 
 class ResNet(nn.Module):
+    """Implements a ResNet from scratch."""
 
     def __init__(self,
                  block,
@@ -149,7 +190,22 @@ class ResNet(nn.Module):
                  shortcut_type='B',
                  widen_factor=1.0,
                  n_classes=400):
+        """Instantiate 3DResNet
+
+        Args:
+            block (nn.Module): Block definition
+            layers (list[int]): List of number of blocks for 3d resnet
+            block_inplanes (list[int]): In-channel count per block
+            n_input_channels (int, optional): Number of input channels. Defaults to 3.
+            conv1_t_size (int, optional): Convolution input kernel size. Defaults to 7.
+            conv1_t_stride (int, optional): Convolution input stride size. Defaults to 1.
+            no_max_pool (bool, optional): Whether to not apply max pooling or not. Defaults to False.
+            shortcut_type (str, optional): Whether to apply downsampling or not. Defaults to 'B'.
+            widen_factor (float, optional): Widen factor. Defaults to 1.0.
+            n_classes (int, optional): Number of classes in output. Defaults to 400.
+        """
         super().__init__()
+        
 
         block_inplanes = [int(x * widen_factor) for x in block_inplanes]
 
@@ -243,6 +299,14 @@ class ResNet(nn.Module):
         return nn.Sequential(*layers)
 
     def forward(self, x):
+        """Apply ResNet3D to Layer Input
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         x = self.conv1_s(x)
         x = self.bn1_s(x)
         x = self.relu(x)

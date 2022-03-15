@@ -13,7 +13,6 @@ def stocks_train(num_training, trainprocess, algorithm, encoder=False):
     
     Returns:
         A list of filenames of the best saved models trained on stocks data.
-    
     """
     if encoder:
         filenames_encoder = []

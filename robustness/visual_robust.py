@@ -1,3 +1,4 @@
+"""Implements visual transformations."""
 import numpy as np
 from PIL import Image, ImageOps, ImageEnhance
 import colorsys
@@ -9,8 +10,17 @@ def add_visual_noise(tests, noise_level=0.3, gray=True, contrast=True, inv=True,
     """
     Add various types of noise to visual data.
 
-    :param noise_level: Probability of randomly applying visual imperfections or transformations, and standard deviation for gaussian noise.
-    :param noises: list of noises to add. # TODO: Change this to use either a list of enums or if statements.
+    :param noise_level: Probability of randomly applying noise to each audio signal, and standard deviation for gaussian noise, and structured dropout probability.
+    :param gray: Boolean flag denoting if grayscale should be applied as a noise type.
+    :param contrast: Boolean flag denoting if lowering the contrast should be applied as a noise type. 
+    :param inv: Boolean flag denoting if inverting the image should be applied as a noise type. 
+    :param temp: Boolean flag denoting if randomly changing the image's color balance should be applied as a noise type.  
+    :param color: Boolean flag denoting if randomly tinting the image should be applied as a noise type. 
+    :param s_and_p: Boolean flag denoting if applying salt and pepper noise should be applied as a noise type. 
+    :param gaus: Boolean flag denoting if applying Gaussian noise should be applied as a noise type. 
+    :param rot: Boolean flag denoting if randomly rotating the image should be applied as a noise type. 
+    :param flip: Boolean flag denoting if randomly flipping the image should be applied as a noise type. 
+    :param crop: Boolean flag denoting if randomly cropping the image should be applied as a noise type. 
     """
     noises = []
     if gray:
@@ -46,7 +56,12 @@ def add_visual_noise(tests, noise_level=0.3, gray=True, contrast=True, inv=True,
 
 
 def grayscale(img, p):
-    """Randomly make an image grayscale."""
+    """Randomly make an image grayscale.
+    
+    :param img: Input to add noise to.
+    :param p: Probability of applying transformation.
+    
+    """
     if np.random.sample() <= p:
         return ImageOps.grayscale(img)
     else:
@@ -54,7 +69,11 @@ def grayscale(img, p):
 
 
 def low_contrast(img, p):
-    """Randomly reduce the contract of an image."""
+    """Randomly reduce the contract of an image.
+    
+    :param img: Input to add noise to.
+    :param p: Probability of applying transformation.
+    """
     if np.random.sample() <= p:
         enhancer = ImageEnhance.Contrast(img)
         return enhancer.enhance(0.5)
@@ -63,7 +82,11 @@ def low_contrast(img, p):
 
 
 def inversion(img, p):
-    """Randomly invert an image."""
+    """Randomly invert an image.
+    
+    :param img: Input to add noise to.
+    :param p: Probability of applying transformation.
+    """
     if np.random.sample() <= p:
         return ImageOps.invert(img)
     else:
@@ -71,7 +94,11 @@ def inversion(img, p):
 
 
 def WB(img, p):
-    """Randomly change the white-balance by increasing/decreasing the temperature."""
+    """Randomly change the white-black balance / temperature of an image.
+    
+    :param img: Input to add noise to.
+    :param p: Probability of applying transformation.
+    """
     if np.random.sample() <= p and img.mode == 'RGB':
         kelvin_table = {1000: (255, 56, 0), 1500: (255, 109, 0), 2000: (255, 137, 18), 2500: (255, 161, 72), 3000: (255, 180, 107), 3500: (255, 196, 137), 4000: (255, 209, 163), 4500: (255, 219, 186), 5000: (255, 228, 206), 5500: (
             255, 236, 224), 6000: (255, 243, 239), 6500: (255, 249, 253), 7000: (245, 243, 255), 7500: (235, 238, 255), 8000: (227, 233, 255), 8500: (220, 229, 255), 9000: (214, 225, 255), 9500: (208, 222, 255), 10000: (204, 219, 255)}
@@ -87,7 +114,11 @@ def WB(img, p):
 
 
 def colorize(img, p):
-    """Randomly tint the color of an image using an existing RGB channel."""
+    """Randomly tint the color of an image using an existing RGB channel.
+    
+    :param img: Input to add noise to.
+    :param p: Probability of applying transformation.
+    """
     if np.random.sample() <= p and img.mode == 'RGB':
         color = np.random.choice(['red', 'blue', 'green'])
         layer = Image.new('RGB', img.size, color)
@@ -97,7 +128,11 @@ def colorize(img, p):
 
 
 def salt_and_pepper(img, p):
-    """Randomly add salt-and-pepper noise to the image."""
+    """Randomly add salt-and-pepper noise to the image.
+    
+    :param img: Input to add noise to.
+    :param p: Probability of applying transformation.
+    """
     if np.random.sample() <= p:
         img = ImageOps.grayscale(img)
         output = np.copy(np.array(img))
@@ -117,7 +152,11 @@ def salt_and_pepper(img, p):
 
 
 def gaussian(img, p):
-    """Randomly add Gaussian/electronic noise that normalizes histogram with respect to the gray values."""
+    """Randomly add salt-and-pepper noise to the image.
+    
+    :param img: Input to add noise to.
+    :param p: Probability of applying transformation.
+    """
     if np.random.sample() <= p:
         dim = np.array(img).shape
         gauss = np.random.normal(0, p, (dim[0], dim[1]))

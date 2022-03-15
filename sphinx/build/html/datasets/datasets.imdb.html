@@ -99,11 +99,88 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
 </section>
-<section id="datasets-imdb-get-data-module">
-<h2>datasets.imdb.get_data module<a class="headerlink" href="#datasets-imdb-get-data-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.imdb.get_data">
+<span id="datasets-imdb-get-data-module"></span><h2>datasets.imdb.get_data module<a class="headerlink" href="#module-datasets.imdb.get_data" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.IMDBDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.imdb.get_data.</span></span><span class="sig-name descname"><span class="pre">IMDBDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.get_data.IMDBDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.IMDBDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">h5py.File</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vggfeature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#datasets.imdb.get_data.IMDBDataset.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.IMDBDataset_robust">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.imdb.get_data.</span></span><span class="sig-name descname"><span class="pre">IMDBDataset_robust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.get_data.IMDBDataset_robust" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.IMDBDataset_robust.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#datasets.imdb.get_data.IMDBDataset_robust.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.get_dataloader">
+<span class="sig-prename descclassname"><span class="pre">datasets.imdb.get_data.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_shuffle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vgg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#datasets.imdb.get_data.get_dataloader" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.process_data">
+<span class="sig-prename descclassname"><span class="pre">datasets.imdb.get_data.</span></span><span class="sig-name descname"><span class="pre">process_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.get_data.process_data" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
-<section id="datasets-imdb-vgg-module">
-<h2>datasets.imdb.vgg module<a class="headerlink" href="#datasets-imdb-vgg-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.imdb.vgg">
+<span id="datasets-imdb-vgg-module"></span><h2>datasets.imdb.vgg module<a class="headerlink" href="#module-datasets.imdb.vgg" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.imdb.vgg.</span></span><span class="sig-name descname"><span class="pre">VGGClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vgg.tar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">synset_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'synset_words.txt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vgg.tar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">synset_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'synset_words.txt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier.classify">
+<span class="sig-name descname"><span class="pre">classify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier.classify" title="Permalink to this definition"></a></dt>
+<dd><p>Classify an image with the 1000 concepts of the ImageNet dataset.
+:image: numpy image or image path.
+:top: Number of top classes for this image.
+:returns: list of strings with synsets predicted by the VGG model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier.get_features">
+<span class="sig-name descname"><span class="pre">get_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier.get_features" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the activations of the last hidden layer for a given image.
+:image: numpy image or image path.
+:returns: numpy vector with 4096 activations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier.resize_and_crop_image">
+<span class="sig-name descname"><span class="pre">resize_and_crop_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[224,</span> <span class="pre">224]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier.resize_and_crop_image" title="Permalink to this definition"></a></dt>
+<dd><p>Downsample the image.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGNet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.imdb.vgg.</span></span><span class="sig-name descname"><span class="pre">VGGNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGNet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">blocks.bricks.FeedforwardSequence</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGNet.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGNet.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-datasets.imdb">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datasets.imdb" title="Permalink to this headline"></a></h2>

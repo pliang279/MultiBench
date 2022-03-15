@@ -15,12 +15,12 @@ def _criterioning(pred, truth, criterion):
 
 
 def MFM_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=True, criterion=torch.nn.CrossEntropyLoss()):
-    """Define objective for MFM. 
+    """Define objective for MFM.
     
-        :param ce_weight: the weight of simple supervised loss
-        :param model_loss_funcs: list of functions that takes in reconstruction and input of each modality and compute reconstruction loss
-        :param recon_weights: list of float values indicating the weight of reconstruction loss of each modality
-        :param criterion: the loss function for supervised loss (default CrossEntropyLoss)
+    :param ce_weight: the weight of simple supervised loss
+    :param model_loss_funcs: list of functions that takes in reconstruction and input of each modality and compute reconstruction loss
+    :param recon_weights: list of float values indicating the weight of reconstruction loss of each modality
+    :param criterion: the loss function for supervised loss (default CrossEntropyLoss)
     """
     recon_loss_func = recon_weighted_sum(modal_loss_funcs, recon_weights)
 
@@ -44,7 +44,7 @@ def MFM_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tru
     return actualfunc
 
 
-def reparameterize(mu, logvar, training):
+def _reparameterize(mu, logvar, training):
     if training:
         std = logvar.mul(0.5).exp_()
         eps = torch.autograd.Variable(std.data.new(std.size()).normal_())
@@ -56,12 +56,12 @@ def reparameterize(mu, logvar, training):
 def MVAE_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=True, annealing=1.0, criterion=torch.nn.CrossEntropyLoss()):
     """Define objective for MVAE.
     
-        :param ce_weight: the weight of simple supervised loss
-        :param model_loss_funcs: list of functions that takes in reconstruction and input of each modality and compute reconstruction loss
-        :param recon_weights: list of float values indicating the weight of reconstruction loss of each modality
-        :param input_to_float: boolean deciding if we should convert input to float or not.
-        :param annealing: the annealing factor, i.e. the weight of kl.
-        :param criterion: the loss function for supervised loss (default CrossEntropyLoss)
+    :param ce_weight: the weight of simple supervised loss
+    :param model_loss_funcs: list of functions that takes in reconstruction and input of each modality and compute reconstruction loss
+    :param recon_weights: list of float values indicating the weight of reconstruction loss of each modality
+    :param input_to_float: boolean deciding if we should convert input to float or not.
+    :param annealing: the annealing factor, i.e. the weight of kl.
+    :param criterion: the loss function for supervised loss (default CrossEntropyLoss)
     """
     recon_loss_func = elbo_loss(modal_loss_funcs, recon_weights, annealing)
 
@@ -84,11 +84,11 @@ def MVAE_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tr
             inputs = [i.cuda() for i in inps]
         for i in range(len(inps)):
             reconsjoint.append(decoders[i](
-                reparameterize(fusedmu, fusedlogvar, training)))
+                _reparameterize(fusedmu, fusedlogvar, training)))
         total_loss = recon_loss_func(reconsjoint, inputs, fusedmu, fusedlogvar)
         for i in range(len(inps)):
             mu, logvar = reps[i]
-            recon = decoders[i](reparameterize(mu, logvar, training))
+            recon = decoders[i](_reparameterize(mu, logvar, training))
             total_loss += recon_loss_func(allnonebuti(i, recon),
                                           allnonebuti(i, inputs[i]), mu, logvar)
         total_loss += ce_weight * _criterioning(pred, truth, criterion)

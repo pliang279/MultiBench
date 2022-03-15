@@ -19,7 +19,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="datasets.avmnist package" href="datasets.avmnist.html" />
-    <link rel="prev" title="datasets.RTFM.rtfm.tasks package" href="datasets.RTFM.rtfm.tasks.html" /> 
+    <link rel="prev" title="datasets.RTFM package" href="datasets.RTFM.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -133,6 +133,11 @@
 <dt class="sig sig-object py" id="datasets.affect.get_data.Affectdataset">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.affect.get_data.</span></span><span class="sig-name descname"><span class="pre">Affectdataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_data.Affectdataset" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.affect.get_data.Affectdataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten_time_series</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aligned</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_pad_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mosi'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_norm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#datasets.affect.get_data.Affectdataset.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py function">
@@ -181,8 +186,43 @@
 <dd></dd></dl>
 
 </section>
-<section id="datasets-affect-get-raw-data-module">
-<h2>datasets.affect.get_raw_data module<a class="headerlink" href="#datasets-affect-get-raw-data-module" title="Permalink to this headline"></a></h2>
+<section id="module-datasets.affect.get_raw_data">
+<span id="datasets-affect-get-raw-data-module"></span><h2>datasets.affect.get_raw_data module<a class="headerlink" href="#module-datasets.affect.get_raw_data" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_raw_data.detect_entry_fold">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_raw_data.</span></span><span class="sig-name descname"><span class="pre">detect_entry_fold</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entry</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_raw_data.detect_entry_fold" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_raw_data.get_audio_visual_text">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_raw_data.</span></span><span class="sig-name descname"><span class="pre">get_audio_visual_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">csds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_raw_data.get_audio_visual_text" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_raw_data.get_rawtext">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_raw_data.</span></span><span class="sig-name descname"><span class="pre">get_rawtext</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_raw_data.get_rawtext" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_raw_data.get_word2id">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_raw_data.</span></span><span class="sig-name descname"><span class="pre">get_word2id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vids</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_raw_data.get_word2id" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_raw_data.get_word_embeddings">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_raw_data.</span></span><span class="sig-name descname"><span class="pre">get_word_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word2id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_raw_data.get_word_embeddings" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_raw_data.glove_embeddings">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_raw_data.</span></span><span class="sig-name descname"><span class="pre">glove_embeddings</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paddings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_raw_data.glove_embeddings" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.affect.get_raw_data.lpad">
+<span class="sig-prename descclassname"><span class="pre">datasets.affect.get_raw_data.</span></span><span class="sig-name descname"><span class="pre">lpad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">this_array</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.affect.get_raw_data.lpad" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-datasets.affect">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datasets.affect" title="Permalink to this headline"></a></h2>
@@ -193,7 +233,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="datasets.RTFM.rtfm.tasks.html" class="btn btn-neutral float-left" title="datasets.RTFM.rtfm.tasks package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="datasets.RTFM.html" class="btn btn-neutral float-left" title="datasets.RTFM package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="datasets.avmnist.html" class="btn btn-neutral float-right" title="datasets.avmnist package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

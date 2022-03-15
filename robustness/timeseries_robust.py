@@ -1,3 +1,4 @@
+"""Implements timeseries transformations."""
 import numpy as np
 
 

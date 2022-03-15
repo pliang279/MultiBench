@@ -1,3 +1,4 @@
+"""Implements audio transformations."""
 import numpy as np
 
 

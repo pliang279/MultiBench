@@ -1,3 +1,4 @@
+"""Implements various evaluation metrics for accuracies and MOSI/MOSEI."""
 import torch
 import numpy as np
 from sklearn.metrics import classification_report
@@ -8,7 +9,8 @@ from sklearn.metrics import accuracy_score, f1_score
 
 def multiclass_acc(preds, truths):
     """
-    Compute the multiclass accuracy w.r.t. groundtruth
+    Compute the multiclass accuracy w.r.t. groundtruth.
+    
     :param preds: Float array representing the predictions, dimension (N,)
     :param truths: Float/int array representing the groundtruth classes, dimension (N,)
     :return: Classification accuracy
@@ -17,6 +19,15 @@ def multiclass_acc(preds, truths):
 
 
 def weighted_accuracy(test_preds_emo, test_truth_emo):
+    """Compute multiclass accuracy weighted by class occurence.
+
+    Args:
+        test_preds_emo (np.array): List of predicted labels
+        test_truth_emo (np.array): List of true labels.
+
+    Returns:
+        float: Weighted classification accuracy.
+    """
     true_label = (test_truth_emo > 0)
     predicted_label = (test_preds_emo > 0)
     tp = float(np.sum((true_label == 1) & (predicted_label == 1)))
@@ -28,6 +39,16 @@ def weighted_accuracy(test_preds_emo, test_truth_emo):
 
 
 def eval_mosei_senti_return(results, truths, exclude_zero=False):
+    """Evaluate MOSEI and return metric list.
+
+    Args:
+        results (np.array): List of predicated values.
+        truths (np.array): List of true values.
+        exclude_zero (bool, optional): Whether to exclute zero. Defaults to False.
+
+    Returns:
+        tuple(mae, corr, mult_a7, f_score, accuracy): Return statistics for MOSEI.
+    """
     test_preds = results.view(-1).cpu().detach().numpy()
     test_truth = truths.view(-1).cpu().detach().numpy()
 
@@ -53,6 +74,13 @@ def eval_mosei_senti_return(results, truths, exclude_zero=False):
 
 
 def eval_mosei_senti(results, truths, exclude_zero=False):
+    """Print out MOSEI metrics given results and ground truth.
+
+    Args:
+        results (list): List of predicted results
+        truths (list): List of ground truth
+        exclude_zero (bool, optional): Whether to include zero or not. Defaults to False.
+    """
     test_preds = results.view(-1).cpu().detach().numpy()
     test_truth = truths.view(-1).cpu().detach().numpy()
 
@@ -85,4 +113,13 @@ def eval_mosei_senti(results, truths, exclude_zero=False):
 
 
 def eval_mosi(results, truths, exclude_zero=False):
+    """Evaluate MOSI results given predictions and ground truth.
+    
+    Same as MOSEI evaluation.
+
+    Args:
+        results (list): List of predicted results
+        truths (list): List of ground truth
+        exclude_zero (bool, optional): Whether to include zero or not. Defaults to False.
+    """
     return eval_mosei_senti(results, truths, exclude_zero)

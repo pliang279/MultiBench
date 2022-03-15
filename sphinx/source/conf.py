@@ -42,7 +42,7 @@ exclude_patterns = []
 
 autodoc_mock_imports = ['torch','tqdm', 'h5py', 'theano', 'numpy', 'torchvision','sklearn', 'rtfm',
                         'gym', 'PIL', 'memory_profiler', 'revtok', 'matplotlib', 'pandas', 'getch',
-                        'lxml','torchtext','transformers','fannypack', 'gensim']
+                        'lxml','torchtext','transformers','fannypack', 'gensim', 'mosi_split', 'theano', 'blocks']
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for

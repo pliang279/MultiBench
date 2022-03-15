@@ -8,11 +8,18 @@ eps = 1e-7
 
 class AliasMethod(object):
     """
-    From: https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/
+    Initializes a generic method to sample from arbritrary discrete probability methods.
+    
+    Sourced From https://hips.seas.harvard.edu/blog/2013/03/03/the-alias-method-efficient-sampling-with-many-discrete-outcomes/.
+    Alternatively, look here for more details: http://cgi.cs.mcgill.ca/~enewel3/posts/alias-method/index.html.
     """
 
     def __init__(self, probs):
+        """Initialize AliasMethod object.
 
+        Args:
+            probs (list[int]): List of probabilities for each object. Can be greater than 1, but will be normalized.
+        """
         if probs.sum() > 1:
             probs.div_(probs.sum())
         K = len(probs)
@@ -49,12 +56,14 @@ class AliasMethod(object):
             self.prob[last_one] = 1
 
     def cuda(self):
+        """Generate CUDA version of self, for GPU-based sampling."""
         self.prob = self.prob.cuda()
         self.alias = self.alias.cuda()
 
     def draw(self, N):
         """
-        Draw N samples from multinomial
+        Draw N samples from multinomial dkstribution, based on given probability array.
+        
         :param N: number of samples
         :return: samples
         """

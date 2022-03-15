@@ -1,12 +1,22 @@
+"""Implements encoders for robotics tasks."""
 import torch.nn as nn
 from .models_utils import filter_depth, init_weights, rescaleImage
 from .layers import CausalConv1D, Flatten, conv2d
 
 
 class ProprioEncoder(nn.Module):
+    """Implements image encoder module.
+    
+    Sourced from selfsupervised code.
+    """
+    
     def __init__(self, z_dim, alpha, initialize_weights=True):
-        """
-        Image encoder taken from selfsupervised code
+        """Initialize ProprioEncoder Module.
+
+        Args:
+            z_dim (float): Z dimension size
+            alpha (float): Alpha to multiply proprio input by.
+            initialize_weights (bool, optional): Whether to initialize weights or not. Defaults to True.
         """
         super().__init__()
         self.z_dim = z_dim
@@ -27,13 +37,30 @@ class ProprioEncoder(nn.Module):
             init_weights(self.modules())
 
     def forward(self, proprio):
+        """Apply ProprioEncoder to Proprio Input.
+
+        Args:
+            proprio (torch.Tensor): Proprio Input
+
+        Returns:
+            torch.Tensor: Encoded Output
+        """
         return self.proprio_encoder(self.alpha * proprio).unsqueeze(2)
 
 
 class ForceEncoder(nn.Module):
+    """Implements force encoder module.
+    
+    Sourced from selfsupervised code.
+    """
+    
     def __init__(self, z_dim, alpha, initialize_weights=True):
-        """
-        Force encoder taken from selfsupervised code
+        """Initialize ForceEncoder Module.
+
+        Args:
+            z_dim (float): Z dimension size
+            alpha (float): Alpha to multiply proprio input by.
+            initialize_weights (bool, optional): Whether to initialize weights or not. Defaults to True.
         """
         super().__init__()
         self.z_dim = z_dim
@@ -56,13 +83,30 @@ class ForceEncoder(nn.Module):
             init_weights(self.modules())
 
     def forward(self, force):
+        """Apply ForceEncoder to Force Input.
+
+        Args:
+            force (torch.Tensor): Force Input
+
+        Returns:
+            torch.Tensor: Encoded Output
+        """        
         return self.frc_encoder(self.alpha * force)
 
 
 class ImageEncoder(nn.Module):
+    """Implements image encoder module.
+    
+    Sourced from Making Sense of Vision and Touch.
+    """   
+     
     def __init__(self, z_dim, alpha, initialize_weights=True):
-        """
-        Image encoder taken from Making Sense of Vision and Touch
+        """Initialize ImageEncoder Module.
+
+        Args:
+            z_dim (float): Z dimension size
+            alpha (float): Alpha to multiply input by.
+            initialize_weights (bool, optional): Whether to initialize weights or not. Defaults to True.
         """
         super().__init__()
         self.z_dim = z_dim
@@ -81,6 +125,14 @@ class ImageEncoder(nn.Module):
             init_weights(self.modules())
 
     def forward(self, vis_in):
+        """Apply encoder to image input.
+
+        Args:
+            vis_in (torch.Tensor): Image input
+
+        Returns:
+            tuple(torch.Tensor, torch.Tensor): Output of encoder, Output of encoder after each convolution.
+        """
         image = rescaleImage(vis_in)
 
         # image encoding layers
@@ -108,9 +160,18 @@ class ImageEncoder(nn.Module):
 
 
 class DepthEncoder(nn.Module):
+    """Implements a simplified depth-encoder module.
+    
+    Sourced from Making Sense of Vision and Touch.
+    """  
+     
     def __init__(self, z_dim, alpha, initialize_weights=True):
-        """
-        Simplified Depth Encoder taken from Making Sense of Vision and Touch
+        """Initialize DepthEncoder Module.
+
+        Args:
+            z_dim (float): Z dimension size
+            alpha (float): Alpha to multiply input by.
+            initialize_weights (bool, optional): Whether to initialize weights or not. Defaults to True.
         """
         super().__init__()
         self.z_dim = z_dim
@@ -130,6 +191,14 @@ class DepthEncoder(nn.Module):
             init_weights(self.modules())
 
     def forward(self, depth_in):
+        """Apply encoder to depth input.
+
+        Args:
+            depth_in (torch.Tensor): Depth input
+
+        Returns:
+            tuple(torch.Tensor, torch.Tensor): Output of encoder, Output of encoder after each convolution.
+        """
         depth = filter_depth(depth_in)
 
         # depth encoding layers
@@ -157,9 +226,13 @@ class DepthEncoder(nn.Module):
 
 
 class ActionEncoder(nn.Module):
+    """Implements an action-encoder module."""
+      
     def __init__(self, action_dim):
-        """
-        Action Encoder
+        """Instantiate ActionEncoder module.
+
+        Args:
+            action_dim (int): Dimension of action.
         """
         super().__init__()
         self.action_encoder = nn.Sequential(
@@ -170,6 +243,14 @@ class ActionEncoder(nn.Module):
         )
 
     def forward(self, action):
+        """Apply action encoder to action input.
+
+        Args:
+            action (torch.Tensor optional): Action input
+
+        Returns:
+            torch.Tensor: Encoded output
+        """
         if action is None:
             return None
         return self.action_encoder(action)

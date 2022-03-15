@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
+Implements a variety of modules for path-based dropout.
+
 @author: juanma
 """
 
@@ -15,17 +17,41 @@ import numpy as np
 # %%
 
 class Identity(nn.Module):
+    """Implements an Identity Module."""
+    
     def forward(self, inputs):
+        """Apply Identity to Layer Input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         return inputs
 
 
 class Tensor1DLateralPadding(nn.Module):
-
+    """Applies 1DLateral Padding to input."""
+    
     def __init__(self, pad):
+        """Initialize Tensor1DLateralPadding Module.
+
+        Args:
+            pad (int): Padding amount
+        """
         super(Tensor1DLateralPadding, self).__init__()
         self.pad = pad
 
     def forward(self, inputs):
+        """Apply Lateral Padding to input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         sz = inputs.size()
         padding = torch.autograd.Variable(
             torch.zeros(sz[0], self.pad), requires_grad=False)
@@ -37,12 +63,26 @@ class Tensor1DLateralPadding(nn.Module):
 
 
 class ChannelPadding(nn.Module):
-
+    """Applies Channel Padding to input."""
+    
     def __init__(self, pad):
+        """Initialize Tensor1DLateralPadding Module.
+
+        Args:
+            pad (int): Padding amount
+        """
         super(ChannelPadding, self).__init__()
         self.pad = pad
 
     def forward(self, inputs):
+        """Apply Channel Padding to input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         sz = inputs.size()
         padding = torch.autograd.Variable(torch.zeros(
             sz[0], self.pad, sz[2], sz[3]), requires_grad=False)
@@ -54,10 +94,21 @@ class ChannelPadding(nn.Module):
 
 
 class GlobalPooling2D(nn.Module):
+    """Implements 2D Global Average Pooling."""
+    
     def __init__(self):
+        """Initialize GlobalPooling2D module."""
         super(GlobalPooling2D, self).__init__()
 
     def forward(self, x):
+        """Apply 2D Global Average Pooling to input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         # apply global average pooling
         x = x.view(x.size(0), x.size(1), -1)
         x = torch.mean(x, 2)
@@ -67,10 +118,21 @@ class GlobalPooling2D(nn.Module):
 
 
 class GlobalPooling1D(nn.Module):
+    """Implements 1D Global Average Pooling."""
+    
     def __init__(self):
+        """Initialize GlobalPooling1D module."""
         super(GlobalPooling1D, self).__init__()
 
     def forward(self, x):
+        """Apply 1D Global Average Pooling to input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         # apply global average pooling
         x = torch.mean(x, 2)
 
@@ -78,12 +140,29 @@ class GlobalPooling1D(nn.Module):
 
 
 class Maxout(nn.Module):
+    """Implements Maxout module."""
+    
     def __init__(self, d, m, k):
+        """Initialize Maxout object.
+
+        Args:
+            d (int): Input dimension.
+            m (int): Number of features remeaining after Maxout.
+            k (int): Pool Size
+        """
         super(Maxout, self).__init__()
         self.d_in, self.d_out, self.pool_size = d, m, k
         self.lin = nn.Linear(d, m * k)
 
     def forward(self, inputs):
+        """Apply Maxout to input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         shape = list(inputs.size())
         shape[-1] = self.d_out
         shape.append(self.pool_size)
@@ -94,7 +173,15 @@ class Maxout(nn.Module):
 
 
 class AlphaScalarMultiplication(nn.Module):
+    """Multiplies output element-wise by a scalar."""
+    
     def __init__(self, size_alpha_x, size_alpha_y):
+        """Initialize AlphaScalarMultiplication module.
+
+        Args:
+            size_alpha_x (int): Feature size for x input.
+            size_alpha_y (int): Feature size for y input.
+        """
         super(AlphaScalarMultiplication, self).__init__()
         self.size_alpha_x = size_alpha_x
         self.size_alpha_y = size_alpha_y
@@ -104,6 +191,15 @@ class AlphaScalarMultiplication(nn.Module):
             torch.from_numpy(np.zeros((1), np.float32)))
 
     def forward(self, x, y):
+        """Apply Alpha Scalar Multiplication to both inputs, followed by a sigmoid.
+
+        Args:
+            x (torch.Tensor): Layer input
+            y (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """      
         bsz = x.size()[0]
         factorx = torch.sigmoid(self.alpha_x.expand(bsz, self.size_alpha_x))
         factory = 1.0 - \
@@ -116,7 +212,14 @@ class AlphaScalarMultiplication(nn.Module):
 
 
 class AlphaVectorMultiplication(nn.Module):
+    """Multiplies output element-wise by a vector."""
+    
     def __init__(self, size_alpha):
+        """Initialize AlphaVectorMultiplication module.
+
+        Args:
+            size_alpha (int): Size of alpha module.
+        """
         super(AlphaVectorMultiplication, self).__init__()
         self.size_alpha = size_alpha
 
@@ -124,6 +227,14 @@ class AlphaVectorMultiplication(nn.Module):
             np.zeros((1, size_alpha), np.float32)))
 
     def forward(self, x):
+        """Apply Alpha Vector Multiplication to input.
+
+        Args:
+            x (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """        
         bsz = x.size()[0]
         x = x * torch.sigmoid(self.alpha.expand(bsz, -1))
 
@@ -132,12 +243,27 @@ class AlphaVectorMultiplication(nn.Module):
 
 # %%
 class WeightedCrossEntropyWithLogits(nn.Module):
+    """Implements cross entropy weighted by given weights."""
 
     def __init__(self, pos_weight):
+        """Initialize WeightedCrossEntropyWithLogits module.
+
+        Args:
+            pos_weight (np.array): Weight for each position in batch.
+        """
         super(WeightedCrossEntropyWithLogits, self).__init__()
         self.w = pos_weight
 
     def forward(self, logits, targets):
+        """Get WeightedCrossEntropy Loss.
+
+        Args:
+            logits (torch.Tensor): Logit Tensor
+            targets (torch.Tensor): Target labels
+
+        Returns:
+            torch.Tensor: Weighted cross entropy
+        """
         q = [self.w] * logits.size()[0]
         q = torch.from_numpy(np.asarray(q, np.float32)).to(logits.device)
 
@@ -155,8 +281,16 @@ class WeightedCrossEntropyWithLogits(nn.Module):
 
 
 class CellBlock(nn.Module):
-
+    """Implements a block of convolution cells, with path-based dropout."""
+    
     def __init__(self, op1_type, op2_type, args):
+        """Instatiates CellBlock Module.
+
+        Args:
+            op1_type (int|str): First convolution type
+            op2_type (int|str): Second convolution type
+            args (obj): Arguments for path-dropping and input/output channel number.
+        """
         super(CellBlock, self).__init__()
 
         self.args = args
@@ -170,6 +304,15 @@ class CellBlock(nn.Module):
         self.dp2 = DropPath(1.0 - self.args.drop_path)
 
     def forward(self, x1, x2):
+        """Apply block to layer input, and add residual connection.
+
+        Args:
+            x1 (torch.Tensor): Input tensor 1
+            x2 (torch.Tensor): Input tensor 2
+
+        Returns:
+            torch.Tensor: Output Tensor
+        """
         xa, xa_dropped = self.dp1(self.op1(x1))
 
         xb, xb_dropped = self.dp2(self.op2(x2), xa_dropped)
@@ -182,8 +325,17 @@ class CellBlock(nn.Module):
 # %%
 
 class Cell(nn.Module):
-
+    """Implements a convnet classifier, using CellBlock instances and path-based dropout."""
+    
     def __init__(self, operation_labels, configuration_indexes, connections, args):
+        """Instantiate Cell Module.
+
+        Args:
+            operation_labels (list): List of operation labels
+            configuration_indexes (list): list of configuration indexes
+            connections (list): list of connections
+            args (list): list of args for Cell
+        """
         super(Cell, self).__init__()
 
         self._args = args
@@ -198,7 +350,15 @@ class Cell(nn.Module):
         self.bn = nn.BatchNorm2d(self._planes, eps=1e-3)
 
     def forward(self, x1, x2):
+        """Apply cell to layer input, and add residual connection.
 
+        Args:
+            x1 (torch.Tensor): Input tensor 1
+            x2 (torch.Tensor): Input tensor 2
+
+        Returns:
+            torch.Tensor: Output Tensor
+        """
         block_outputs = list([x1, x2])
 
         # apply blocks according to the connections
@@ -240,8 +400,17 @@ class Cell(nn.Module):
 
 
 class FixedCell(nn.Module):
-
+    """Implements cell with fixed connections and no path-based dropout."""
+    
     def __init__(self, operation_labels, configuration_indexes, connections, args):
+        """Instantiate Cell Module.
+
+        Args:
+            operation_labels (list): List of operation labels
+            configuration_indexes (list): list of configuration indexes
+            connections (list): list of connections
+            args (list): list of args for Cell
+        """
         super(FixedCell, self).__init__()
 
         self._args = args
@@ -260,7 +429,15 @@ class FixedCell(nn.Module):
             nn.BatchNorm2d(self._args.planes))
 
     def forward(self, x1, x2):
+        """Apply cell to layer input, and add residual connection.
 
+        Args:
+            x1 (torch.Tensor): Input tensor 1
+            x2 (torch.Tensor): Input tensor 2
+
+        Returns:
+            torch.Tensor: Output Tensor
+        """
         block_outputs = list([x1, x2])
 
         # apply blocks according to the connections
@@ -308,13 +485,22 @@ class FixedCell(nn.Module):
 
 
 class FactorizedReduction(nn.Module):
-    '''
+    """
+    Implements Factozied Reduction.
+    
     Reduce both spatial dimensions (width and height) by a factor of 2, and 
     potentially to change the number of output filters
     https://github.com/melodyguan/enas/blob/master/src/cifar10/general_child.py#L129
-    '''
+    """
 
     def __init__(self, in_planes, out_planes, stride=2):
+        """Initialize FactorizedReduction Module.
+
+        Args:
+            in_planes (int): Input channel count
+            out_planes (int): Output channel count
+            stride (int, optional): Stride of convolutions. Defaults to 2.
+        """
         super(FactorizedReduction, self).__init__()
 
         assert out_planes % 2 == 0, (
@@ -339,6 +525,14 @@ class FactorizedReduction(nn.Module):
             self.bn = nn.BatchNorm2d(out_planes)
 
     def forward(self, x):
+        """Apply factorized reduction to layer input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         if self.stride == 1:
             return self.fr(x)
         else:
@@ -357,11 +551,19 @@ class FactorizedReduction(nn.Module):
 # %%
 
 class PoolBranch(nn.Module):
-    """
-    Max pooling operations with 1x1 convolutions to fix output size
-    """
+    """Implements max pooling operations with 1x1 convolutions to fix output size."""
 
     def __init__(self, in_planes, out_planes, avg_or_max):
+        """Initialize PoolBranch module.
+
+        Args:
+            in_planes (int): Input channel count
+            out_planes (int): Output channel count
+            avg_or_max (str): Whether to use average pooling ('avg') or max pooling 'max'
+
+        Raises:
+            ValueError: Unknown Pooling Type.
+        """
         super(PoolBranch, self).__init__()
 
         self.in_planes = in_planes
@@ -381,6 +583,14 @@ class PoolBranch(nn.Module):
             raise ValueError("Unknown pool {}".format(avg_or_max))
 
     def forward(self, x):
+        """Apply PoolBranch to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """        
         out = self.conv1(x)
         out = self.pool(out)
         return out
@@ -389,11 +599,17 @@ class PoolBranch(nn.Module):
 # %%
 
 class ConvBranch(nn.Module):
-    '''
-    Conv branch
-    '''
+    """Implements a convolution computational path for path-based dropout."""
 
     def __init__(self, in_planes, out_planes, kernel_size, separable=False):
+        """Initialize ConvBranch Module.
+
+        Args:
+            in_planes (int): Input channel count
+            out_planes (int): Output channel count
+            kernel_size (int): Kernel size
+            separable (bool, optional): Whether to use Separable convolutions or not. Defaults to False.
+        """
         super(ConvBranch, self).__init__()
         assert kernel_size in [3, 5, 7], "Kernel size must be either 3, 5 or 7"
 
@@ -422,6 +638,14 @@ class ConvBranch(nn.Module):
                 nn.ReLU())
 
     def forward(self, x):
+        """Apply ConvBranch to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         out = self.inp_conv1(x)
         out = self.out_conv(out)
         return out
@@ -429,8 +653,18 @@ class ConvBranch(nn.Module):
 
 # %%
 
-class SeparableConvOld(nn.Module):
+class SeparableConvOld(nn.Module): 
+    """(deprecated) Implements 1D Separable Convolutions."""
+    
     def __init__(self, in_planes, out_planes, kernel_size, bias=False):
+        """Initialize SeparableConvOld Module.
+
+        Args:
+            in_planes (int): Number of input channels.
+            out_planes (int): Number of output channels.
+            kernel_size (int): Size of kernel
+            bias (bool, optional): (unused) Whether to add a bias to each convolution or not. Defaults to False.
+        """
         super(SeparableConvOld, self).__init__()
         padding = (kernel_size - 1) // 2
         self.depthwise = nn.Conv2d(in_planes, in_planes, kernel_size=kernel_size,
@@ -439,6 +673,14 @@ class SeparableConvOld(nn.Module):
             in_planes, out_planes, kernel_size=1, bias=bias)
 
     def forward(self, x):
+        """Apply 1D Separable Convolution to Layer Input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         out = self.depthwise(x)
         out = self.pointwise(out)
         return out
@@ -447,7 +689,17 @@ class SeparableConvOld(nn.Module):
 # %%
 
 class SeparableConv(nn.Module):
+    """Implements Separable Convolutions."""
+    
     def __init__(self, in_planes, out_planes, kernel_size, bias=False):
+        """Initialize SeparableConv Module.
+
+        Args:
+            in_planes (int): Number of input channels.
+            out_planes (int): Number of output channels.
+            kernel_size (int): Size of kernel
+            bias (bool, optional): Whether to add a bias to each convolution or not. Defaults to False.
+        """
         super(SeparableConv, self).__init__()
         padding = (kernel_size - 1) // 2
 
@@ -466,6 +718,14 @@ class SeparableConv(nn.Module):
         )
 
     def forward(self, x):
+        """Apply Separable Convolution to Layer Input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """        
         out = self.op(x)
         return out
 
@@ -473,13 +733,36 @@ class SeparableConv(nn.Module):
 # %%
 
 class IdentityModule(nn.Module):
+    """Implements an Identity Module."""
+    
     def forward(self, inputs):
+        """Apply Identity to Layer Input.
+
+        Args:
+            inputs (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
         return inputs
 
 
 # %%
 
 def CreateOp(conv_type, input_planes=64, output_planes=64):
+    """Given a type of convolution, and the input/output channels, instatiate a convolution module.
+
+    Args:
+        conv_type (int|string): Type of convolution.    
+        input_planes (int, optional): Input channel number. Defaults to 64.
+        output_planes (int, optional): Output channel number. Defaults to 64.
+
+    Raises:
+        NotImplementedError: Convolution not implemented.
+
+    Returns:
+        nn.Module: Convolution instance
+    """
     if conv_type == 0 or conv_type == 'I':
         inp_conv = nn.Sequential(
             nn.Conv2d(input_planes, output_planes, kernel_size=1, bias=False),
@@ -517,10 +800,17 @@ def CreateOp(conv_type, input_planes=64, output_planes=64):
     return op
 
 
-# %%
-class AuxiliaryHead(nn.Module):
 
+class AuxiliaryHead(nn.Module):
+    """Implements Auxiliary Head Module."""
+    
     def __init__(self, num_classes, filters=96):
+        """Instantiate AuxiliaryHead Module.
+
+        Args:
+            num_classes (int): Number of classes in output
+            filters (int, optional): Number of hidden channels. Defaults to 96.
+        """
         super(AuxiliaryHead, self).__init__()
         self.features = nn.Sequential(
             nn.AvgPool2d(5, stride=2, padding=0, count_include_pad=False),
@@ -535,6 +825,14 @@ class AuxiliaryHead(nn.Module):
         self.classifier = nn.Linear(filters * 6, num_classes)
 
     def forward(self, x):
+        """Apply AuxiliaryHead to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """        
         x = self.features(x)
         x = self.classifier(self.global_avg_pool(x).view(x.size(0), -1))
         return x
@@ -544,11 +842,27 @@ class AuxiliaryHead(nn.Module):
 
 
 class DropPath(nn.Module):
+    """Implements path-based dropout."""
+    
     def __init__(self, keep_prob=0.9):
+        """Initialize DropPath module.
+
+        Args:
+            keep_prob (float, optional): Probability to keep this path in the training pass. Defaults to 0.9.
+        """
         super(DropPath, self).__init__()
         self.keep_prob = keep_prob
 
     def forward(self, x, other_dropped=False):
+        """Apply path-dropping to layer input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+            other_dropped (bool, optional): Whether to always drop or not. Defaults to False.
+
+        Returns:
+            tuple(tensor, was_dropped): Tuple of the tensor ( zeros if dropped ), and a boolean of if the tensor was dropped.
+        """
         if self.training:
             p = random()
             if p <= self.keep_prob or other_dropped:

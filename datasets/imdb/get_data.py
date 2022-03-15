@@ -4,7 +4,7 @@ import json
 from torch.utils.data import Dataset, DataLoader
 import h5py
 from gensim.models import KeyedVectors
-from vgg import VGGClassifier
+from .vgg import VGGClassifier
 from robustness.text_robust import add_text_noise
 from robustness.visual_robust import add_visual_noise
 import os

@@ -155,18 +155,22 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.gentle_push.data_loader.</span></span><span class="sig-name descname"><span class="pre">SubsequenceDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.gentle_push.data_loader.SubsequenceDataset" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p>
 <p>A data preprocessor for producing training subsequences from
-a list of trajectories.
-Thin wrapper around <cite>torchfilter.data.split_trajectories()</cite>.
-:param trajectories: list of trajectories, where each is a tuple of</p>
-<blockquote>
-<div><p><cite>(states, observations, controls)</cite>. Each tuple member should be
-either a numpy array or dict of numpy arrays with shape <cite>(T, …)</cite>.</p>
-</div></blockquote>
+a list of trajectories. Thin wrapper around <cite>torchfilter.data.split_trajectories()</cite>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>subsequence_length</strong> (<em>int</em>) – # of timesteps per subsequence.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trajectories</strong> (<em>list</em>) – list of trajectories, where each is a tuple of
+<cite>(states, observations, controls)</cite>. Each tuple member should be
+either a numpy array or dict of numpy arrays with shape <cite>(T, …)</cite>.</p></li>
+<li><p><strong>subsequence_length</strong> (<em>int</em>) – # of timesteps per subsequence.</p></li>
+</ul>
 </dd>
 </dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.gentle_push.data_loader.SubsequenceDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#datasets.gentle_push.data_loader.TrajectoryNumpy" title="datasets.gentle_push.data_loader.TrajectoryNumpy"><span class="pre">datasets.gentle_push.data_loader.TrajectoryNumpy</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsequence_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modalities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.gentle_push.data_loader.SubsequenceDataset.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -198,8 +202,7 @@ either a numpy array or dict of numpy arrays with shape <cite>(T, …)</cite>.</
 <dt class="sig sig-object py" id="datasets.gentle_push.data_loader.split_trajectories">
 <span class="sig-prename descclassname"><span class="pre">datasets.gentle_push.data_loader.</span></span><span class="sig-name descname"><span class="pre">split_trajectories</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trajectories</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#datasets.gentle_push.data_loader.TrajectoryNumpy" title="datasets.gentle_push.data_loader.TrajectoryNumpy"><span class="pre">datasets.gentle_push.data_loader.TrajectoryNumpy</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subsequence_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modalities</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.gentle_push.data_loader.split_trajectories" title="Permalink to this definition"></a></dt>
 <dd><p>Helper for splitting a list of trajectories into a list of overlapping
-subsequences.
-For each trajectory, assuming a subsequence length of 10, this function
+subsequences. For each trajectory, assuming a subsequence length of 10, this function
 includes in its output overlapping subsequences corresponding to
 timesteps…
 <a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a></p>

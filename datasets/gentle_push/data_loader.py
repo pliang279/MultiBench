@@ -540,9 +540,9 @@ def _load_trajectories(
 def split_trajectories(
     trajectories: List[TrajectoryNumpy], subsequence_length: int, modalities=None
 ):
-    """Helper for splitting a list of trajectories into a list of overlapping
-    subsequences.
-    For each trajectory, assuming a subsequence length of 10, this function
+    """
+    Helper for splitting a list of trajectories into a list of overlapping
+    subsequences. For each trajectory, assuming a subsequence length of 10, this function
     includes in its output overlapping subsequences corresponding to
     timesteps...
     ```
@@ -627,8 +627,8 @@ def split_trajectories(
 
 class SubsequenceDataset(Dataset):
     """A data preprocessor for producing training subsequences from
-    a list of trajectories.
-    Thin wrapper around `torchfilter.data.split_trajectories()`.
+    a list of trajectories. Thin wrapper around `torchfilter.data.split_trajectories()`.
+    
     Args:
         trajectories (list): list of trajectories, where each is a tuple of
             `(states, observations, controls)`. Each tuple member should be

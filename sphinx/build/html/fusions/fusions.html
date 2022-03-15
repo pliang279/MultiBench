@@ -140,15 +140,37 @@
 <dt class="sig sig-object py" id="fusions.MCTN.Attention">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.MCTN.</span></span><span class="sig-name descname"><span class="pre">Attention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Attention" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Attention Mechanism for MCTN.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.MCTN.Attention.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Attention.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Attention Mechanism for MCTN.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>hidden_size</strong> (<em>int</em>) – Hidden Size of Attention Layer.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.MCTN.Attention.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Attention.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fusions.MCTN.Attention.score">
-<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Attention.score" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply Attention to Input, with Hidden Layers.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hidden</strong> – Initial hidden state.</p></li>
+<li><p><strong>encoder_outputs</strong> – Outputs of Encoder object.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output of Attention layer</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>output</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -156,6 +178,11 @@
 <dt class="sig sig-object py" id="fusions.MCTN.Decoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.MCTN.</span></span><span class="sig-name descname"><span class="pre">Decoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Decoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.MCTN.Decoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Decoder.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.MCTN.Decoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_hidden</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Decoder.forward" title="Permalink to this definition"></a></dt>
@@ -167,10 +194,37 @@
 <dt class="sig sig-object py" id="fusions.MCTN.Encoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.MCTN.</span></span><span class="sig-name descname"><span class="pre">Encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Encoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Apply a gated GRU to encode the input vector.</p>
+<p>Paper/Code Sourced From: <a class="reference external" href="https://arxiv.org/pdf/1812.07809.pdf">https://arxiv.org/pdf/1812.07809.pdf</a>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.MCTN.Encoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Encoder.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Create Encoder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_size</strong> – Encoder input size</p></li>
+<li><p><strong>hidden_size</strong> – Hidden state size for internal GRU</p></li>
+<li><p><strong>n_layers</strong> – Number of layers in recurrent unit</p></li>
+<li><p><strong>dropout</strong> – Dropout Probability</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.MCTN.Encoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Encoder.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply Encoder to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>src</strong> – Encoder Input</p></li>
+<li><p><strong>hidden</strong> – Encoder Hidden State</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -178,6 +232,11 @@
 <dt class="sig sig-object py" id="fusions.MCTN.L2_MCTN">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.MCTN.</span></span><span class="sig-name descname"><span class="pre">L2_MCTN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.L2_MCTN" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.MCTN.L2_MCTN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq2seq_0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq2seq_1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regression_encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.L2_MCTN.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.MCTN.L2_MCTN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trg0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trg1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.L2_MCTN.forward" title="Permalink to this definition"></a></dt>
@@ -190,6 +249,11 @@
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.MCTN.</span></span><span class="sig-name descname"><span class="pre">MCTN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.MCTN" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
 <dl class="py method">
+<dt class="sig sig-object py" id="fusions.MCTN.MCTN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seq2seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regression_encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.MCTN.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="fusions.MCTN.MCTN.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.MCTN.forward" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -200,6 +264,11 @@
 <dt class="sig sig-object py" id="fusions.MCTN.Seq2Seq">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.MCTN.</span></span><span class="sig-name descname"><span class="pre">Seq2Seq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Seq2Seq" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.MCTN.Seq2Seq.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decoder</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Seq2Seq.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.MCTN.Seq2Seq.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">src</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">teacher_forcing_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MCTN.Seq2Seq.forward" title="Permalink to this definition"></a></dt>
@@ -222,6 +291,11 @@
 <p>Return parameters for product of independent experts.
 See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">https://arxiv.org/pdf/1410.7827.pdf</a> for equations.</p>
 <dl class="py method">
+<dt class="sig sig-object py" id="fusions.MVAE.ProductOfExperts.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MVAE.ProductOfExperts.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="fusions.MVAE.ProductOfExperts.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logvars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MVAE.ProductOfExperts.forward" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -234,6 +308,11 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
 <p>Return parameters for product of independent experts.
 See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">https://arxiv.org/pdf/1410.7827.pdf</a> for equations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.MVAE.ProductOfExperts_Zipped.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MVAE.ProductOfExperts_Zipped.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.MVAE.ProductOfExperts_Zipped.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">zipped</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-08</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.MVAE.ProductOfExperts_Zipped.forward" title="Permalink to this definition"></a></dt>
@@ -248,10 +327,22 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.Concat">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">Concat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.Concat" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Concatenation of input data on dimension 1.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.Concat.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.Concat.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.Concat.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.Concat.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of Concat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -259,10 +350,22 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.ConcatEarly">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">ConcatEarly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.ConcatEarly" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Concatenation of input data on dimension 2.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.ConcatEarly.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.ConcatEarly.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.ConcatEarly.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.ConcatEarly.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of ConcatEarly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -270,10 +373,34 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.ConcatWithLinear">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">ConcatWithLinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.ConcatWithLinear" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Concatenation with a linear layer.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.ConcatWithLinear.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">concat_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.ConcatWithLinear.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize ConcatWithLinear Module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dim</strong> – The input dimension for the linear layer</p></li>
+<li><p><strong>output_dim</strong> – The output dimension for the linear layer</p></li>
+</ul>
+</dd>
+<dt class="field-even">Concat_dim</dt>
+<dd class="field-even"><p>The concatentation dimension for the modalities.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.ConcatWithLinear.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.ConcatWithLinear.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of Stack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -281,10 +408,35 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.FiLM">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">FiLM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.FiLM" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implementation of FiLM - Feature-Wise Affine Transformations of the Input.</p>
+<p>See <a class="reference external" href="https://arxiv.org/pdf/1709.07871.pdf">https://arxiv.org/pdf/1709.07871.pdf</a> for more details.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.FiLM.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamma_generation_network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_generation_network</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_modal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_generate_modal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta_generate_modal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.FiLM.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize FiLM layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gamma_generation_network</strong> – Network which generates gamma_parameters from gamma_generation_modal data.</p></li>
+<li><p><strong>beta_generation_network</strong> – Network which generates beta_parameters from beta_generation_modal data.</p></li>
+<li><p><strong>base_modal</strong> – Modality to apply affine transformation to.</p></li>
+<li><p><strong>gamma_generate_modal</strong> – Modality to generate gamma portion of affine transformation from.</p></li>
+<li><p><strong>beta_generate_modal</strong> – Modality to generate beta portion of affine transformation from.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.FiLM.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.FiLM.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of FiLM.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -292,10 +444,33 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.LowRankTensorFusion">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">LowRankTensorFusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.LowRankTensorFusion" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implementation of Low-Rank Tensor Fusion.</p>
+<p>See <a class="reference external" href="https://github.com/Justin1904/Low-rank-Multimodal-Fusion">https://github.com/Justin1904/Low-rank-Multimodal-Fusion</a> for more information.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.LowRankTensorFusion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rank</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.LowRankTensorFusion.__init__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dims</strong> – list or tuple of integers indicating input dimensions of the modalities</p></li>
+<li><p><strong>output_dim</strong> – output dimension</p></li>
+<li><p><strong>rank</strong> – a hyperparameter of LRTF. See link above for details</p></li>
+<li><p><strong>flatten</strong> – Boolean to dictate if output should be flattened or not. Default: True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.LowRankTensorFusion.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.LowRankTensorFusion.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of Low-Rank TensorFusion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -303,10 +478,35 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.MultiplicativeInteractions2Modal">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">MultiplicativeInteractions2Modal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.MultiplicativeInteractions2Modal" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implementation of 2-way Modal Multiplicative Interactions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.MultiplicativeInteractions2Modal.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_clip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.MultiplicativeInteractions2Modal.__init__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dims</strong> – list or tuple of 2 integers indicating input dimensions of the 2 modalities</p></li>
+<li><p><strong>output_dim</strong> – output dimension</p></li>
+<li><p><strong>output</strong> – type of MI, options from ‘matrix3D’,’matrix’,’vector’,’scalar’</p></li>
+<li><p><strong>flatten</strong> – whether we need to flatten the input modalities</p></li>
+<li><p><strong>clip</strong> – clip parameter values, None if no clip</p></li>
+<li><p><strong>grad_clip</strong> – clip grad values, None if no clip</p></li>
+<li><p><strong>flip</strong> – whether to swap the two input modalities in forward function or not</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.MultiplicativeInteractions2Modal.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.MultiplicativeInteractions2Modal.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of MultiplicativeInteractions2Modal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.MultiplicativeInteractions2Modal.repeatHorizontally">
@@ -319,10 +519,31 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.MultiplicativeInteractions3Modal">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">MultiplicativeInteractions3Modal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.MultiplicativeInteractions3Modal" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implementation of 3-Way Modal Multiplicative Interactions</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.MultiplicativeInteractions3Modal.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dims</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.MultiplicativeInteractions3Modal.__init__" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dims</strong> – list or tuple of 3 integers indicating sizes of input</p></li>
+<li><p><strong>output_dim</strong> – size of outputs</p></li>
+<li><p><strong>task</strong> – Set to “affect” when working with social data.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.MultiplicativeInteractions3Modal.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.MultiplicativeInteractions3Modal.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of MultiplicativeInteractions3Modal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -330,10 +551,37 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.NLgate">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">NLgate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.NLgate" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implementation of Non-Local Gate-based Fusion</p>
+<p>See section F4 of <a class="reference external" href="https://arxiv.org/pdf/1905.12681.pdf">https://arxiv.org/pdf/1905.12681.pdf</a> for details</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.NLgate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thw_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tf_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.NLgate.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>q_linear, k_linear, v_linear are none if no linear layer applied before q,k,v.
+Otherwise, a tuple of (indim,outdim) is required for each of these 3 arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thw_dim</strong> – TODO</p></li>
+<li><p><strong>c_dim</strong> – TODO</p></li>
+<li><p><strong>tf_dim</strong> – TODO</p></li>
+<li><p><strong>q_linear</strong> – TODO</p></li>
+<li><p><strong>k_linear</strong> – TODO</p></li>
+<li><p><strong>v_linear</strong> – TODO</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.NLgate.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.NLgate.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of Low-Rank TensorFusion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – An iterable of modalities to combine.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -341,10 +589,22 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.Stack">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">Stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.Stack" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Stacking modalities together on dimension 1.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.Stack.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.Stack.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.Stack.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.Stack.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of Stack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -352,10 +612,23 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.common_fusions.TensorFusion">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.common_fusions.</span></span><span class="sig-name descname"><span class="pre">TensorFusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.TensorFusion" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implementation of TensorFusion Networks.</p>
+<p>See <a class="reference external" href="https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py">https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py</a> for more and the original code.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.common_fusions.TensorFusion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.TensorFusion.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.common_fusions.TensorFusion.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modalities</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.common_fusions.TensorFusion.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Forward Pass of TensorFusion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>modalities</strong> – An iterable of modalities to combine.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -366,6 +639,11 @@ See <a class="reference external" href="https://arxiv.org/pdf/1410.7827.pdf">htt
 <dt class="sig sig-object py" id="fusions.searchable.Searchable">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.searchable.</span></span><span class="sig-name descname"><span class="pre">Searchable</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.searchable.Searchable" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.searchable.Searchable.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layered_encoders</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rep_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alphas</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.searchable.Searchable.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.searchable.Searchable.alphasgen">
 <span class="sig-name descname"><span class="pre">alphasgen</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.searchable.Searchable.alphasgen" title="Permalink to this definition"></a></dt>

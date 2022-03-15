@@ -144,6 +144,11 @@ action:  batch_size x action_dim</p>
 </dd>
 </dl>
 <dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusion.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusion.bias_parameters">
 <span class="sig-name descname"><span class="pre">bias_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusion.bias_parameters" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -173,6 +178,11 @@ proprio: batch_size x 8
 action:  batch_size x action_dim</p>
 </div></blockquote>
 <dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusionSelfSupervised.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusionSelfSupervised.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusionSelfSupervised.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusionSelfSupervised.forward" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -183,6 +193,11 @@ action:  batch_size x action_dim</p>
 <dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.roboticsConcat">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.robotics.sensor_fusion.</span></span><span class="sig-name descname"><span class="pre">roboticsConcat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.roboticsConcat" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.roboticsConcat.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.roboticsConcat.__init__" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.roboticsConcat.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.roboticsConcat.forward" title="Permalink to this definition"></a></dt>
