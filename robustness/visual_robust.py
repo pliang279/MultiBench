@@ -166,6 +166,7 @@ def gaussian(img, p):
 
 
 def rotate(img, p):
+    """Randomly rotate the image by a random angle in [20, 40]."""
     if np.random.sample() <= p:
         angle = np.random.random_sample()*40-20
         return img.rotate(angle, Image.BILINEAR)
@@ -174,6 +175,7 @@ def rotate(img, p):
 
 
 def horizontal_flip(img, p):
+    """Randomly flip the image horizontally."""
     if np.random.sample() <= p:
         return img.transpose(Image.FLIP_LEFT_RIGHT)
     else:
@@ -181,6 +183,7 @@ def horizontal_flip(img, p):
 
 
 def random_crop(img, p):
+    """Randomly apply cropping changes."""
     if np.random.sample() <= p:
         dim = np.array(img).shape
         height = dim[0]
@@ -197,6 +200,7 @@ def random_crop(img, p):
 
 
 def periodic(img, periodic_noise_filename="periodic_noise"):
+    """Randomly expose the image to periodic pattern/noise."""
     height = img.height
     width = img.width
     output = []

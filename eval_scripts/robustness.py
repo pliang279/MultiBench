@@ -4,14 +4,23 @@ import numpy as np
 
 
 def relative_robustness(robustness_result, task):
+    """Compute the relative robustenss metric given the performance of the method on the task."""
     return get_robustness_metric(robustness_result, task, 'relative')
 
 
 def effective_robustness(robustness_result, task):
+    """Compute the effective robustenss metric given the performance of the method on the task."""
     return get_robustness_metric(robustness_result, task, 'effective')
 
 
 def get_robustness_metric(robustness_result, task, metric):
+    """
+    Compute robustness metric given specific method performance and the task.
+
+    :param robustness_result: Performance of the method on datasets applied with different level of noises.
+    :param task: Name of the task on which the method is evaluated.
+    :param metric: Type of robustness metric to be computed. ( "effective" / "relative" )
+    """
     if metric == 'effective' and task not in robustness['LF']:
         return "Invalid example name!"
     else:
@@ -35,7 +44,12 @@ def get_robustness_metric(robustness_result, task, metric):
         return maxmin_normalize(result, task)
 
 
-def relative_robustness_helper(robustness_result, task):
+def relative_robustness_helper(robustness_result):
+    """
+    Helper function that computes the relative robustness metric as the area under the performance curve.
+
+    :param robustness_result: Performance of the method on datasets applied with different level of noises.
+    """
     area = 0
     for i in range(len(robustness_result)-1):
         area += (robustness_result[i] + robustness_result[i+1]) * 0.1 / 2
@@ -43,6 +57,12 @@ def relative_robustness_helper(robustness_result, task):
 
 
 def effective_robustness_helper(robustness_result, task):
+    """
+    Helper function that computes the effective robustness metric as the performance difference compared to late fusion method.
+
+    :param robustness_result: Performance of the method on datasets applied with different level of noises.
+    :param task: Name of the task on which the method is evaluated.
+    """
     f = np.array(robustness_result)
     lf = np.array(robustness['LF'][task])
     beta_f = lf + (f[0] - lf[0])
@@ -50,6 +70,12 @@ def effective_robustness_helper(robustness_result, task):
 
 
 def maxmin_normalize(result, task):
+    """
+    Normalize the metric for robustness comparison across all methods.
+
+    :param result: Un-normalized robustness metrics of all methods on the given task.
+    :param task: Name of the task.
+    """
     tmp = []
     method2idx = dict()
     for i, method in enumerate(list(result.keys())):
@@ -63,6 +89,16 @@ def maxmin_normalize(result, task):
 
 
 def single_plot(robustness_result, task, xlabel, ylabel, fig_name, method):
+    """
+    Produce performance vs. robustness plot of a single method.
+
+    :param robustness_result: Performance of the method on dataset applied with different level of noises.
+    :param task: Name of the task on which the method is evaluated.
+    :param xlabel: Label of x-axis to be appeared in the plot.
+    :param ylabel: Label of y-axis to be appeared in the plot.
+    :param fig_name: Name of plot to be saved.
+    :param method: Name of the method.
+    """
     fig, axs = plt.subplots()
     if task.startswith('gentle push') or task.startswith('robotics image') or task.startswith('robotics force'):
         robustness_result = list(np.log(np.array(robustness_result)))
