@@ -1,5 +1,7 @@
-# https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/push_models/layers.py
+"""Implements sub-layers for gentle_push model.
 
+Taken from https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/push_models/layers.py.
+"""
 import torch
 import torch.nn as nn
 from fannypack.nn import resblocks
@@ -27,16 +29,16 @@ def control_layers(units: int) -> nn.Module:
 
 
 class _DualSpanningAvgPool(nn.Module):
-    """Module with two average pools: one that spans the full height of the image and
-    another the spans the full width. Outputs are flattened and concatenated.
-
-    Args:
-        rows (int): Number of rows in image.
-        cols (int): Number of columns in image.
-        reduce_size (int): How man
-    """
+    """Module with two average pools: one that spans the full height of the image and another the spans the full width. Outputs are flattened and concatenated."""
 
     def __init__(self, rows, cols, reduce_size=1):
+        """Instantiate DualSpanningAvgPool Module.
+
+        Args:
+            rows (int): Number of rows in image.
+            cols (int): Number of columns in image.
+            reduce_size (int): Reduction size.
+        """
         super().__init__()
         self.pool_h = nn.Sequential(
             nn.AvgPool2d((rows, reduce_size)),
@@ -48,6 +50,14 @@ class _DualSpanningAvgPool(nn.Module):
         )
 
     def forward(self, x):
+        """Apply DualSpanningAvgPool Module to Layer Input.
+
+        Args:
+            x: Layer Input
+            
+        Returns:
+            torch.Tensor: Layer Output
+        """
         return torch.cat((self.pool_h(x), self.pool_w(x)), dim=-1)
 
 

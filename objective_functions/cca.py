@@ -1,3 +1,4 @@
+"""Implements losses for CCA."""
 import torch
 from torch import nn
 
