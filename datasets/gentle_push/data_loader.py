@@ -540,9 +540,9 @@ def _load_trajectories(
 def split_trajectories(
     trajectories: List[TrajectoryNumpy], subsequence_length: int, modalities=None
 ):
-    """Helper for splitting a list of trajectories into a list of overlapping
-    subsequences.
-    For each trajectory, assuming a subsequence length of 10, this function
+    """
+    Helper for splitting a list of trajectories into a list of overlapping
+    subsequences. For each trajectory, assuming a subsequence length of 10, this function
     includes in its output overlapping subsequences corresponding to
     timesteps...
     ```

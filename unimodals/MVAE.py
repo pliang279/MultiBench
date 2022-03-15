@@ -6,7 +6,16 @@ from torch.nn import functional as F
 
 
 class MLPEncoder(torch.nn.Module):
+    """Implements MLP Encoder for MVAE."""
+    
     def __init__(self, indim, hiddim, outdim):
+        """Initialzies MLPEncoder Object.
+
+        Args:
+            indim (int): Input Dimension
+            hiddim (int): Hidden Dimension
+            outdim (int): Output Dimension
+        """
         super(MLPEncoder, self).__init__()
         self.fc = nn.Linear(indim, hiddim)
         self.fc2 = nn.Linear(hiddim, 2*outdim)

@@ -1,3 +1,4 @@
+"""Implements Trasnformer Encoder Layer."""
 import torch
 from torch import nn
 import torch.nn.functional as F
@@ -8,8 +9,10 @@ import math
 
 class TransformerEncoder(nn.Module):
     """
-    Transformer encoder consisting of *args.encoder_layers* layers. Each layer
-    is a :class:`TransformerEncoderLayer`.
+    Transformer encoder consisting of *args.encoder_layers* layers.
+    
+    Each layer is a :class:`TransformerEncoderLayer`.
+    
     Args:
         embed_tokens (torch.nn.Embedding): input embedding
         num_heads (int): number of heads
@@ -22,6 +25,18 @@ class TransformerEncoder(nn.Module):
 
     def __init__(self, embed_dim, num_heads, layers, attn_dropout=0.0, relu_dropout=0.0, res_dropout=0.0,
                  embed_dropout=0.0, attn_mask=False):
+        """Initialize Transformer Encoder.
+
+        Args:
+            embed_dim (int): Embedding dimension
+            num_heads (int): Number of heads
+            layers (int): Number of layers
+            attn_dropout (float, optional): Probability of dropout in attention mechanism. Defaults to 0.0.
+            relu_dropout (float, optional): Probability of dropout after ReLU. Defaults to 0.0.
+            res_dropout (float, optional): Probability of dropout in residual layer. Defaults to 0.0.
+            embed_dropout (float, optional): Probability of dropout in embedding layer. Defaults to 0.0.
+            attn_mask (bool, optional): Whether to apply a mask to the attention or not. Defaults to False.
+        """
         super().__init__()
         self.dropout = embed_dropout      # Embedding dropout
         self.attn_dropout = attn_dropout
@@ -48,6 +63,8 @@ class TransformerEncoder(nn.Module):
 
     def forward(self, x_in, x_in_k=None, x_in_v=None):
         """
+        Apply Transformer Encoder to layer input.
+        
         Args:
             x_in (FloatTensor): embedded input of shape `(src_len, batch, embed_dim)`
             x_in_k (FloatTensor): embedded input of shape `(src_len, batch, embed_dim)`
@@ -103,7 +120,8 @@ class TransformerEncoder(nn.Module):
 
 
 class TransformerEncoderLayer(nn.Module):
-    """Encoder layer block.
+    """Implements encoder layer block.
+    
     In the original paper each operation (multi-head attention or FFN) is
     postprocessed with: `dropout -> add residual -> layernorm`. In the
     tensor2tensor code they suggest that learning is more robust when
@@ -111,12 +129,21 @@ class TransformerEncoderLayer(nn.Module):
     `dropout -> add residual`. We default to the approach in the paper, but the
     tensor2tensor approach can be enabled by setting
     *args.encoder_normalize_before* to ``True``.
-    Args:
-        embed_dim: Embedding dimension
+    
     """
 
     def __init__(self, embed_dim, num_heads=4, attn_dropout=0.1, relu_dropout=0.1, res_dropout=0.1,
                  attn_mask=False):
+        """Instantiate TransformerEncoderLayer Module.
+
+        Args:
+            embed_dim (int): Embedding dimension
+            num_heads (int, optional): Number of heads. Defaults to 4.
+            attn_dropout (float, optional): Dropout for attention mechanism. Defaults to 0.1.
+            relu_dropout (float, optional): Dropout after ReLU. Defaults to 0.1.
+            res_dropout (float, optional): Dropout after residual layer. Defaults to 0.1.
+            attn_mask (bool, optional): Whether to apply an attention mask or not. Defaults to False.
+        """
         super().__init__()
         self.embed_dim = embed_dim
         self.num_heads = num_heads
@@ -140,6 +167,8 @@ class TransformerEncoderLayer(nn.Module):
 
     def forward(self, x, x_k=None, x_v=None):
         """
+        Apply TransformerEncoderLayer to Layer Input.
+        
         Args:
             x (Tensor): input to the layer of shape `(seq_len, batch, embed_dim)`
             encoder_padding_mask (ByteTensor): binary ByteTensor of shape
@@ -150,29 +179,29 @@ class TransformerEncoderLayer(nn.Module):
             encoded output of shape `(batch, src_len, embed_dim)`
         """
         residual = x
-        x = self.maybe_layer_norm(0, x, before=True)
+        x = self._maybe_layer_norm(0, x, before=True)
         mask = buffered_future_mask(x, x_k) if self.attn_mask else None
         if x_k is None and x_v is None:
             x, _ = self.self_attn(query=x, key=x, value=x, attn_mask=mask)
         else:
-            x_k = self.maybe_layer_norm(0, x_k, before=True)
-            x_v = self.maybe_layer_norm(0, x_v, before=True)
+            x_k = self._maybe_layer_norm(0, x_k, before=True)
+            x_v = self._maybe_layer_norm(0, x_v, before=True)
             x, _ = self.self_attn(query=x, key=x_k, value=x_v, attn_mask=mask)
         x = F.dropout(x, p=self.res_dropout, training=self.training)
         x = residual + x
-        x = self.maybe_layer_norm(0, x, after=True)
+        x = self._maybe_layer_norm(0, x, after=True)
 
         residual = x
-        x = self.maybe_layer_norm(1, x, before=True)
+        x = self._maybe_layer_norm(1, x, before=True)
         x = F.relu(self.fc1(x))
         x = F.dropout(x, p=self.relu_dropout, training=self.training)
         x = self.fc2(x)
         x = F.dropout(x, p=self.res_dropout, training=self.training)
         x = residual + x
-        x = self.maybe_layer_norm(1, x, after=True)
+        x = self._maybe_layer_norm(1, x, after=True)
         return x
 
-    def maybe_layer_norm(self, i, x, before=False, after=False):
+    def _maybe_layer_norm(self, i, x, before=False, after=False):
         assert before ^ after
         if after ^ self.normalize_before:
             return self.layer_norms[i](x)
@@ -186,6 +215,15 @@ def fill_with_neg_inf(t):
 
 
 def buffered_future_mask(tensor, tensor2=None):
+    """Generate buffered future mask.
+
+    Args:
+        tensor (torch.Tensor): Tensor to initialize mask from.
+        tensor2 (torch.Tensor, optional): Tensor to initialize target mask from. Defaults to None.
+
+    Returns:
+        torch.Tensor: Buffered future mask.
+    """
     dim1 = dim2 = tensor.size(0)
     if tensor2 is not None:
         dim2 = tensor2.size(0)
@@ -197,6 +235,16 @@ def buffered_future_mask(tensor, tensor2=None):
 
 
 def Linear(in_features, out_features, bias=True):
+    """Generate Linear Layer with given parameters and Xavier initialization.
+
+    Args:
+        in_features (int): Number of input features
+        out_features (int): Number of output features
+        bias (bool, optional): Whether to include a bias term or not. Defaults to True.
+
+    Returns:
+        nn.Module: Initialized Linear Module.
+    """
     m = nn.Linear(in_features, out_features, bias)
     nn.init.xavier_uniform_(m.weight)
     if bias:
@@ -205,11 +253,14 @@ def Linear(in_features, out_features, bias=True):
 
 
 def LayerNorm(embedding_dim):
+    """Generate LayerNorm Layer with given parameters.
+
+    Args:
+        embedding_dim (int): Embedding dimension
+
+    Returns:
+        nn.Module: Initialized LayerNorm Module
+    """
     m = nn.LayerNorm(embedding_dim)
     return m
 
-
-if __name__ == '__main__':
-    encoder = TransformerEncoder(300, 4, 2)
-    x = torch.tensor(torch.rand(20, 2, 300))
-    print(encoder(x).shape)

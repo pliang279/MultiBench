@@ -1,3 +1,4 @@
+"""Implements MVAE."""
 import torch
 from torch import nn
 from torch.autograd import Variable
@@ -6,14 +7,31 @@ from torch.autograd import Variable
 class ProductOfExperts(nn.Module):
     """
     Return parameters for product of independent experts.
+    
     See https://arxiv.org/pdf/1410.7827.pdf for equations.
     """
 
     def __init__(self, size):
+        """Initialize Product of Experts Object.
+
+        Args:
+            size (int): Size of Product of Experts Layer
+        
+        """
         super(ProductOfExperts, self).__init__()
         self.size = size
 
     def forward(self, mus, logvars, eps=1e-8):
+        """Apply Product of Experts Layer.
+
+        Args:
+            mus (torch.Tensor): torch.Tensor of Mus
+            logvars (torch.Tensor): torch.Tensor of Logvars
+            eps (float, optional): Epsilon for log-exponent trick. Defaults to 1e-8.
+
+        Returns:
+            torch.Tensor, torch.Tensor: Output of PoE layer.
+        """
         mu, logvar = _prior_expert(self.size, len(mus[0]))
         for i in range(len(mus)):
             
@@ -32,14 +50,31 @@ class ProductOfExperts(nn.Module):
 class ProductOfExperts_Zipped(nn.Module):
     """
     Return parameters for product of independent experts.
+    
     See https://arxiv.org/pdf/1410.7827.pdf for equations.
     """
 
     def __init__(self, size):
+        """Initialize Product of Experts Object.
+
+        Args:
+            size (int): Size of Product of Experts Layer
+        
+        """
         super(ProductOfExperts_Zipped, self).__init__()
         self.size = size
 
     def forward(self, zipped, eps=1e-8):
+        """Apply Product of Experts Layer.
+
+        Args:
+            mus (torch.Tensor): torch.Tensor of Mus
+            logvars (torch.Tensor): torch.Tensor of Logvars
+            eps (float, optional): Epsilon for log-exponent trick. Defaults to 1e-8.
+
+        Returns:
+            torch.Tensor, torch.Tensor: Output of PoE layer.
+        """
         mus = [i[0] for i in zipped]
         logvars = [i[1] for i in zipped]
         mu, logvar = _prior_expert(self.size, len(mus[0]))
@@ -57,7 +92,8 @@ class ProductOfExperts_Zipped(nn.Module):
 
 def _prior_expert(size, batch_size):
     """
-    Universal prior expert. Here we use a spherical
+    Universal prior expert. Here we use a spherical.
+    
     Gaussian: N(0, 1)
     """
     size = (size[0], batch_size, size[2])

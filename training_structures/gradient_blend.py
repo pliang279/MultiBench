@@ -13,6 +13,18 @@ delta = False
 
 
 def getloss(model, head, data, monum, batch_size):
+    """Get loss for model given classification head.
+
+    Args:
+        model (nn.Module): Module to evaluate
+        head (nn.Module): Classification head.
+        data (torch.utils.data.Dataloader): Dataloader to evaluate on.
+        monum (int): Unimodal model index.
+        batch_size (int): (unused) Batch Size
+
+    Returns:
+        float: Average loss per sample.
+    """
     losses = 0.0
     total = 0
     with torch.no_grad():
@@ -176,27 +188,34 @@ def calcAUPRC(pts):
     predicted_probs = [x[0] for x in pts]
     return sklearn.metrics.average_precision_score(true_labels, predicted_probs)
 
-# unimodal_models: list of modules, unimodal encoders for each input modality in the order of the modality input data.
-# multimodal_classification_head: classification head that takes in fused output of unimodal models of all modalities
-# unimodal_classification_heads: list of classification heads that each takes in output of one unimodal model (must be in the same modality order as unimodal_models)
-# fuse: fusion module that takes in a list of outputs from unimodal_models and generate a fused representation
-# train_dataloader, valid_dataloader: dataloaders of input datas
-# num_epochs: total number of epochs
-# lr: learning rate
-# gb_epoch: how many epochs between re-evaluate weights of gradient blend
-# v_rate: portion of training set used as validation for gradient blend weight estimation
-# weight_decay: weight decay of optimizer
-# optimtype: type of optimizer to use
-# finetune_epoch: how many epochs to finetune the classification head
-# classification: whether the task is a classification task
-# auprc: whether to compute auprc score or not
-# savedir: the name of the saved file for the model with current best validation performance
+
 
 
 def train(unimodal_models,  multimodal_classification_head,
           unimodal_classification_heads, fuse, train_dataloader, valid_dataloader,
           num_epoch, lr, gb_epoch=20, v_rate=0.08, weight_decay=0.0, optimtype=torch.optim.SGD,
           finetune_epoch=25, classification=True, AUPRC=False, savedir='best.pt', track_complexity=True):
+    """Train model using gradient_blending.
+
+    Args:
+        unimodal_models (list): List of modules, unimodal encoders for each input modality in the order of the modality input data.
+        multimodal_classification_head (nn.Module): Classification head that takes in fused output of unimodal models of all modalities
+        unimodal_classification_heads (list[nn.Module]): List of classification heads that each takes in output of one unimodal model (must be in the same modality order as unimodal_models)
+        fuse (nn.Module): Fusion module that takes in a list of outputs from unimodal_models and generate a fused representation
+        train_dataloader (torch.utils.data.DataLoader): Training data loader
+        valid_dataloader (torch.utils.data.DataLoader): Validation data loader
+        num_epoch (int): Number of epochs to train this model on.
+        lr (float): Learning rate.
+        gb_epoch (int, optional): Number of epochs between re-evaluation of weights of gradient blend. Defaults to 20.
+        v_rate (float, optional): Portion of training set used as validation for gradient blend weight estimation. Defaults to 0.08.
+        weight_decay (float, optional): Weight decay of optimizer. Defaults to 0.0.
+        optimtype (torch.optim.Optimizer, optional):  Type of optimizer to use. Defaults to torch.optim.SGD.
+        finetune_epoch (int, optional): Number of epochs to finetune the classification head. Defaults to 25.
+        classification (bool, optional): Whether the task is a classification task. Defaults to True.
+        AUPRC (bool, optional): Whether to compute auprc score or not. Defaults to False.
+        savedir (str, optional): The name of the saved file for the model with current best validation performance. Defaults to 'best.pt'.
+        track_complexity (bool, optional): Whether to track complexity or not. Defaults to True.
+    """
     def trainprocess():
         nonlocal train_dataloader
         params = []

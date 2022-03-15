@@ -5,7 +5,16 @@ from torch.distributions import Normal
 
 
 def sample_gaussian(m, v, device):
+    """Sample from Gaussian Distribution with known mean and variance.
 
+    Args:
+        m (float): Mean of sampled Gaussian
+        v (float): Variance of sampled Gaussian
+        device (torch.device): Device on which to create tensor.
+
+    Returns:
+        torch.Tensor: Sampled Gaussian Tensor
+    """
     epsilon = Normal(0, 1).sample(m.size())
     z = m + torch.sqrt(v) * epsilon.to(device)
 

@@ -1,9 +1,8 @@
+"""Implements text transformations."""
 import numpy as np
 import re
 from tqdm import tqdm
 
-def add_text_noise():
-    return 
 ##############################################################################
 # Text
 def add_text_noise(tests, noise_level=0.3, swap=True, rand_mid=True, typo=True, sticky=True, omit=True):
@@ -119,7 +118,7 @@ def sticky_keys(word, num_sticky=1):
 
 
 def omission(word, num_omit=1):
-    """Randomly omit num_omit number of letters of a word
+    """Randomly omit num_omit number of letters of a word.
     
     :param word: word to apply transformations to.
     :param num_sticky: Number of letters to randomly omit.

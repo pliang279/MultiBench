@@ -1,24 +1,20 @@
-"""
-An implementation of the paper: "Removing Bias in Multi-modal Classifiers: Regularization by Maximizing Functional
- Entropies" NeurIPS 2020.
-"""
+"""Implements the paper: "Removing Bias in Multi-modal Classifiers: Regularization by Maximizing Functional Entropies" NeurIPS 2020."""
 
 import torch
 
 
 class Perturbation:
-    """
-    Class that in charge of tensor perturbation techniques
-    """
+    """Utility class for tensor perturbation techniques."""
+    
     @classmethod
     def _add_noise_to_tensor(cls, tens: torch.Tensor, over_dim: int = 0) -> torch.Tensor:
         """
-        Adds noise to a tensor sampled from N(0, tens.std()).
-        :param tens:
-        :param over_dim: over what dim to calculate the std. 0 for features over batch,  1 for over sample.
-        :return: noisy tensor in the same shape as input
+        Add noise to a tensor sampled from N(0, tens.std()).
+        
+        :param tens: Tensor from which to sample on.
+        :param over_dim: Over what dim to calculate the std. 0 for features over batch,  1 for over sample.
+        :return: Noisy tensor in the same shape as input
         """
-
         return tens + torch.randn_like(tens) * tens.std(dim=over_dim)
         # return tens + torch.randn_like(tens)
 
@@ -26,8 +22,10 @@ class Perturbation:
     def perturb_tensor(cls, tens: torch.Tensor, n_samples: int, perturbation: bool = True) -> torch.Tensor:
         """
         Flatting the tensor, expanding it, perturbing and reconstructing to the original shape.
+        
         Note, this function assumes that the batch is the first dimension.
-        :param tens:
+        
+        :param tens: Tensor to manipulate.
         :param n_samples: times to perturb
         :param perturbation: False - only duplicating the tensor
         :return: tensor in the shape of [batch, samples * num_eval_samples]
@@ -225,10 +223,13 @@ class RegularizationLoss(torch.nn.Module):
     """
 
     def __init__(self, loss: torch.nn.Module, model: torch.nn.Module, delta: float = 1e-10, is_pack: bool = True) -> None:
-        """
-        Initialize the Loss Module.
+        """Initialize RegularizationLoss Object
 
-        #TODO: Define the parameters.
+        Args:
+            loss (torch.nn.Module): Loss from which to compare output of model with predicted output
+            model (torch.nn.Module): Model to apply regularization loss to.
+            delta (float, optional): Strength of regularization loss. Defaults to 1e-10.
+            is_pack (bool, optional): Whether samples are packaed or not.. Defaults to True.
         """
         super(RegularizationLoss, self).__init__()
         self.reg_params = RegParameters()
@@ -238,7 +239,15 @@ class RegularizationLoss(torch.nn.Module):
         self.pack = is_pack
 
     def forward(self, logits, inputs):
+        """Apply RegularizationLoss to input.
 
+        Args:
+            logits (torch.Tensor): Desired outputs of model
+            inputs (torch.Tensor): Model Input.
+
+        Returns:
+            torch.Tensor: Regularization Loss for this sample.
+        """
         expanded_logits = Perturbation.get_expanded_logits(
             logits, self.reg_params.n_samples)
 

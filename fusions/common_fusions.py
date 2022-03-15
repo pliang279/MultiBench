@@ -1,3 +1,5 @@
+"""Implements common fusion patterns."""
+
 import torch
 from torch import nn
 from torch.nn import functional as F
@@ -7,10 +9,10 @@ from torch.autograd import Variable
 
 
 class Concat(nn.Module):
-    """
-    Concatenation of input data on dimension 1.
-    """
+    """Concatenation of input data on dimension 1."""
+
     def __init__(self):
+        """Initialize Concat Module."""
         super(Concat, self).__init__()
 
     def forward(self, modalities):
@@ -27,10 +29,10 @@ class Concat(nn.Module):
 
 
 class ConcatEarly(nn.Module):
-    """
-    Concatenation of input data on dimension 2.
-    """
+    """Concatenation of input data on dimension 2."""
+
     def __init__(self):
+        """Initialize ConcatEarly Module."""
         super(ConcatEarly, self).__init__()
 
     def forward(self, modalities):
@@ -44,10 +46,10 @@ class ConcatEarly(nn.Module):
 
 # Stacking modalities
 class Stack(nn.Module):
-    """
-    Stacking modalities together on dimension 1.
-    """
+    """Stacks modalities together on dimension 1."""
+
     def __init__(self):
+        """Initialize Stack Module."""
         super().__init__()
 
     def forward(self, modalities):
@@ -63,12 +65,10 @@ class Stack(nn.Module):
 
 
 class ConcatWithLinear(nn.Module):
-    """
-    Concatenation with a linear layer.
-    """
+    """Concatenates input and applies a linear layer."""
+
     def __init__(self, input_dim, output_dim, concat_dim=1):
-        """
-        Initialize ConcatWithLinear Module
+        """Initialize ConcatWithLinear Module.
         
         :param input_dim: The input dimension for the linear layer
         :param output_dim: The output dimension for the linear layer
@@ -88,14 +88,13 @@ class ConcatWithLinear(nn.Module):
 
 
 class FiLM(nn.Module):
-    """
-    Implementation of FiLM - Feature-Wise Affine Transformations of the Input.
+    """Implements FiLM - Feature-Wise Affine Transformations of the Input.
     
     See https://arxiv.org/pdf/1709.07871.pdf for more details.
     """
+
     def __init__(self, gamma_generation_network, beta_generation_network, base_modal=0, gamma_generate_modal=1, beta_generate_modal=1):
-        """
-        Initialize FiLM layer. 
+        """Initialize FiLM layer.
         
         :param gamma_generation_network: Network which generates gamma_parameters from gamma_generation_modal data.
         :param beta_generation_network: Network which generates beta_parameters from beta_generation_modal data.
@@ -123,11 +122,11 @@ class FiLM(nn.Module):
 
 
 class MultiplicativeInteractions3Modal(nn.Module):
-    """
-    Implementation of 3-Way Modal Multiplicative Interactions
-    """
+    """Implements 3-Way Modal Multiplicative Interactions."""
+    
     def __init__(self, input_dims, output_dim, task=None):
-        """
+        """Initialize MultiplicativeInteractions3Modal object.
+
         :param input_dims: list or tuple of 3 integers indicating sizes of input
         :param output_dim: size of outputs
         :param task: Set to "affect" when working with social data.
@@ -151,9 +150,8 @@ class MultiplicativeInteractions3Modal(nn.Module):
 
 
 class MultiplicativeInteractions2Modal(nn.Module):
-    """
-    Implementation of 2-way Modal Multiplicative Interactions
-    """
+    """Implements 2-way Modal Multiplicative Interactions."""
+    
     def __init__(self, input_dims, output_dim, output, flatten=False, clip=None, grad_clip=None, flip=False):
         """
         :param input_dims: list or tuple of 2 integers indicating input dimensions of the 2 modalities
@@ -163,6 +161,7 @@ class MultiplicativeInteractions2Modal(nn.Module):
         :param clip: clip parameter values, None if no clip
         :param grad_clip: clip grad values, None if no clip
         :param flip: whether to swap the two input modalities in forward function or not
+        
         """
         super(MultiplicativeInteractions2Modal, self).__init__()
         self.input_dims = input_dims
@@ -221,7 +220,7 @@ class MultiplicativeInteractions2Modal(nn.Module):
                 p.register_hook(lambda grad: torch.clamp(
                     grad, grad_clip[0], grad_clip[1]))
 
-    def repeatHorizontally(self, tensor, dim):
+    def _repeatHorizontally(self, tensor, dim):
         return tensor.repeat(dim).view(dim, -1).transpose(0, 1)
 
     def forward(self, modalities):
@@ -273,8 +272,8 @@ class MultiplicativeInteractions2Modal(nn.Module):
         elif self.output == 'scalar':
             Wprime = torch.matmul(m1, self.W.unsqueeze(1)).squeeze(1) + self.V
             bprime = torch.matmul(m1, self.U.unsqueeze(1)).squeeze(1) + self.b
-            output = self.repeatHorizontally(
-                Wprime, self.input_dims[1]) * m2 + self.repeatHorizontally(bprime, self.input_dims[1])
+            output = self._repeatHorizontally(
+                Wprime, self.input_dims[1]) * m2 + self._repeatHorizontally(bprime, self.input_dims[1])
         return output
 
 
@@ -285,6 +284,7 @@ class TensorFusion(nn.Module):
     See https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py for more and the original code.
     """
     def __init__(self):
+        """Instantiates TensorFusion Network Module."""
         super().__init__()
 
     def forward(self, modalities):
@@ -319,10 +319,13 @@ class LowRankTensorFusion(nn.Module):
 
     def __init__(self, input_dims, output_dim, rank, flatten=True):
         """
+        Initialize LowRankTensorFusion object.
+        
         :param input_dims: list or tuple of integers indicating input dimensions of the modalities
         :param output_dim: output dimension
         :param rank: a hyperparameter of LRTF. See link above for details
         :param flatten: Boolean to dictate if output should be flattened or not. Default: True
+        
         """
         super(LowRankTensorFusion, self).__init__()
 
@@ -377,22 +380,24 @@ class LowRankTensorFusion(nn.Module):
 
 class NLgate(torch.nn.Module):
     """
-    Implementation of Non-Local Gate-based Fusion
+    Implements of Non-Local Gate-based Fusion.
 
     
     See section F4 of https://arxiv.org/pdf/1905.12681.pdf for details
     """
+    
     def __init__(self, thw_dim, c_dim, tf_dim, q_linear=None, k_linear=None, v_linear=None):
         """
         q_linear, k_linear, v_linear are none if no linear layer applied before q,k,v.
+        
         Otherwise, a tuple of (indim,outdim) is required for each of these 3 arguments.
         
-        :param thw_dim: TODO
-        :param c_dim: TODO 
-        :param tf_dim: TODO
-        :param q_linear: TODO
-        :param k_linear: TODO
-        :param v_linear: TODO
+        :param thw_dim: See paper
+        :param c_dim: See paper
+        :param tf_dim: See paper
+        :param q_linear: See paper
+        :param k_linear: See paper
+        :param v_linear: See paper
         """
         super(NLgate, self).__init__()
         self.qli = None
@@ -411,7 +416,7 @@ class NLgate(torch.nn.Module):
 
     def forward(self, x):
         """
-        Forward Pass of Low-Rank TensorFusion.
+        Apply Low-Rank TensorFusion to input.
         
         :param x: An iterable of modalities to combine. 
         """

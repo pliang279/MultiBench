@@ -1,3 +1,4 @@
+"""Implements visual transformations."""
 import numpy as np
 from PIL import Image, ImageOps, ImageEnhance
 import colorsys

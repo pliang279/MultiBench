@@ -12,8 +12,16 @@ import numpy as np
 
 # %%
 class SimpleRecurrentSurrogate(nn.Module):
-
+    """Defines simple surrogate for MFAS using a single LSTM layer."""
+    
     def __init__(self, num_hidden=100, number_input_feats=3, size_ebedding=100):
+        """Initialize SimpleRecurrentSurrogate Module.
+
+        Args:
+            num_hidden (int, optional): Hidden dimension size of LSTM. Defaults to 100.
+            number_input_feats (int, optional): Input dimension size. Defaults to 3.
+            size_ebedding (int, optional): Hidden dimension size before LSTM portion. Defaults to 100.
+        """
         # call the initialization method of super class
         # super(cls_name, self) convert to object of cls_name to its super class's object
         super(SimpleRecurrentSurrogate, self).__init__()
@@ -36,6 +44,14 @@ class SimpleRecurrentSurrogate(nn.Module):
                 m.bias.data.fill_(1.8)
 
     def forward(self, sequence_of_operations):
+        """Apply SimpleRecurrentSurrogate to list of configurations, to get accuracy predictions.
+
+        Args:
+            sequence_of_operations (list): List of configurations to predict accuracies.
+
+        Returns:
+            nn.Tensor: Predicted accuracies.
+        """
         # (seq_len, batch, input_size):
 
         embeds = []
@@ -51,8 +67,15 @@ class SimpleRecurrentSurrogate(nn.Module):
         return val_space
 
     def eval_model(self, sequence_of_operations_np, device):
-        # the user will give this data sample as numpy array (int) with size len_seq x input_size
+        """Apply SimpleRecurrentSurrogate to a list of operations ( a configuration ) to get accuracy predictions.
 
+        Args:
+            sequence_of_operations_np (np.array[int]): List of operations for this configuration. Size len_seq x input_size.
+            device (torch.utils.data.device): Device to train on.
+
+        Returns:
+            np.array: Array of predicted accuracies.
+        """
         npseq = np.expand_dims(sequence_of_operations_np, 1)
         sequence_of_operations = torch.from_numpy(npseq).float().to(device)
         res = self.forward(sequence_of_operations)
@@ -63,11 +86,19 @@ class SimpleRecurrentSurrogate(nn.Module):
 
 # %%
 class SurrogateDataloader():
-
+    """Implements a data loader for the surrogate instance, predicting accuracies from configurations."""
+    
     def __init__(self):
+        """Initialize SurrogateDataloader Instance."""
         self._dict_data = {}
 
     def add_datum(self, datum_conf, datum_acc):
+        """Add data to surrogate data loader
+
+        Args:
+            datum_conf (list): List of operations for a configuration.
+            datum_acc (list[float]): Accuracies for this configuration.
+        """
         # data_conf is of size [seq_len, len_data]
 
         seq_len = len(datum_conf)
@@ -85,6 +116,14 @@ class SurrogateDataloader():
             self._dict_data[seq_len] = {datum_hash: (datum_conf, datum_acc)}
 
     def get_data(self, to_torch=False):
+        """Get data for training
+
+        Args:
+            to_torch (bool, optional): Whether to turn output to torch tensors. Defaults to False.
+
+        Returns:
+            list[np.array|torch.tensor]: Data for surrogate instance to train on.
+        """
         # delivers list of numpy tensors of size [seq_len, num_layers, len_data]
 
         dataset_conf = list()
@@ -114,7 +153,14 @@ class SurrogateDataloader():
         return dataset_conf, dataset_acc
 
     def get_k_best(self, k):
+        """Get K best configurations, given all that has been sampled so far.
 
+        Args:
+            k (int): Number of top configurations to get.
+
+        Returns:
+            tuple(configs, accuracies, index): Tuple of the list of configurations, their accuracies, and their position in the dataloader.
+        """
         dataset_conf = list()
         dataset_acc = list()
 
@@ -134,6 +180,19 @@ class SurrogateDataloader():
 
 # %%
 def train_simple_surrogate(model, criterion, optimizer, data_tensors, num_epochs, device):
+    """Train simple surrogate for MFAS procedure.
+
+    Args:
+        model (nn.Module): Model to train on.
+        criterion (nn.Module): Loss function to train on.
+        optimizer (nn.optim.Optimizer): Optimizer to apply.
+        data_tensors (torch.Tensor): Dataset to train on.
+        num_epochs (int): Number of epochs to train this surrogate on.
+        device (torch.device): Device to train on.
+
+    Returns:
+        float: Loss of this surrogate.
+    """
     for epoch in range(num_epochs):
 
         model.train(True)  # Set model to training mode

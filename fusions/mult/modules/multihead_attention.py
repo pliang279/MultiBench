@@ -1,19 +1,33 @@
+"""Implements MultiHead Attention.
+
+Adapted from fairseq repo.
+"""
 import torch
 from torch import nn
 from torch.nn import Parameter
 import torch.nn.functional as F
 import sys
 
-# Code adapted from the fairseq repo.
-
 
 class MultiheadAttention(nn.Module):
-    """Multi-headed attention.
+    """
+    Implements Multi-headed attention.
+    
     See "Attention Is All You Need" for more details.
     """
 
     def __init__(self, embed_dim, num_heads, attn_dropout=0.,
                  bias=True, add_bias_kv=False, add_zero_attn=False):
+        """Instantiate MultiHeadAttention Module.
+
+        Args:
+            embed_dim (int): Embedding dimension
+            num_heads (int): Number of heads
+            attn_dropout (float, optional): Dropout probability for attention. Defaults to 0..
+            bias (bool, optional): Whether to add a bias term or not. Defaults to True.
+            add_bias_kv (bool, optional): Whether to add a bias term to the key and value computation. Defaults to False.
+            add_zero_attn (bool, optional): Whether to add zero attention. Defaults to False.
+        """
         super().__init__()
         self.embed_dim = embed_dim
         self.num_heads = num_heads
@@ -40,6 +54,7 @@ class MultiheadAttention(nn.Module):
         self.reset_parameters()
 
     def reset_parameters(self):
+        """Reset parameters to defaults."""
         nn.init.xavier_uniform_(self.in_proj_weight)
         nn.init.xavier_uniform_(self.out_proj.weight)
         if self.in_proj_bias is not None:
@@ -51,12 +66,23 @@ class MultiheadAttention(nn.Module):
             nn.init.xavier_normal_(self.bias_v)
 
     def forward(self, query, key, value, attn_mask=None):
-        """Input shape: Time x Batch x Channel
+        """Apply attention mechanism given Q,K,V matrices.
+        
+        Input shape: Time x Batch x Channel
         Self-attention can be implemented by passing in the same arguments for
         query, key and value. Timesteps can be masked by supplying a T x T mask in the
         `attn_mask` argument. Padding elements can be excluded from
         the key by passing a binary ByteTensor (`key_padding_mask`) with shape:
         batch x src_len, where padding elements are indicated by 1s.
+
+        Args:
+            query (torch.Tensor): Query matrix
+            key (torch.Tensor): Key matrix
+            value (torch.Tensor): Value matrix
+            attn_mask (torch.Tensor, optional): Optional attention mask for masked attention. Defaults to None.
+
+        Returns:
+            torch.Tensor: Layer output
         """
         qkv_same = query.data_ptr() == key.data_ptr() == value.data_ptr()
         kv_same = key.data_ptr() == value.data_ptr()
@@ -70,20 +96,20 @@ class MultiheadAttention(nn.Module):
 
         if qkv_same:
             # self-attention
-            q, k, v = self.in_proj_qkv(query)
+            q, k, v = self._in_proj_qkv(query)
         elif kv_same:
             # encoder-decoder attention
-            q = self.in_proj_q(query)
+            q = self._in_proj_q(query)
 
             if key is None:
                 assert value is None
                 k = v = None
             else:
-                k, v = self.in_proj_kv(key)
+                k, v = self._in_proj_kv(key)
         else:
-            q = self.in_proj_q(query)
-            k = self.in_proj_k(key)
-            v = self.in_proj_v(value)
+            q = self._in_proj_q(query)
+            k = self._in_proj_k(key)
+            v = self._in_proj_v(value)
         q = q * self.scaling
 
         if self.bias_k is not None:
@@ -143,19 +169,19 @@ class MultiheadAttention(nn.Module):
         attn_weights = attn_weights.sum(dim=1) / self.num_heads
         return attn, attn_weights
 
-    def in_proj_qkv(self, query):
+    def _in_proj_qkv(self, query):
         return self._in_proj(query).chunk(3, dim=-1)
 
-    def in_proj_kv(self, key):
+    def _in_proj_kv(self, key):
         return self._in_proj(key, start=self.embed_dim).chunk(2, dim=-1)
 
-    def in_proj_q(self, query, **kwargs):
+    def _in_proj_q(self, query, **kwargs):
         return self._in_proj(query, end=self.embed_dim, **kwargs)
 
-    def in_proj_k(self, key):
+    def _in_proj_k(self, key):
         return self._in_proj(key, start=self.embed_dim, end=2 * self.embed_dim)
 
-    def in_proj_v(self, value):
+    def _in_proj_v(self, value):
         return self._in_proj(value, start=2 * self.embed_dim)
 
     def _in_proj(self, input, start=0, end=None, **kwargs):
