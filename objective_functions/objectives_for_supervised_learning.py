@@ -1,3 +1,4 @@
+"""Implements various objectives for supervised learning objectives."""
 import torch
 from objective_functions.recon import recon_weighted_sum, elbo_loss
 from objective_functions.cca import CCALoss
@@ -24,7 +25,7 @@ def MFM_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tru
     """
     recon_loss_func = recon_weighted_sum(modal_loss_funcs, recon_weights)
 
-    def actualfunc(pred, truth, args):
+    def _actualfunc(pred, truth, args):
         ints = args['intermediates']
         reps = args['reps']
         fused = args['fused']
@@ -41,7 +42,7 @@ def MFM_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tru
             inputs = [i.cuda() for i in inps]
         recon_loss = recon_loss_func(recons, inputs)
         return ce_loss*ce_weight+recon_loss
-    return actualfunc
+    return _actualfunc
 
 
 def _reparameterize(mu, logvar, training):
@@ -65,12 +66,12 @@ def MVAE_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tr
     """
     recon_loss_func = elbo_loss(modal_loss_funcs, recon_weights, annealing)
 
-    def allnonebuti(i, item):
+    def _allnonebuti(i, item):
         ret = [None for w in modal_loss_funcs]
         ret[i] = item
         return ret
 
-    def actualfunc(pred, truth, args):
+    def _actualfunc(pred, truth, args):
         training = args['training']
         reps = args['reps']
         fusedmu, fusedlogvar = args['fused']
@@ -89,11 +90,11 @@ def MVAE_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tr
         for i in range(len(inps)):
             mu, logvar = reps[i]
             recon = decoders[i](_reparameterize(mu, logvar, training))
-            total_loss += recon_loss_func(allnonebuti(i, recon),
-                                          allnonebuti(i, inputs[i]), mu, logvar)
+            total_loss += recon_loss_func(_allnonebuti(i, recon),
+                                          _allnonebuti(i, inputs[i]), mu, logvar)
         total_loss += ce_weight * _criterioning(pred, truth, criterion)
         return total_loss
-    return actualfunc
+    return _actualfunc
 
 
 
@@ -107,12 +108,12 @@ def CCA_objective(out_dim, cca_weight=0.001, criterion=torch.nn.CrossEntropyLoss
     """
     lossfunc = CCALoss(out_dim, False, device=torch.device("cuda"))
 
-    def actualfunc(pred, truth, args):
+    def _actualfunc(pred, truth, args):
         ce_loss = _criterioning(pred, truth, criterion)
         outs = args['reps']
         cca_loss = lossfunc(outs[0], outs[1])
         return cca_loss * cca_weight + ce_loss
-    return actualfunc
+    return _actualfunc
 
 
 
@@ -126,7 +127,7 @@ def RefNet_objective(ref_weight, criterion=torch.nn.CrossEntropyLoss(), input_to
     """
     ss_criterion = torch.nn.CosineEmbeddingLoss()
 
-    def actualfunc(pred, truth, args):
+    def _actualfunc(pred, truth, args):
         ce_loss = _criterioning(pred, truth, criterion)
         refiner = args['refiner']
         fused = args['fused']
@@ -147,7 +148,7 @@ def RefNet_objective(ref_weight, criterion=torch.nn.CrossEntropyLoss(), input_to
             ss_loss += ss_criterion(out,
                                     inputs[i], torch.ones(out.size(0)).cuda())
         return ce_loss + ss_loss*ref_weight
-    return actualfunc
+    return _actualfunc
 
 
 def RMFE_object(reg_weight=1e-10, criterion=torch.nn.BCEWithLogitsLoss(), is_packed=False):
@@ -159,7 +160,7 @@ def RMFE_object(reg_weight=1e-10, criterion=torch.nn.BCEWithLogitsLoss(), is_pac
     :param criterion: criterion for supervised loss
     :param is_packed: packed for LSTM or not
     """
-    def regfunc(pred, truth, args):
+    def _regfunc(pred, truth, args):
         model = args['model']
         lossfunc = RegularizationLoss(criterion, model, reg_weight, is_packed)
         ce_loss = _criterioning(pred, truth, criterion)
@@ -170,4 +171,4 @@ def RMFE_object(reg_weight=1e-10, criterion=torch.nn.BCEWithLogitsLoss(), is_pac
             print("No reg loss for validation")
             reg_loss = 0
         return ce_loss+reg_loss
-    return regfunc
+    return _regfunc

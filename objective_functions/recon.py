@@ -60,7 +60,7 @@ def sigmloss1dcentercrop(adim, bdim):
     """ 
     borderdim = (bdim-adim)//2
 
-    def func(a, b):
+    def _func(a, b):
         if a.size()[2] > b.size()[2]:
             a1 = b
             b1 = a
@@ -72,12 +72,12 @@ def sigmloss1dcentercrop(adim, bdim):
         af = torch.flatten(a1, start_dim=1)
         bf = torch.flatten(br, start_dim=1)
         return sigmloss1d(af, bf)
-    return func
+    return _func
 
 
 def elbo_loss(modal_loss_funcs, weights, annealing=1.0):
     """Create wrapper function that computes the model ELBO (Evidence Lower Bound) loss."""
-    def actualfunc(recons, origs, mu, logvar):
+    def _actualfunc(recons, origs, mu, logvar):
         totalloss = 0.0
         if torch.max(logvar).item() > 99999:
             kld = logvar
@@ -95,16 +95,16 @@ def elbo_loss(modal_loss_funcs, weights, annealing=1.0):
                 # if math.isnan(torch.sum(totalloss).item()):
             # exit(0)
         return torch.mean(totalloss+annealing*kld)
-    return actualfunc
+    return _actualfunc
 
 
 def recon_weighted_sum(modal_loss_funcs, weights):
     """Create wrapper function that computes the weighted model reconstruction loss."""
-    def actualfunc(recons, origs):
+    def _actualfunc(recons, origs):
         totalloss = 0.0
         for i in range(len(recons)):
             trg = origs[i].view(recons[i].shape[0], recons[i].shape[1]) if len(
                 recons[i].shape) != len(origs[i].shape) else origs[i]
             totalloss += modal_loss_funcs[i](recons[i], trg)*weights[i]
         return torch.mean(totalloss)
-    return actualfunc
+    return _actualfunc

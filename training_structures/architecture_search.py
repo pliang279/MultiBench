@@ -1,3 +1,4 @@
+"""Implements training procedure for MFAS."""
 from utils.AUPRC import AUPRC
 import torch
 import torch.optim as op
@@ -11,15 +12,6 @@ import fusions.searchable as avm
 from eval_scripts.complexity import all_in_one_train, all_in_one_test
 from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
 from tqdm import tqdm
-
-# unimodal_files: 
-# rep_size: 
-# classes: output size
-# sub_sizes: 
-# train_data, valid_data: dataloaders for the input data and ground truths
-# surrogate: a surrogate instance, see utils/surrogate.py
-# max_labels: the search space of the fusion architecture
-# all other input configs: hyperparameters, see original repo  for detail
 
 
 def train(unimodal_files, rep_size, classes, sub_sizes, train_data, valid_data, surrogate, max_labels,
@@ -105,6 +97,27 @@ class ModelSearcher():
     def search(self, surrogate,
                use_weightsharing, unimodal_files, rep_size, classes, sub_sizes, batch_size, epochs, max_labels,
                eta_max, eta_min, Ti, Tm, criterion=torch.nn.MSELoss()):
+        """Search for the best model using MFAS.
+
+        Args:
+            surrogate (nn.Module): Surrogate cost function module.
+            use_weightsharing (bool): Whether to use weight sharing or not.
+            unimodal_files (list): List of unimodal encoders, pre-trained.
+            rep_size (int): Dimensionality of unimodal encoder output
+            classes (int): Number of classes
+            sub_sizes (int): Sub sizes
+            batch_size (int): Batch size
+            epochs (int): Number of epochs
+            max_labels (int): Maximum number of labels
+            eta_max (float): eta_max for LRCosineAnnealing Scheduler
+            eta_min (float): eta_min for LRCosineAnnealingScheduler
+            Ti (float): Ti for LRCosineAnnealingScheduler
+            Tm (float): Tm for LRCosineAnnealingScheduler
+            criterion (nn.Module, optional): Loss function. Defaults to torch.nn.MSELoss().
+
+        Returns:
+            torch.Tensor: Surrogate function training data ( i.e. model configs and their performances )
+        """
         searchmethods = {'train_sampled_fun': avm.train_sampled_models,
                          'get_layer_confs': avm.get_possible_layer_configurations}
         surro_dict = {'model': surrogate, 'criterion': criterion}
@@ -216,6 +229,16 @@ class ModelSearcher():
 
 
 def single_test(model, test_dataloader, auprc=False):
+    """Get accuracy for a single dataloader for MFAS.
+
+    Args:
+        model (nn.Module): MFAS Model
+        test_dataloader (torch.utils.data.DataLoader): Test dataloader to sample from
+        auprc (bool, optional): Whether to get AUPRC scores or not. Defaults to False.
+
+    Returns:
+        dict: Dictionary of (metric, value) pairs.
+    """
     total = 0
     corrects = 0
     pts = []
@@ -236,16 +259,26 @@ def single_test(model, test_dataloader, auprc=False):
 
 
 def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, no_robust=False):
+    """Test MFAS Model.
+
+    Args:
+        model (nn.Module): Module to test.
+        test_dataloaders_all (list): List of dataloaders
+        dataset (str): Name of dataset.
+        method_name (str, optional): Method name. Defaults to 'My method'.
+        auprc (bool, optional): Whether to output AUPRC scores or not. Defaults to False.
+        no_robust (bool, optional): Whether to not apply robustness transformations or not. Defaults to False.
+    """
     if no_robust:
-        def testprocess():
+        def _testprocess():
             single_test(model, test_dataloaders_all, auprc)
-        all_in_one_test(testprocess, [model])
+        all_in_one_test(_testprocess, [model])
         return
 
-    def testprocess():
+    def _testprocess():
         single_test(model, test_dataloaders_all[list(
             test_dataloaders_all.keys())[0]][0], auprc)
-    all_in_one_test(testprocess, [model])
+    all_in_one_test(_testprocess, [model])
     for noisy_modality, test_dataloaders in test_dataloaders_all.items():
         print("Testing on noisy data ({})...".format(noisy_modality))
         robustness_curve = dict()

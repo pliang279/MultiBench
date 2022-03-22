@@ -901,7 +901,7 @@ class DAN(torch.nn.Module):
     Deep Sets: https://arxiv.org/abs/1703.06114
     """
     def __init__(self, indim, hiddim, dropout=False, dropoutp=0.25, nlayers=3, has_padding=False):
-        """Initializes DAN Object.
+        """Initialize DAN Object.
 
         Args:
             indim (int): Input Dimension
@@ -977,6 +977,14 @@ class ResNetLSTMEnc(torch.nn.Module):
         self.dropout = dropout
 
     def forward(self, x):  # x is (cbatch_size, 3, 150, 112, 112)
+        """Apply ResNetLSTMEnc Module to Input
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         cbatch_size = x.shape[0]
         x = x.permute([0, 2, 1, 3, 4])  # (cbatch_size, 150, 3, 112, 112)
         x = x.reshape(-1, 3, 112, 112)  # (cbatch_size*150, 3, 112, 112)

@@ -216,7 +216,7 @@ def train(unimodal_models,  multimodal_classification_head,
         savedir (str, optional): The name of the saved file for the model with current best validation performance. Defaults to 'best.pt'.
         track_complexity (bool, optional): Whether to track complexity or not. Defaults to True.
     """
-    def trainprocess():
+    def _trainprocess():
         nonlocal train_dataloader
         params = []
         for model in unimodal_models:
@@ -340,13 +340,24 @@ def train(unimodal_models,  multimodal_classification_head,
                         torch.save(completeModule(unimodal_models,
                                                   fusehead, finetunehead), savedir)
     if track_complexity:
-        all_in_one_train(trainprocess, unimodal_models +
+        all_in_one_train(_trainprocess, unimodal_models +
                          [multimodal_classification_head, fuse]+unimodal_classification_heads)
     else:
-        trainprocess()
+        _trainprocess()
 
 
 def single_test(model, test_dataloader, auprc=False, classification=True):
+    """Run single test with model and test data loader.
+
+    Args:
+        model (nn.Module): Model to evaluate.
+        test_dataloader (torch.utils.data.DataLoader): Test data loader
+        auprc (bool, optional): Whether to return AUPRC scores or not. Defaults to False.
+        classification (bool, optional): Whether to return classification accuracy or not. Defaults to True.
+
+    Returns:
+        dict: Dictionary of (metric, value) pairs
+    """
     with torch.no_grad():
         totalloss = 0.0
         total = 0
@@ -380,15 +391,15 @@ def single_test(model, test_dataloader, auprc=False, classification=True):
 
 def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, classification=True, no_robust=False):
     if no_robust:
-        def testprocess():
+        def _testprocess():
             single_test(model, test_dataloaders_all, auprc, classification)
-        all_in_one_test(testprocess, [model])
+        all_in_one_test(_testprocess, [model])
         return
 
-    def testprocess():
+    def _testprocess():
         single_test(model, test_dataloaders_all[list(
             test_dataloaders_all.keys())[0]][0], auprc, classification)
-    all_in_one_test(testprocess, [model])
+    all_in_one_test(_testprocess, [model])
     for noisy_modality, test_dataloaders in test_dataloaders_all.items():
         print("Testing on noisy data ({})...".format(noisy_modality))
         robustness_curve = dict()

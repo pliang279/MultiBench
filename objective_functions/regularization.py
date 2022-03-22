@@ -209,6 +209,16 @@ class RegParameters(object):
 
     def __init__(self, lambda_: float = 1e-10, norm: float = 2.0, estimation: str = 'ent',
                  optim_method: str = 'max_ent', n_samples: int = 10, grad: bool = True):
+        """Initialize RegParameters Object.
+
+        Args:
+            lambda_ (float, optional): Lambda value. Defaults to 1e-10.
+            norm (float, optional): Norm value. Defaults to 2.0.
+            estimation (str, optional): Regularization estimation. Defaults to 'ent'.
+            optim_method (str, optional): Optimization method. Defaults to 'max_ent'.
+            n_samples (int, optional): Number of samples . Defaults to 10.
+            grad (bool, optional): Whether to regularize gradient or not. Defaults to True.
+        """
         self.lambda_ = lambda_
         self.norm = norm
         self.estimation = estimation

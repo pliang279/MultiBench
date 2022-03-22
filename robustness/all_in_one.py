@@ -1,3 +1,4 @@
+"""Implements generic modules to apply robustness functions to generic training processses."""
 import numpy as np
 import torch
 

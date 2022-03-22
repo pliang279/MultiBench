@@ -1,3 +1,4 @@
+"""Implements sensor fusion networks for supervised and self-supervised objectives."""
 import torch
 import torch.nn as nn
 from .models_utils import (
@@ -10,6 +11,8 @@ from .models_utils import (
 
 class SensorFusion(nn.Module):
     """
+    Implements traditional SensorFusionNetwork.
+    
     #
         Regular SensorFusionNetwork Architecture
         Number of parameters:
@@ -19,10 +22,19 @@ class SensorFusion(nn.Module):
             proprio: batch_size x 8
             action:  batch_size x action_dim
     """
-
+    
     def __init__(
         self, device, z_dim=128, action_dim=4, encoder=False, deterministic=False
     ):
+        """Initialize SensorFusionNetwork.
+
+        Args:
+            device (torch.device): Device to train/test model on.
+            z_dim (int, optional): Z dimension size. Defaults to 128.
+            action_dim (int, optional): Action dimension size. Defaults to 4.
+            encoder (bool, optional): Whether to apply action encoder or not. Defaults to False.
+            deterministic (bool, optional): Whether the fusion networks is deterministic or not. Defaults to False.
+        """
         super().__init__()
 
         self.z_dim = z_dim
@@ -76,7 +88,18 @@ class SensorFusion(nn.Module):
                 m.bias.data.zero_()
 
     def forward_encoder(self, img_encoded, frc_encoded, proprio_encoded, depth_encoded, action_encoded):
+        """Encode output using forward encoder.
 
+        Args:
+            img_encoded (torch.Tensor): Encoded image.
+            frc_encoded (torch.Tesnor): Encoded force.
+            proprio_encoded (torch.Tensor): Encoded proprioception
+            depth_encoded (torch.Tensor): Encoded depth.
+            action_encoded (torch.Tensor): Encoded action.
+
+        Returns:
+            torch.Tensor: tuple of outputs
+        """
         # Get encoded outputs
         img_out, img_out_convs = img_encoded
         depth_out, depth_out_convs = depth_encoded
@@ -145,14 +168,18 @@ class SensorFusion(nn.Module):
                 return img_out_convs, mm_act_feat, z, mu_z, var_z, mu_prior, var_prior
 
     def weight_parameters(self):
+        """Get weight parameters."""
         return [param for name, param in self.named_parameters() if "weight" in name]
 
     def bias_parameters(self):
+        """Get bias parameters."""
         return [param for name, param in self.named_parameters() if "bias" in name]
 
 
 class SensorFusionSelfSupervised(SensorFusion):
     """
+    Implements SensorFusionNetwork for Self-Supervision.
+    
         Regular SensorFusionNetwork Architecture
         Inputs:
             image:   batch_size x 3 x 128 x 128
@@ -164,12 +191,27 @@ class SensorFusionSelfSupervised(SensorFusion):
     def __init__(
         self, device, z_dim=128, encoder=False, deterministic=False
     ):
+        """Initialize SensorFusionSelfSupervised Module.
 
+        Args:
+            device (torch.Device): Device to train/test on.
+            z_dim (int, optional): Z dimension size for encoders. Defaults to 128.
+            encoder (bool, optional): Whether to apply the encoders or not. Defaults to False.
+            deterministic (bool, optional): Whether the fusion network is deterministic or not. Defaults to False.
+        """
         super().__init__(device, z_dim, encoder, deterministic)
 
         self.deterministic = deterministic
 
     def forward(self, input):
+        """Apply SensorFusionSelfSupervised Module to Layer Input.
+
+        Args:
+            input (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         img_encoded, frc_encoded, proprio_encoded, depth_encoded, action_encoded = input
 
         if self.encoder_bool:
@@ -212,11 +254,26 @@ class SensorFusionSelfSupervised(SensorFusion):
 
 
 class roboticsConcat(nn.Module):
+    """Concatenates tensors for robotics fusion."""
+    
     def __init__(self, name=None):
+        """Initialize roboticsConcat module.
+
+        Args:
+            name (str, optional): What kind of concatenation to do. Can be "noconcat", "image" or "simple". Defaults to None.
+        """
         super(roboticsConcat, self).__init__()
         self.name = name
 
     def forward(self, x):
+        """Apply roboticsConcat module to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer output.
+        """
         if self.name == "noconcat":
             return [x[0][0].squeeze(), x[1].squeeze(), x[2].squeeze(), x[3][0].squeeze(), x[4]]
         if self.name == "image":

@@ -1,3 +1,4 @@
+"""Implement objectives for contrastive loss."""
 import torch
 from torch import nn
 import math
@@ -82,8 +83,19 @@ class AliasMethod(object):
 
 
 class NCEAverage(nn.Module):
-
+    """Implements NCEAverage Loss Function."""
+    
     def __init__(self, inputSize, outputSize, K, T=0.07, momentum=0.5, use_softmax=False):
+        """Instantiate NCEAverage Loss Function.
+
+        Args:
+            inputSize (int): Input Size
+            outputSize (int): Output Size
+            K (float): K Value. See paper for more.
+            T (float, optional): T Value. See paper for more. Defaults to 0.07.
+            momentum (float, optional): Momentum for NCEAverage Loss. Defaults to 0.5.
+            use_softmax (bool, optional): Whether to use softmax or not. Defaults to False.
+        """
         super(NCEAverage, self).__init__()
         self.nLem = outputSize
         self.unigrams = torch.ones(self.nLem)
@@ -100,6 +112,17 @@ class NCEAverage(nn.Module):
             outputSize, inputSize).mul_(2 * stdv).add_(-stdv))
 
     def forward(self, l, ab, y, idx=None):
+        """Apply NCEAverage Module.
+
+        Args:
+            l (torch.Tensor): Labels
+            ab (torch.Tensor): See paper for more.
+            y (torch.Tensor): True values.
+            idx (torch.Tensor, optional): See paper for more. Defaults to None.
+
+        Returns:
+            _type_: _description_
+        """
         K = int(self.params[0].item())
         T = self.params[1].item()
         Z_l = self.params[2].item()
@@ -170,14 +193,25 @@ class NCEAverage(nn.Module):
 
 class NCECriterion(nn.Module):
     """
+    Implements NCECriterion Loss.
+    
     Eq. (12): L_{NCE}
     """
 
     def __init__(self, n_data):
+        """Instantiate NCECriterion Loss."""
         super(NCECriterion, self).__init__()
         self.n_data = n_data
 
     def forward(self, x):
+        """Apply NCECriterion to Tensor Input.
+
+        Args:
+            x (torch.Tensor): Tensor Input
+
+        Returns:
+            torch.Tensor: Loss
+        """
         bsz = x.shape[0]
         m = x.size(1) - 1
 
@@ -199,13 +233,22 @@ class NCECriterion(nn.Module):
 
 
 class NCESoftmaxLoss(nn.Module):
-    """Softmax cross-entropy loss (a.k.a., info-NCE loss in CPC paper)"""
+    """Implements Softmax cross-entropy loss (a.k.a., info-NCE loss in CPC paper)."""
 
     def __init__(self):
+        """Instantiate NCESoftmaxLoss Module."""
         super(NCESoftmaxLoss, self).__init__()
         self.criterion = nn.CrossEntropyLoss()
 
     def forward(self, x):
+        """Apply NCESoftmaxLoss to Layer Input.
+
+        Args:
+            x (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         bsz = x.shape[0]
         x = x.squeeze()
         label = torch.zeros([bsz]).cuda().long()
@@ -214,7 +257,10 @@ class NCESoftmaxLoss(nn.Module):
 
 
 class MultiSimilarityLoss(nn.Module):
+    """Implements MultiSimilarityLoss."""
+    
     def __init__(self,):
+        """Initialize MultiSimilarityLoss Module."""
         super(MultiSimilarityLoss, self).__init__()
         self.thresh = 0.5
         self.margin = 0.1
@@ -223,6 +269,15 @@ class MultiSimilarityLoss(nn.Module):
         self.scale_neg = 2e-3
 
     def forward(self, feats, labels):
+        """Apply MultiSimilarityLoss to Tensor Inputs.
+
+        Args:
+            feats (torch.Tensor): Features
+            labels (torch.Tensor): Labels
+
+        Returns:
+            torch.Tensor: Loss output.
+        """
         assert feats.size(0) == labels.size(0), \
             f"feats.size(0): {feats.size(0)} is not equal to labels.size(0): {labels.size(0)}"
         batch_size = feats.size(0)
