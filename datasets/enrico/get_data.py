@@ -1,3 +1,6 @@
+"""Implements dataloaders for ENRICO dataset."""
+
+
 from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 import random
 import csv
@@ -12,14 +15,13 @@ from PIL import Image
 import numpy as np
 from robustness.visual_robust import add_visual_noise
 
-# helper function for extracting UI elements from hierarchy
 
-
-def add_screen_elements(tree, element_list):
+def _add_screen_elements(tree, element_list):
+    """Helper function for extracting UI elements from hierarchy. (unused?)"""
     if 'children' in tree and len(tree['children']) > 0:
         # we are at an intermediate node
         for child in tree['children']:
-            add_screen_elements(child, element_list)
+            _add_screen_elements(child, element_list)
     else:
         # we are at a leaf node
         if 'bounds' in tree and 'componentLabel' in tree:
@@ -31,7 +33,26 @@ def add_screen_elements(tree, element_list):
 
 
 class EnricoDataset(Dataset):
+    """Implements torch dataset class for ENRICO dataset."""
+    
     def __init__(self, data_dir, mode="train", noise_level=0, img_noise=False, wireframe_noise=False, img_dim_x=128, img_dim_y=256, random_seed=42, train_split=0.65, val_split=0.15, test_split=0.2, normalize_image=False, seq_len=64):
+        """Instantiate ENRICO dataset.
+
+        Args:
+            data_dir (str): Data directory.
+            mode (str, optional): What data to extract. Defaults to "train".
+            noise_level (int, optional): Noise level, as defined in robustness. Defaults to 0.
+            img_noise (bool, optional): Whether to apply noise to images or not. Defaults to False.
+            wireframe_noise (bool, optional): Whether to apply noise to wireframes or not. Defaults to False.
+            img_dim_x (int, optional): Image width. Defaults to 128.
+            img_dim_y (int, optional): Image height. Defaults to 256.
+            random_seed (int, optional): Seed to split dataset on and shuffle data on. Defaults to 42.
+            train_split (float, optional): Percentage of training data split. Defaults to 0.65.
+            val_split (float, optional): Percentage of validation data split. Defaults to 0.15.
+            test_split (float, optional): Percentage of test data split. Defaults to 0.2.
+            normalize_image (bool, optional): Whether to normalize image or not Defaults to False.
+            seq_len (int, optional): Length of sequence. Defaults to 64.
+        """
         super(EnricoDataset, self).__init__()
         self.noise_level = noise_level
         self.img_noise = img_noise
@@ -117,15 +138,25 @@ class EnricoDataset(Dataset):
         self.ui_types = UI_TYPES
 
     def __len__(self):
+        """Get number of samples in dataset."""
         return len(self.keys)
 
     def featurizeElement(self, element):
+        """Convert element into tuple of (bounds, one-hot-label)."""
         bounds, label = element
         labelOneHot = [0 for _ in range(len(self.ui_types))]
         labelOneHot[self.label2Idx[label]] = 1
         return bounds, labelOneHot
 
     def __getitem__(self, idx):
+        """Get item in dataset.
+
+        Args:
+            idx (int): Index of data to get.
+
+        Returns:
+            list: List of (screen image, screen wireframe image, screen label)
+        """
         example = self.example_list[self.keys[idx]]
         screenId = example['screen_id']
         # image modality
@@ -148,6 +179,18 @@ class EnricoDataset(Dataset):
 
 
 def get_dataloader(data_dir, batch_size=32, num_workers=0, train_shuffle=True, return_class_weights=True):
+    """Get dataloaders for this dataset.
+
+    Args:
+        data_dir (str): Data directory.
+        batch_size (int, optional): Batch size. Defaults to 32.
+        num_workers (int, optional): Number of workers. Defaults to 0.
+        train_shuffle (bool, optional): Whether to shuffle training data or not. Defaults to True.
+        return_class_weights (bool, optional): Whether to return class weights or not. Defaults to True.
+
+    Returns:
+        tuple: Tuple of ((train dataloader, validation dataloader, test dataloader), class_weights) if return_class_weights, otherwise just the dataloaders
+    """
     ds_train = EnricoDataset(data_dir, mode="train")
     ds_val = EnricoDataset(data_dir, mode="val")
 

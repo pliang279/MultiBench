@@ -1,3 +1,4 @@
+"""Implements BERT embedding extractors."""
 import torch
 from torch import nn
 from transformers import AutoTokenizer, pipeline, BertModel
@@ -12,9 +13,21 @@ tokenizer = AutoTokenizer.from_pretrained(model_name)
 bert = BertModel.from_pretrained(model_name)
 bert.config.output_hidden_states = True
 
-# use pipline to extract all the features, (num_points, max_seq_length, feature_dim): np.ndarray
-# contextual embedding:if True output the last hidden state of bert, if False, output the embedding of words
+
 def get_bert_features(all_text, contextual_embedding=False, batch_size=500, max_len=None):
+    """Get bert features from data.
+    
+    Use pipline to extract all the features, (num_points, max_seq_length, feature_dim): np.ndarray
+
+    Args:
+        all_text (list): Data to get BERT features from
+        contextual_embedding (bool, optional): If True output the last hidden state of bert. If False, output the embedding of words. Defaults to False.
+        batch_size (int, optional): Batch size. Defaults to 500.
+        max_len (int, optional): Maximum length of the dataset. Defaults to None.
+
+    Returns:
+        np.array: BERT features of text.
+    """
     output_bert_features = []
     if max_len == None:
         max_len = max([len([ms for ms in s.split() if len(ms) > 0]) for s in all_text])
@@ -38,8 +51,18 @@ def get_bert_features(all_text, contextual_embedding=False, batch_size=500, max_
     print(np.concatenate(output_bert_features).shape)
     return np.concatenate(output_bert_features)
 
-# get raw text from the datasets
+
 def get_rawtext(path, data_kind, vids=None):
+    """"Get raw text from the datasets.
+
+    Args:
+        path (str): Path to data
+        data_kind (str): Data Kind. Must be 'hdf5'.
+        vids (list, optional): List of video data as np.array. Defaults to None.
+
+    Returns:
+        tuple(list, list): Text data list, video data list
+    """
     if data_kind == 'hdf5':
         f = h5py.File(path, 'r')
     else:
@@ -76,9 +99,20 @@ def get_rawtext(path, data_kind, vids=None):
     return text_data, new_vids
 
 
-# cut the id lists with the max length, but didnt do padding here
-# add the first one as [CLS] and the last one for [SEP]
+
 def max_seq_len(id_list, max_len=50):
+    """ Fix dataset to max sequence length.
+    
+    Cut the id lists with the max length, but didnt do padding here.
+    Add the first one as [CLS] and the last one for [SEP].
+
+    Args:
+        id_list (list): List of ids to manipulate
+        max_len (int, optional): Maximum sequence length. Defaults to 50.
+
+    Returns:
+        list: List of tokens
+    """
     new_id_list = []
     for id in id_list:
         if len(id) > 0:
@@ -88,10 +122,21 @@ def max_seq_len(id_list, max_len=50):
     return new_id_list
 
 
-# since tokenizer splits the word into parts e.g. '##ing' or 'you're' -> 'you', ''', 're'
-# we should get the corresponding ids for other modalities' features
-# applied to modalities which aligned to words
+
 def corresponding_other_modality_ids(orig_text, tokenized_text):
+    """Align word ids to other modalities.
+    
+    Since tokenizer splits the word into parts e.g. '##ing' or 'you're' -> 'you', ''', 're'
+    we should get the corresponding ids for other modalities' features applied to modalities 
+    which aligned to words
+
+    Args:
+        orig_text (list):  List of strings corresponding to the original text. 
+        tokenized_text (list): List of lists of tokens.
+
+    Returns:
+        list: List of ids.
+    """
     id_list = []
     idx = -1
     for i, t in enumerate(tokenized_text):
@@ -122,6 +167,18 @@ def corresponding_other_modality_ids(orig_text, tokenized_text):
 
 
 def bert_version_data(data, raw_path, keys, max_padding=50, bert_max_len=None):
+    """Get bert encoded data
+
+    Args:
+        data (dict): Data dictionary
+        raw_path (str): Path to raw data
+        keys (dict): List of keys in raw text getter
+        max_padding (int, optional): Maximum padding to add to list. Defaults to 50.
+        bert_max_len (int, optional): Maximum length in BERT. Defaults to None.
+
+    Returns:
+        dict: Dictionary from modality to data.
+    """
 
     file_type = raw_path.split('.')[-1]
     sarcasm_text, _ = get_rawtext(raw_path, file_type, keys)

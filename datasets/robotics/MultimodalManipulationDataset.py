@@ -1,3 +1,5 @@
+"""Implements dataset for MultiModal Manipulation Task."""
+
 import h5py
 import numpy as np
 from tqdm import tqdm
@@ -21,11 +23,17 @@ class MultimodalManipulationDataset(Dataset):
         pairing_tolerance=0.06,
         filedirprefix=""
     ):
-        """
+        """Initialize dataset.
+
         Args:
-            hdf5_file (handle): h5py handle of the hdf5 file with annotations.
-            transform (callable, optional): Optional transform to be applied
-                on a sample.
+            filename_list (str): List of files to get data from
+            transform (fn, optional): Optional function to transform data. Defaults to None.
+            episode_length (int, optional): Length of each episode. Defaults to 50.
+            training_type (str, optional): Type of training. Defaults to "selfsupervised".
+            n_time_steps (int, optional): Number of time steps. Defaults to 1.
+            action_dim (int, optional): Action dimension. Defaults to 4.
+            pairing_tolerance (float, optional): Pairing tolerance. Defaults to 0.06.
+            filedirprefix (str, optional): File directory prefix (unused). Defaults to "".
         """
         #self.dataset_path = [(filedirprefix + ff) for ff in filename_list]
         self.dataset_path = filename_list
@@ -41,10 +49,11 @@ class MultimodalManipulationDataset(Dataset):
         self._init_paired_filenames()
 
     def __len__(self):
+        """Get number of items in dataset."""
         return len(self.dataset_path) * (self.episode_length - self.n_time_steps)
 
     def __getitem__(self, idx):
-
+        """Get item in dataset at index idx."""
         list_index = idx // (self.episode_length - self.n_time_steps)
         dataset_index = idx % (self.episode_length - self.n_time_steps)
         filename = self.dataset_path[list_index][:-8]
@@ -248,10 +257,12 @@ class MultimodalManipulationDataset_robust(Dataset):
         self._init_paired_filenames()
 
     def __len__(self):
+        """Get number of items in dataset."""
         return len(self.dataset_path) * (self.episode_length - self.n_time_steps)
 
     def __getitem__(self, idx):
-
+        """Get item in dataset at index idx."""
+        
         list_index = idx // (self.episode_length - self.n_time_steps)
         dataset_index = idx % (self.episode_length - self.n_time_steps)
         filename = self.dataset_path[list_index][:-8]

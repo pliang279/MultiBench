@@ -1,3 +1,4 @@
+"""Implements dataloaders for AFFECT data."""
 import os
 import sys
 from typing import *
@@ -22,6 +23,7 @@ from robustness.timeseries_robust import add_timeseries_noise
 np.seterr(divide='ignore', invalid='ignore')
 
 def drop_entry(dataset):
+    """Drop entries where there's no text in the data."""
     drop = []
     for ind, k in enumerate(dataset["text"]):
         if k.sum() == 0:
@@ -41,6 +43,7 @@ def drop_entry(dataset):
 
 
 def z_norm(dataset, max_seq_len=50):
+    """Normalize data in the dataset."""
     processed = {}
     text = dataset['text'][:, :max_seq_len, :]
     vision = dataset['vision'][:, :max_seq_len, :]
@@ -61,6 +64,7 @@ def z_norm(dataset, max_seq_len=50):
 
 
 def get_rawtext(path, data_kind, vids):
+    """Get raw text, video data from hdf5 file."""
     if data_kind == 'hdf5':
         f = h5py.File(path, 'r')
     else:
@@ -94,7 +98,7 @@ def get_rawtext(path, data_kind, vids):
     return text_data, new_vids
 
 
-def get_word2id(text_data, vids):
+def _get_word2id(text_data, vids):
     word2id = defaultdict(lambda: len(word2id))
     UNK = word2id['unk']
     data_processed = dict()
@@ -106,14 +110,14 @@ def get_word2id(text_data, vids):
         words = np.asarray(words)
         data_processed[vids[i]] = words
 
-    def return_unk():
+    def _return_unk():
         return UNK
 
-    word2id.default_factory = return_unk
+    word2id.default_factory = _return_unk
     return data_processed, word2id
 
 
-def get_word_embeddings(word2id, save=False):
+def _get_word_embeddings(word2id, save=False):
     vec = text.vocab.GloVe(name='840B', dim=300)
     tokens = []
     for w, _ in word2id.items():
@@ -123,9 +127,9 @@ def get_word_embeddings(word2id, save=False):
     return ret
 
 
-def glove_embeddings(text_data, vids, paddings=50):
-    data_prod, w2id = get_word2id(text_data, vids)
-    word_embeddings_looks_up = get_word_embeddings(w2id)
+def _glove_embeddings(text_data, vids, paddings=50):
+    data_prod, w2id = _get_word2id(text_data, vids)
+    word_embeddings_looks_up = _get_word_embeddings(w2id)
     looks_up = word_embeddings_looks_up.numpy()
     embedd_data = []
     for vid in vids:
@@ -151,8 +155,20 @@ def glove_embeddings(text_data, vids, paddings=50):
 
 
 class Affectdataset(Dataset):
-
+    """Implements Affect data as a torch dataset."""
     def __init__(self, data: Dict, flatten_time_series: bool, aligned: bool = True, task: str = None, max_pad=False, max_pad_num=50, data_type='mosi', z_norm=False) -> None:
+        """Instantiate AffectDataset
+
+        Args:
+            data (Dict): Data dictionary
+            flatten_time_series (bool): Whether to flatten time series or not
+            aligned (bool, optional): Whether to align data or not across modalities. Defaults to True.
+            task (str, optional): What task to load. Defaults to None.
+            max_pad (bool, optional): Whether to pad data to max_pad_num or not. Defaults to False.
+            max_pad_num (int, optional): Maximum padding number. Defaults to 50.
+            data_type (str, optional): What data to load. Defaults to 'mosi'.
+            z_norm (bool, optional): Whether to normalize data along the z-axis. Defaults to False.
+        """
         self.dataset = data
         self.flatten = flatten_time_series
         self.aligned = aligned
@@ -164,7 +180,7 @@ class Affectdataset(Dataset):
         self.dataset['audio'][self.dataset['audio'] == -np.inf] = 0.0
 
     def __getitem__(self, ind):
-
+        """Get item from dataset."""
         # vision = torch.tensor(vision)
         # audio = torch.tensor(audio)
         # text = torch.tensor(text)
@@ -198,7 +214,7 @@ class Affectdataset(Dataset):
             audio = torch.nan_to_num((audio - audio.mean(0, keepdims=True)) / (torch.std(audio, axis=0, keepdims=True)))
             text = torch.nan_to_num((text - text.mean(0, keepdims=True)) / (torch.std(text, axis=0, keepdims=True)))
 
-        def get_class(flag, data_type=self.data_type):
+        def _get_class(flag, data_type=self.data_type):
             if data_type in ['mosi', 'mosei', 'sarcasm']:
                 if flag > 0:
                     return [[1]]
@@ -217,7 +233,7 @@ class Affectdataset(Dataset):
         else:
             tmp_label = self.dataset['labels'][ind]
 
-        label = torch.tensor(get_class(tmp_label)).long() if self.task == "classification" else torch.tensor(
+        label = torch.tensor(_get_class(tmp_label)).long() if self.task == "classification" else torch.tensor(
             tmp_label).float()
 
         if self.flatten:
@@ -234,6 +250,7 @@ class Affectdataset(Dataset):
             return tmp
 
     def __len__(self):
+        """Get length of dataset."""
         return self.dataset['vision'].shape[0]
 
 
@@ -241,6 +258,25 @@ def get_dataloader(
         filepath: str, batch_size: int = 32, max_seq_len=50, max_pad=False, train_shuffle: bool = True,
         num_workers: int = 2, flatten_time_series: bool = False, task=None, robust_test=False, data_type='mosi', 
         raw_path='/home/van/backup/pack/mosi/mosi.hdf5', z_norm=False) -> DataLoader:
+    """Get dataloaders for affect data.
+
+    Args:
+        filepath (str): Path to datafile
+        batch_size (int, optional): Batch size. Defaults to 32.
+        max_seq_len (int, optional): Maximum sequence length. Defaults to 50.
+        max_pad (bool, optional): Whether to pad data to max length or not. Defaults to False.
+        train_shuffle (bool, optional): Whether to shuffle training data or not. Defaults to True.
+        num_workers (int, optional): Number of workers. Defaults to 2.
+        flatten_time_series (bool, optional): Whether to flatten time series data or not. Defaults to False.
+        task (str, optional): Which task to load in. Defaults to None.
+        robust_test (bool, optional): Whether to apply robustness to data or not. Defaults to False.
+        data_type (str, optional): What data to load in. Defaults to 'mosi'.
+        raw_path (str, optional): Full path to data. Defaults to '/home/van/backup/pack/mosi/mosi.hdf5'.
+        z_norm (bool, optional): Whether to normalize data along the z dimension or not. Defaults to False.
+
+    Returns:
+        DataLoader: tuple of train dataloader, validation dataloader, test dataloader
+    """
     with open(filepath, "rb") as f:
         alldata = pickle.load(f)
 
@@ -276,7 +312,7 @@ def get_dataloader(
             test = dict()
             test['vision'] = alldata['test']["vision"]
             test['audio'] = alldata['test']["audio"]
-            test['text'] = glove_embeddings(add_text_noise(rawtext, noise_level=i / 10), vids)
+            test['text'] = _glove_embeddings(add_text_noise(rawtext, noise_level=i / 10), vids)
             test['labels'] = alldata['test']["labels"]
             test = drop_entry(test)
 
@@ -355,7 +391,7 @@ def get_dataloader(
                       collate_fn=process)
         return train, valid, test
 
-def process_1(inputs: List):
+def _process_1(inputs: List):
     processed_input = []
     processed_input_lengths = []
     inds = []
@@ -384,7 +420,7 @@ def process_1(inputs: List):
            torch.tensor(inds).view(len(inputs), 1), torch.tensor(labels).view(len(inputs), 1)
 
 
-def process_2(inputs: List):
+def _process_2(inputs: List):
     processed_input = []
     processed_input_lengths = []
     labels = []

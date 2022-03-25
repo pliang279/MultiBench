@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+"""Implements the collation function for CLOTHO data."""
 from typing import MutableSequence, Union, Tuple, AnyStr
 from numpy import ndarray
 

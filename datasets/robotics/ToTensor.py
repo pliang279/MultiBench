@@ -1,3 +1,4 @@
+"""Implements another utility for this dataset."""
 import torch
 import numpy as np
 
@@ -6,9 +7,11 @@ class ToTensor(object):
     """Convert ndarrays in sample to Tensors."""
 
     def __init__(self, device=None):
+        """Initialize ToTensor object."""
         self.device = device
 
     def __call__(self, sample):
+        """Convert sample argument from ndarray with H,W,C dimensions to a tensor with C,H,W dimensions."""
         # swap color axis because
         # numpy image: H x W x C
         # torch image: C X H X W

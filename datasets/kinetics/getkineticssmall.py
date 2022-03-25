@@ -1,3 +1,5 @@
+"""Code to eventually load kinetics data."""
+
 import os
 import torch
 
@@ -5,6 +7,20 @@ from torchvision.datasets import Kinetics400
 
 
 def getkinetics(datafolder, tempfolder, categorylist, frames_per_instance, reallabel, frame_skip=1, centercrop=None):
+    """ UNUSED: TODO
+
+    Args:
+        datafolder (_type_): _description_
+        tempfolder (_type_): _description_
+        categorylist (_type_): _description_
+        frames_per_instance (_type_): _description_
+        reallabel (_type_): _description_
+        frame_skip (int, optional): _description_. Defaults to 1.
+        centercrop (_type_, optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
     # TODO
     # for category in categorylist:
     #     os.system("mv "+datafolder+"/"+category+" "+tempfolder)
@@ -45,6 +61,12 @@ def getkinetics(datafolder, tempfolder, categorylist, frames_per_instance, reall
 
 
 def getdata(datalist, splitsize=50):
+    """UNUSED: TODO
+
+    Args:
+        datalist (_type_): _description_
+        splitsize (int, optional): _description_. Defaults to 50.
+    """
     catacount = 0
     trainhome = '/home/pliang/yiwei/kinetics/ActivityNet/Crawler/Kinetics/test_data/'
     zemp_dir = trainhome+'zemp/'

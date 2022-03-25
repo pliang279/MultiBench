@@ -1,3 +1,4 @@
+"""Implements training structures for gradient blending."""
 import sklearn.metrics
 import torch
 from torch import nn
@@ -43,7 +44,21 @@ def getloss(model, head, data, monum, batch_size):
 
 
 def train_unimodal(model, head, optim, trains, valids, monum, epoch, batch_size):
+    """Train unimodal gradient blending module.
 
+    Args:
+        model (nn.Module): Unimodal encoder
+        head (nn.Module): Classifier instance
+        optim (torch.optim.Optimizer): Optimizer instance
+        trains (torch.utils.data.DataLoader):  Training Dataloader Instance
+        valids (torch.utils.data.DataLoader):  Validation DataLoader Instance
+        monum (int): Modality index
+        epoch (int): Number of epochs to train on
+        batch_size (int): Batch size of data loaders
+
+    Returns:
+        float: Metric
+    """
     ltN = getloss(model, head, trains, monum, batch_size)
     lvN = getloss(model, head, valids, monum, batch_size)
     for i in range(epoch):
@@ -80,11 +95,30 @@ def train_unimodal(model, head, optim, trains, valids, monum, epoch, batch_size)
 
 
 def multimodalcondense(models, fuse, train_x):
+    """Compute fusion encoded output.
+
+    Args:
+        models (List): List of nn.Modules for each encoder
+        fuse (nn.Module): Fusion instance
+        train_x (List): List of Input Tensors
+
+    Returns:
+        torch.Tensor: Fused output
+    """
     outs = multimodalcompute(models, train_x)
     return fuse(outs)
 
 
 def multimodalcompute(models, train_x):
+    """Compute encoded representation for each modality in train_x using encoders in models.
+
+    Args:
+        models (list): List of encoder instances
+        train_x (List): List of Input Tensors
+
+    Returns:
+        List: List of encoded tensors
+    """
     outs = []
     for i in range(len(models)):
         outs.append(models[i](train_x[i]))
@@ -92,6 +126,18 @@ def multimodalcompute(models, train_x):
 
 
 def getmloss(models, head, fuse, data, batch_size):
+    """Calculate multimodal loss.
+
+    Args:
+        models (list): List of encoder models
+        head (nn.Module): Classifier module
+        fuse (nn.Module): Fusion module
+        data (torch.utils.data.Dataloader): Data loader to calculate loss on.
+        batch_size (int): Batch size of dataloader
+
+    Returns:
+        float: Average loss
+    """
     losses = 0.0
     total = 0
     with torch.no_grad():
@@ -106,6 +152,21 @@ def getmloss(models, head, fuse, data, batch_size):
 
 
 def train_multimodal(models, head, fuse, optim, trains, valids, epoch, batch_size):
+    """Train multimodal gradient-blending model.
+
+    Args:
+        models (list): List of nn.modules for the encoders
+        head (nn.Module): Classifier, post fusion layer
+        fuse (nn.Module): Fusion module
+        optim (torch.optim.Optimizer): Optimizer instance.
+        trains (torch.utils.data.Dataloader): Training data dataloader
+        valids (torch.utils.data.Dataloader): Validation data dataloader
+        epoch (int): Number of epochs to train on
+        batch_size (int): Batch size
+
+    Returns:
+        float: metric
+    """
     ltN = getmloss(models, head, fuse, trains, batch_size)
     lvN = getmloss(models, head, fuse, valids, batch_size)
     for i in range(epoch):
@@ -141,6 +202,24 @@ def train_multimodal(models, head, fuse, optim, trains, valids, epoch, batch_siz
 
 def gb_estimate(unimodal_models, multimodal_classification_head, fuse, unimodal_classification_heads, train_dataloader, gb_epoch,
                 batch_size, v_dataloader, lr, weight_decay=0.0, optimtype=torch.optim.SGD):
+    """Compute estimate of gradient-blending score.
+
+    Args:
+        unimodal_models (list): List of encoder modules
+        multimodal_classification_head (nn.Module): Classifier given fusion instance
+        fuse (nn.Module): Fusion module
+        unimodal_classification_heads (list): List of unimodal classifiers
+        train_dataloader (torch.utils.data.Dataloader): Training data loader
+        gb_epoch (int): Number of epochs for gradient-blending
+        batch_size (int): Batch size
+        v_dataloader (torch.utils.data.Dataloader): Validation dataloader
+        lr (float): Learning Rate
+        weight_decay (float, optional): Weight decay parameter. Defaults to 0.0.
+        optimtype (torch.optim.Optimizer, optional): Optimizer instance. Defaults to torch.optim.SGD.
+
+    Returns:
+        float: Normalized weights between unimodal and multimodal models
+    """
     weights = []
     for i in range(len(unimodal_models)):
         print("At gb_estimate unimodal "+str(i))
@@ -172,18 +251,42 @@ softmax = nn.Softmax()
 
 
 class completeModule(nn.Module):
+    """Implements and combines sub-modules into a full classifier."""
     def __init__(self, encoders, fuse, head):
+        """Instantiate completeModule instance.
+
+        Args:
+            encoders (list): List of nn.Module encoders
+            fuse (nn.Module): Fusion module
+            head (nn.Module): Classifier module
+        """
         super(completeModule, self).__init__()
         self.encoders = nn.ModuleList(encoders)
         self.fuse = fuse
         self.head = head
 
     def forward(self, x):
+        """Apply classifier to output.
+
+        Args:
+            x (list[torch.Tensor]): List of input tensors
+
+        Returns:
+            torch.Tensor: Classifier output
+        """
         outs = multimodalcondense(self.encoders, self.fuse, x)
         return self.head(outs)
 
 
 def calcAUPRC(pts):
+    """Calculate AUPRC score given true labels and predicted probabilities.
+
+    Args:
+        pts (list): List of (true, predicted prob) for each sample in batch.
+
+    Returns:
+        float: AUPRC score
+    """
     true_labels = [int(x[1]) for x in pts]
     predicted_probs = [x[0] for x in pts]
     return sklearn.metrics.average_precision_score(true_labels, predicted_probs)
@@ -390,6 +493,17 @@ def single_test(model, test_dataloader, auprc=False, classification=True):
 
 
 def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, classification=True, no_robust=False):
+    """Test module, reporting results to stdout.
+
+    Args:
+        model (nn.Module): Model to test
+        test_dataloaders_all (list[torch.utils.data.Dataloader]): List of data loaders to test on.
+        dataset (string): Dataset name
+        method_name (str, optional): Method name. Defaults to 'My method'.
+        auprc (bool, optional): Whether to use AUPRC scores or not. Defaults to False.
+        classification (bool, optional): Whether the task is classificaion or not. Defaults to True.
+        no_robust (bool, optional): Whether to not apply robustness variations to input. Defaults to False.
+    """
     if no_robust:
         def _testprocess():
             single_test(model, test_dataloaders_all, auprc, classification)
