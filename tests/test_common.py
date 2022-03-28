@@ -150,6 +150,15 @@ def test_Seq():
     lin = TwoLayersLSTM(3,3,True)
     assert lin(test).shape == (8,3,6)
 
+def test_Resnet3d():
+    """Test stuff."""
+    from unimodals.res3d import generate_model
+    test = torch.ones((3,3,128,128,128))
+    lin = generate_model(10)
+    assert lin(test).shape == (3,400)
+
+
+
 """
 def test_integration():
     import torch
