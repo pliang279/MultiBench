@@ -90,7 +90,7 @@ def test_Constant():
     assert cons(test)[0] == 0
     
 """ def test_integration():
-    """Integration test on AFFECT data."""
+    Integration test on AFFECT data.
     import torch
     import sys
     import os
