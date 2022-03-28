@@ -144,9 +144,11 @@ def test_LeNet():
 
 def test_Seq():
     """Test stuff."""
-    test = torch.ones((8,4))
+    test = torch.ones((8,3,3))
     lin = GRUWithLinear(3,2,1, True)
-    assert lin(test).shape == ()
+    assert lin(test).shape == (8,3,1)
+    lin = TwoLayersLSTM(3,3,True)
+    assert lin(test).shape == (8,3,6)
 
 """
 def test_integration():
