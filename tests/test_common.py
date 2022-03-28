@@ -2,7 +2,7 @@ from unimodals.common_models import *
 import torch
 
 
-DATA_PATH = '/content/MultiBench/'
+DATA_PATH = '/home/arav/MultiBench/MultiBench/'
 
 def test_id():
     """Test Identity module."""
@@ -89,7 +89,7 @@ def test_Constant():
     assert cons(test).shape == (1,)
     assert cons(test)[0] == 0
     
-def test_integration():
+""" def test_integration():
     """Integration test on AFFECT data."""
     import torch
     import sys
@@ -167,8 +167,8 @@ def test_integration2():
 
 
     all_in_one_train(trainprocess, allmodules)
-
-def test_integration3():
+ """
+""" def test_integration3():
   from training_structures.gradient_blend import train, test # noqa
   from unimodals.common_models import GRU, MLP, Transformer # noqa
   from datasets.affect.get_data import get_dataloader # noqa
@@ -209,4 +209,4 @@ def test_integration3():
   print("Testing:")
   #model = torch.load('mosi_besf_gb.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
-  
+   """
