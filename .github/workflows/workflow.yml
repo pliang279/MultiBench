@@ -19,8 +19,7 @@ jobs:
       run: |
         pip install pytest
         pip install pytest-cov
-        pip install torch
-        pip install memory-profiler
+        pip install -r requirements.txt
         python -m pytest -s --cov-append --cov-report=xml --cov=utils --cov=unimodals/ --cov=training_structures/ --cov=robustness --cov=fusions/ --cov=objective_functions tests/test_common.py
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
