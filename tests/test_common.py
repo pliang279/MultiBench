@@ -109,6 +109,33 @@ def test_GlobalPooling():
     model = GlobalPooling2D()
     assert model(test).shape == (2,40)
 
+def test_MaxOut_MLP():
+    """Test Module."""
+    test = torch.ones((2,40))
+    model = MaxOut_MLP(10, number_input_feats=40)
+    assert model(test).shape == (2,10)
+
+def test_MaxOut():
+    """Test Module."""
+    test = torch.ones((2,10))
+    model = Maxout(10,10,1)
+    assert model(test).shape == (2,10)
+
+def test_VGG():
+    """Test Module."""
+    test = torch.ones((1,3,128,128))
+    model = VGG16(10)
+    assert model(test).shape == (1,10)
+    model = VGG16Slim(10)
+    assert model(test).shape == (1,10)
+    model = VGG11Slim(10)
+    assert model(test).shape == (1,10)
+    model = VGG11Pruned(10)
+    assert model(test).shape == (1,10)
+    model = VGG16Pruned(10)
+    assert model(test).shape == (1,10)
+    
+
 
 """
 def test_integration():
