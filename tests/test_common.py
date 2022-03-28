@@ -95,6 +95,14 @@ def test_DAN():
     model = DAN(4,2)
     assert model(test).shape == (2,)
 
+
+def test_Transformer():
+    """Test DAN."""
+    test = torch.ones((2,40))
+    model = Transformer(40,1)
+    assert model(test).shape == (2,)
+
+
 """
 def test_integration():
     import torch
