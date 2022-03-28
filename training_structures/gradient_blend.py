@@ -31,8 +31,8 @@ def getloss(model, head, data, monum, batch_size):
     with torch.no_grad():
         for j in data:
             total += len(j[0])
-            train_x = j[monum].float().cuda()
-            train_y = j[-1].cuda()
+            train_x = j[monum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+            train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             out = model(train_x)
             # if (monum==1):
             
@@ -66,8 +66,8 @@ def train_unimodal(model, head, optim, trains, valids, monum, epoch, batch_size)
         total = 0
         for j in trains:
             total += len(j[0])
-            train_x = j[monum].float().cuda()
-            train_y = j[-1].cuda()
+            train_x = j[monum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+            train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             optim.zero_grad()
             out = model(train_x)
             out = head(out)
@@ -143,8 +143,8 @@ def getmloss(models, head, fuse, data, batch_size):
     with torch.no_grad():
         for j in data:
             total += len(j[0])
-            train_x = [x.float().cuda() for x in j[:-1]]
-            train_y = j[-1].cuda()
+            train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+            train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             out = head(multimodalcondense(models, fuse, train_x))
             loss = criterion(out, train_y.squeeze())
             losses += loss*len(j[0])
@@ -174,8 +174,8 @@ def train_multimodal(models, head, fuse, optim, trains, valids, epoch, batch_siz
         total = 0
         for j in trains:
             total += len(j[0])
-            train_x = [x.float().cuda() for x in j[:-1]]
-            train_y = j[-1].cuda()
+            train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+            train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             optim.zero_grad()
             out = head(multimodalcondense(models, fuse, train_x))
             loss = criterion(out, train_y.squeeze())
@@ -223,17 +223,17 @@ def gb_estimate(unimodal_models, multimodal_classification_head, fuse, unimodal_
     weights = []
     for i in range(len(unimodal_models)):
         print("At gb_estimate unimodal "+str(i))
-        model = copy.deepcopy(unimodal_models[i]).cuda()
-        head = copy.deepcopy(unimodal_classification_heads[i]).cuda()
+        model = copy.deepcopy(unimodal_models[i]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+        head = copy.deepcopy(unimodal_classification_heads[i]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         optim = optimtype(list(model.parameters()) +
                           list(head.parameters()), lr=lr, weight_decay=weight_decay)
         w = train_unimodal(model, head, optim, train_dataloader,
                            v_dataloader, i, gb_epoch, batch_size)
         weights.append(w)
     print("At gb_estimate multimodal ")
-    allcopies = [copy.deepcopy(x).cuda() for x in unimodal_models]
-    mmcopy = copy.deepcopy(multimodal_classification_head).cuda()
-    fusecopy = copy.deepcopy(fuse).cuda()
+    allcopies = [copy.deepcopy(x).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in unimodal_models]
+    mmcopy = copy.deepcopy(multimodal_classification_head).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    fusecopy = copy.deepcopy(fuse).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
     params = []
     for model in allcopies:
         params.extend(list(model.parameters()))
@@ -342,8 +342,8 @@ def train(unimodal_models,  multimodal_classification_head,
             train_data, shuffle=True, num_workers=8, batch_size=train_dataloader.batch_size)
         tv_dataloader = DataLoader(
             v_data, shuffle=False, num_workers=8, batch_size=train_dataloader.batch_size)
-        finetunehead = copy.deepcopy(multimodal_classification_head).cuda()
-        fusehead = copy.deepcopy(fuse).cuda()
+        finetunehead = copy.deepcopy(multimodal_classification_head).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+        fusehead = copy.deepcopy(fuse).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         params = list(finetunehead.parameters())
         if fuse.parameters() is not None:
             params.extend(list(fuse.parameters()))
@@ -359,8 +359,8 @@ def train(unimodal_models,  multimodal_classification_head,
             for jj in range(gb_epoch):
                 totalloss = 0.0
                 for j in train_dataloader:
-                    train_x = [x.float().cuda() for x in j[:-1]]
-                    train_y = j[-1].cuda()
+                    train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+                    train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                     optim.zero_grad()
                     outs = multimodalcompute(unimodal_models, train_x)
                     fuse.train()
@@ -381,8 +381,8 @@ def train(unimodal_models,  multimodal_classification_head,
             finetunetrains = []
             with torch.no_grad():
                 for j in train_dataloader:
-                    train_x = [x.float().cuda() for x in j[:-1]]
-                    train_y = j[-1].cuda()
+                    train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+                    train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                     outs = multimodalcompute(unimodal_models, train_x)
                     for iii in range(len(train_y)):
                         aa = [x[iii].cpu() for x in outs]
@@ -397,8 +397,8 @@ def train(unimodal_models,  multimodal_classification_head,
                 totalloss = 0.0
                 for j in ftt_dataloader:
                     optimi.zero_grad()
-                    train_x = [x.float().cuda() for x in j[:-1]]
-                    train_y = j[-1].cuda()
+                    train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+                    train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                     finetunehead.train()
                     fusehead.train()
                     blendloss = criterion(finetunehead(
@@ -413,8 +413,8 @@ def train(unimodal_models,  multimodal_classification_head,
                     corrects = 0
                     auprclist = []
                     for j in valid_dataloader:
-                        valid_x = [x.float().cuda() for x in j[:-1]]
-                        valid_y = j[-1].cuda()
+                        valid_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+                        valid_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                         outs = multimodalcompute(unimodal_models, valid_x)
                         fusehead.eval()
                         catout = fusehead(outs)
@@ -467,8 +467,8 @@ def single_test(model, test_dataloader, auprc=False, classification=True):
         corrects = 0
         auprclist = []
         for j in test_dataloader:
-            valid_x = [x.float().cuda() for x in j[:-1]]
-            valid_y = j[-1].cuda()
+            valid_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+            valid_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             predicts = model(valid_x)
             blendloss = criterion(predicts, valid_y.squeeze())
             totalloss += blendloss*len(j[0])

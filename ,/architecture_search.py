@@ -160,7 +160,7 @@ def test(model, test_dataloader, auprc=False):
     pts = []
     with torch.no_grad():
         for j in test_dataloader:
-            x = [y.float().cuda() for y in j[:-1]]
+            x = [y.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for y in j[:-1]]
             out = model(x)
             outs = torch.nn.Softmax()(out)
             for ii in range(len(outs)):

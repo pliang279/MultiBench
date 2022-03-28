@@ -135,8 +135,8 @@ def train_track_acc(model, criteria, optimizer, scheduler, dataloaders, dataset_
             for data in dataloaders[phase]:
 
                 # get the inputs
-                inputs = [d.float().cuda() for d in data[:-1]]
-                label = data[-1].cuda()
+                inputs = [d.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for d in data[:-1]]
+                label = data[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
                 # zero the parameter gradients
                 optimizer.zero_grad()

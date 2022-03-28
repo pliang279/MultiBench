@@ -14,11 +14,11 @@ filename = 'best3.pt'
 traindata, validdata, testdata = get_dataloader(
     '/data/yiwei/avmnist/_MFAS/avmnist')
 channels = 6
-encoders = [LeNet(1, channels, 3).cuda(), LeNet(1, channels, 5).cuda()]
-mult_head = MLP(channels*40, 100, 10).cuda()
-uni_head = [MLP(channels*8, 100, 10).cuda(), MLP(channels*32, 100, 10).cuda()]
+encoders = [LeNet(1, channels, 3).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), LeNet(1, channels, 5).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+mult_head = MLP(channels*40, 100, 10).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+uni_head = [MLP(channels*8, 100, 10).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(channels*32, 100, 10).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
-fusion = Concat().cuda()
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def trpr():
@@ -31,7 +31,7 @@ all_in_one_train(trpr, [encoders[0], encoders[1],
 
 
 print("Testing:")
-model = torch.load(filename).cuda()
+model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def tepr():

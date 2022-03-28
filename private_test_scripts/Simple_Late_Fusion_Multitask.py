@@ -38,7 +38,7 @@ def train(
         early_stop=False, task="classification", optimtype=torch.optim.SGD, lr=0.0001, weight_decay=0.0,
         criterion=nn.CrossEntropyLoss(), regularization=False, auprc=False, save='best.pt', validtime=False):
 
-    model = MMDL(encoders, fusion, head1, head2, is_packed).cuda()
+    model = MMDL(encoders, fusion, head1, head2, is_packed).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
     op = optimtype([p for p in model.parameters()
                    if p.requires_grad], lr=lr, weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
@@ -61,20 +61,20 @@ def train(
             op.zero_grad()
             if is_packed:
                 with torch.backends.cudnn.flags(enabled=False):
-                    out = model([[i.cuda()
+                    out = model([[i.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                                 for i in j[0]], j[1]], training=True)
                     
                     
-                    loss1 = criterion(out, j[-1].cuda())
+                    loss1 = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                     loss2 = regularize(
-                        out, [[i.cuda() for i in j[0]], j[1]]) if regularization else 0
+                        out, [[i.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in j[0]], j[1]]) if regularization else 0
                     loss = loss1+loss2
             else:
-                out1, out2 = model([i.float().cuda()
+                out1, out2 = model([i.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                                    for i in j[:-2]], training=True)
                 
-                loss1 = criterion(out1, j[-2].long().cuda())
-                loss2 = criterion(out2, j[-1].long().cuda())
+                loss1 = criterion(out1, j[-2].long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
+                loss2 = criterion(out2, j[-1].long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 loss = loss1+loss2
                 # loss=loss2
             
@@ -101,13 +101,13 @@ def train(
             pts = []
             for j in valid_dataloader:
                 if is_packed:
-                    out = model([[i.cuda()
+                    out = model([[i.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                                 for i in j[0]], j[1]], training=False)
                 else:
-                    out1, out2 = model([i.float().cuda()
+                    out1, out2 = model([i.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                                        for i in j[:-2]], training=False)
-                loss1 = criterion(out1, j[-2].long().cuda())
-                loss2 = criterion(out2, j[-1].long().cuda())
+                loss1 = criterion(out1, j[-2].long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
+                loss2 = criterion(out2, j[-1].long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 totalloss += loss*len(j[-1])
                 
                 if task == "classification":
@@ -184,12 +184,12 @@ def test(
         pts = []
         for j in test_dataloader:
             if is_packed:
-                out = model([[i.cuda() for i in j[0]], j[1]], training=False)
+                out = model([[i.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in j[0]], j[1]], training=False)
             else:
-                out1, out2 = model([i.float().cuda()
+                out1, out2 = model([i.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                                    for i in j[:-2]], training=False)
-            loss1 = criterion(out1, j[-2].cuda())
-            loss2 = criterion(out1, j[-1].cuda())
+            loss1 = criterion(out1, j[-2].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
+            loss2 = criterion(out1, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             
             #totalloss += loss*len(j[-1])
             if task == "classification":

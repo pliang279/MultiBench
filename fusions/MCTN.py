@@ -189,7 +189,7 @@ class Seq2Seq(nn.Module):
 
         output_size = self.decoder.output_size
         outputs = Variable(torch.zeros(
-            max_len, batch_size, output_size)).cuda()
+            max_len, batch_size, output_size)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
         encoder_output, hidden = self.encoder(src)
         hidden = hidden[:self.decoder.n_layers]
@@ -211,7 +211,7 @@ class Seq2Seq(nn.Module):
 
             is_teacher = random.random() < teacher_forcing_ratio
             if is_teacher:
-                output = Variable(trg.data[t]).cuda()
+                output = Variable(trg.data[t]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
         return outputs, encoder_output
 
@@ -330,9 +330,9 @@ class L2_MCTN(nn.Module):
     else:
         src = F.pad(src, (0, trg.size(-1) - src.size(-1)))
         # trg = F.pad(trg, (1, 0))
-    src = src.transpose(1, 0).cuda()
-    trg = trg.transpose(1, 0).cuda()
-    labels = inputs[-1].cuda()
+    src = src.transpose(1, 0).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    trg = trg.transpose(1, 0).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    labels = inputs[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
     return src, trg, labels, feature_dim
 

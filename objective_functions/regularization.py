@@ -266,7 +266,7 @@ class RegularizationLoss(torch.nn.Module):
             inf_inputs_len = []
             for ind, i in enumerate(inputs[0]):
                 inf_inputs.append(Perturbation.perturb_tensor(
-                    i, self.reg_params.n_samples).float().cuda())
+                    i, self.reg_params.n_samples).float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 inf_inputs_len.append(Perturbation.perturb_tensor(
                     inputs[1][ind], self.reg_params.n_samples, False))
             self.model.train()
@@ -275,7 +275,7 @@ class RegularizationLoss(torch.nn.Module):
         else:
             for ind, i in enumerate(inputs):
                 inf_inputs.append(Perturbation.perturb_tensor(
-                    i, self.reg_params.n_samples).float().cuda())
+                    i, self.reg_params.n_samples).float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             self.model.train()
             inf_output = self.model(inf_inputs)
         inf_loss = self.criterion(inf_output, expanded_logits)

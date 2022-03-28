@@ -16,10 +16,10 @@ traindata, validdata, testdata = get_dataloader(
     -1, imputed_path='datasets/mimic/im.pk')
 
 # build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10).cuda(), GRU(12, 30, flatten=True).cuda()]
-head = MLP(730, 40, 6).cuda()
-fusion = Concat().cuda()
-unimodal_heads = [MLP(10, 20, 6).cuda(), MLP(720, 40, 6).cuda()]
+encoders = [MLP(5, 10, 10).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), GRU(12, 30, flatten=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(730, 40, 6).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+unimodal_heads = [MLP(10, 20, 6).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(720, 40, 6).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 allmodules = [encoders[0], encoders[1], head,
               fusion, unimodal_heads[0], unimodal_heads[1]]
 
@@ -35,7 +35,7 @@ all_in_one_train(trainprocess, allmodules)
 
 # test
 print("Testing: ")
-model = torch.load(filename).cuda()
+model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def testprocess():

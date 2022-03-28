@@ -68,14 +68,15 @@ class MMDL(nn.Module):
 
 def deal_with_objective(objective, pred, truth, args):
     """Alter inputs depending on objective function, to deal with different objective arguments."""
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     if type(objective) == nn.CrossEntropyLoss:
         if len(truth.size()) == len(pred.size()):
             truth1 = truth.squeeze(len(pred.size())-1)
         else:
             truth1 = truth
-        return objective(pred, truth1.long().cuda())
+        return objective(pred, truth1.long().to(device))
     elif type(objective) == nn.MSELoss or type(objective) == nn.modules.loss.BCEWithLogitsLoss or type(objective) == nn.L1Loss:
-        return objective(pred, truth.float().cuda())
+        return objective(pred, truth.float().to(device))
     else:
         return objective(pred, truth, args)
 
@@ -110,7 +111,8 @@ def train(
     :param clip_val: grad clipping limit
     :param track_complexity: whether to track training complexity or not
     """
-    model = MMDL(encoders, fusion, head, has_padding=is_packed).cuda()
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model = MMDL(encoders, fusion, head, has_padding=is_packed).to(device)
 
     def _trainprocess():
         additional_params = []
@@ -139,12 +141,12 @@ def train(
                 if is_packed:
                     with torch.backends.cudnn.flags(enabled=False):
                         model.train()
-                        out = model([[_processinput(i).cuda()
+                        out = model([[_processinput(i).to(device)
                                     for i in j[0]], j[1]])
 
                 else:
                     model.train()
-                    out = model([_processinput(i).cuda()
+                    out = model([_processinput(i).to(device)
                                 for i in j[:-1]])
                 if not (objective_args_dict is None):
                     objective_args_dict['reps'] = model.reps
@@ -173,11 +175,11 @@ def train(
                 for j in valid_dataloader:
                     if is_packed:
                         model.train()
-                        out = model([[_processinput(i).cuda()
+                        out = model([[_processinput(i).to(device)
                                     for i in j[0]], j[1]])
                     else:
                         model.train()
-                        out = model([_processinput(i).cuda()
+                        out = model([_processinput(i).to(device)
                                     for i in j[:-1]])
 
                     if not (objective_args_dict is None):
@@ -277,25 +279,25 @@ def single_test(
         for j in test_dataloader:
             model.eval()
             if is_packed:
-                out = model([[_processinput(i).cuda()
+                out = model([[_processinput(i).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                             for i in j[0]], j[1]])
             else:
-                out = model([_processinput(i).float().cuda()
+                out = model([_processinput(i).float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                             for i in j[:-1]])
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss or type(criterion) == torch.nn.MSELoss:
-                loss = criterion(out, j[-1].float().cuda())
+                loss = criterion(out, j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
 
             # elif type(criterion) == torch.nn.CrossEntropyLoss:
-            #     loss=criterion(out, j[-1].long().cuda())
+            #     loss=criterion(out, j[-1].long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
 
             elif type(criterion) == nn.CrossEntropyLoss:
                 if len(j[-1].size()) == len(out.size()):
                     truth1 = j[-1].squeeze(len(out.size())-1)
                 else:
                     truth1 = j[-1]
-                loss = criterion(out, truth1.long().cuda())
+                loss = criterion(out, truth1.long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             else:
-                loss = criterion(out, j[-1].cuda())
+                loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             totalloss += loss*len(j[-1])
             if task == "classification":
                 pred.append(torch.argmax(out, 1))

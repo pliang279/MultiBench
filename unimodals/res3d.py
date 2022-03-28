@@ -267,7 +267,7 @@ class ResNet(nn.Module):
         zero_pads = torch.zeros(out.size(0), planes - out.size(1), out.size(2),
                                 out.size(3), out.size(4))
         if isinstance(out.data, torch.cuda.FloatTensor):
-            zero_pads = zero_pads.cuda()
+            zero_pads = zero_pads.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
         out = torch.cat([out.data, zero_pads], dim=1)
 

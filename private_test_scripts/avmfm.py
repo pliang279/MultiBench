@@ -21,13 +21,13 @@ n_latent = 200
 fuse = Concat()
 
 encoders = [LeNetEncoder(1, channels, 3, n_latent, twooutput=False).cuda(
-), LeNetEncoder(1, channels, 5, n_latent, twooutput=False).cuda()]
-decoders = [DeLeNet(1, channels, 3, n_latent).cuda(),
-            DeLeNet(1, channels, 5, n_latent).cuda()]
+), LeNetEncoder(1, channels, 5, n_latent, twooutput=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+decoders = [DeLeNet(1, channels, 3, n_latent).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
+            DeLeNet(1, channels, 5, n_latent).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
-intermediates = [MLP(n_latent, n_latent//2, n_latent//2).cuda(), MLP(n_latent,
-                                                                     n_latent//2, n_latent//2).cuda(), MLP(2*n_latent, n_latent, n_latent//2).cuda()]
-head = MLP(n_latent//2, 40, classes).cuda()
+intermediates = [MLP(n_latent, n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(n_latent,
+                                                                     n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(2*n_latent, n_latent, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(n_latent//2, 40, classes).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 recon_loss = recon_weighted_sum([sigmloss1dcentercrop(
     28, 34), sigmloss1dcentercrop(112, 130)], [1.0, 1.0])
 

@@ -166,7 +166,7 @@ class Help:
         self.num_outputs = 10
 
 
-model = SimpleAVNet_Deeper(Help(), 1, 1).cuda()
+model = SimpleAVNet_Deeper(Help(), 1, 1).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 optim = torch.optim.SGD(model.parameters(), lr=0.1, weight_decay=0.0001)
 trains, valids, tests = get_dataloader('/data/yiwei/avmnist/_MFAS/avmnist')
 criterion = nn.CrossEntropyLoss()
@@ -176,8 +176,8 @@ for ep in range(100):
     for j in trains:
         batches += 1
         optim.zero_grad()
-        inputs = [x.float().cuda() for x in j[:-1]]
-        labels = j[-1].cuda()
+        inputs = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+        labels = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         preds = model(inputs[1], inputs[0])
         loss = criterion(preds, labels)
         loss.backward()
@@ -191,8 +191,8 @@ for ep in range(100):
     with torch.no_grad():
         for j in valids:
             batches += 1
-            inputs = [x.float().cuda() for x in j[:-1]]
-            labels = j[-1].cuda()
+            inputs = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+            labels = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             preds = model(inputs[1], inputs[0])
             loss = criterion(preds, labels)
             totalloss += loss

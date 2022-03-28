@@ -43,12 +43,12 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
             totals = 0
             for j in train_dataloader:
                 op.zero_grad()
-                out = model(j[modalnum].float().cuda())
+                out = model(j[modalnum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss = criterion(out, j[-1].float().cuda())
+                    loss = criterion(out, j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 else:
-                    loss = criterion(out, j[-1].cuda())
+                    loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 totalloss += loss * len(j[-1])
                 totals += len(j[-1])
                 loss.backward()
@@ -61,11 +61,11 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
                 true = []
                 pts = []
                 for j in valid_dataloader:
-                    out = model(j[modalnum].float().cuda())
+                    out = model(j[modalnum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                     if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                        loss = criterion(out, j[-1].float().cuda())
+                        loss = criterion(out, j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                     else:
-                        loss = criterion(out, j[-1].cuda())
+                        loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                     totalloss += loss*len(j[-1])
                     if task == "classification":
                         pred.append(torch.argmax(out, 1))
@@ -149,9 +149,9 @@ def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='c
         totalloss = 0
         pts = []
         for j in test_dataloader:
-            out = model(j[modalnum].float().cuda())
+            out = model(j[modalnum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             if criterion is not None:
-                loss = criterion(out, j[-1].cuda())
+                loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 totalloss += loss*len(j[-1])
             if task == "classification":
                 pred.append(torch.argmax(out, 1))

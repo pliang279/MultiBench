@@ -13,10 +13,10 @@ traindata, validdata, testdata = get_dataloader(
     1, imputed_path='datasets/mimic/im.pk')
 modalnum = 1
 # build encoders, head and fusion layer
-#encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False).cuda()]
+#encoders = [MLP(5, 10, 10,dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), GRU(12, 30,dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
-encoder = GRUWithLinear(12, 30, 15, flatten=True).cuda()
-head = MLP(360, 40, 2, dropout=False).cuda()
+encoder = GRUWithLinear(12, 30, 15, flatten=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+head = MLP(360, 40, 2, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 # train
@@ -29,8 +29,8 @@ all_in_one_train(trainprocess, [encoder, head])
 
 # test
 print("Testing: ")
-encoder = torch.load('encoder.pt').cuda()
-head = torch.load('head.pt').cuda()
+encoder = torch.load('encoder.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+head = torch.load('head.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def testprocess():

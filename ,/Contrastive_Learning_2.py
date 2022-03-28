@@ -84,7 +84,7 @@ def train(
         criterion=nn.L1Loss(), auprc=False, save='best.pt'):
 
     #n_data = len(train_dataloader.dataset)
-    model = MMDL(encoders, fusion, refiner, head, is_packed).cuda()
+    model = MMDL(encoders, fusion, refiner, head, is_packed).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
     op = optimtype(model.parameters(), lr=lr, weight_decay=weight_decay)
     #scheduler = ExponentialLR(op, 0.9)
     ss_criterion = nn.CosineEmbeddingLoss()
@@ -106,22 +106,22 @@ def train(
                 with torch.backends.cudnn.flags(enabled=False):
                     model.train()
                     out1, out2 = model(
-                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()])
+                        [[j[0][0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), j[0][2].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))], j[1], j[2].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))])
                     # loss1=contrast_criterion(out1)
                     # loss2=contrast_criterion(out2)
                     # loss = loss1+loss2
                     loss = 0
             else:
                 model.train()
-                out = model([i.float().cuda() for i in j[:-1]])
+                out = model([i.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in j[:-1]])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss_cl = criterion(out[0], j[-1].float().cuda())
+                    loss_cl = criterion(out[0], j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 else:
-                    loss_cl = criterion(out[0], j[-1].cuda())
+                    loss_cl = criterion(out[0], j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 loss_self = 0
                 for i in range(len(out[3])):
-                    loss_self += ss_criterion(out[3][i], j[i].float().cuda(),
-                                              torch.ones(out[3][i].size(0)).cuda())
+                    loss_self += ss_criterion(out[3][i], j[i].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
+                                              torch.ones(out[3][i].size(0)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 
                 loss = loss_cl+0.1*loss_self
             totalloss += loss * len(j[-1])
@@ -144,16 +144,16 @@ def train(
                 if is_packed:
                     model.train()
                     out = model(
-                        [[j[0][0].cuda(), j[0][2].cuda()], j[1], j[2].cuda()], True)
+                        [[j[0][0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), j[0][2].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))], j[1], j[2].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))], True)
 
                 else:
                     model.train()
-                    out, _, _, _ = model([i.float().cuda()
+                    out, _, _, _ = model([i.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                                          for i in j[:-1]])
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss = criterion(out, j[-1].float().cuda())
+                    loss = criterion(out, j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 else:
-                    loss = criterion(out, j[-1].cuda())
+                    loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 totalloss += loss*len(j[-1])
                 if task == "classification":
                     pred.append(torch.argmax(out, 1))
@@ -224,15 +224,15 @@ def test(
         for j in test_dataloader:
             if is_packed:
                 model.eval()
-                out = model([[i.cuda() for i in j[0]], j[1]])
+                out = model([[i.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in j[0]], j[1]])
             else:
                 model.eval()
-                out, _, _, _ = model([i.float().cuda()
+                out, _, _, _ = model([i.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                                      for i in j[:-1]])
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                loss = criterion(out, j[-1].float().cuda())
+                loss = criterion(out, j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             else:
-                loss = criterion(out, j[-1].cuda())
+                loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             
             totalloss += loss*len(j[-1])
             if task == "classification":

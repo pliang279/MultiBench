@@ -22,10 +22,10 @@ fuse = ProductOfExperts((1, 40, n_latent))
 
 channels = 6
 encoders = [LeNetEncoder(1, channels, 3, n_latent).cuda(
-), LeNetEncoder(1, channels, 5, n_latent).cuda()]
-decoders = [DeLeNet(1, channels, 3, n_latent).cuda(),
-            DeLeNet(1, channels, 5, n_latent).cuda()]
-head = MLP(n_latent, 40, classes).cuda()
+), LeNetEncoder(1, channels, 5, n_latent).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+decoders = [DeLeNet(1, channels, 3, n_latent).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
+            DeLeNet(1, channels, 5, n_latent).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(n_latent, 40, classes).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 elbo = elbo_loss([sigmloss1dcentercrop(28, 34),
                  sigmloss1dcentercrop(112, 130)], [1.0, 1.0], 0.0)
 

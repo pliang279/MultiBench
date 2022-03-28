@@ -9,9 +9,9 @@ def _criterioning(pred, truth, criterion):
     """Handle criterion ideosyncracies."""
     if isinstance(criterion, torch.nn.CrossEntropyLoss):
         truth = truth.squeeze() if len(truth.shape) == len(pred.shape) else truth
-        return criterion(pred, truth.long().cuda())
+        return criterion(pred, truth.long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
     if isinstance(criterion, (torch.nn.modules.loss.BCEWithLogitsLoss, torch.nn.MSELoss, torch.nn.L1Loss)):
-        return criterion(pred, truth.float().cuda())
+        return criterion(pred, truth.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
 
 
 
@@ -37,9 +37,9 @@ def MFM_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tru
                 torch.cat([ints[i](reps[i]), fused], dim=1)))
         ce_loss = _criterioning(pred, truth, criterion)
         if input_to_float:
-            inputs = [i.float().cuda() for i in inps]
+            inputs = [i.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in inps]
         else:
-            inputs = [i.cuda() for i in inps]
+            inputs = [i.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in inps]
         recon_loss = recon_loss_func(recons, inputs)
         return ce_loss*ce_weight+recon_loss
     return _actualfunc
@@ -80,9 +80,9 @@ def MVAE_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=Tr
         reconsjoint = []
 
         if input_to_float:
-            inputs = [i.float().cuda() for i in inps]
+            inputs = [i.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in inps]
         else:
-            inputs = [i.cuda() for i in inps]
+            inputs = [i.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in inps]
         for i in range(len(inps)):
             reconsjoint.append(decoders[i](
                 _reparameterize(fusedmu, fusedlogvar, training)))
@@ -134,10 +134,10 @@ def RefNet_objective(ref_weight, criterion=torch.nn.CrossEntropyLoss(), input_to
         inps = args['inputs']
         refinerout = refiner(fused)
         if input_to_float:
-            inputs = [torch.flatten(t, start_dim=1).float().cuda()
+            inputs = [torch.flatten(t, start_dim=1).float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                       for t in inps]
         else:
-            inputs = [torch.flatten(t, start_dim=1).cuda() for t in inps]
+            inputs = [torch.flatten(t, start_dim=1).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for t in inps]
 
         inputsizes = [t.size(1) for t in inputs]
         ss_loss = 0.0
@@ -146,7 +146,7 @@ def RefNet_objective(ref_weight, criterion=torch.nn.CrossEntropyLoss(), input_to
             out = refinerout[:, loc:loc+inputsizes[i]]
             loc += inputsizes[i]
             ss_loss += ss_criterion(out,
-                                    inputs[i], torch.ones(out.size(0)).cuda())
+                                    inputs[i], torch.ones(out.size(0)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
         return ce_loss + ss_loss*ref_weight
     return _actualfunc
 
@@ -166,7 +166,7 @@ def RMFE_object(reg_weight=1e-10, criterion=torch.nn.BCEWithLogitsLoss(), is_pac
         ce_loss = _criterioning(pred, truth, criterion)
         inps = args['inputs']
         try:
-            reg_loss = lossfunc(pred, [i.cuda() for i in inps])
+            reg_loss = lossfunc(pred, [i.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for i in inps])
         except RuntimeError:
             print("No reg loss for validation")
             reg_loss = 0

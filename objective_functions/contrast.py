@@ -58,8 +58,8 @@ class AliasMethod(object):
 
     def cuda(self):
         """Generate CUDA version of self, for GPU-based sampling."""
-        self.prob = self.prob.cuda()
-        self.alias = self.alias.cuda()
+        self.prob = self.prob.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+        self.alias = self.alias.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
     def draw(self, N):
         """
@@ -100,7 +100,7 @@ class NCEAverage(nn.Module):
         self.nLem = outputSize
         self.unigrams = torch.ones(self.nLem)
         self.multinomial = AliasMethod(self.unigrams)
-        self.multinomial.cuda()
+        self.multinomial.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         self.K = K
         self.use_softmax = use_softmax
 
@@ -251,7 +251,7 @@ class NCESoftmaxLoss(nn.Module):
         """
         bsz = x.shape[0]
         x = x.squeeze()
-        label = torch.zeros([bsz]).cuda().long()
+        label = torch.zeros([bsz]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")).long()
         loss = self.criterion(x, label)
         return loss
 

@@ -339,13 +339,13 @@ class LowRankTensorFusion(nn.Module):
         self.factors = []
         for input_dim in input_dims:
             factor = nn.Parameter(torch.Tensor(
-                self.rank, input_dim+1, self.output_dim)).cuda()
+                self.rank, input_dim+1, self.output_dim)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             nn.init.xavier_normal(factor)
             self.factors.append(factor)
 
-        self.fusion_weights = nn.Parameter(torch.Tensor(1, self.rank)).cuda()
+        self.fusion_weights = nn.Parameter(torch.Tensor(1, self.rank)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         self.fusion_bias = nn.Parameter(
-            torch.Tensor(1, self.output_dim)).cuda()
+            torch.Tensor(1, self.output_dim)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         # init the fusion weights
         nn.init.xavier_normal(self.fusion_weights)
         self.fusion_bias.data.fill_(0)
@@ -363,7 +363,7 @@ class LowRankTensorFusion(nn.Module):
         fused_tensor = 1
         for (modality, factor) in zip(modalities, self.factors):
             ones = Variable(torch.ones(batch_size, 1).type(
-                modality.dtype), requires_grad=False).cuda()
+                modality.dtype), requires_grad=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             if self.flatten:
                 modality_withones = torch.cat(
                     (ones, torch.flatten(modality, start_dim=1)), dim=1)

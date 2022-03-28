@@ -20,8 +20,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 feature_dim = 300
 hidden_dim = 2
 
-reg_encoder = nn.GRU(hidden_dim, 128).cuda()
-head = MLP(128, 64, 1).cuda()
+reg_encoder = nn.GRU(hidden_dim, 128).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+head = MLP(128, 64, 1).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 criterion_t = nn.MSELoss()
 criterion_c = nn.MSELoss()
@@ -69,9 +69,9 @@ def train(
         model_save (str, optional): Path to save best model. Defaults to 'best_mctn.pt'.
         testdata (torch.utils.data.DataLoader, optional): Data Loader for test data. Defaults to None.
     """
-    seq2seq0 = Seq2Seq(encoder0, decoder0).cuda()
-    seq2seq1 = Seq2Seq(encoder1, decoder1).cuda()
-    model = L2_MCTN(seq2seq0, seq2seq1, reg_encoder, head, p=dropout_p).cuda()
+    seq2seq0 = Seq2Seq(encoder0, decoder0).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    seq2seq1 = Seq2Seq(encoder1, decoder1).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    model = L2_MCTN(seq2seq0, seq2seq1, reg_encoder, head, p=dropout_p).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
     op = op_type(model.parameters(), lr=lr, weight_decay=weight_decay)
 
     patience = 0
@@ -261,9 +261,9 @@ def _process_input_L2(inputs, max_seq=20):
     trg0 = F.pad(trg0, (0, feature_dim - trg0.size(-1)))
     trg1 = F.pad(trg1, (0, feature_dim - trg1.size(-1)))
 
-    src = src.transpose(1, 0).cuda()
-    trg0 = trg0.transpose(1, 0).cuda()
-    trg1 = trg1.transpose(1, 0).cuda()
-    labels = inputs[-1].cuda()
+    src = src.transpose(1, 0).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    trg0 = trg0.transpose(1, 0).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    trg1 = trg1.transpose(1, 0).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    labels = inputs[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
     return src, trg0, trg1, labels, feature_dim

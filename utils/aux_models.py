@@ -56,7 +56,7 @@ class Tensor1DLateralPadding(nn.Module):
         padding = torch.autograd.Variable(
             torch.zeros(sz[0], self.pad), requires_grad=False)
         if inputs.is_cuda:
-            padding = padding.cuda()
+            padding = padding.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
         padded = torch.cat((inputs, padding), 1)
         return padded
@@ -87,7 +87,7 @@ class ChannelPadding(nn.Module):
         padding = torch.autograd.Variable(torch.zeros(
             sz[0], self.pad, sz[2], sz[3]), requires_grad=False)
         if inputs.is_cuda:
-            padding = padding.cuda()
+            padding = padding.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
         padded = torch.cat((inputs, padding), 1)
         return padded

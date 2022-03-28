@@ -109,7 +109,7 @@ class TSDecoder(torch.nn.Module):
             torch.Tensor: Layer Output
         """
         hidden = self.linear(x).unsqueeze(0)
-        next = torch.zeros(1, len(x), self.indim).cuda()
+        next = torch.zeros(1, len(x), self.indim).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         nexts = []
         for i in range(self.ts):
             next, hidden = self.gru(next, hidden)

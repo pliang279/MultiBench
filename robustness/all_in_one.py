@@ -50,8 +50,8 @@ def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
         encoders = models[0]
         heads = models[1]
         for i in range(num_training):
-            encoder = torch.load(encoders[i]).cuda()
-            head = torch.load(heads[i]).cuda()
+            encoder = torch.load(encoders[i]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+            head = torch.load(heads[i]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             loss_tmp = []
             for noise_level in range(noise_range):
                 print("Noise level {}: ".format(noise_level/10))
@@ -59,7 +59,7 @@ def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
             loss.append(np.array(loss_tmp))
     else:
         for i in range(num_training):
-            model = torch.load(models[i]).cuda()
+            model = torch.load(models[i]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             loss_tmp = []
             for noise_level in range(noise_range):
                 print("Noise level {}: ".format(noise_level/10))
@@ -107,15 +107,15 @@ def general_test(testprocess, filename, robustdatasets, encoder=False, multi_mea
     for robustdata in robustdatasets:
         measure = []
         if encoder:
-            encoder = torch.load(filename[0]).cuda()
-            head = torch.load(filename[1]).cuda()
+            encoder = torch.load(filename[0]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+            head = torch.load(filename[1]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             print("Robustness testing:")
             for noise_level in range(len(robustdata)):
                 print("Noise level {}: ".format(noise_level/10))
                 measure.append(testprocess(
                     encoder, head, robustdata[noise_level]))
         else:
-            model = torch.load(filename).cuda()
+            model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             print("Robustness testing:")
             for noise_level in range(len(robustdata)):
                 print("Noise level {}: ".format(noise_level/10))

@@ -872,7 +872,7 @@ class Constant(nn.Module):
         Returns:
             torch.Tensor: Layer Output
         """
-        return torch.zeros(self.out_dim).cuda()
+        return torch.zeros(self.out_dim).to(x.device)
 
 
 class Identity(nn.Module):

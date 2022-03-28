@@ -14,10 +14,10 @@ traindata, validdata, testdata = get_dataloader(
     7, imputed_path='datasets/mimic/im.pk')
 
 # build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10, dropout=False).cuda(),
-            GRU(12, 30, dropout=False).cuda()]
-head = MLP(720, 40, 2, dropout=False).cuda()
-#fusion = Concat().cuda()
+encoders = [MLP(5, 10, 10, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
+            GRU(12, 30, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(720, 40, 2, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+#fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 fusion = NLgate(24, 30, 10, None, (10, 300), (10, 300))
 allmodules = [encoders[0], encoders[1], head, fusion]
 
@@ -33,7 +33,7 @@ all_in_one_train(trainprocess, allmodules)
 
 # test
 print("Testing: ")
-model = torch.load('best.pt').cuda()
+model = torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def testprocess():
