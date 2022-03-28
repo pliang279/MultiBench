@@ -1,0 +1,4 @@
+torchvision
+torch
+memory-profiler
+torchtext
