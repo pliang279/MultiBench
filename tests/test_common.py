@@ -142,7 +142,11 @@ def test_LeNet():
     assert model(test).shape == (4,32,32)
     
 
-  
+def test_Seq():
+    """Test stuff."""
+    test = torch.ones((8,4))
+    lin = GRUWithLinear(3,2,1, True)
+    assert lin(test).shape == ()
 
 """
 def test_integration():
