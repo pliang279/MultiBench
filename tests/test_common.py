@@ -139,9 +139,10 @@ def test_LeNet():
     """Test module."""
     test = torch.ones((1,3,128,128))
     model = LeNet(3,2,1)
-    assert model(test).shape == (1,10)
+    assert model(test).shape == (4,32,32)
     
 
+  
 
 """
 def test_integration():
