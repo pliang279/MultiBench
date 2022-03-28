@@ -1,0 +1,159 @@
+from unimodals.common_models import *
+import torch
+
+
+def test_id():
+    """Test Identity module."""
+    id = Identity()
+    test = torch.Tensor([0])
+    assert id(test) == test
+    
+def test_linear():
+    """Test Linear Module."""
+    lin = Linear(3,4)
+    test = torch.zeros((4,3))
+    assert lin(test).shape == (4,4)
+    
+    lin = Linear(3,4, True)
+    test = torch.zeros((4,3))
+    assert lin(test).shape == (4,4)
+    
+def test_squeeze():
+    """Test squeeze module."""
+    lin = Squeeze(1)
+    test = torch.zeros((4,1))
+    assert lin(test).shape == (4,)
+    lin = Squeeze()
+    assert lin(test).shape == (4,)
+    
+def test_sequential():
+    """Test sequential module."""
+    lin = Sequential(Linear(1,2), Squeeze())
+    test = torch.zeros((1,))
+    assert lin(test, training=True).shape == (2,)
+    
+def test_reshape():
+    """Test common module."""
+    lin = Reshape((4,4))
+    test = torch.zeros((16,))
+    assert lin(test).shape == (4,4)
+    
+def test_transpose():
+    """Test common module."""
+    lin = Transpose(0,1)
+    test = torch.zeros((3,4))
+    assert lin(test).shape == (4,3)
+    
+def test_MLP():
+    """Test common module."""
+    lin = MLP(3,2,1, True, 0.1,True)
+    test = torch.zeros((3,3))
+    out = lin(test)
+    assert out[0] == 0
+    assert out[1].shape == test.shape
+    assert out[2].shape == (3,2)
+    assert out[3].shape == (3,2)
+    lin = MLP(3,2,1)
+    assert lin(test).shape == (3,1)
+
+
+def test_MLP():
+    """Test common module."""
+    lin = MLP(3,2,1, True, 0.1,True)
+    test = torch.zeros((3,3))
+    out = lin(test)
+    assert out[0] == 0
+    assert out[1].shape == test.shape
+    assert out[2].shape == (3,2)
+    assert out[3].shape == (3,2)
+    lin = MLP(3,2,1)
+    assert lin(test).shape == (3,1)
+    
+def test_GRU():
+    """Test common module."""
+    lin = GRU(3,2,1, True)
+    test = torch.zeros((3,3))
+    out = lin(test)
+    assert out[0].shape == (2,)
+    lin.flatten = True
+    assert lin(test).shape == (3,2)
+    lin.last_only = True
+    assert lin(test).shape == (2,)
+
+def test_Constant():
+    """Test constant module."""
+    cons = Constant(1)
+    test = torch.ones((3,3))
+    assert cons(test).shape == (1,)
+    assert cons(test)[0] == 0
+    
+def test_integration():
+    """Integration test on AFFECT data."""
+    import torch
+    import sys
+    import os
+    from unimodals.common_models import GRU, MLP, Sequential, Identity  # noqa
+    from training_structures.Supervised_Learning import train, test  # noqa
+    from datasets.affect.get_data import get_dataloader  # noqa
+    from fusions.common_fusions import ConcatEarly  # noqa
+
+
+    traindata, validdata, testdata = get_dataloader(
+        '/home/arav/MultiBench/MultiBench/mosi_raw.pkl', robust_test=False, max_pad=True, data_type='mosi', max_seq_len=50)
+
+    encoders = [Identity(), Identity(), Identity()]
+    head = Sequential(GRU(409, 512, dropout=True, has_padding=False,
+                    batch_first=True, last_only=True), MLP(512, 512, 1))
+
+    fusion = ConcatEarly()
+
+    train(encoders, fusion, head, traindata, validdata, 1, task="regression", optimtype=torch.optim.AdamW,
+        is_packed=False, lr=1e-3, save='mosi_ef_r0.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
+
+
+def test_integration2():
+    from torch import nn
+    import torch
+    import sys
+    import os
+    from private_test_scripts.all_in_one import all_in_one_train # noqa
+    from training_structures.MCTN_Level2 import train, test # noqa
+    from unimodals.common_models import GRU, MLP # noqa
+    from fusions.MCTN import Encoder, Decoder # noqa
+    from datasets.affect.get_data import get_dataloader # noqa
+
+
+    traindata, validdata, testdata = \
+        get_dataloader('/home/arav/MultiBench/MultiBench/mosi_raw.pkl', robust_test=False)
+
+    max_seq = 20
+    feature_dim = 300
+    hidden_dim = 32
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    
+    encoder0 = Encoder(feature_dim, hidden_dim, n_layers=1, dropout=0.0).to(device)
+    decoder0 = Decoder(hidden_dim, feature_dim, n_layers=1, dropout=0.0).to(device)
+    encoder1 = Encoder(hidden_dim, hidden_dim, n_layers=1, dropout=0.0).to(device)
+    decoder1 = Decoder(hidden_dim, feature_dim, n_layers=1, dropout=0.0).to(device)
+
+    reg_encoder = nn.GRU(hidden_dim, 32).to(device)
+    head = MLP(32, 64, 1).to(device)
+
+    allmodules = [encoder0, decoder0, encoder1, decoder1, reg_encoder, head]
+
+
+    def trainprocess():
+        train(
+            traindata, validdata,
+            encoder0, decoder0, encoder1, decoder1,
+            reg_encoder, head,
+            criterion_t0=nn.MSELoss(), criterion_c=nn.MSELoss(),
+            criterion_t1=nn.MSELoss(), criterion_r=nn.L1Loss(),
+            max_seq_len=20,
+            mu_t0=0.01, mu_c=0.01, mu_t1=0.01,
+            dropout_p=0.15, early_stop=False, patience_num=15,
+            lr=1e-4, weight_decay=0.01, op_type=torch.optim.AdamW,
+            epoch=200, model_save='best_mctn.pt')
+
+
+    all_in_one_train(trainprocess, allmodules)
