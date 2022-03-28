@@ -88,7 +88,14 @@ def test_Constant():
     test = torch.ones((3,3))
     assert cons(test).shape == (1,)
     assert cons(test)[0] == 0
-    
+
+def test_DAN():
+    """Test DAN."""
+    test = torch.ones((2,4))
+    model = DAN(4,2)
+    assert model(test).shape == (2,)
+
+"""
 def test_integration():
     import torch
     import sys
@@ -119,7 +126,7 @@ def test_integration():
     train(encoders, fusion, head, traindata, validdata, 1, task="regression", optimtype=torch.optim.AdamW,
         is_packed=False, lr=1e-3, save='mosi_ef_r0.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
-"""
+
 def test_integration2():
     from torch import nn
     import torch
