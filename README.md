@@ -2,6 +2,9 @@
 
 [MultiBench website](https://cmu-multicomp-lab.github.io/multibench/)
 
+[![codecov](https://codecov.io/gh/arav-agarwal2/MultiBench/branch/main/graph/badge.svg?token=IN899HIWCF)](https://codecov.io/gh/arav-agarwal2/MultiBench)
+[![Documentation Status](https://readthedocs.org/projects/multibench/badge/?version=latest)](https://multibench.readthedocs.io/en/latest/?badge=latest)
+
 ## Contributors
 
 Correspondence to: 
