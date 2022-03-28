@@ -97,10 +97,17 @@ def test_DAN():
 
 
 def test_Transformer():
-    """Test DAN."""
-    test = torch.ones((2,40))
-    model = Transformer(40,1)
-    assert model(test).shape == (2,)
+    """Test Transformer Shape."""
+    test = torch.ones((2,40,10))
+    model = Transformer(10,10)
+    assert model(test).shape == (2,10)
+
+
+def test_GlobalPooling():
+    """Test Module."""
+    test = torch.ones((2,40,40))
+    model = GlobalPooling2D()
+    assert model(test).shape == (2,40)
 
 
 """
