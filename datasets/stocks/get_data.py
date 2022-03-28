@@ -69,8 +69,8 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
     X = torch.cat(X)
 
     if cuda:
-        X = X.cuda()
-        Y = Y.cuda()
+        X = X.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+        Y = Y.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
     class _MyDataset(torch.utils.data.Dataset):
         """"""
@@ -127,7 +127,7 @@ def get_dataloader(stocks, input_stocks, output_stocks, batch_size=16, train_shu
         X_robust = torch.tensor(add_timeseries_noise(
             X_robust, noise_level=noise_level/10), dtype=torch.float32)
         if cuda:
-            X_robust = X_robust.cuda()
+            X_robust = X_robust.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         test_ds = _MyDataset(X_robust, Y[test_split:], modality_first)
         test_loader['timeseries'].append(torch.utils.data.DataLoader(
             test_ds, shuffle=False, batch_size=batch_size, drop_last=False))

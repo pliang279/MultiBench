@@ -28,18 +28,18 @@ timestep = 50
 traindata, validdata, test_robust = get_dataloader(
     '/home/paul/MultiBench/mosi_raw.pkl', task='classification', robust_test=False, max_pad=True, max_seq_len=timestep)
 
-encoders = [TSEncoder(dim_0, 30, n_latent, timestep, returnvar=False).cuda(), TSEncoder(
-    dim_1, 30, n_latent, timestep, returnvar=False).cuda(), TSEncoder(dim_2, 30, n_latent, timestep, returnvar=False).cuda()]
+encoders = [TSEncoder(dim_0, 30, n_latent, timestep, returnvar=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSEncoder(
+    dim_1, 30, n_latent, timestep, returnvar=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSEncoder(dim_2, 30, n_latent, timestep, returnvar=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
-decoders = [TSDecoder(dim_0, 30, n_latent, timestep).cuda(), TSDecoder(
-    dim_1, 30, n_latent, timestep).cuda(), TSDecoder(dim_2, 30, n_latent, timestep).cuda()]
+decoders = [TSDecoder(dim_0, 30, n_latent, timestep).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSDecoder(
+    dim_1, 30, n_latent, timestep).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSDecoder(dim_2, 30, n_latent, timestep).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
-fuse = Sequential2(Concat(), MLP(3*n_latent, n_latent, n_latent//2)).cuda()
+fuse = Sequential2(Concat(), MLP(3*n_latent, n_latent, n_latent//2)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
-intermediates = [MLP(n_latent, n_latent//2, n_latent//2).cuda(), MLP(n_latent,
-                                                                     n_latent//2, n_latent//2).cuda(), MLP(n_latent, n_latent//2, n_latent//2).cuda()]
+intermediates = [MLP(n_latent, n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(n_latent,
+                                                                     n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(n_latent, n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
-head = MLP(n_latent//2, 20, classes).cuda()
+head = MLP(n_latent//2, 20, classes).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 argsdict = {'decoders': decoders, 'intermediates': intermediates}
 
@@ -52,7 +52,7 @@ train(encoders, fuse, head, traindata, validdata, 200, additional_modules,
       objective=objective, objective_args_dict=argsdict, save='mosi_mfm_best.pt')
 
 print("Testing:")
-model = torch.load('mosi_mfm_best.pt').cuda()
+model = torch.load('mosi_mfm_best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 test(model=model, test_dataloaders_all=test_robust,
      dataset='mosi', is_packed=False, no_robust=True)

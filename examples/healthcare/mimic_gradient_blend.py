@@ -18,11 +18,11 @@ traindata, validdata, testdata = get_dataloader(
     -1, imputed_path='/home/pliang/yiwei/im.pk')
 
 # build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10).cuda(), GRU(
-    12, 30, flatten=True, batch_first=True).cuda()]
-head = MLP(730, 40, 6).cuda()
-fusion = Concat().cuda()
-unimodal_heads = [MLP(10, 20, 6).cuda(), MLP(720, 40, 6).cuda()]
+encoders = [MLP(5, 10, 10).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), GRU(
+    12, 30, flatten=True, batch_first=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(730, 40, 6).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+unimodal_heads = [MLP(10, 20, 6).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(720, 40, 6).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
 # train
 train(encoders, head, unimodal_heads, fusion, traindata,
@@ -30,6 +30,6 @@ train(encoders, head, unimodal_heads, fusion, traindata,
 
 # test
 print("Testing: ")
-model = torch.load(filename).cuda()
+model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 # dataset = 'mimic mortality', 'mimic 1', 'mimic 7'
 test(model, testdata, dataset='mimic mortality', auprc=False)

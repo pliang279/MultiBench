@@ -16,16 +16,16 @@ from training_structures.Supervised_Learning import train, test # noqa
 
 dls, weights = get_dataloader('datasets/enrico/dataset')
 traindata, validdata, testdata = dls
-criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights)).cuda()
-# encoders=[VGG16Slim(64).cuda(), DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
+criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+# encoders=[VGG16Slim(64).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), DAN(4, 16, dropout=True, dropoutp=0.25).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), DAN(28, 16, dropout=True, dropoutp=0.25).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 # head = Linear(96, 20)
 encoders = [VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).cuda(
-), VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).cuda()]
-# encoders = [DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
-refiner = Linear(32, 256*128*3*2).cuda()
-head = Linear(32, 20).cuda()
+), VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+# encoders = [DAN(4, 16, dropout=True, dropoutp=0.25).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), DAN(28, 16, dropout=True, dropoutp=0.25).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+refiner = Linear(32, 256*128*3*2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+head = Linear(32, 20).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
-fusion = Concat().cuda()
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 allmodules = encoders + [refiner, head, fusion]
 
@@ -38,6 +38,6 @@ def trainprocess():
 all_in_one_train(trainprocess, allmodules)
 
 print("Testing:")
-model = torch.load('best.pt').cuda()
+model = torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 test(model, testdata, dataset='enrico')

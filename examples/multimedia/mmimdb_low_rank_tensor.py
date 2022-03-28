@@ -15,13 +15,13 @@ traindata, validdata, testdata = get_dataloader(
 
 encoders = [MaxOut_MLP(512, 512, 300, linear_layer=False),
             MaxOut_MLP(512, 1024, 4096, 512, False)]
-head = Linear(512, 23).cuda()
-fusion = LowRankTensorFusion([512, 512], 512, 128).cuda()
+head = Linear(512, 23).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+fusion = LowRankTensorFusion([512, 512], 512, 128).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 train(encoders, fusion, head, traindata, validdata, 1000, early_stop=True, task="multilabel",
       save=filename, optimtype=torch.optim.AdamW, lr=8e-3, weight_decay=0.01, objective=torch.nn.BCEWithLogitsLoss())
 
 print("Testing:")
-model = torch.load(filename).cuda()
+model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 test(model, testdata, method_name="lrtf", dataset="imdb",
      criterion=torch.nn.BCEWithLogitsLoss(), task="multilabel")

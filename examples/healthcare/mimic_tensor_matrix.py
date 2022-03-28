@@ -17,9 +17,9 @@ filename = 'besttensor.pt'
 traindata, validdata, testdata = get_dataloader(
     1, imputed_path='/home/paul/yiwei/im.pk')
 # build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10, dropout=False).cuda(), GRU(
-    12, 30, dropout=False, batch_first=True).cuda()]
-head = MLP(100, 40, 2, dropout=False).cuda()
+encoders = [MLP(5, 10, 10, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), GRU(
+    12, 30, dropout=False, batch_first=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(100, 40, 2, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 fusion = MultiplicativeInteractions2Modal(
     [10, 720], 100, 'matrix', flatten=True)
 
@@ -29,6 +29,6 @@ train(encoders, fusion, head, traindata,
 
 # test
 print("Testing: ")
-model = torch.load(filename).cuda()
+model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 # dataset = 'mimic mortality', 'mimic 1', 'mimic 7'
 test(model, testdata, dataset='mimic 1', auprc=True)

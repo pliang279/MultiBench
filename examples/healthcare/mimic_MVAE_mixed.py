@@ -20,11 +20,11 @@ n_latent = 200
 series_dim = 12
 timestep = 24
 fuse = ProductOfExperts_Zipped((1, 40, n_latent))
-encoders = [MLPEncoder(5, 20, n_latent).cuda(), TSEncoder(
-    series_dim, 30, n_latent, timestep, batch_first=True).cuda()]
-decoders = [MLP(n_latent, 20, 5).cuda(), TSDecoder(
-    series_dim, 30, n_latent, timestep).cuda()]
-head = MLP(n_latent, 20, classes).cuda()
+encoders = [MLPEncoder(5, 20, n_latent).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSEncoder(
+    series_dim, 30, n_latent, timestep, batch_first=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+decoders = [MLP(n_latent, 20, 5).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSDecoder(
+    series_dim, 30, n_latent, timestep).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(n_latent, 20, classes).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 elbo = MVAE_objective(2.0, [sigmloss1d, sigmloss1d], [1.0, 1.0], annealing=0.0)
 argsdict = {'decoders': decoders}
 train(encoders, fuse, head, traindata, validdata, 30, decoders,

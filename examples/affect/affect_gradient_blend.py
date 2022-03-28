@@ -24,23 +24,23 @@ traindata, validdata, test_robust = \
                    task='classification', robust_test=False, max_pad=True)
 
 # mosi/mosei
-encoders = [Transformer(35, 70).cuda(),
-            Transformer(74, 150).cuda(),
-            Transformer(300, 600).cuda()]
-head = MLP(820, 512, 2).cuda()
+encoders = [Transformer(35, 70).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
+            Transformer(74, 150).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
+            Transformer(300, 600).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(820, 512, 2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
-unimodal_heads = [MLP(70, 32, 2).cuda(), MLP(
-    150, 64, 2).cuda(), MLP(600, 256, 2).cuda()]
+unimodal_heads = [MLP(70, 32, 2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(
+    150, 64, 2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(600, 256, 2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
 # humor/sarcasm
-# encoders=[Transformer(371,700).cuda(), \
-#     Transformer(81,150).cuda(),\
-#     Transformer(300,600).cuda()]
-# head=MLP(1450,512,2).cuda()
+# encoders=[Transformer(371,700).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), \
+#     Transformer(81,150).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),\
+#     Transformer(300,600).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+# head=MLP(1450,512,2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
-# unimodal_heads=[MLP(700,512,2).cuda(),MLP(150,64,2).cuda(),MLP(600,256,2).cuda()]
+# unimodal_heads=[MLP(700,512,2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),MLP(150,64,2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),MLP(600,256,2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
-fusion = Concat().cuda()
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 # training_structures.gradient_blend.criterion = nn.L1Loss()
 
@@ -48,7 +48,7 @@ train(encoders, head, unimodal_heads, fusion, traindata, validdata, 100, gb_epoc
       classification=True, optimtype=torch.optim.AdamW, savedir='mosi_best_gb.pt', weight_decay=0.1)
 
 print("Testing:")
-model = torch.load('mosi_besf_gb.pt').cuda()
+model = torch.load('mosi_besf_gb.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 test(model, test_robust, dataset='mosi', auprc=False, no_robust=True)
 

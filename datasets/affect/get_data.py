@@ -285,7 +285,7 @@ def get_dataloader(
     alldata['valid'] = drop_entry(alldata['valid'])
     alldata['test'] = drop_entry(alldata['test'])
 
-    process = eval("process_2") if max_pad else eval("process_1")
+    process = eval("_process_2") if max_pad else eval("_process_1")
 
     for dataset in alldata:
         processed_dataset[dataset] = alldata[dataset]

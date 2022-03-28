@@ -62,6 +62,6 @@ train(encoders, fusion, head,
       objective=loss_state,
       lr=0.00001)
 
-model = torch.load('best.pt').cuda()
+model = torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 test(model, test_loader, dataset='gentle push',
      task='regression', criterion=loss_state)

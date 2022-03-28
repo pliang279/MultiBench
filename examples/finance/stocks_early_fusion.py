@@ -32,9 +32,9 @@ train_loader, val_loader, test_loader = get_dataloader(
     stocks, stocks, [args.target_stock])
 
 n_modalities = len(train_loader.dataset[0]) - 1
-encoders = [Identity().cuda()] * n_modalities
-fusion = Stack().cuda()
-head = LSTM(n_modalities, 128, linear_layer_outdim=1).cuda()
+encoders = [Identity().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))] * n_modalities
+fusion = Stack().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+head = LSTM(n_modalities, 128, linear_layer_outdim=1).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 allmodules = [*encoders, fusion, head]
 
 
@@ -45,6 +45,6 @@ def trainprocess():
 
 all_in_one_train(trainprocess, allmodules)
 
-model = torch.load('best.pt').cuda()
+model = torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 test(model, test_loader, dataset='finance F&B',
      task='regression', criterion=nn.MSELoss())

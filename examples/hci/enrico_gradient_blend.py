@@ -14,16 +14,16 @@ from training_structures.gradient_blend import train, test # noqa
 
 dls, weights = get_dataloader('datasets/enrico/dataset')
 traindata, validdata, testdata = dls
-criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights)).cuda()
-# encoders=[VGG16Slim(64).cuda(), DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
+criterion = nn.CrossEntropyLoss(weight=torch.tensor(weights)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+# encoders=[VGG16Slim(64).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), DAN(4, 16, dropout=True, dropoutp=0.25).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), DAN(28, 16, dropout=True, dropoutp=0.25).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 # head = Linear(96, 20)
 encoders = [VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).cuda(
-), VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).cuda()]
-# encoders = [DAN(4, 16, dropout=True, dropoutp=0.25).cuda(), DAN(28, 16, dropout=True, dropoutp=0.25).cuda()]
-mult_head = Linear(32, 20).cuda()
-uni_head = [Linear(16, 20).cuda(), Linear(16, 20).cuda()]
+), VGG11Slim(16, dropout=True, dropoutp=0.2, freeze_features=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+# encoders = [DAN(4, 16, dropout=True, dropoutp=0.25).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), DAN(28, 16, dropout=True, dropoutp=0.25).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+mult_head = Linear(32, 20).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+uni_head = [Linear(16, 20).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), Linear(16, 20).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 
-fusion = Concat().cuda()
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 # train(encoders,fusion,head,traindata,validdata,num_epoch=50,gb_epoch=10,optimtype=torch.optim.Adam,lr=0.0001,weight_decay=0)
 allmodules = encoders + [mult_head, fusion] + uni_head
@@ -37,5 +37,5 @@ def trainprocess():
 all_in_one_train(trainprocess, allmodules)
 
 
-model = torch.load('best.pt').cuda()
+model = torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 test(model, testdata, dataset='enrico')

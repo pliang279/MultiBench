@@ -18,13 +18,13 @@ traindata, validdata, testdata = get_dataloader(
 
 encoders = [MaxOut_MLP(512, 128, 300, linear_layer=False),
             MaxOut_MLP(512, 1024, 4096, 128, False)]
-head = Linear(256, 23).cuda()
-fusion = Concat().cuda()
+head = Linear(256, 23).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 train(encoders, fusion, head, traindata, validdata, 1000, early_stop=True, task="multilabel", save=filename, objective_args_dict={},
       optimtype=torch.optim.AdamW, lr=1e-2, weight_decay=0.01, objective=RMFE_object())
 
 print("Testing:")
-model = torch.load(filename).cuda()
+model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 test(model, testdata, method_name="rmfe", dataset="imdb",
      criterion=torch.nn.BCEWithLogitsLoss(), task="multilabel")

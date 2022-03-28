@@ -32,15 +32,15 @@ class HParams():
         output_dim = 1
         all_steps = False
 
-encoders = [Identity().cuda(), Identity().cuda(), Identity().cuda()]
-fusion = MULTModel(3, [20, 5, 300], hyp_params=HParams).cuda()
-# fusion = MULTModel(3, [371, 81, 300], hyp_params=HParams).cuda()
-head = Identity().cuda()
+encoders = [Identity().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), Identity().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), Identity().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+fusion = MULTModel(3, [20, 5, 300], hyp_params=HParams).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+# fusion = MULTModel(3, [371, 81, 300], hyp_params=HParams).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+head = Identity().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW, early_stop=False, is_packed=False, lr=1e-3, clip_val=1.0, save='mosi_mult_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
 print("Testing:")
-model = torch.load('mosi_mult_best.pt').cuda()
+model = torch.load('mosi_mult_best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 test(model=model, test_dataloaders_all=test_robust, dataset='mosi', is_packed=False,
      criterion=torch.nn.L1Loss(), task='posneg-classification', no_robust=True)
