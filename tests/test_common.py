@@ -2,6 +2,8 @@ from unimodals.common_models import *
 import torch
 
 
+DATA_PATH = '/content/MultiBench/'
+
 def test_id():
     """Test Identity module."""
     id = Identity()
@@ -72,13 +74,13 @@ def test_MLP():
 def test_GRU():
     """Test common module."""
     lin = GRU(3,2,1, True)
-    test = torch.zeros((3,3))
+    test = torch.zeros((3,3,3))
     out = lin(test)
-    assert out[0].shape == (2,)
+    assert out[0].shape == (3,2)
     lin.flatten = True
-    assert lin(test).shape == (3,2)
+    assert lin(test).shape == (3,6)
     lin.last_only = True
-    assert lin(test).shape == (2,)
+    assert lin(test).shape == (3,2)
 
 def test_Constant():
     """Test constant module."""
@@ -99,7 +101,7 @@ def test_integration():
 
 
     traindata, validdata, testdata = get_dataloader(
-        '/home/arav/MultiBench/MultiBench/mosi_raw.pkl', robust_test=False, max_pad=True, data_type='mosi', max_seq_len=50)
+        DATA_PATH+'mosi_raw.pkl', robust_test=False, max_pad=True, data_type='mosi', max_seq_len=50)
 
     encoders = [Identity(), Identity(), Identity()]
     head = Sequential(GRU(409, 512, dropout=True, has_padding=False,
@@ -124,7 +126,7 @@ def test_integration2():
 
 
     traindata, validdata, testdata = \
-        get_dataloader('/home/arav/MultiBench/MultiBench/mosi_raw.pkl', robust_test=False)
+        get_dataloader(DATA_PATH+'mosi_raw.pkl', robust_test=False)
 
     max_seq = 20
     feature_dim = 300
@@ -153,7 +155,7 @@ def test_integration2():
             mu_t0=0.01, mu_c=0.01, mu_t1=0.01,
             dropout_p=0.15, early_stop=False, patience_num=15,
             lr=1e-4, weight_decay=0.01, op_type=torch.optim.AdamW,
-            epoch=200, model_save='best_mctn.pt')
+            epoch=1, model_save='best_mctn.pt')
 
 
     all_in_one_train(trainprocess, allmodules)
