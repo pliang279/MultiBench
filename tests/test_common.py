@@ -135,6 +135,12 @@ def test_VGG():
     model = VGG16Pruned(10)
     assert model(test).shape == (1,10)
     
+def test_LeNet():
+    """Test module."""
+    test = torch.ones((1,3,128,128))
+    model = LeNet(3,2,1)
+    assert model(test).shape == (1,10)
+    
 
 
 """
