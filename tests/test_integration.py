@@ -112,7 +112,7 @@ def test_sl4():
 
   def trainprocess():
       train(
-          dl, dl,
+          dl_faked, dl_faked,
           encoder0, decoder0, encoder1, decoder1,
           reg_encoder, head,
           criterion_t0=nn.MSELoss(), criterion_c=nn.MSELoss(),
@@ -128,4 +128,6 @@ def test_sl4():
 
   model = torch.load('best_mctn.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
-  test(model, dl, 'mosi', no_robust=True)
+  test(model, dl_faked, 'mosi', no_robust=True)
+
+
