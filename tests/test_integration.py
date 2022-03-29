@@ -82,6 +82,8 @@ def test_sl3():
   head = torch.load('head.pt')
   test(encoder, head, dl, 'affect', criterion=torch.nn.L1Loss(),
       task="posneg-classification", modalnum=modality_num, no_robust=True)
+  test(encoder, head, {'test':[dl,dl]}, 'affect', criterion=torch.nn.L1Loss(),
+      task="posneg-classification", modalnum=modality_num, no_robust=False)
 
 
 def test_sl4():
