@@ -611,7 +611,7 @@ class ConvBranch(nn.Module):
             separable (bool, optional): Whether to use Separable convolutions or not. Defaults to False.
         """
         super(ConvBranch, self).__init__()
-        assert kernel_size in [3, 5, 7], "Kernel size must be either 3, 5 or 7"
+        assert kernel_size in [1,3, 5, 7], "Kernel size must be either 3, 5 or 7"
 
         self.in_planes = in_planes
         self.out_planes = out_planes
