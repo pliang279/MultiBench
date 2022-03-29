@@ -44,7 +44,7 @@ def get_robustness_metric(robustness_result, task, metric):
         return maxmin_normalize(result, task)
 
 
-def relative_robustness_helper(robustness_result):
+def relative_robustness_helper(robustness_result, task):
     """
     Helper function that computes the relative robustness metric as the area under the performance curve.
 
