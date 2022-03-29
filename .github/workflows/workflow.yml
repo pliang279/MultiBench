@@ -20,7 +20,7 @@ jobs:
         pip install pytest
         pip install pytest-cov
         pip install -r requirements.txt
-        python -m pytest -s --cov-append --cov-report=xml --cov=utils --cov=unimodals/ --cov=training_structures/ --cov=robustness --cov=fusions/ --cov=objective_functions tests/test_*.py
+        python -m pytest -s --cov-report xml --cov=utils --cov=unimodals/ --cov=training_structures/ --cov=robustness --cov=fusions/ --cov=objective_functions tests/test_*.py
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
