@@ -147,3 +147,48 @@ def test_sl5():
   
   test(model, dl_faked, 'test', no_robust=True)
 
+def test_sl6():
+  
+  from unimodals.MVAE import TSEncoder, TSDecoder # noqa
+  from utils.helper_modules import Sequential2 # noqa
+  from objective_functions.objectives_for_supervised_learning import MFM_objective # noqa
+  from torch import nn # noqa
+  from unimodals.common_models import MLP # noqa
+  from training_structures.Supervised_Learning import train, test # noqa
+  from datasets.affect.get_data import get_dataloader # noqa
+  from fusions.common_fusions import Concat # noqa
+
+  data = [torch.zeros([32, 50, 35]), torch.zeros([32, 50, 74]), torch.zeros([32, 50, 300]), torch.cat((torch.ones((16,1)),torch.zeros((16,1))),dim=0)]
+  my_dataset = torch.utils.data.TensorDataset(*data)
+  dl = torch.utils.data.DataLoader(my_dataset, batch_size=32)
+
+
+  classes = 2
+  n_latent = 256
+  dim_0 = 35
+  dim_1 = 74
+  dim_2 = 300
+  timestep = 50
+
+  encoders = [TSEncoder(dim_0, 30, n_latent, timestep, returnvar=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSEncoder(
+      dim_1, 30, n_latent, timestep, returnvar=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSEncoder(dim_2, 30, n_latent, timestep, returnvar=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+
+  decoders = [TSDecoder(dim_0, 30, n_latent, timestep).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSDecoder(
+      dim_1, 30, n_latent, timestep).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSDecoder(dim_2, 30, n_latent, timestep).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+
+  fuse = Sequential2(Concat(), MLP(3*n_latent, n_latent, n_latent//2)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+
+  intermediates = [MLP(n_latent, n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(n_latent,
+                                                                      n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(n_latent, n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+
+  head = MLP(n_latent//2, 20, classes).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+
+  argsdict = {'decoders': decoders, 'intermediates': intermediates}
+
+  additional_modules = decoders+intermediates
+
+  objective = MFM_objective(2.0, [torch.nn.MSELoss(
+  ), torch.nn.MSELoss(), torch.nn.MSELoss()], [1.0, 1.0, 1.0])
+
+  train(encoders, fuse, head, dl, dl, 1, additional_modules,
+        objective=objective, objective_args_dict=argsdict, save='mosi_mfm_best.pt')

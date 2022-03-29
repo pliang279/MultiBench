@@ -24,3 +24,11 @@ def test_tabular():
     idf = add_visual_noise(test, noise_level=1)
     assert idf[0].shape == (128,128)
     
+
+def test_text():
+    """Test text module."""
+    from robustness.text_robust import add_text_noise
+    test = ["Hello", "Darkness","My old", "Friend."]
+    idf = add_text_noise(test, noise_level=1)
+    assert len(idf) in [1,2,3,4]
+    
