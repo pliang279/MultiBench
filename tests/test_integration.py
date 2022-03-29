@@ -134,7 +134,6 @@ def test_sl4():
 def test_sl5():
   from unimodals.common_models import LeNet, MLP, Constant
   import utils.surrogate as surr
-  from datasets.avmnist.get_data import get_dataloader
   from fusions.common_fusions import Concat
   from training_structures.architecture_search import train, test
 
@@ -147,3 +146,4 @@ def test_sl5():
   model = torch.load('tests/best0.pt')
   
   test(model, dl_faked, 'test', no_robust=True)
+
