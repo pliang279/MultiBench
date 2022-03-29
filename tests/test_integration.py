@@ -2,7 +2,7 @@ import torch
 import numpy as np
 
     
-def test_sl():
+def test_sl1():
     from unimodals.common_models import GRU, MLP, Sequential, Identity  # noqa
     from training_structures.Supervised_Learning import train, test  # noqa
     from fusions.common_fusions import ConcatEarly  # noqa
@@ -20,8 +20,8 @@ def test_sl():
       is_packed=False, lr=1e-3, save='mosi_ef_r0.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
     model = torch.load('mosi_ef_r0.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-    test(model, dl, 'affect', is_packed=False,
-     criterion=torch.nn.L1Loss(), task="posneg-classification", no_robust=True)
+    test(model, {'key':[dl]}, 'affect', is_packed=False,
+     criterion=torch.nn.L1Loss(), task="posneg-classification", auprc=True, no_robust=False)
 
 def test_sl2():
   from private_test_scripts.all_in_one import all_in_one_train # noqa

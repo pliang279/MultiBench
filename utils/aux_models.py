@@ -55,7 +55,7 @@ class Tensor1DLateralPadding(nn.Module):
         sz = inputs.size()
         padding = torch.autograd.Variable(
             torch.zeros(sz[0], self.pad), requires_grad=False)
-        if inputs.is_cuda:
+        if inputs.is_cuda: # pragma: no cover
             padding = padding.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
         padded = torch.cat((inputs, padding), 1)
@@ -86,7 +86,7 @@ class ChannelPadding(nn.Module):
         sz = inputs.size()
         padding = torch.autograd.Variable(torch.zeros(
             sz[0], self.pad, sz[2], sz[3]), requires_grad=False)
-        if inputs.is_cuda:
+        if inputs.is_cuda: # pragma: no cover
             padding = padding.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
         padded = torch.cat((inputs, padding), 1)
@@ -324,8 +324,11 @@ class CellBlock(nn.Module):
 
 # %%
 
-class Cell(nn.Module):
-    """Implements a convnet classifier, using CellBlock instances and path-based dropout."""
+class Cell(nn.Module): # pragma: no cover
+    """Implements a convnet classifier, using CellBlock instances and path-based dropout.
+    
+    Generally unused.
+    """
     
     def __init__(self, operation_labels, configuration_indexes, connections, args):
         """Instantiate Cell Module.
@@ -378,7 +381,7 @@ class Cell(nn.Module):
         return output
 
     def _conn(self, conn):
-        return conn + 2
+        return [c + 2 for c in conn]
 
     def _create_blocks(self):
 
@@ -399,8 +402,11 @@ class Cell(nn.Module):
         return block_array, block_used
 
 
-class FixedCell(nn.Module):
-    """Implements cell with fixed connections and no path-based dropout."""
+class FixedCell(nn.Module): # pragma: no cover
+    """Implements cell with fixed connections and no path-based dropout.
+    
+    Generally unused, and probably buggy.
+    """
     
     def __init__(self, operation_labels, configuration_indexes, connections, args):
         """Instantiate Cell Module.
