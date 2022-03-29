@@ -63,7 +63,7 @@ def train_sampled_models(sampled_configurations, searchable_type, dataloaders,
             if not premodels:
                 sds = []
                 for i in unimodal_files:
-                    sds.append(torch.load(i))
+                    sds.append(torch.load(i,map_location=torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 for sd in sds:
                     sd.output_each_layer = True
                 rmode = searchable_type(
@@ -77,11 +77,11 @@ def train_sampled_models(sampled_configurations, searchable_type, dataloaders,
             scheduler = sc.LRCosineAnnealingScheduler(eta_max, eta_min, Ti, Tm,
                                                       num_batches_per_epoch)
 
-            rmode.to(device)
+            rmode.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
             best_model_acc = train_track_acc(rmode, [criterion], optimizer, scheduler, dataloaders,
                                              dataset_sizes,
-                                             device=device, num_epochs=epochs, verbose=False,
+                                             device=torch.device("cuda:0" if torch.cuda.is_available() else "cpu"), num_epochs=epochs, verbose=False,
                                              multitask=False)
 
             real_accuracies.append(best_model_acc)
@@ -178,7 +178,7 @@ def train_track_acc(model, criteria, optimizer, scheduler, dataloaders, dataset_
 
     model.load_state_dict(best_model_sd)
     model.train(False)
-    torch.save(model, 'temp/best'+str(best_acc)+'.pt')
+    torch.save(model, 'tests/best'+str(best_acc)+'.pt')
 
     return best_acc
 

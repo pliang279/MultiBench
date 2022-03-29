@@ -54,6 +54,8 @@ def train(unimodal_files, rep_size, classes, sub_sizes, train_data, valid_data, 
     """
     searcher = ModelSearcher(train_data, valid_data, search_iter, num_samples, epoch_surrogate,
                              temperature_init, temperature_final, temperature_decay, max_progression_levels, lr_surrogate)
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    searcher.device = device
     s_data = searcher.search(surrogate,
                              use_weightsharing, unimodal_files, rep_size, classes, sub_sizes, batch_size, epochs, max_labels,
                              eta_max, eta_min, Ti, Tm)
@@ -192,7 +194,7 @@ class ModelSearcher():
                 # all confs were trained in step 3
                 if si + progression_index == 0:
                     # move tensor from cuda:0 to cpu
-                    all_accuracies = [i.cpu() for i in all_accuracies]
+                    all_accuracies = [i.cpu() if (not isinstance(i, int)) and i.is_cuda else i for i in all_accuracies]
 
                     sampled_k_confs = tools.sample_k_configurations(all_configurations, all_accuracies,
                                                                     self.num_samples, temperature)

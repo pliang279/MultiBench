@@ -131,3 +131,19 @@ def test_sl4():
   test(model, dl_faked, 'mosi', no_robust=True)
 
 
+def test_sl5():
+  from unimodals.common_models import LeNet, MLP, Constant
+  import utils.surrogate as surr
+  from datasets.avmnist.get_data import get_dataloader
+  from fusions.common_fusions import Concat
+  from training_structures.architecture_search import train, test
+
+
+  data = [torch.zeros((64,1,28,28)),torch.zeros((64,1,112,112)),torch.cat((torch.ones((32,)),torch.zeros((32,))),dim=0).long()]
+  my_dataset = torch.utils.data.TensorDataset(*data)
+  dl_faked = torch.utils.data.DataLoader(my_dataset, batch_size=32)
+  s_data = train(['pretrained/avmnist/image_encoder.pt', 'pretrained/avmnist/audio_encoder.pt'], 16, 10, [(6, 12, 24), (6, 12, 24, 48, 96)],
+                  dl_faked, dl_faked, surr.SimpleRecurrentSurrogate(), (3, 5, 2), epochs=1, search_iter=1, epoch_surrogate=1, num_samples=1, max_progression_levels=1)
+  model = torch.load('tests/best0.pt')
+  
+  test(model, dl_faked, 'test', no_robust=True)
