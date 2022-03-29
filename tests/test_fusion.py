@@ -61,3 +61,26 @@ def test_sl6():
   fusion = NLgate(24, 30, 10, None, (10, 300), (10, 300))
   out = fusion([torch.zeros((24,30)),torch.zeros((30,10))])
   assert out.shape == (30,720)
+
+def test_sl7():
+    from fusions.mult import MULTModel
+
+    class HParams():
+            num_heads = 8
+            layers = 4
+            attn_dropout = 0.1
+            attn_dropout_modalities = [0,0,0.1]
+            relu_dropout = 0.1
+            res_dropout = 0.1
+            out_dropout = 0.1
+            embed_dropout = 0.2
+            embed_dim = 40
+            attn_mask = True
+            output_dim = 1
+            all_steps = False
+
+    data = [torch.zeros([32, 50, 20]), torch.zeros([32, 50, 5]), torch.zeros([32, 50, 300]), torch.cat((torch.ones((16,1)),torch.zeros((16,1))),dim=0).long()]
+
+    fusion = MULTModel(3, [20, 5, 300], hyp_params=HParams).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    out = fusion([data[0],data[1],data[2]])
+    assert out.shape == (32,1)
