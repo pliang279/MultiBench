@@ -15,3 +15,4 @@ def test_tabular():
     test = torch.zeros((4,1,20))
     idf = add_tabular_noise(test)
     assert idf.shape == (4,1,20)
+    
