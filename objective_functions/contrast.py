@@ -100,7 +100,7 @@ class NCEAverage(nn.Module):
         self.nLem = outputSize
         self.unigrams = torch.ones(self.nLem)
         self.multinomial = AliasMethod(self.unigrams)
-        self.multinomial.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+        self.multinomial.cuda()
         self.K = K
         self.use_softmax = use_softmax
 

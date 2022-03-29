@@ -55,8 +55,8 @@ def test_sl2():
 
   train(encoders, head, unimodal_heads, fusion, dl, dl, num_epoch=1, gb_epoch=1, lr=1e-3, AUPRC=False,
         classification=True, optimtype=torch.optim.AdamW, savedir='mosi_best_gb.pt', weight_decay=0.1, finetune_epoch=1)
-
-  # test(model=model, test_dataloaders_all=test_robust, dataset='mosi', is_packed=True, criterion=torch.nn.L1Loss(), task='posneg-classification')
+  model = torch.load('mosi_best_gb.pt')
+  test(model=model, test_dataloaders_all={'fake':[dl]}, dataset='mosi', auprc=True)
 
 def test_sl3():
   from unimodals.common_models import GRU, MLP, Sequential, Identity  # noqa
