@@ -84,3 +84,4 @@ def test_sl7():
     fusion = MULTModel(3, [20, 5, 300], hyp_params=HParams).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
     out = fusion([data[0],data[1],data[2]])
     assert out.shape == (32,1)
+

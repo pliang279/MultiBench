@@ -21,7 +21,7 @@ def test_sl1():
 
     model = torch.load('mosi_ef_r0.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
     test(model, {'key':[dl]}, 'affect', is_packed=False,
-     criterion=torch.nn.L1Loss(), task="posneg-classification", auprc=True, no_robust=False)
+     criterion=torch.nn.L1Loss(), task="posneg-classification", auprc=False, no_robust=False)
 
 def test_sl2():
   from private_test_scripts.all_in_one import all_in_one_train # noqa
