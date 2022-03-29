@@ -61,7 +61,6 @@ def test_sl2():
 def test_sl3():
   from unimodals.common_models import GRU, MLP, Sequential, Identity  # noqa
   from training_structures.unimodal import train, test  # noqa
-  from datasets.affect.get_data import get_dataloader  # noqa
   from fusions.common_fusions import ConcatEarly  # noqa
   data = [torch.zeros([32, 50, 35]), torch.zeros([32, 50, 74]), torch.zeros([32, 50, 300]), torch.cat((torch.ones((16,1)),torch.zeros((16,1))),dim=0).long()]
   my_dataset = torch.utils.data.TensorDataset(*data)
@@ -90,7 +89,6 @@ def test_sl4():
   from training_structures.MCTN_Level2 import train, test # noqa
   from unimodals.common_models import GRU, MLP # noqa
   from fusions.MCTN import Encoder, Decoder # noqa
-  from datasets.affect.get_data import get_dataloader # noqa
   import torch.nn as nn
 
   # Faking a dataloader with a list of lists, to test that training structures execute
