@@ -15,13 +15,13 @@ traindata, validdata, testdata = get_dataloader(
     "../video/multimodal_imdb.hdf5", "../video/mmimdb", vgg=True, batch_size=128)
 
 encoders = [Identity(), Identity()]
-head = MaxOut_MLP(23, 512, 4396).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+head = MaxOut_MLP(23, 512, 4396).cuda()
+fusion = Concat().cuda()
 
 train(encoders, fusion, head, traindata, validdata, 1000, early_stop=True, task="multilabel",
       save=filename, optimtype=torch.optim.AdamW, lr=4e-2, weight_decay=0.01, objective=torch.nn.BCEWithLogitsLoss())
 
 print("Testing:")
-model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+model = torch.load(filename).cuda()
 test(model, testdata, method_name="ef", dataset="imdb",
      criterion=torch.nn.BCEWithLogitsLoss(), task="multilabel")

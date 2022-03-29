@@ -14,9 +14,9 @@ traindata, validdata, testdata = get_dataloader(
     1, imputed_path='/home/pliang/yiwei/im.pk')
 modalnum = 0
 # build encoders, head and fusion layer
-#encoders = [MLP(5, 10, 10,dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), GRU(12, 30,dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
-encoder = MLP(5, 10, 10).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-head = MLP(10, 40, 2, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+#encoders = [MLP(5, 10, 10,dropout=False).cuda(), GRU(12, 30,dropout=False).cuda()]
+encoder = MLP(5, 10, 10).cuda()
+head = MLP(10, 40, 2, dropout=False).cuda()
 
 
 # train
@@ -24,7 +24,7 @@ train(encoder, head, traindata, validdata, 20, auprc=False, modalnum=modalnum)
 
 # test
 print("Testing: ")
-encoder = torch.load('encoder.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-head = torch.load('head.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+encoder = torch.load('encoder.pt').cuda()
+head = torch.load('head.pt').cuda()
 # dataset = 'mimic mortality', 'mimic 1', 'mimic 7'
 test(encoder, head, testdata, dataset='mimic 1', auprc=False, modalnum=modalnum)

@@ -14,14 +14,14 @@ headfile = "head_text.pt"
 traindata, validdata, testdata = get_dataloader(
     "../video/multimodal_imdb.hdf5", "../video/mmimdb", vgg=True, batch_size=128)
 
-encoders = MLP(300, 512, 512).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-head = MLP(512, 512, 23).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+encoders = MLP(300, 512, 512).cuda()
+head = MLP(512, 512, 23).cuda()
 
 train(encoders, head, traindata, validdata, 1000, early_stop=True, task="multilabel", save_encoder=encoderfile, modalnum=0,
       save_head=headfile, optimtype=torch.optim.AdamW, lr=1e-4, weight_decay=0.01, criterion=torch.nn.BCEWithLogitsLoss())
 
 print("Testing:")
-encoder = torch.load(encoderfile).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-head = torch.load(headfile).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+encoder = torch.load(encoderfile).cuda()
+head = torch.load(headfile).cuda()
 test(encoder, head, testdata, "imdb",
      "unimodal_image", task="multilabel", modalnum=0)

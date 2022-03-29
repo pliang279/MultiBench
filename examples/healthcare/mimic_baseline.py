@@ -16,16 +16,16 @@ traindata, validdata, testdata = get_dataloader(
     7, imputed_path='/home/pliang/yiwei/im.pk')
 
 # build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), GRU(
-    12, 30, dropout=False, batch_first=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
-head = MLP(730, 40, 2, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+encoders = [MLP(5, 10, 10, dropout=False).cuda(), GRU(
+    12, 30, dropout=False, batch_first=True).cuda()]
+head = MLP(730, 40, 2, dropout=False).cuda()
+fusion = Concat().cuda()
 
 # train
 train(encoders, fusion, head, traindata, validdata, 20, auprc=True)
 
 # test
 print("Testing: ")
-model = torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+model = torch.load('best.pt').cuda()
 # dataset = 'mimic mortality', 'mimic 1', 'mimic 7'
 test(model, testdata, dataset='mimic 7', auprc=True)

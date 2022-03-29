@@ -18,25 +18,25 @@ traindata, validdata, test_robust = \
     get_dataloader('/home/paul/MultiBench/mosi_data.pkl', robust_test=False)
 
 # mosi/mosei
-encoders = [Transformer(20, 40).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
-            Transformer(5, 10).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
-            Transformer(300, 600).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
-head = MLP(650, 256, 1).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+encoders = [Transformer(20, 40).cuda(),
+            Transformer(5, 10).cuda(),
+            Transformer(300, 600).cuda()]
+head = MLP(650, 256, 1).cuda()
 
 # humor/sarcasm
-# encoders=[Transformer(371,400).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), \
-#     Transformer(81,100).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),\
-#     Transformer(300,600).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
-# head=MLP(1100,256,1).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+# encoders=[Transformer(371,400).cuda(), \
+#     Transformer(81,100).cuda(),\
+#     Transformer(300,600).cuda()]
+# head=MLP(1100,256,1).cuda()
 
-fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+fusion = Concat().cuda()
 
 train(encoders, fusion, head, traindata, validdata, 100, task="regression", optimtype=torch.optim.AdamW,
       early_stop=True, is_packed=True, lr=1e-4, save='mosi_lf_best.pt', weight_decay=0.01, objective=torch.nn.L1Loss())
 
 
 print("Testing:")
-model = torch.load('mosi_lf_best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+model = torch.load('mosi_lf_best.pt').cuda()
 
 test(model=model, test_dataloaders_all=test_robust, dataset='mosi', is_packed=True,
      criterion=torch.nn.L1Loss(), task='posneg-classification', no_robust=True)

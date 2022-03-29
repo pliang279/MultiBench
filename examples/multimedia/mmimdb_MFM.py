@@ -18,14 +18,14 @@ traindata, validdata, testdata = get_dataloader(
 
 classes = 23
 n_latent = 512
-fuse = Sequential2(Concat(), MLP(2*n_latent, n_latent, n_latent//2)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+fuse = Sequential2(Concat(), MLP(2*n_latent, n_latent, n_latent//2)).cuda()
 encoders = [MaxOut_MLP(512, 512, 300, n_latent, False).cuda(
-), MaxOut_MLP(512, 1024, 4096, n_latent, False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
-head = Linear(n_latent//2, classes).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+), MaxOut_MLP(512, 1024, 4096, n_latent, False).cuda()]
+head = Linear(n_latent//2, classes).cuda()
 
-decoders = [MLP(n_latent, 600, 300).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(n_latent, 2048, 4096).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
-intermediates = [MLP(n_latent, n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
-                 MLP(n_latent, n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+decoders = [MLP(n_latent, 600, 300).cuda(), MLP(n_latent, 2048, 4096).cuda()]
+intermediates = [MLP(n_latent, n_latent//2, n_latent//2).cuda(),
+                 MLP(n_latent, n_latent//2, n_latent//2).cuda()]
 
 recon_loss = MFM_objective(2.0, [sigmloss1d, sigmloss1d], [
                            1.0, 1.0], criterion=torch.nn.BCEWithLogitsLoss())
@@ -34,6 +34,6 @@ train(encoders, fuse, head, traindata, validdata, 1000, decoders+intermediates, 
       objective_args_dict={"decoders": decoders, "intermediates": intermediates}, save=filename, optimtype=torch.optim.AdamW, lr=5e-3, weight_decay=0.01, objective=recon_loss)
 
 print("Testing:")
-model = torch.load(filename).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+model = torch.load(filename).cuda()
 test(model, testdata, method_name="MFM", dataset="imdb",
      criterion=torch.nn.BCEWithLogitsLoss(), task="multilabel")

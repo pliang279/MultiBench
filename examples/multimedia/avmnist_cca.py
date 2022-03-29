@@ -17,19 +17,19 @@ from objective_functions.objectives_for_supervised_learning import CCA_objective
 traindata, validdata, testdata = get_dataloader(
     '/home/pliang/yiwei/avmnist/_MFAS/avmnist', batch_size=800)
 channels = 6
-encoders = [LeNet(1, channels, 3).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), Sequential2(
-    LeNet(1, channels, 5), Linear(192, 48, xavier_init=True)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+encoders = [LeNet(1, channels, 3).cuda(), Sequential2(
+    LeNet(1, channels, 5), Linear(192, 48, xavier_init=True)).cuda()]
 #encoders=[MLP(300,512,outdim), MLP(4096,1024,outdim)]
 #encoders=[MLP(300, 512, 512), VGG16(512)]
 #encoders=[Linear(300, 512), Linear(4096,512)]
-# head=MLP(2*outdim,2*outdim,23).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-head = Linear(96, 10, xavier_init=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
-fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+# head=MLP(2*outdim,2*outdim,23).cuda()
+head = Linear(96, 10, xavier_init=True).cuda()
+fusion = Concat().cuda()
 
 train(encoders, fusion, head, traindata, validdata, 25,
       save="best_cca.pt", optimtype=torch.optim.AdamW, lr=1e-2, objective=CCA_objective(48), objective_args_dict={})
 # ,weight_decay=0.01)
 
 print("Testing:")
-model = torch.load('best_cca.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+model = torch.load('best_cca.pt').cuda()
 test(model, testdata, no_robust=True)
