@@ -131,7 +131,6 @@ class GRU(torch.nn.Module):
             return out
         else:
             out, l = self.gru(x)
-            print(l.size())
         if self.dropout:
             out = self.dropout_layer(out)
         if self.flatten:
