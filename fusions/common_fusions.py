@@ -1,3 +1,5 @@
+"""Implements common fusion patterns."""
+
 import torch
 from torch import nn
 from torch.nn import functional as F
@@ -5,54 +7,101 @@ import pdb
 from torch.autograd import Variable
 
 
-# Simple concatenation on dim 1
+
 class Concat(nn.Module):
+    """Concatenation of input data on dimension 1."""
+
     def __init__(self):
+        """Initialize Concat Module."""
         super(Concat, self).__init__()
 
     def forward(self, modalities):
+        """
+        Forward Pass of Concat.
+        
+        :param modalities: An iterable of modalities to combine
+        """
         flattened = []
         for modality in modalities:
             flattened.append(torch.flatten(modality, start_dim=1))
         return torch.cat(flattened, dim=1)
 
 
-# Simple Early concatenation on dim 2
+
 class ConcatEarly(nn.Module):
+    """Concatenation of input data on dimension 2."""
+
     def __init__(self):
+        """Initialize ConcatEarly Module."""
         super(ConcatEarly, self).__init__()
 
     def forward(self, modalities):
+        """
+        Forward Pass of ConcatEarly.
+        
+        :param modalities: An iterable of modalities to combine
+        """
         return torch.cat(modalities, dim=2)
 
 
 # Stacking modalities
 class Stack(nn.Module):
+    """Stacks modalities together on dimension 1."""
+
     def __init__(self):
+        """Initialize Stack Module."""
         super().__init__()
 
     def forward(self, modalities):
+        """
+        Forward Pass of Stack.
+        
+        :param modalities: An iterable of modalities to combine
+        """
         flattened = []
         for modality in modalities:
             flattened.append(torch.flatten(modality, start_dim=1))
         return torch.stack(flattened, dim=2)
 
 
-# Concatenation with a linear layer
 class ConcatWithLinear(nn.Module):
-    # input dim, output_dim: the in/out dim of the linear layer
+    """Concatenates input and applies a linear layer."""
+
     def __init__(self, input_dim, output_dim, concat_dim=1):
+        """Initialize ConcatWithLinear Module.
+        
+        :param input_dim: The input dimension for the linear layer
+        :param output_dim: The output dimension for the linear layer
+        :concat_dim: The concatentation dimension for the modalities.
+        """
         super(ConcatWithLinear, self).__init__()
         self.concat_dim = concat_dim
         self.fc = nn.Linear(input_dim, output_dim)
 
     def forward(self, modalities):
+        """
+        Forward Pass of Stack.
+        
+        :param modalities: An iterable of modalities to combine
+        """
         return self.fc(torch.cat(modalities, dim=self.concat_dim))
 
 
 class FiLM(nn.Module):
-    # See https://arxiv.org/pdf/1709.07871.pdf
+    """Implements FiLM - Feature-Wise Affine Transformations of the Input.
+    
+    See https://arxiv.org/pdf/1709.07871.pdf for more details.
+    """
+
     def __init__(self, gamma_generation_network, beta_generation_network, base_modal=0, gamma_generate_modal=1, beta_generate_modal=1):
+        """Initialize FiLM layer.
+        
+        :param gamma_generation_network: Network which generates gamma_parameters from gamma_generation_modal data.
+        :param beta_generation_network: Network which generates beta_parameters from beta_generation_modal data.
+        :param base_modal: Modality to apply affine transformation to.
+        :param gamma_generate_modal: Modality to generate gamma portion of affine transformation from.
+        :param beta_generate_modal: Modality to generate beta portion of affine transformation from.
+        """
         super(FiLM, self).__init__()
         self.g_net = gamma_generation_network
         self.b_net = beta_generation_network
@@ -61,16 +110,27 @@ class FiLM(nn.Module):
         self.bgen_modal = beta_generate_modal
 
     def forward(self, modalities):
+        """
+        Forward Pass of FiLM.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         gamma = self.g_net(modalities[self.ggen_modal])
         beta = self.b_net(modalities[self.bgen_modal])
         return gamma * modalities[self.base_modal] + beta
 
 
-# 3-modal Multiplicative Interactions
+
 class MultiplicativeInteractions3Modal(nn.Module):
-    # input_dims: list or tuple of 3 integers indicating sizes of input
-    # output_dim: size of output
+    """Implements 3-Way Modal Multiplicative Interactions."""
+    
     def __init__(self, input_dims, output_dim, task=None):
+        """Initialize MultiplicativeInteractions3Modal object.
+
+        :param input_dims: list or tuple of 3 integers indicating sizes of input
+        :param output_dim: size of outputs
+        :param task: Set to "affect" when working with social data.
+        """
         super(MultiplicativeInteractions3Modal, self).__init__()
         self.a = MultiplicativeInteractions2Modal([input_dims[0], input_dims[1]],
                                                   [input_dims[2], output_dim], 'matrix3D')
@@ -79,21 +139,30 @@ class MultiplicativeInteractions3Modal(nn.Module):
         self.task = task
 
     def forward(self, modalities):
+        """
+        Forward Pass of MultiplicativeInteractions3Modal.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         if self.task == 'affect':
             return torch.einsum('bm, bmp -> bp', modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
         return torch.matmul(modalities[2], self.a(modalities[0:2])) + self.b(modalities[0:2])
 
 
-# Multiplicative Interactions for 2 Modal
 class MultiplicativeInteractions2Modal(nn.Module):
-    # input_dims: list or tuple of 2 integers indicating input dimensions of the 2 modalities
-    # output_dim: output dimension
-    # output: type of MI, options from 'matrix3D','matrix','vector','scalar'
-    # flatten: whether we need to flatten the input modalities
-    # clip: clip parameter values, None if no clip
-    # grad_clip: clip grad values, None if no clip
-    # flip: whether to swap the two input modalities in forward function or not
+    """Implements 2-way Modal Multiplicative Interactions."""
+    
     def __init__(self, input_dims, output_dim, output, flatten=False, clip=None, grad_clip=None, flip=False):
+        """
+        :param input_dims: list or tuple of 2 integers indicating input dimensions of the 2 modalities
+        :param output_dim: output dimension
+        :param output: type of MI, options from 'matrix3D','matrix','vector','scalar'
+        :param flatten: whether we need to flatten the input modalities
+        :param clip: clip parameter values, None if no clip
+        :param grad_clip: clip grad values, None if no clip
+        :param flip: whether to swap the two input modalities in forward function or not
+        
+        """
         super(MultiplicativeInteractions2Modal, self).__init__()
         self.input_dims = input_dims
         self.clip = clip
@@ -151,10 +220,15 @@ class MultiplicativeInteractions2Modal(nn.Module):
                 p.register_hook(lambda grad: torch.clamp(
                     grad, grad_clip[0], grad_clip[1]))
 
-    def repeatHorizontally(self, tensor, dim):
+    def _repeatHorizontally(self, tensor, dim):
         return tensor.repeat(dim).view(dim, -1).transpose(0, 1)
 
     def forward(self, modalities):
+        """
+        Forward Pass of MultiplicativeInteractions2Modal.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         if len(modalities) == 1:
             return modalities[0]
         elif len(modalities) > 2:
@@ -198,17 +272,27 @@ class MultiplicativeInteractions2Modal(nn.Module):
         elif self.output == 'scalar':
             Wprime = torch.matmul(m1, self.W.unsqueeze(1)).squeeze(1) + self.V
             bprime = torch.matmul(m1, self.U.unsqueeze(1)).squeeze(1) + self.b
-            output = self.repeatHorizontally(
-                Wprime, self.input_dims[1]) * m2 + self.repeatHorizontally(bprime, self.input_dims[1])
+            output = self._repeatHorizontally(
+                Wprime, self.input_dims[1]) * m2 + self._repeatHorizontally(bprime, self.input_dims[1])
         return output
 
 
 class TensorFusion(nn.Module):
-    # https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py
+    """
+    Implementation of TensorFusion Networks.
+    
+    See https://github.com/Justin1904/TensorFusionNetworks/blob/master/model.py for more and the original code.
+    """
     def __init__(self):
+        """Instantiates TensorFusion Network Module."""
         super().__init__()
 
     def forward(self, modalities):
+        """
+        Forward Pass of TensorFusion.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         if len(modalities) == 1:
             return modalities[0]
 
@@ -227,11 +311,22 @@ class TensorFusion(nn.Module):
 
 
 class LowRankTensorFusion(nn.Module):
-    # https://github.com/Justin1904/Low-rank-Multimodal-Fusion
-    # input_dims: list or tuple of integers indicating input dimensions of the modalities
-    # output_dim: output dimension
-    # rank: a hyperparameter of LRTF. See link above for details
+    """
+    Implementation of Low-Rank Tensor Fusion.
+    
+    See https://github.com/Justin1904/Low-rank-Multimodal-Fusion for more information.
+    """
+
     def __init__(self, input_dims, output_dim, rank, flatten=True):
+        """
+        Initialize LowRankTensorFusion object.
+        
+        :param input_dims: list or tuple of integers indicating input dimensions of the modalities
+        :param output_dim: output dimension
+        :param rank: a hyperparameter of LRTF. See link above for details
+        :param flatten: Boolean to dictate if output should be flattened or not. Default: True
+        
+        """
         super(LowRankTensorFusion, self).__init__()
 
         # dimensions are specified in the order of audio, video and text
@@ -244,18 +339,23 @@ class LowRankTensorFusion(nn.Module):
         self.factors = []
         for input_dim in input_dims:
             factor = nn.Parameter(torch.Tensor(
-                self.rank, input_dim+1, self.output_dim)).cuda()
+                self.rank, input_dim+1, self.output_dim)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             nn.init.xavier_normal(factor)
             self.factors.append(factor)
 
-        self.fusion_weights = nn.Parameter(torch.Tensor(1, self.rank)).cuda()
+        self.fusion_weights = nn.Parameter(torch.Tensor(1, self.rank)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         self.fusion_bias = nn.Parameter(
-            torch.Tensor(1, self.output_dim)).cuda()
+            torch.Tensor(1, self.output_dim)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         # init the fusion weights
         nn.init.xavier_normal(self.fusion_weights)
         self.fusion_bias.data.fill_(0)
 
     def forward(self, modalities):
+        """
+        Forward Pass of Low-Rank TensorFusion.
+        
+        :param modalities: An iterable of modalities to combine. 
+        """
         batch_size = modalities[0].shape[0]
         # next we perform low-rank multimodal fusion
         # here is a more efficient implementation than the one the paper describes
@@ -263,7 +363,7 @@ class LowRankTensorFusion(nn.Module):
         fused_tensor = 1
         for (modality, factor) in zip(modalities, self.factors):
             ones = Variable(torch.ones(batch_size, 1).type(
-                modality.dtype), requires_grad=False).cuda()
+                modality.dtype), requires_grad=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             if self.flatten:
                 modality_withones = torch.cat(
                     (ones, torch.flatten(modality, start_dim=1)), dim=1)
@@ -279,10 +379,26 @@ class LowRankTensorFusion(nn.Module):
 
 
 class NLgate(torch.nn.Module):
-    # q_linear, k_linear, v_linear are none of no linear layer applied before q,k,v;
-    # otherwise, a tuple of (indim,outdim) is inputted for each of these 3 arguments
-    # See section F4 of "What makes training MM classification networks hard for details"
+    """
+    Implements of Non-Local Gate-based Fusion.
+
+    
+    See section F4 of https://arxiv.org/pdf/1905.12681.pdf for details
+    """
+    
     def __init__(self, thw_dim, c_dim, tf_dim, q_linear=None, k_linear=None, v_linear=None):
+        """
+        q_linear, k_linear, v_linear are none if no linear layer applied before q,k,v.
+        
+        Otherwise, a tuple of (indim,outdim) is required for each of these 3 arguments.
+        
+        :param thw_dim: See paper
+        :param c_dim: See paper
+        :param tf_dim: See paper
+        :param q_linear: See paper
+        :param k_linear: See paper
+        :param v_linear: See paper
+        """
         super(NLgate, self).__init__()
         self.qli = None
         if q_linear is not None:
@@ -299,6 +415,11 @@ class NLgate(torch.nn.Module):
         self.softmax = nn.Softmax(dim=2)
 
     def forward(self, x):
+        """
+        Apply Low-Rank TensorFusion to input.
+        
+        :param x: An iterable of modalities to combine. 
+        """
         q = x[0]
         k = x[1]
         v = x[1]

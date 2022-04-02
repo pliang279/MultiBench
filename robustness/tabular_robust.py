@@ -1,3 +1,4 @@
+"""Implements tabular data transformations."""
 import numpy as np
 
 

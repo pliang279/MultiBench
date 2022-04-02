@@ -15,5 +15,5 @@ traindata, validdata, testdata = get_dataloader(
 
 # test
 print("Testing: ")
-model = torch.load('best2.pt').cuda()
+model = torch.load('best2.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 test(model, testdata)

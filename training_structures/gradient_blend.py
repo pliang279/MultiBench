@@ -1,3 +1,4 @@
+"""Implements training structures for gradient blending."""
 import sklearn.metrics
 import torch
 from torch import nn
@@ -13,13 +14,25 @@ delta = False
 
 
 def getloss(model, head, data, monum, batch_size):
+    """Get loss for model given classification head.
+
+    Args:
+        model (nn.Module): Module to evaluate
+        head (nn.Module): Classification head.
+        data (torch.utils.data.Dataloader): Dataloader to evaluate on.
+        monum (int): Unimodal model index.
+        batch_size (int): (unused) Batch Size
+
+    Returns:
+        float: Average loss per sample.
+    """
     losses = 0.0
     total = 0
     with torch.no_grad():
         for j in data:
             total += len(j[0])
-            train_x = j[monum].float().cuda()
-            train_y = j[-1].cuda()
+            train_x = j[monum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+            train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             out = model(train_x)
             # if (monum==1):
             
@@ -31,7 +44,21 @@ def getloss(model, head, data, monum, batch_size):
 
 
 def train_unimodal(model, head, optim, trains, valids, monum, epoch, batch_size):
+    """Train unimodal gradient blending module.
 
+    Args:
+        model (nn.Module): Unimodal encoder
+        head (nn.Module): Classifier instance
+        optim (torch.optim.Optimizer): Optimizer instance
+        trains (torch.utils.data.DataLoader):  Training Dataloader Instance
+        valids (torch.utils.data.DataLoader):  Validation DataLoader Instance
+        monum (int): Modality index
+        epoch (int): Number of epochs to train on
+        batch_size (int): Batch size of data loaders
+
+    Returns:
+        float: Metric
+    """
     ltN = getloss(model, head, trains, monum, batch_size)
     lvN = getloss(model, head, valids, monum, batch_size)
     for i in range(epoch):
@@ -39,8 +66,8 @@ def train_unimodal(model, head, optim, trains, valids, monum, epoch, batch_size)
         total = 0
         for j in trains:
             total += len(j[0])
-            train_x = j[monum].float().cuda()
-            train_y = j[-1].cuda()
+            train_x = j[monum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+            train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             optim.zero_grad()
             out = model(train_x)
             out = head(out)
@@ -68,11 +95,30 @@ def train_unimodal(model, head, optim, trains, valids, monum, epoch, batch_size)
 
 
 def multimodalcondense(models, fuse, train_x):
+    """Compute fusion encoded output.
+
+    Args:
+        models (List): List of nn.Modules for each encoder
+        fuse (nn.Module): Fusion instance
+        train_x (List): List of Input Tensors
+
+    Returns:
+        torch.Tensor: Fused output
+    """
     outs = multimodalcompute(models, train_x)
     return fuse(outs)
 
 
 def multimodalcompute(models, train_x):
+    """Compute encoded representation for each modality in train_x using encoders in models.
+
+    Args:
+        models (list): List of encoder instances
+        train_x (List): List of Input Tensors
+
+    Returns:
+        List: List of encoded tensors
+    """
     outs = []
     for i in range(len(models)):
         outs.append(models[i](train_x[i]))
@@ -80,13 +126,25 @@ def multimodalcompute(models, train_x):
 
 
 def getmloss(models, head, fuse, data, batch_size):
+    """Calculate multimodal loss.
+
+    Args:
+        models (list): List of encoder models
+        head (nn.Module): Classifier module
+        fuse (nn.Module): Fusion module
+        data (torch.utils.data.Dataloader): Data loader to calculate loss on.
+        batch_size (int): Batch size of dataloader
+
+    Returns:
+        float: Average loss
+    """
     losses = 0.0
     total = 0
     with torch.no_grad():
         for j in data:
             total += len(j[0])
-            train_x = [x.float().cuda() for x in j[:-1]]
-            train_y = j[-1].cuda()
+            train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+            train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             out = head(multimodalcondense(models, fuse, train_x))
             loss = criterion(out, train_y.squeeze())
             losses += loss*len(j[0])
@@ -94,6 +152,21 @@ def getmloss(models, head, fuse, data, batch_size):
 
 
 def train_multimodal(models, head, fuse, optim, trains, valids, epoch, batch_size):
+    """Train multimodal gradient-blending model.
+
+    Args:
+        models (list): List of nn.modules for the encoders
+        head (nn.Module): Classifier, post fusion layer
+        fuse (nn.Module): Fusion module
+        optim (torch.optim.Optimizer): Optimizer instance.
+        trains (torch.utils.data.Dataloader): Training data dataloader
+        valids (torch.utils.data.Dataloader): Validation data dataloader
+        epoch (int): Number of epochs to train on
+        batch_size (int): Batch size
+
+    Returns:
+        float: metric
+    """
     ltN = getmloss(models, head, fuse, trains, batch_size)
     lvN = getmloss(models, head, fuse, valids, batch_size)
     for i in range(epoch):
@@ -101,8 +174,8 @@ def train_multimodal(models, head, fuse, optim, trains, valids, epoch, batch_siz
         total = 0
         for j in trains:
             total += len(j[0])
-            train_x = [x.float().cuda() for x in j[:-1]]
-            train_y = j[-1].cuda()
+            train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+            train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             optim.zero_grad()
             out = head(multimodalcondense(models, fuse, train_x))
             loss = criterion(out, train_y.squeeze())
@@ -129,20 +202,38 @@ def train_multimodal(models, head, fuse, optim, trains, valids, epoch, batch_siz
 
 def gb_estimate(unimodal_models, multimodal_classification_head, fuse, unimodal_classification_heads, train_dataloader, gb_epoch,
                 batch_size, v_dataloader, lr, weight_decay=0.0, optimtype=torch.optim.SGD):
+    """Compute estimate of gradient-blending score.
+
+    Args:
+        unimodal_models (list): List of encoder modules
+        multimodal_classification_head (nn.Module): Classifier given fusion instance
+        fuse (nn.Module): Fusion module
+        unimodal_classification_heads (list): List of unimodal classifiers
+        train_dataloader (torch.utils.data.Dataloader): Training data loader
+        gb_epoch (int): Number of epochs for gradient-blending
+        batch_size (int): Batch size
+        v_dataloader (torch.utils.data.Dataloader): Validation dataloader
+        lr (float): Learning Rate
+        weight_decay (float, optional): Weight decay parameter. Defaults to 0.0.
+        optimtype (torch.optim.Optimizer, optional): Optimizer instance. Defaults to torch.optim.SGD.
+
+    Returns:
+        float: Normalized weights between unimodal and multimodal models
+    """
     weights = []
     for i in range(len(unimodal_models)):
         print("At gb_estimate unimodal "+str(i))
-        model = copy.deepcopy(unimodal_models[i]).cuda()
-        head = copy.deepcopy(unimodal_classification_heads[i]).cuda()
+        model = copy.deepcopy(unimodal_models[i]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+        head = copy.deepcopy(unimodal_classification_heads[i]).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         optim = optimtype(list(model.parameters()) +
                           list(head.parameters()), lr=lr, weight_decay=weight_decay)
         w = train_unimodal(model, head, optim, train_dataloader,
                            v_dataloader, i, gb_epoch, batch_size)
         weights.append(w)
     print("At gb_estimate multimodal ")
-    allcopies = [copy.deepcopy(x).cuda() for x in unimodal_models]
-    mmcopy = copy.deepcopy(multimodal_classification_head).cuda()
-    fusecopy = copy.deepcopy(fuse).cuda()
+    allcopies = [copy.deepcopy(x).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in unimodal_models]
+    mmcopy = copy.deepcopy(multimodal_classification_head).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    fusecopy = copy.deepcopy(fuse).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
     params = []
     for model in allcopies:
         params.extend(list(model.parameters()))
@@ -160,44 +251,75 @@ softmax = nn.Softmax()
 
 
 class completeModule(nn.Module):
+    """Implements and combines sub-modules into a full classifier."""
     def __init__(self, encoders, fuse, head):
+        """Instantiate completeModule instance.
+
+        Args:
+            encoders (list): List of nn.Module encoders
+            fuse (nn.Module): Fusion module
+            head (nn.Module): Classifier module
+        """
         super(completeModule, self).__init__()
         self.encoders = nn.ModuleList(encoders)
         self.fuse = fuse
         self.head = head
 
     def forward(self, x):
+        """Apply classifier to output.
+
+        Args:
+            x (list[torch.Tensor]): List of input tensors
+
+        Returns:
+            torch.Tensor: Classifier output
+        """
         outs = multimodalcondense(self.encoders, self.fuse, x)
         return self.head(outs)
 
 
 def calcAUPRC(pts):
+    """Calculate AUPRC score given true labels and predicted probabilities.
+
+    Args:
+        pts (list): List of (true, predicted prob) for each sample in batch.
+
+    Returns:
+        float: AUPRC score
+    """
     true_labels = [int(x[1]) for x in pts]
     predicted_probs = [x[0] for x in pts]
     return sklearn.metrics.average_precision_score(true_labels, predicted_probs)
 
-# unimodal_models: list of modules, unimodal encoders for each input modality in the order of the modality input data.
-# multimodal_classification_head: classification head that takes in fused output of unimodal models of all modalities
-# unimodal_classification_heads: list of classification heads that each takes in output of one unimodal model (must be in the same modality order as unimodal_models)
-# fuse: fusion module that takes in a list of outputs from unimodal_models and generate a fused representation
-# train_dataloader, valid_dataloader: dataloaders of input datas
-# num_epochs: total number of epochs
-# lr: learning rate
-# gb_epoch: how many epochs between re-evaluate weights of gradient blend
-# v_rate: portion of training set used as validation for gradient blend weight estimation
-# weight_decay: weight decay of optimizer
-# optimtype: type of optimizer to use
-# finetune_epoch: how many epochs to finetune the classification head
-# classification: whether the task is a classification task
-# auprc: whether to compute auprc score or not
-# savedir: the name of the saved file for the model with current best validation performance
+
 
 
 def train(unimodal_models,  multimodal_classification_head,
           unimodal_classification_heads, fuse, train_dataloader, valid_dataloader,
           num_epoch, lr, gb_epoch=20, v_rate=0.08, weight_decay=0.0, optimtype=torch.optim.SGD,
           finetune_epoch=25, classification=True, AUPRC=False, savedir='best.pt', track_complexity=True):
-    def trainprocess():
+    """Train model using gradient_blending.
+
+    Args:
+        unimodal_models (list): List of modules, unimodal encoders for each input modality in the order of the modality input data.
+        multimodal_classification_head (nn.Module): Classification head that takes in fused output of unimodal models of all modalities
+        unimodal_classification_heads (list[nn.Module]): List of classification heads that each takes in output of one unimodal model (must be in the same modality order as unimodal_models)
+        fuse (nn.Module): Fusion module that takes in a list of outputs from unimodal_models and generate a fused representation
+        train_dataloader (torch.utils.data.DataLoader): Training data loader
+        valid_dataloader (torch.utils.data.DataLoader): Validation data loader
+        num_epoch (int): Number of epochs to train this model on.
+        lr (float): Learning rate.
+        gb_epoch (int, optional): Number of epochs between re-evaluation of weights of gradient blend. Defaults to 20.
+        v_rate (float, optional): Portion of training set used as validation for gradient blend weight estimation. Defaults to 0.08.
+        weight_decay (float, optional): Weight decay of optimizer. Defaults to 0.0.
+        optimtype (torch.optim.Optimizer, optional):  Type of optimizer to use. Defaults to torch.optim.SGD.
+        finetune_epoch (int, optional): Number of epochs to finetune the classification head. Defaults to 25.
+        classification (bool, optional): Whether the task is a classification task. Defaults to True.
+        AUPRC (bool, optional): Whether to compute auprc score or not. Defaults to False.
+        savedir (str, optional): The name of the saved file for the model with current best validation performance. Defaults to 'best.pt'.
+        track_complexity (bool, optional): Whether to track complexity or not. Defaults to True.
+    """
+    def _trainprocess():
         nonlocal train_dataloader
         params = []
         for model in unimodal_models:
@@ -220,8 +342,8 @@ def train(unimodal_models,  multimodal_classification_head,
             train_data, shuffle=True, num_workers=8, batch_size=train_dataloader.batch_size)
         tv_dataloader = DataLoader(
             v_data, shuffle=False, num_workers=8, batch_size=train_dataloader.batch_size)
-        finetunehead = copy.deepcopy(multimodal_classification_head).cuda()
-        fusehead = copy.deepcopy(fuse).cuda()
+        finetunehead = copy.deepcopy(multimodal_classification_head).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+        fusehead = copy.deepcopy(fuse).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
         params = list(finetunehead.parameters())
         if fuse.parameters() is not None:
             params.extend(list(fuse.parameters()))
@@ -237,8 +359,8 @@ def train(unimodal_models,  multimodal_classification_head,
             for jj in range(gb_epoch):
                 totalloss = 0.0
                 for j in train_dataloader:
-                    train_x = [x.float().cuda() for x in j[:-1]]
-                    train_y = j[-1].cuda()
+                    train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+                    train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                     optim.zero_grad()
                     outs = multimodalcompute(unimodal_models, train_x)
                     fuse.train()
@@ -259,8 +381,8 @@ def train(unimodal_models,  multimodal_classification_head,
             finetunetrains = []
             with torch.no_grad():
                 for j in train_dataloader:
-                    train_x = [x.float().cuda() for x in j[:-1]]
-                    train_y = j[-1].cuda()
+                    train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+                    train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                     outs = multimodalcompute(unimodal_models, train_x)
                     for iii in range(len(train_y)):
                         aa = [x[iii].cpu() for x in outs]
@@ -275,8 +397,8 @@ def train(unimodal_models,  multimodal_classification_head,
                 totalloss = 0.0
                 for j in ftt_dataloader:
                     optimi.zero_grad()
-                    train_x = [x.float().cuda() for x in j[:-1]]
-                    train_y = j[-1].cuda()
+                    train_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+                    train_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                     finetunehead.train()
                     fusehead.train()
                     blendloss = criterion(finetunehead(
@@ -291,8 +413,8 @@ def train(unimodal_models,  multimodal_classification_head,
                     corrects = 0
                     auprclist = []
                     for j in valid_dataloader:
-                        valid_x = [x.float().cuda() for x in j[:-1]]
-                        valid_y = j[-1].cuda()
+                        valid_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+                        valid_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                         outs = multimodalcompute(unimodal_models, valid_x)
                         fusehead.eval()
                         catout = fusehead(outs)
@@ -321,21 +443,32 @@ def train(unimodal_models,  multimodal_classification_head,
                         torch.save(completeModule(unimodal_models,
                                                   fusehead, finetunehead), savedir)
     if track_complexity:
-        all_in_one_train(trainprocess, unimodal_models +
+        all_in_one_train(_trainprocess, unimodal_models +
                          [multimodal_classification_head, fuse]+unimodal_classification_heads)
     else:
-        trainprocess()
+        _trainprocess()
 
 
 def single_test(model, test_dataloader, auprc=False, classification=True):
+    """Run single test with model and test data loader.
+
+    Args:
+        model (nn.Module): Model to evaluate.
+        test_dataloader (torch.utils.data.DataLoader): Test data loader
+        auprc (bool, optional): Whether to return AUPRC scores or not. Defaults to False.
+        classification (bool, optional): Whether to return classification accuracy or not. Defaults to True.
+
+    Returns:
+        dict: Dictionary of (metric, value) pairs
+    """
     with torch.no_grad():
         totalloss = 0.0
         total = 0
         corrects = 0
         auprclist = []
         for j in test_dataloader:
-            valid_x = [x.float().cuda() for x in j[:-1]]
-            valid_y = j[-1].cuda()
+            valid_x = [x.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for x in j[:-1]]
+            valid_y = j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
             predicts = model(valid_x)
             blendloss = criterion(predicts, valid_y.squeeze())
             totalloss += blendloss*len(j[0])
@@ -360,16 +493,27 @@ def single_test(model, test_dataloader, auprc=False, classification=True):
 
 
 def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, classification=True, no_robust=False):
+    """Test module, reporting results to stdout.
+
+    Args:
+        model (nn.Module): Model to test
+        test_dataloaders_all (list[torch.utils.data.Dataloader]): List of data loaders to test on.
+        dataset (string): Dataset name
+        method_name (str, optional): Method name. Defaults to 'My method'.
+        auprc (bool, optional): Whether to use AUPRC scores or not. Defaults to False.
+        classification (bool, optional): Whether the task is classificaion or not. Defaults to True.
+        no_robust (bool, optional): Whether to not apply robustness variations to input. Defaults to False.
+    """
     if no_robust:
-        def testprocess():
+        def _testprocess():
             single_test(model, test_dataloaders_all, auprc, classification)
-        all_in_one_test(testprocess, [model])
+        all_in_one_test(_testprocess, [model])
         return
 
-    def testprocess():
+    def _testprocess():
         single_test(model, test_dataloaders_all[list(
             test_dataloaders_all.keys())[0]][0], auprc, classification)
-    all_in_one_test(testprocess, [model])
+    all_in_one_test(_testprocess, [model])
     for noisy_modality, test_dataloaders in test_dataloaders_all.items():
         print("Testing on noisy data ({})...".format(noisy_modality))
         robustness_curve = dict()

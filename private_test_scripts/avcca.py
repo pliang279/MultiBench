@@ -14,14 +14,14 @@ sys.path.append(os.getcwd())
 traindata, validdata, testdata = get_dataloader(
     '/home/pliang/yiwei/avmnist/_MFAS/avmnist', batch_size=800)
 channels = 6
-encoders = [LeNet(1, channels, 3).cuda(), Sequential2(
-    LeNet(1, channels, 5), Linear(192, 48, xavier_init=True)).cuda()]
+encoders = [LeNet(1, channels, 3).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), Sequential2(
+    LeNet(1, channels, 5), Linear(192, 48, xavier_init=True)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
 #encoders=[MLP(300,512,outdim), MLP(4096,1024,outdim)]
 #encoders=[MLP(300, 512, 512), VGG16(512)]
 #encoders=[Linear(300, 512), Linear(4096,512)]
-# head=MLP(2*outdim,2*outdim,23).cuda()
-head = Linear(96, 10, xavier_init=True).cuda()
-fusion = Concat().cuda()
+# head=MLP(2*outdim,2*outdim,23).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+head = Linear(96, 10, xavier_init=True).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def trpr():
@@ -31,7 +31,7 @@ def trpr():
     # ,weight_decay=0.01)
 all_in_one_train(trpr, encoders+[fusion, head])
 print("Testing:")
-model = torch.load('best_cca.pt').cuda()
+model = torch.load('best_cca.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def tepr():

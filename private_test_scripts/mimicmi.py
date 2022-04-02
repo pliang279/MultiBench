@@ -15,10 +15,10 @@ traindata, validdata, testdata = get_dataloader(
     1, imputed_path='datasets/mimic/im.pk')
 
 # build encoders, head and fusion layer
-encoders = [MLP(5, 10, 10, dropout=False).cuda(),
-            GRU(12, 30, dropout=False).cuda()]
-head = MLP(100, 40, 2, dropout=False).cuda()
-#fusion = LowRankTensorFusion([10,720],100,40).cuda()
+encoders = [MLP(5, 10, 10, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")),
+            GRU(12, 30, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(100, 40, 2, dropout=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+#fusion = LowRankTensorFusion([10,720],100,40).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 fusion = MultiplicativeInteractions2Modal(
     [10, 720], 100, 'matrix', flatten=True)
 
@@ -34,7 +34,7 @@ all_in_one_train(trainprocess, [encoders[0], encoders[1], fusion, head])
 
 # test
 print("Testing: ")
-model = torch.load('best.pt').cuda()
+model = torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def testprocess():

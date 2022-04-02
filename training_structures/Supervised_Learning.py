@@ -1,4 +1,5 @@
 
+"""Implements supervised learning training procedures."""
 import torch
 from torch import nn
 import time
@@ -12,7 +13,17 @@ softmax = nn.Softmax()
 
 
 class MMDL(nn.Module):
+    """Implements MMDL classifier."""
+    
     def __init__(self, encoders, fusion, head, has_padding=False):
+        """Instantiate MMDL Module
+
+        Args:
+            encoders (List): List of nn.Module encoders, one per modality.
+            fusion (nn.Module): Fusion module
+            head (nn.Module): Classifier module
+            has_padding (bool, optional): Whether input has padding or not. Defaults to False.
+        """
         super(MMDL, self).__init__()
         self.encoders = nn.ModuleList(encoders)
         self.fuse = fusion
@@ -22,6 +33,14 @@ class MMDL(nn.Module):
         self.reps = []
 
     def forward(self, inputs):
+        """Apply MMDL to Layer Input.
+
+        Args:
+            inputs (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
         outs = []
         if self.has_padding:
             for i in range(len(inputs[0])):
@@ -48,36 +67,20 @@ class MMDL(nn.Module):
 
 
 def deal_with_objective(objective, pred, truth, args):
+    """Alter inputs depending on objective function, to deal with different objective arguments."""
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     if type(objective) == nn.CrossEntropyLoss:
         if len(truth.size()) == len(pred.size()):
             truth1 = truth.squeeze(len(pred.size())-1)
         else:
             truth1 = truth
-        return objective(pred, truth1.long().cuda())
+        return objective(pred, truth1.long().to(device))
     elif type(objective) == nn.MSELoss or type(objective) == nn.modules.loss.BCEWithLogitsLoss or type(objective) == nn.L1Loss:
-        return objective(pred, truth.float().cuda())
+        return objective(pred, truth.float().to(device))
     else:
         return objective(pred, truth, args)
 
-# encoders: list of modules, unimodal encoders for each input modality in the order of the modality input data.
-# fusion: fusion module, takes in outputs of encoders in a list and outputs fused representation
-# head: classification or prediction head, takes in output of fusion module and outputs the classification or prediction results that will be sent to the objective function for loss calculation
-# total_epochs: maximum number of epochs to train
-# additional_optimizing_modules: list of modules, include all modules that you want to be optimized by the optimizer other than those in encoders, fusion, head (for example, decoders in MVAE)
-# is_packed: whether the input modalities are packed in one list or not (default is False, which means we expect input of [tensor(20xmodal1_size),(20xmodal2_size),(20xlabel_size)] for batch size 20 and 2 input modalities)
-# early_stop: whether to stop early if valid performance does not improve over 7 epochs
-# task: type of task, currently support "classification","regression","multilabel"
-# optimtype: type of optimizer to use
-# lr: learning rate
-# weight_decay: weight decay of optimizer
-# objective: objective function, which is either one of CrossEntropyLoss, MSELoss or BCEWithLogitsLoss or a custom objective function that takes in three arguments: prediction, ground truth, and an argument dictionary.
-# auprc: whether to compute auprc score or not
-# save: the name of the saved file for the model with current best validation performance
-# validtime: whether to show valid time in seconds or not
-# objective_args_dict: the argument dictionary to be passed into objective function. If not None, at every batch the dict's "reps", "fused", "inputs", "training" fields will be updated to the batch's encoder outputs, fusion module output, input tensors, and boolean of whether this is training or validation, respectively.
-# input_to_float: whether to convert input to float type or not
-# clip_val: grad clipping limit
-# track_complexity: whether to track training complexity or not
+
 
 
 def train(
@@ -85,9 +88,33 @@ def train(
         early_stop=False, task="classification", optimtype=torch.optim.RMSprop, lr=0.001, weight_decay=0.0,
         objective=nn.CrossEntropyLoss(), auprc=False, save='best.pt', validtime=False, objective_args_dict=None, input_to_float=True, clip_val=8,
         track_complexity=True):
-    model = MMDL(encoders, fusion, head, has_padding=is_packed).cuda()
+    """
+    Handle running a simple supervised training loop.
+    
+    :param encoders: list of modules, unimodal encoders for each input modality in the order of the modality input data.
+    :param fusion: fusion module, takes in outputs of encoders in a list and outputs fused representation
+    :param head: classification or prediction head, takes in output of fusion module and outputs the classification or prediction results that will be sent to the objective function for loss calculation
+    :param total_epochs: maximum number of epochs to train
+    :param additional_optimizing_modules: list of modules, include all modules that you want to be optimized by the optimizer other than those in encoders, fusion, head (for example, decoders in MVAE)
+    :param is_packed: whether the input modalities are packed in one list or not (default is False, which means we expect input of [tensor(20xmodal1_size),(20xmodal2_size),(20xlabel_size)] for batch size 20 and 2 input modalities)
+    :param early_stop: whether to stop early if valid performance does not improve over 7 epochs
+    :param task: type of task, currently support "classification","regression","multilabel"
+    :param optimtype: type of optimizer to use
+    :param lr: learning rate
+    :param weight_decay: weight decay of optimizer
+    :param objective: objective function, which is either one of CrossEntropyLoss, MSELoss or BCEWithLogitsLoss or a custom objective function that takes in three arguments: prediction, ground truth, and an argument dictionary.
+    :param auprc: whether to compute auprc score or not
+    :param save: the name of the saved file for the model with current best validation performance
+    :param validtime: whether to show valid time in seconds or not
+    :param objective_args_dict: the argument dictionary to be passed into objective function. If not None, at every batch the dict's "reps", "fused", "inputs", "training" fields will be updated to the batch's encoder outputs, fusion module output, input tensors, and boolean of whether this is training or validation, respectively.
+    :param input_to_float: whether to convert input to float type or not
+    :param clip_val: grad clipping limit
+    :param track_complexity: whether to track training complexity or not
+    """
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    model = MMDL(encoders, fusion, head, has_padding=is_packed).to(device)
 
-    def trainprocess():
+    def _trainprocess():
         additional_params = []
         for m in additional_optimizing_modules:
             additional_params.extend(
@@ -99,7 +126,7 @@ def train(
         bestf1 = 0
         patience = 0
 
-        def processinput(inp):
+        def _processinput(inp):
             if input_to_float:
                 return inp.float()
             else:
@@ -114,12 +141,12 @@ def train(
                 if is_packed:
                     with torch.backends.cudnn.flags(enabled=False):
                         model.train()
-                        out = model([[processinput(i).cuda()
+                        out = model([[_processinput(i).to(device)
                                     for i in j[0]], j[1]])
 
                 else:
                     model.train()
-                    out = model([processinput(i).cuda()
+                    out = model([_processinput(i).to(device)
                                 for i in j[:-1]])
                 if not (objective_args_dict is None):
                     objective_args_dict['reps'] = model.reps
@@ -148,11 +175,11 @@ def train(
                 for j in valid_dataloader:
                     if is_packed:
                         model.train()
-                        out = model([[processinput(i).cuda()
+                        out = model([[_processinput(i).to(device)
                                     for i in j[0]], j[1]])
                     else:
                         model.train()
-                        out = model([processinput(i).cuda()
+                        out = model([_processinput(i).to(device)
                                     for i in j[:-1]])
 
                     if not (objective_args_dict is None):
@@ -220,15 +247,26 @@ def train(
                 print("valid time:  "+str(validendtime-validstarttime))
                 print("Valid total: "+str(totals))
     if track_complexity:
-        all_in_one_train(trainprocess, [model]+additional_optimizing_modules)
+        all_in_one_train(_trainprocess, [model]+additional_optimizing_modules)
     else:
-        trainprocess()
+        _trainprocess()
 
 
 def single_test(
         model, test_dataloader, is_packed=False,
         criterion=nn.CrossEntropyLoss(), task="classification", auprc=False, input_to_float=True):
-    def processinput(inp):
+    """Run single test for model.
+
+    Args:
+        model (nn.Module): Model to test
+        test_dataloader (torch.utils.data.Dataloader): Test dataloader
+        is_packed (bool, optional): Whether the input data is packed or not. Defaults to False.
+        criterion (_type_, optional): Loss function. Defaults to nn.CrossEntropyLoss().
+        task (str, optional): Task to evaluate. Choose between "classification", "multiclass", "regression", "posneg-classification". Defaults to "classification".
+        auprc (bool, optional): Whether to get AUPRC scores or not. Defaults to False.
+        input_to_float (bool, optional): Whether to convert inputs to float before processing. Defaults to True.
+    """
+    def _processinput(inp):
         if input_to_float:
             return inp.float()
         else:
@@ -241,25 +279,25 @@ def single_test(
         for j in test_dataloader:
             model.eval()
             if is_packed:
-                out = model([[processinput(i).cuda()
+                out = model([[_processinput(i).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                             for i in j[0]], j[1]])
             else:
-                out = model([processinput(i).float().cuda()
+                out = model([_processinput(i).float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
                             for i in j[:-1]])
             if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss or type(criterion) == torch.nn.MSELoss:
-                loss = criterion(out, j[-1].float().cuda())
+                loss = criterion(out, j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
 
             # elif type(criterion) == torch.nn.CrossEntropyLoss:
-            #     loss=criterion(out, j[-1].long().cuda())
+            #     loss=criterion(out, j[-1].long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
 
             elif type(criterion) == nn.CrossEntropyLoss:
                 if len(j[-1].size()) == len(out.size()):
                     truth1 = j[-1].squeeze(len(out.size())-1)
                 else:
                     truth1 = j[-1]
-                loss = criterion(out, truth1.long().cuda())
+                loss = criterion(out, truth1.long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             else:
-                loss = criterion(out, j[-1].cuda())
+                loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             totalloss += loss*len(j[-1])
             if task == "classification":
                 pred.append(torch.argmax(out, 1))
@@ -307,24 +345,28 @@ def single_test(
             return {'Accuracy': accs}
 
 
-# model: saved checkpoint filename from train
-# test_dataloaders_all: test data
-# dataset: the name of dataset, need to be set for testing effective robustness
-# criterion: only needed for regression, put MSELoss there
-# all other arguments are same as train
+
 def test(
         model, test_dataloaders_all, dataset='default', method_name='My method', is_packed=False, criterion=nn.CrossEntropyLoss(), task="classification", auprc=False, input_to_float=True, no_robust=False):
+    """
+    Handle getting test results for a simple supervised training loop.
+    
+    :param model: saved checkpoint filename from train
+    :param test_dataloaders_all: test data
+    :param dataset: the name of dataset, need to be set for testing effective robustness
+    :param criterion: only needed for regression, put MSELoss there   
+    """
     if no_robust:
-        def testprocess():
+        def _testprocess():
             single_test(model, test_dataloaders_all, is_packed,
                         criterion, task, auprc, input_to_float)
-        all_in_one_test(testprocess, [model])
+        all_in_one_test(_testprocess, [model])
         return
 
-    def testprocess():
+    def _testprocess():
         single_test(model, test_dataloaders_all[list(test_dataloaders_all.keys())[
                     0]][0], is_packed, criterion, task, auprc, input_to_float)
-    all_in_one_test(testprocess, [model])
+    all_in_one_test(_testprocess, [model])
     for noisy_modality, test_dataloaders in test_dataloaders_all.items():
         print("Testing on noisy data ({})...".format(noisy_modality))
         robustness_curve = dict()

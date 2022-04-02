@@ -1,3 +1,4 @@
+"""Implements data loaders for the multitask formulation of MIMIC."""
 import numpy as np
 from torch.utils.data import DataLoader
 import random
@@ -6,6 +7,18 @@ import pickle
 
 
 def get_dataloader(batch_size=40, num_workers=1, train_shuffle=True, imputed_path='im.pk', flatten_time_series=False):
+    """Generate dataloader for multi-task setup, using only tasks -1 and 7.
+
+    Args:
+        batch_size (int, optional): Batch size. Defaults to 40.
+        num_workers (int, optional): Number of workers to load data in. Defaults to 1.
+        train_shuffle (bool, optional): Whether to shuffle training data or not. Defaults to True.
+        imputed_path (str, optional): Datafile location. Defaults to 'im.pk'.
+        flatten_time_series (bool, optional): Whether to flatten time series data or not. Defaults to False.
+
+    Returns:
+        tupe: Tuple of training dataloader, validation dataloader, and test dataloader.
+    """
     f = open(imputed_path, 'rb')
     datafile = pickle.load(f)
     f.close()

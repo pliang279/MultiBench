@@ -19,13 +19,13 @@ n_latent = 200
 series_dim = 12
 timestep = 24
 fuse = Concat()
-encoders = [MLP(5, 20, n_latent).cuda(), TSEncoder(
-    series_dim, 30, n_latent, timestep, returnvar=False).cuda()]
-decoders = [MLP(n_latent, 20, 5).cuda(), TSDecoder(
-    series_dim, 30, n_latent, timestep).cuda()]
-intermediates = [MLP(n_latent, n_latent//2, n_latent//2).cuda(), MLP(n_latent,
-                                                                     n_latent//2, n_latent//2).cuda(), MLP(2*n_latent, n_latent, n_latent//2).cuda()]
-head = MLP(n_latent//2, 20, classes).cuda()
+encoders = [MLP(5, 20, n_latent).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSEncoder(
+    series_dim, 30, n_latent, timestep, returnvar=False).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+decoders = [MLP(n_latent, 20, 5).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), TSDecoder(
+    series_dim, 30, n_latent, timestep).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+intermediates = [MLP(n_latent, n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(n_latent,
+                                                                     n_latent//2, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), MLP(2*n_latent, n_latent, n_latent//2).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(n_latent//2, 20, classes).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 recon_loss = recon_weighted_sum([sigmloss1d, sigmloss1d], [1.0, 1.0])
 
 

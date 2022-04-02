@@ -1,3 +1,5 @@
+"""Implements dataloaders for the Yummly dataset."""
+
 import numpy as np
 import os
 import pickle
@@ -10,12 +12,12 @@ from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import Dataset, DataLoader
 
 
-def load_pkl(path):
+def _load_pkl(path):
     with open(path, 'rb') as f:
         return pickle.load(f)
 
 
-def mk_label_map(label_set):
+def _mk_label_map(label_set):
     '''
     Returns dictionary mapping raw label to integer (0-indexed)
     '''
@@ -25,7 +27,7 @@ def mk_label_map(label_set):
     return label_to_int
 
 
-def tokenize_text(text, word2index):
+def _tokenize_text(text, word2index):
     '''
     Args:
         text: string
@@ -43,13 +45,24 @@ def tokenize_text(text, word2index):
 
 
 class YummlyDataset(Dataset):
+    """Implements Yummly Data as a torch Dataset."""
+    
     def __init__(self, data_dir, phase, width, height, word2index):
-        fid_to_label = load_pkl(os.path.join(data_dir, 'fid_to_label.pkl'))
-        fid_to_text = load_pkl(os.path.join(data_dir, 'fid_to_text.pkl'))
+        """Initialize YummlyDataset.
+
+        Args:
+            data_dir (str): Data Directory
+            phase (str): 'train' or 'valid', else all other data.
+            width (int): Width to resize data to 
+            height (int): Height to resize data to
+            word2index (dictionary): Dictionary of word to indexes for tokenizer
+        """
+        fid_to_label = _load_pkl(os.path.join(data_dir, 'fid_to_label.pkl'))
+        fid_to_text = _load_pkl(os.path.join(data_dir, 'fid_to_text.pkl'))
         fids = list(fid_to_label.keys())
         paths = [os.path.join(data_dir, 'images', 'img%s.jpg' % fid)
                  for fid in fids]
-        label_to_int = mk_label_map(set(fid_to_label.values()))
+        label_to_int = _mk_label_map(set(fid_to_label.values()))
         targets = [label_to_int[fid_to_label[fid]] for fid in fids]
         num_labels = len(np.unique(targets))
         texts = [fid_to_text[fid] for fid in fids]
@@ -76,18 +89,35 @@ class YummlyDataset(Dataset):
                                                        x, [2, 0, 1]),
                                                    lambda x: x/255.])
         self.transform_text = transforms.Compose(
-            [lambda x: tokenize_text(x, word2index)])
+            [lambda x: _tokenize_text(x, word2index)])
 
     def __getitem__(self, i):
+        """Get item at index i.
+
+        Args:
+            i (int): Index of data
+
+        Returns:
+            tuple(torch.Tensor, torch.Tensor, torch.Tensor): Tuple of (input modality 1, input modality 2, targets)
+        """
         p = self.paths[i]
         t = self.texts[i]
         return self.transform_image(p), self.transform_input(t), self.targets[i]
 
     def __len__(self):
+        """Get number of samples in dataset."""
         return len(self.paths)
 
 
 def collate_yummly(batch):
+    """Collate yummly data into batches.
+
+    Args:
+        batch (list(elements)): List of tuple(img, text, label)
+
+    Returns:
+        torch.Tensor: Collated tensors for imgs, texts, and labels in a batch.
+    """
     new_imgs = []
     new_texts = []
     new_labels = []
@@ -102,8 +132,19 @@ def collate_yummly(batch):
 
 
 def get_dataloader(data_dir, batch_size=40, num_workers=8, train_shuffle=True):
+    """Create train, test, and validation dataloaders.
+
+    Args:
+        data_dir (str): Data directory
+        batch_size (int, optional): Batch size. Defaults to 40.
+        num_workers (int, optional): Number of workers. Defaults to 8.
+        train_shuffle (bool, optional): Whether to shuffle training data or not. Defaults to True.
+
+    Returns:
+        tuple: Tuple of training dataloader, validation dataloader, test dataloader
+    """
     word2index_path = os.path.join(data_dir, 'word2index.pkl')
-    word2index = load_pkl(word2index_path)
+    word2index = _load_pkl(word2index_path)
     valid_set = YummlyDataset(data_dir, 'valid', 128, 128, word2index)
     test_set = YummlyDataset(data_dir, 'test', 128, 128, word2index)
     train_set = YummlyDataset(data_dir, 'train', 128, 128, word2index)

@@ -1,11 +1,10 @@
+"""Utility functions for robotics unimodals."""
 import torch
 import torch.nn as nn
 
 
 def init_weights(modules):
-    """
-    Weight initialization from original SensorFusion Code
-    """
+    """Weight initialization from original SensorFusion Code."""
     for m in modules:
         if isinstance(m, nn.Conv2d) or isinstance(m, nn.ConvTranspose2d):
             nn.init.kaiming_normal_(m.weight.data)
@@ -18,6 +17,7 @@ def init_weights(modules):
 
 def rescaleImage(image, output_size=128, scale=1 / 255.0):
     """Rescale the image in a sample to a given size.
+    
     Args:
         output_size (tuple or int): Desired output size. If tuple, output is
             matched to output_size. If int, smaller of image edges is matched
@@ -28,6 +28,14 @@ def rescaleImage(image, output_size=128, scale=1 / 255.0):
 
 
 def filter_depth(depth_image):
+    """Get filter depth given a depth image.
+
+    Args:
+        depth_image (torch.Tensor): Depth image.
+
+    Returns:
+        torch.Tensor: Output
+    """
     depth_image = torch.where(
         depth_image > 1e-7, depth_image, torch.zeros_like(depth_image)
     )

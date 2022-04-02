@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader
 
 sys.path.append(os.getcwd())
 r3d = torchvision.models.video.r3d_18(pretrained=True)
-model = r3d.cuda()
+model = r3d.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 optim = torch.optim.Adam(model.parameters(), lr=0.0001)
 datas = torch.load('/home/pliang/yiwei/kinetics_small/valid/batch0.pkt')
 epochs = 15
@@ -26,7 +26,7 @@ with torch.no_grad():
             '/home/pliang/yiwei/kinetics_small/train/batch'+str(i)+'.pkt')
         train_dataloader = DataLoader(datas, shuffle=True, batch_size=5)
         for j in train_dataloader:
-            out = model(j[0].cuda())
+            out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             
             for ii in range(len(j[0])):
                 train_data.append([out[ii].cpu(), j[1][ii]])
@@ -35,7 +35,7 @@ with torch.no_grad():
         correct = 0
         totalloss = 0.0
         for j in valid_dataloader:
-            out = model(j[0].cuda())
+            out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             for ii in range(len(j[0])):
                 valid_data.append([out[ii].cpu(), j[1][ii]])
 
@@ -47,7 +47,7 @@ with torch.no_grad():
     correct = 0
     totalloss = 0.0
     for j in test_dataloader:
-        out = model(j[0].cuda())
+        out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
         for ii in range(len(out)):
             test_data.append([out[ii].cpu(), j[1][ii]])
 

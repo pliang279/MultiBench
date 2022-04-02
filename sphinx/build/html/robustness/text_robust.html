@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>text_robust module &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="timeseries_robust module" href="timeseries_robust.html" />
+    <link rel="prev" title="tabular_robust module" href="tabular_robust.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">eval_scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">fusions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">objective_functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">robustness</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="all_in_one.html">all_in_one module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="audio_robust.html">audio_robust module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tabular_robust.html">tabular_robust module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">text_robust module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeseries_robust.html">timeseries_robust module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="visual_robust.html">visual_robust module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">training_structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">unimodals</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">utils</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">robustness</a> &raquo;</li>
+      <li>text_robust module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/robustness/text_robust.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-text_robust">
+<span id="text-robust-module"></span><h1>text_robust module<a class="headerlink" href="#module-text_robust" title="Permalink to this headline"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="text_robust.add_text_noise">
+<span class="sig-prename descclassname"><span class="pre">text_robust.</span></span><span class="sig-name descname"><span class="pre">add_text_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rand_mid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sticky</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#text_robust.add_text_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to text data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Probability of randomly applying noise to a word. ( default: 0.1)</p></li>
+<li><p><strong>swap</strong> – Swap two adjacent letters. ( default: True )</p></li>
+<li><p><strong>rand_mid</strong> – Randomly permute the middle section of the word, except for the first and last letters. ( default: True )</p></li>
+<li><p><strong>typo</strong> – Simulate keyboard typos for the word. ( default: True )</p></li>
+<li><p><strong>sticky</strong> – Randomly repeat letters inside a word. ( default: True )</p></li>
+<li><p><strong>omit</strong> – Randomly omit some letters from a word ( default: True )</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="text_robust.omission">
+<span class="sig-prename descclassname"><span class="pre">text_robust.</span></span><span class="sig-name descname"><span class="pre">omission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_omit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#text_robust.omission" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly omit num_omit number of letters of a word</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word</strong> – word to apply transformations to.</p></li>
+<li><p><strong>num_sticky</strong> – Number of letters to randomly omit.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="text_robust.qwerty_typo">
+<span class="sig-prename descclassname"><span class="pre">text_robust.</span></span><span class="sig-name descname"><span class="pre">qwerty_typo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#text_robust.qwerty_typo" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly replace num_typo number of letters of a word to a one adjacent to it on qwerty keyboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>word</strong> – word to apply transformations to.:</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="text_robust.random_mid">
+<span class="sig-prename descclassname"><span class="pre">text_robust.</span></span><span class="sig-name descname"><span class="pre">random_mid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#text_robust.random_mid" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly permute the middle chunk of a word (all letters except the first and last letter).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>word</strong> – word to apply transformations to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="text_robust.sticky_keys">
+<span class="sig-prename descclassname"><span class="pre">text_robust.</span></span><span class="sig-name descname"><span class="pre">sticky_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sticky</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#text_robust.sticky_keys" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly repeat letters of a word once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word</strong> – word to apply transformations to.</p></li>
+<li><p><strong>num_sticky</strong> – Number of letters to randomly repeat once.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="text_robust.swap_letter">
+<span class="sig-prename descclassname"><span class="pre">text_robust.</span></span><span class="sig-name descname"><span class="pre">swap_letter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#text_robust.swap_letter" title="Permalink to this definition"></a></dt>
+<dd><p>Swap two random adjacent letters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>word</strong> – word to apply transformations to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tabular_robust.html" class="btn btn-neutral float-left" title="tabular_robust module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="timeseries_robust.html" class="btn btn-neutral float-right" title="timeseries_robust module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

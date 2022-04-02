@@ -1,8 +1,22 @@
+"""Code to eventually load kinetics data."""
+
 from torchvision.datasets import Kinetics400
 import os
 
-
 def getkinetics(datafolder, tempfolder, categorylist, frames_per_instance, frame_skip=1, centercrop=None):
+    """ UNUSED: TODO
+
+    Args:
+        datafolder (_type_): _description_
+        tempfolder (_type_): _description_
+        categorylist (_type_): _description_
+        frames_per_instance (_type_): _description_
+        frame_skip (int, optional): _description_. Defaults to 1.
+        centercrop (_type_, optional): _description_. Defaults to None.
+
+    Returns:
+        _type_: _description_
+    """
     for category in categorylist:
         os.system("mv "+datafolder+"/"+category+" "+tempfolder)
     a = Kinetics400(tempfolder, 300, extensions=('mp4',))
@@ -39,5 +53,5 @@ def getkinetics(datafolder, tempfolder, categorylist, frames_per_instance, frame
     return datas
 
 
-a = getkinetics('/home/yiwei/kinetics/ActivityNet/Crawler/Kinetics/train_data',
-                '/home/yiwei/kinetics/ActivityNet/Crawler/Kinetics/temp', ['archery'], 150, 2, (224, 224))
+#a = getkinetics('/home/yiwei/kinetics/ActivityNet/Crawler/Kinetics/train_data',
+#               '/home/yiwei/kinetics/ActivityNet/Crawler/Kinetics/temp', ['archery'], 150, 2, (224, 224))

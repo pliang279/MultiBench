@@ -14,7 +14,7 @@ sys.path.append(os.getcwd())
 traindata, validdata, testdata = get_dataloader(
     1, imputed_path='datasets/mimic/im.pk')
 
-model = torch.load('temp/best.pt').cuda()
+model = torch.load('temp/best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def tepr():

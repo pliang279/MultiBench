@@ -1,3 +1,4 @@
+"""Implements VGG pre-processer for IMDB data."""
 import theano
 import numpy
 
@@ -12,8 +13,10 @@ from PIL import Image
 
 
 class VGGNet(FeedforwardSequence):
-
+    """Implements VGG pre-processor."""
+    
     def __init__(self, **kwargs):
+        """Instantiate VGG pre-processor instance."""
         conv_layers = [
             Convolutional(filter_size=(3, 3), num_filters=64,
                           border_mode=(1, 1), name='conv_1'),
@@ -76,8 +79,15 @@ class VGGNet(FeedforwardSequence):
 
 
 class VGGClassifier(object):
-
+    """Implements VGG classifier instance."""
+    
     def __init__(self, model_path='vgg.tar', synset_words='synset_words.txt'):
+        """Instantiate VGG classifier instance.
+
+        Args:
+            model_path (str, optional): VGGNet weight file. Defaults to 'vgg.tar'.
+            synset_words (str, optional): Path to synset words. Defaults to 'synset_words.txt'.
+        """
         self.vgg_net = VGGNet()
         x = theano.tensor.tensor4('x')
         y_hat = self.vgg_net.apply(x)
@@ -96,7 +106,9 @@ class VGGClassifier(object):
         self.fe_extractor = ComputationGraph(fc15).get_theano_function()
 
     def classify(self, image, top=1):
-        """Classify an image with the 1000 concepts of the ImageNet dataset.
+        """
+        Classify an image with the 1000 concepts of the ImageNet dataset.
+        
         :image: numpy image or image path.
         :top: Number of top classes for this image.
         :returns: list of strings with synsets predicted by the VGG model.
@@ -108,7 +120,8 @@ class VGGClassifier(object):
         return self.classes[top]
 
     def get_features(self, image):
-        """Returns the activations of the last hidden layer for a given image.
+        """Return the activations of the last hidden layer for a given image.
+        
         :image: numpy image or image path.
         :returns: numpy vector with 4096 activations.
         """
@@ -116,9 +129,10 @@ class VGGClassifier(object):
         return self.fe_extractor(image)[0]
 
     def resize_and_crop_image(img, output_box=[224, 224], fit=True):
-        # https://github.com/BVLC/caffe/blob/master/tools/extra/resize_and_crop_images.py
-        '''Downsample the image.
-        '''
+        """Downsample the image.
+        
+        Sourced from https://github.com/BVLC/caffe/blob/master/tools/extra/resize_and_crop_images.py
+        """
         box = output_box
         # preresize image with factor 2, 4, 8 and fast algorithm
         factor = 1

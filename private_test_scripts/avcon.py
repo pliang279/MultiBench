@@ -13,10 +13,10 @@ traindata, validdata, testdata = get_dataloader(
     '/home/pliang/yiwei/avmnist/_MFAS/avmnist', batch_size=20)
 channels = 6
 encoders = [Sequential2(LeNet(1, channels, 3), nn.Linear(
-    channels*8, channels*32)).cuda(), LeNet(1, channels, 5).cuda()]
-head = MLP(channels*64, 100, 10).cuda()
+    channels*8, channels*32)).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), LeNet(1, channels, 5).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))]
+head = MLP(channels*64, 100, 10).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 refiner = MLP(channels*64, 1000, 13328)
-fusion = Concat().cuda()
+fusion = Concat().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def trpr():
@@ -26,7 +26,7 @@ def trpr():
 
 all_in_one_train(trpr, encoders+[fusion, head, refiner])
 print("Testing:")
-model = torch.load('best.pt').cuda()
+model = torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 
 
 def tepr():

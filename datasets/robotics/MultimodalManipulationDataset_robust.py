@@ -1,3 +1,4 @@
+"""Implements MultimodalManipulationDataset with robustness transforms."""
 import h5py
 import numpy as np
 from tqdm import tqdm
@@ -49,10 +50,12 @@ class MultimodalManipulationDataset_robust(Dataset):
         self._init_paired_filenames()
 
     def __len__(self):
+        """Get number of items in dataset."""
         return len(self.dataset_path) * (self.episode_length - self.n_time_steps)
 
     def __getitem__(self, idx):
-
+        """Get item in dataset at index idx."""
+        
         list_index = idx // (self.episode_length - self.n_time_steps)
         dataset_index = idx % (self.episode_length - self.n_time_steps)
         filename = self.dataset_path[list_index][:-8]

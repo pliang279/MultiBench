@@ -1,3 +1,4 @@
+"""Implements training procedure for MFAS."""
 from utils.AUPRC import AUPRC
 import torch
 import torch.optim as op
@@ -12,15 +13,6 @@ from eval_scripts.complexity import all_in_one_train, all_in_one_test
 from eval_scripts.robustness import relative_robustness, effective_robustness, single_plot
 from tqdm import tqdm
 
-# unimodal_files: dictionary of names of files containing pretrained unimodal encoders
-# rep_size: size of representation
-# classes: output size
-# sub_sizes: the output size of each layer within the unimodal encoders
-# train_data, valid_data: dataloaders for the input data and ground truths
-# surrogate: a surrogate instance, see utils/surrogate.py
-# max_labels: the search space of the fusion architecture
-# all other input configs: hyperparameters, see original repo https://github.com/slyviacassell/_MFAS/blob/master/models/searchable.py for detail
-
 
 def train(unimodal_files, rep_size, classes, sub_sizes, train_data, valid_data, surrogate, max_labels,
           batch_size=32, epochs=3,
@@ -28,8 +20,42 @@ def train(unimodal_files, rep_size, classes, sub_sizes, train_data, valid_data, 
           eta_max=0.001, eta_min=0.000001, Ti=1, Tm=2,
           temperature_init=10.0, temperature_final=0.2, temperature_decay=4.0, max_progression_levels=4,
           lr_surrogate=0.001, use_weightsharing=False):
+    """Train MFAS Model.
+    
+    See https://github.com/slyviacassell/_MFAS/blob/master/models/searchable.py for more details.
+
+    Args:
+        unimodal_files (list[dict]): Dictionary of names of files containing pretrained unimodal encoders
+        rep_size (int): Size of Representation
+        classes (int): Output Size
+        sub_sizes (list of tuples): The output size of each layer within the unimodal encoders
+        train_data (torch.utils.data.DataLoader): Training data loader
+        valid_data (torch.utils.data.DataLoader): Validation data loader
+        surrogate (nn.Module): Surrogate Instance
+        max_labels (tuple): Search space of input architecture
+        batch_size (int, optional): Batch size Defaults to 32.
+        epochs (int, optional): Epoch count. Defaults to 3.
+        search_iter (int, optional): Number of iterations to search with MFAS. Defaults to 3.
+        num_samples (int, optional): Sample number. Defaults to 15.
+        epoch_surrogate (int, optional): Surrogate epoch. Defaults to 50.
+        eta_max (float, optional): See MFAS github for more details. Defaults to 0.001.
+        eta_min (float, optional): See MFAS github for more details. Defaults to 0.000001.
+        Ti (int, optional): See MFAS github for more details. Defaults to 1.
+        Tm (int, optional): See MFAS github for more details. Defaults to 2.
+        temperature_init (float, optional): See MFAS github for more details. Defaults to 10.0.
+        temperature_final (float, optional): See MFAS github for more details. Defaults to 0.2.
+        temperature_decay (float, optional): See MFAS github for more details. Defaults to 4.0.
+        max_progression_levels (int, optional): See MFAS github for more details. Defaults to 4.
+        lr_surrogate (float, optional): Surrogate learning rate. Defaults to 0.001.
+        use_weightsharing (bool, optional): Use weight-sharing when training architectures for evaluation. Defaults to False.
+
+    Returns:
+        _type_: _description_
+    """
     searcher = ModelSearcher(train_data, valid_data, search_iter, num_samples, epoch_surrogate,
                              temperature_init, temperature_final, temperature_decay, max_progression_levels, lr_surrogate)
+    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    searcher.device = device
     s_data = searcher.search(surrogate,
                              use_weightsharing, unimodal_files, rep_size, classes, sub_sizes, batch_size, epochs, max_labels,
                              eta_max, eta_min, Ti, Tm)
@@ -37,7 +63,27 @@ def train(unimodal_files, rep_size, classes, sub_sizes, train_data, valid_data, 
 
 
 class ModelSearcher():
+    """Implements MFAS Procedure.
+    
+    See https://github.com/slyviacassell/_MFAS/blob/master/models/searchable.py for more details.
+    """
+    
     def __init__(self, train_data, valid_data, search_iter, num_samples, epoch_surrogate, temperature_init, temperature_final, temperature_decay, max_progression_levels, lr_surrogate, device="cuda"):
+        """Initialize ModelSearcher Object.
+
+        Args:
+            train_data (torch.utils.data.DataLoader): Training Data Dataloader
+            valid_data (torch.utils.data.DataLoader): Validation Data Dataloader
+            search_iter (int): Number of search iterations
+            num_samples (int): Number of samples
+            epoch_surrogate (int): Number of epochs per surrogate
+            temperature_init (float): Initial softmax temperature
+            temperature_final (float): Final softmax temperature
+            temperature_decay (float): Softmax temperature decay rate
+            max_progression_levels (int): Maximum number of progression levels.
+            lr_surrogate (float): Surrogate learning rate.
+            device (str, optional): Device to place computation on. Defaults to "cuda".
+        """
         self.search_iterations = search_iter
         self.num_samples = num_samples
         self.surrep = epoch_surrogate
@@ -53,6 +99,27 @@ class ModelSearcher():
     def search(self, surrogate,
                use_weightsharing, unimodal_files, rep_size, classes, sub_sizes, batch_size, epochs, max_labels,
                eta_max, eta_min, Ti, Tm, criterion=torch.nn.MSELoss()):
+        """Search for the best model using MFAS.
+
+        Args:
+            surrogate (nn.Module): Surrogate cost function module.
+            use_weightsharing (bool): Whether to use weight sharing or not.
+            unimodal_files (list): List of unimodal encoders, pre-trained.
+            rep_size (int): Dimensionality of unimodal encoder output
+            classes (int): Number of classes
+            sub_sizes (int): Sub sizes
+            batch_size (int): Batch size
+            epochs (int): Number of epochs
+            max_labels (int): Maximum number of labels
+            eta_max (float): eta_max for LRCosineAnnealing Scheduler
+            eta_min (float): eta_min for LRCosineAnnealingScheduler
+            Ti (float): Ti for LRCosineAnnealingScheduler
+            Tm (float): Tm for LRCosineAnnealingScheduler
+            criterion (nn.Module, optional): Loss function. Defaults to torch.nn.MSELoss().
+
+        Returns:
+            torch.Tensor: Surrogate function training data ( i.e. model configs and their performances )
+        """
         searchmethods = {'train_sampled_fun': avm.train_sampled_models,
                          'get_layer_confs': avm.get_possible_layer_configurations}
         surro_dict = {'model': surrogate, 'criterion': criterion}
@@ -127,7 +194,7 @@ class ModelSearcher():
                 # all confs were trained in step 3
                 if si + progression_index == 0:
                     # move tensor from cuda:0 to cpu
-                    all_accuracies = [i.cpu() for i in all_accuracies]
+                    all_accuracies = [i.cpu() if (not isinstance(i, int)) and i.is_cuda else i for i in all_accuracies]
 
                     sampled_k_confs = tools.sample_k_configurations(all_configurations, all_accuracies,
                                                                     self.num_samples, temperature)
@@ -164,12 +231,22 @@ class ModelSearcher():
 
 
 def single_test(model, test_dataloader, auprc=False):
+    """Get accuracy for a single dataloader for MFAS.
+
+    Args:
+        model (nn.Module): MFAS Model
+        test_dataloader (torch.utils.data.DataLoader): Test dataloader to sample from
+        auprc (bool, optional): Whether to get AUPRC scores or not. Defaults to False.
+
+    Returns:
+        dict: Dictionary of (metric, value) pairs.
+    """
     total = 0
     corrects = 0
     pts = []
     with torch.no_grad():
         for j in test_dataloader:
-            x = [y.float().cuda() for y in j[:-1]]
+            x = [y.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")) for y in j[:-1]]
             out = model(x)
             outs = torch.nn.Softmax()(out)
             for ii in range(len(outs)):
@@ -184,16 +261,26 @@ def single_test(model, test_dataloader, auprc=False):
 
 
 def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, no_robust=False):
+    """Test MFAS Model.
+
+    Args:
+        model (nn.Module): Module to test.
+        test_dataloaders_all (list): List of dataloaders
+        dataset (str): Name of dataset.
+        method_name (str, optional): Method name. Defaults to 'My method'.
+        auprc (bool, optional): Whether to output AUPRC scores or not. Defaults to False.
+        no_robust (bool, optional): Whether to not apply robustness transformations or not. Defaults to False.
+    """
     if no_robust:
-        def testprocess():
+        def _testprocess():
             single_test(model, test_dataloaders_all, auprc)
-        all_in_one_test(testprocess, [model])
+        all_in_one_test(_testprocess, [model])
         return
 
-    def testprocess():
+    def _testprocess():
         single_test(model, test_dataloaders_all[list(
             test_dataloaders_all.keys())[0]][0], auprc)
-    all_in_one_test(testprocess, [model])
+    all_in_one_test(_testprocess, [model])
     for noisy_modality, test_dataloaders in test_dataloaders_all.items():
         print("Testing on noisy data ({})...".format(noisy_modality))
         robustness_curve = dict()

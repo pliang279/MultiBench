@@ -5,7 +5,7 @@ import os
 from torch.utils.data import DataLoader
 
 sys.path.append(os.getcwd())
-model = MLP(400, 200, 5).cuda()
+model = MLP(400, 200, 5).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 optim = torch.optim.Adam(model.parameters(), lr=0.01)
 train_datas, valid_datas, test_datas = torch.load(
     '/home/pliang/yiwei/features/features.pt')
@@ -22,8 +22,8 @@ for ep in range(epochs):
     total = 0
     for j in train_dataloader:
         optim.zero_grad()
-        out = model(j[0].cuda())
-        loss = criterion(out, j[1].cuda())
+        out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
+        loss = criterion(out, j[1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
         loss.backward()
         optim.step()
         totalloss += loss*len(j[0])
@@ -34,8 +34,8 @@ for ep in range(epochs):
         correct = 0
         totalloss = 0.0
         for j in valid_dataloader:
-            out = model(j[0].cuda())
-            loss = criterion(out, j[1].cuda())
+            out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
+            loss = criterion(out, j[1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             totalloss += loss * len(j[0])
             for ii in range(len(out)):
                 total += 1
@@ -55,8 +55,8 @@ with torch.no_grad():
     correct = 0
     totalloss = 0.0
     for j in test_dataloader:
-        out = model(j[0].cuda())
-        loss = criterion(out, j[1].cuda())
+        out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
+        loss = criterion(out, j[1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
         totalloss += loss
         for ii in range(len(out)):
             total += 1

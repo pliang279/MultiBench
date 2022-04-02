@@ -1,3 +1,4 @@
+"""Handle getting raw data from mosi"""
 from mosi_split import train_fold, valid_fold, test_fold
 import pickle
 import sys
@@ -12,12 +13,30 @@ sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 
 
 def lpad(this_array, seq_len):
+    """Left pad array with seq_len 0s.
+
+    Args:
+        this_array (np.array): Array to pad
+        seq_len (int): Number of 0s to pad.
+
+    Returns:
+        np.array: Padded array
+    """
     temp_array = np.concatenate([np.zeros(
         [seq_len]+list(this_array.shape[1:])), this_array], axis=0)[-seq_len:, ...]
     return temp_array
 
 
 def detect_entry_fold(entry, folds):
+    """Detect entry fold.
+
+    Args:
+        entry (str): Entry string
+        folds (int): Number of folds
+
+    Returns:
+        int: Entry fold index
+    """
     entry_id = entry.split("[")[0]
     for i in range(len(folds)):
         if entry_id in folds[i]:
@@ -48,6 +67,16 @@ print(len(keys))
 
 
 def get_rawtext(path, data_kind, vids):
+    """Get raw text modality.
+
+    Args:
+        path (str): Path to h5 file
+        data_kind (str): String for data format. Should be 'hdf5'.
+        vids (list): List of video ids.
+
+    Returns:
+        tuple(list,list): Tuple of text_data and video_data in lists.
+    """
     if data_kind == 'hdf5':
         f = h5py.File(path, 'r')
         text_data = []
@@ -73,6 +102,15 @@ def get_rawtext(path, data_kind, vids):
 
 
 def get_word2id(text_data, vids):
+    """From text_data, vids get word2id lsit
+
+    Args:
+        text_data (list): List of text data
+        vids (list): List of video data
+
+    Returns:
+        list: List of word2id data
+    """
     word2id = defaultdict(lambda: len(word2id))
     UNK = word2id['unk']
     data_processed = dict()
@@ -84,13 +122,22 @@ def get_word2id(text_data, vids):
         words = np.asarray(words)
         data_processed[vids[i]] = words
 
-    def return_unk():
+    def _return_unk():
         return UNK
-    word2id.default_factory = return_unk
+    word2id.default_factory = _return_unk
     return data_processed, word2id
 
 
 def get_word_embeddings(word2id, save=False):
+    """Given a word2id, get the associated glove embeddings ( 300 dimensional ).
+
+    Args:
+        word2id (list): list of word, index pairs
+        save (bool, optional): Whether to save data to the folder (unused). Defaults to False.
+
+    Returns:
+        list[np.array]: List of embedded words
+    """
     vec = text.vocab.GloVe(name='840B', dim=300)
     tokens = []
     for w, _ in word2id.items():
@@ -101,6 +148,16 @@ def get_word_embeddings(word2id, save=False):
 
 
 def glove_embeddings(text_data, vids, paddings=50):
+    """Get glove embeddings of text, video pairs.
+
+    Args:
+        text_data (list): list of text data.
+        vids (list): list of video data
+        paddings (int, optional): Amount to left-pad data if it's less than some size. Defaults to 50.
+
+    Returns:
+        np.array: Array of embedded data
+    """
     data_prod, w2id = get_word2id(text_data, vids)
     word_embeddings_looks_up = get_word_embeddings(w2id)
     looks_up = word_embeddings_looks_up.numpy()
@@ -128,6 +185,7 @@ def glove_embeddings(text_data, vids, paddings=50):
 
 
 def get_audio_visual_text(csds, seq_len, text_data, vids):
+    """Get audio visual from text."""
     data = [{} for _ in range(3)]
     output = [{} for _ in range(3)]
 
@@ -169,30 +227,32 @@ def get_audio_visual_text(csds, seq_len, text_data, vids):
     return output
 
 
-raw_text, vids = get_rawtext(
-    '/home/pliang/multibench/affect/mosi/mosi.hdf5', 'hdf5', keys)
-print(raw_text[0])
-print(vids[0])
-text_glove = glove_embeddings(raw_text, vids)
-print(text_glove.shape)
+if __name__ == "__main__":
 
-audio_video_text = get_audio_visual_text(
-    csds, seq_len=seq_len, text_data=text_glove, vids=vids)
-print(len(audio_video_text))
-print(audio_video_text[0].keys())
+    raw_text, vids = get_rawtext(
+        '/home/pliang/multibench/affect/mosi/mosi.hdf5', 'hdf5', keys)
+    print(raw_text[0])
+    print(vids[0])
+    text_glove = glove_embeddings(raw_text, vids)
+    print(text_glove.shape)
 
-all_data = {}
-fold_names = ["train", "valid", "test"]
-key_sets = ['audio', 'vision', 'text', 'labels', 'id']
+    audio_video_text = get_audio_visual_text(
+        csds, seq_len=seq_len, text_data=text_glove, vids=vids)
+    print(len(audio_video_text))
+    print(audio_video_text[0].keys())
 
-for i, fold in enumerate(fold_names):
-    all_data[fold] = {}
-    all_data[fold]['vision'] = audio_video_text[i][VIDEO]
-    all_data[fold]['audio'] = audio_video_text[i][AUDIO]
-    all_data[fold]['text'] = audio_video_text[i]['words']
-    all_data[fold]['labels'] = audio_video_text[i][labels[0]]
-    all_data[fold]['id'] = audio_video_text[i]['id']
+    all_data = {}
+    fold_names = ["train", "valid", "test"]
+    key_sets = ['audio', 'vision', 'text', 'labels', 'id']
+
+    for i, fold in enumerate(fold_names):
+        all_data[fold] = {}
+        all_data[fold]['vision'] = audio_video_text[i][VIDEO]
+        all_data[fold]['audio'] = audio_video_text[i][AUDIO]
+        all_data[fold]['text'] = audio_video_text[i]['words']
+        all_data[fold]['labels'] = audio_video_text[i][labels[0]]
+        all_data[fold]['id'] = audio_video_text[i]['id']
 
 
-with open('mosi_raw.pkl', 'wb') as f:
-    pickle.dump(all_data, f)
+    with open('mosi_raw.pkl', 'wb') as f:
+        pickle.dump(all_data, f)

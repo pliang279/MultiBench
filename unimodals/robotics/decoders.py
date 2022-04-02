@@ -1,3 +1,4 @@
+"""Implements decoders for robotics tasks."""
 import torch
 import torch.nn as nn
 from .models_utils import init_weights
@@ -10,9 +11,15 @@ from .layers import (
 
 
 class OpticalFlowDecoder(nn.Module):
+    """Implements optical flow and optical flow mask decoder."""
+    
     def __init__(self, z_dim, initailize_weights=True):
-        """
-        Decodes the optical flow and optical flow mask.
+        """Initialize OpticalFlowDecoder Module.
+
+        Args:
+            z_dim (float): Z dimension size
+            alpha (float): Alpha to multiply proprio input by.
+            initialize_weights (bool, optional): Whether to initialize weights or not. Defaults to True.
         """
         super().__init__()
 
@@ -113,9 +120,15 @@ class OpticalFlowDecoder(nn.Module):
 
 
 class EeDeltaDecoder(nn.Module):
+    """Implements an EE Delta Decoder."""
+    
     def __init__(self, z_dim, action_dim, initailize_weights=True):
-        """
-        Decodes the EE Delta
+        """Initialize EeDeltaDecoder Module.
+
+        Args:
+            z_dim (float): Z dimension size
+            alpha (float): Alpha to multiply proprio input by.
+            initialize_weights (bool, optional): Whether to initialize weights or not. Defaults to True.
         """
         super().__init__()
 
@@ -133,20 +146,42 @@ class EeDeltaDecoder(nn.Module):
             init_weights(self.modules())
 
     def forward(self, mm_act_feat):
+        """Apply EeDeltaDecoder Module to EE Delta.
+
+        Args:
+            mm_act_feat (torch.Tensor): EE Delta
+
+        Returns:
+            torch.Tensor: Decoded Output
+        """
         return self.ee_delta_decoder(mm_act_feat)
 
 
 class ContactDecoder(nn.Module):
+    """Decodes everything, given some input."""
+    
     def __init__(self, z_dim, deterministic, head=1):
-        '''
-        Decodes everything
-        '''
+        """Initialize ContactDecoder Module.
+
+        Args:
+            z_dim (float): Z dimension size
+            deterministic (float): Whether input parameters are deterministic or sampled from some distribution given prior mu and var.
+            head (int): Output dimension of head.
+        """
         super().__init__()
 
         self.deterministic = deterministic
         self.contact_fc = nn.Sequential(nn.Linear(z_dim, head))
 
     def forward(self, input):
+        """Apply ContactDecoder Module to Layer Input.
+
+        Args:
+            input (torch.Tensor): Layer Input
+
+        Returns:
+            torch.Tensor: Decoded Output
+        """
         if self.deterministic:
             z, mm_act_feat, tiled_feat, img_out_convs = input
         else:

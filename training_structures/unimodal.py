@@ -1,3 +1,4 @@
+"""Implements training pipeline for unimodal comparison."""
 from sklearn.metrics import accuracy_score, f1_score
 import torch
 from torch import nn
@@ -8,21 +9,29 @@ from eval_scripts.robustness import relative_robustness, effective_robustness, s
 from tqdm import tqdm
 softmax = nn.Softmax()
 
-# encoder: unimodal encoder for the modality
-# head: takes in unimodal encoder output and produces final prediction
-# train_dataloader, valid_dataloader: dataloaders for input datas and ground truths
-# optimtype: type of optimizer to use
-# lr: learning rate
-# weight_decay: weight decay of optimizer
-# auprc: whether to compute auprc score or not
-# save_encoder: the name of the saved file for the encoder model with current best validation performance
-# save_head: the name of the saved file for the head model with current best validation performance
-# modalnum: which modality to use (if the input contains multiple modalities and you only want to use one, put the index of the modality you want to use here. put 0 otherwise)
-# task: type of task, currently support "classification","regression","multilabel"
-
 
 def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early_stop=False, optimtype=torch.optim.RMSprop, lr=0.001, weight_decay=0.0, criterion=nn.CrossEntropyLoss(), auprc=False, save_encoder='encoder.pt', save_head='head.pt', modalnum=0, task='classification', track_complexity=True):
-    def trainprocess():
+    """Train unimodal module.
+
+    Args:
+        encoder (nn.Module): Unimodal encodder for the modality
+        head (nn.Module): Takes in the unimodal encoder output and produces the final prediction.
+        train_dataloader (torch.utils.data.DataLoader): Training data dataloader
+        valid_dataloader (torch.utils.data.DataLoader): Validation set dataloader
+        total_epochs (int): Total number of epochs
+        early_stop (bool, optional): Whether to apply early-stopping or not. Defaults to False.
+        optimtype (torch.optim.Optimizer, optional): Type of optimizer to use. Defaults to torch.optim.RMSprop.
+        lr (float, optional): Learning rate. Defaults to 0.001.
+        weight_decay (float, optional): Weight decay of optimizer. Defaults to 0.0.
+        criterion (nn.Module, optional): Loss module. Defaults to nn.CrossEntropyLoss().
+        auprc (bool, optional): Whether to compute AUPRC score or not. Defaults to False.
+        save_encoder (str, optional): Path of file to save model with best validation performance. Defaults to 'encoder.pt'.
+        save_head (str, optional): Path fo file to save head with best validation performance. Defaults to 'head.pt'.
+        modalnum (int, optional): Which modality to apply encoder to. Defaults to 0.
+        task (str, optional): Type of task to try. Supports "classification", "regression", or "multilabel". Defaults to 'classification'.
+        track_complexity (bool, optional): Whether to track the model's complexity or not. Defaults to True.
+    """
+    def _trainprocess():
         model = nn.Sequential(encoder, head)
         op = optimtype(model.parameters(), lr=lr, weight_decay=weight_decay)
         bestvalloss = 10000
@@ -34,12 +43,12 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
             totals = 0
             for j in train_dataloader:
                 op.zero_grad()
-                out = model(j[modalnum].float().cuda())
+                out = model(j[modalnum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 
                 if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                    loss = criterion(out, j[-1].float().cuda())
+                    loss = criterion(out, j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 else:
-                    loss = criterion(out, j[-1].cuda())
+                    loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 totalloss += loss * len(j[-1])
                 totals += len(j[-1])
                 loss.backward()
@@ -52,11 +61,11 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
                 true = []
                 pts = []
                 for j in valid_dataloader:
-                    out = model(j[modalnum].float().cuda())
+                    out = model(j[modalnum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                     if type(criterion) == torch.nn.modules.loss.BCEWithLogitsLoss:
-                        loss = criterion(out, j[-1].float().cuda())
+                        loss = criterion(out, j[-1].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                     else:
-                        loss = criterion(out, j[-1].cuda())
+                        loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                     totalloss += loss*len(j[-1])
                     if task == "classification":
                         pred.append(torch.argmax(out, 1))
@@ -113,12 +122,26 @@ def train(encoder, head, train_dataloader, valid_dataloader, total_epochs, early
             if auprc:
                 print("AUPRC: "+str(AUPRC(pts)))
     if track_complexity:
-        all_in_one_train(trainprocess, [encoder, head])
+        all_in_one_train(_trainprocess, [encoder, head])
     else:
-        trainprocess()
+        _trainprocess()
 
 
 def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='classification', criterion=None):
+    """Test unimodal model on one dataloader.
+
+    Args:
+        encoder (nn.Module): Unimodal encoder module
+        head (nn.Module): Module which takes in encoded unimodal input and predicts output.
+        test_dataloader (torch.utils.data.DataLoader): Data Loader for test set.
+        auprc (bool, optional): Whether to output AUPRC or not. Defaults to False.
+        modalnum (int, optional): Index of modality to consider for the test with the given encoder. Defaults to 0.
+        task (str, optional): Type of task to try. Supports "classification", "regression", or "multilabel". Defaults to 'classification'.
+        criterion (nn.Module, optional): Loss module. Defaults to None.
+
+    Returns:
+        dict: Dictionary of (metric, value) relations.
+    """
     model = nn.Sequential(encoder, head)
     with torch.no_grad():
         pred = []
@@ -126,9 +149,9 @@ def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='c
         totalloss = 0
         pts = []
         for j in test_dataloader:
-            out = model(j[modalnum].float().cuda())
+            out = model(j[modalnum].float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             if criterion is not None:
-                loss = criterion(out, j[-1].cuda())
+                loss = criterion(out, j[-1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
                 totalloss += loss*len(j[-1])
             if task == "classification":
                 pred.append(torch.argmax(out, 1))
@@ -177,17 +200,31 @@ def single_test(encoder, head, test_dataloader, auprc=False, modalnum=0, task='c
 
 
 def test(encoder, head, test_dataloaders_all, dataset='default', method_name='My method', auprc=False, modalnum=0, task='classification', criterion=None, no_robust=False):
+    """Test unimodal model on all provided dataloaders.
+
+    Args:
+        encoder (nn.Module): Encoder module
+        head (nn.Module): Module which takes in encoded unimodal input and predicts output.
+        test_dataloaders_all (dict): Dictionary of noisetype, dataloader to test.
+        dataset (str, optional): Dataset to test on. Defaults to 'default'.
+        method_name (str, optional): Method name. Defaults to 'My method'.
+        auprc (bool, optional): Whether to output AUPRC scores or not. Defaults to False.
+        modalnum (int, optional): Index of modality to test on. Defaults to 0.
+        task (str, optional): Type of task to try. Supports "classification", "regression", or "multilabel". Defaults to 'classification'.
+        criterion (nn.Module, optional): Loss module. Defaults to None.
+        no_robust (bool, optional): Whether to not apply robustness methods or not. Defaults to False.
+    """
     if no_robust:
-        def testprocess():
+        def _testprocess():
             single_test(encoder, head, test_dataloaders_all,
                         auprc, modalnum, task, criterion)
-        all_in_one_test(testprocess, [encoder, head])
+        all_in_one_test(_testprocess, [encoder, head])
         return
 
-    def testprocess():
+    def _testprocess():
         single_test(encoder, head, test_dataloaders_all[list(
             test_dataloaders_all.keys())[0]][0], auprc, modalnum, task, criterion)
-    all_in_one_test(testprocess, [encoder, head])
+    all_in_one_test(_testprocess, [encoder, head])
     for noisy_modality, test_dataloaders in test_dataloaders_all.items():
         print("Testing on noisy data ({})...".format(noisy_modality))
         robustness_curve = dict()

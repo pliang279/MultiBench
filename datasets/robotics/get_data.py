@@ -1,3 +1,4 @@
+"""Implements dataloaders for robotics data."""
 import numpy as np
 
 import torch
@@ -16,7 +17,13 @@ from torchvision import transforms
 
 
 def combine_modalitiesbuilder(unimodal, output):
-    def combine_modalities(data):
+    """Create a function data combines modalities given the type of input.
+
+    Args:
+        unimodal (str): Input type as a string. Can be 'force', 'proprio', 'image'. Defaults to using all modalities otherwise
+        output (int): Index of output modality.
+    """
+    def _combine_modalities(data):
         if unimodal == "force":
             return [data['force'], data['action'], data[output]]
         if unimodal == "proprio":
@@ -31,10 +38,22 @@ def combine_modalitiesbuilder(unimodal, output):
             data['action'],
             data[output],
         ]
-    return combine_modalities
+    return _combine_modalities
 
 
 def get_data(device, configs, filedirprefix="", unimodal=None, output='contact_next'):
+    """Get dataloaders for robotics dataset.
+
+    Args:
+        device (torch.utils.device): Device to load data to.
+        configs (dict): Configuration dictionary
+        filedirprefix (str, optional): File directory prefix path. Defaults to "".
+        unimodal (str, optional): Input modality as a string. Defaults to None. Can be 'force', 'proprio', 'image'. Defaults to using all modalities otherwise.
+        output (str, optional): Output format. Defaults to 'contact_next'.
+
+    Returns:
+        _type_: _description_
+    """
     filename_list = []
     for file in os.listdir(configs['dataset']):
         if file.endswith(".h5"):

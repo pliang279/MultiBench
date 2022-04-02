@@ -1,4 +1,8 @@
-# From https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/tasks/_push.py
+"""Implements dataloaders for Gentle Push tasks.
+
+Sourced from https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/tasks/_push.py 
+"""
+
 
 import argparse
 import sys
@@ -79,6 +83,17 @@ class PushTask():
     def get_dataloader(
         cls, subsequence_length: int, modalities=None, batch_size=32, drop_last=True, **dataset_args
     ):
+        """Get dataloaders for gentle-push dataset.
+
+        Args:
+            subsequence_length (int): Length of subsequences for each sample
+            modalities (list, optional): List of strings defining which modalities to use. Defaults to None. Pick from ['gripper_pos', 'gripper_sensors', 'image', 'control'].
+            batch_size (int, optional): Batch size. Defaults to 32.
+            drop_last (bool, optional): Whether to drop last datasample or not. Defaults to True.
+
+        Returns:
+            tuple: Tuple of training dataloader, validation dataloader, and test dataloader
+        """
         # Load trajectories into memory
         train_trajectories = cls.get_train_trajectories(**dataset_args)
         val_trajectories = cls.get_eval_trajectories(**dataset_args)
@@ -113,7 +128,7 @@ class PushTask():
     def get_train_trajectories(
         cls, **dataset_args
     ) -> List[TrajectoryNumpy]:
-
+        """Get training trajectories."""
         kloss_dataset = (
             dataset_args["kloss_dataset"] if "kloss_dataset" in dataset_args else False
         )
@@ -134,7 +149,7 @@ class PushTask():
     def get_eval_trajectories(
         cls, **dataset_args
     ) -> List[TrajectoryNumpy]:
-
+        """Get evaluation trajectories."""
         kloss_dataset = (
             dataset_args["kloss_dataset"] if "kloss_dataset" in dataset_args else False
         )
@@ -147,7 +162,7 @@ class PushTask():
     def get_test_trajectories(
         cls, modalities, **dataset_args
     ):
-
+        """Get test trajectories."""
         kloss_dataset = (
             dataset_args["kloss_dataset"] if "kloss_dataset" in dataset_args else False
         )
@@ -540,9 +555,9 @@ def _load_trajectories(
 def split_trajectories(
     trajectories: List[TrajectoryNumpy], subsequence_length: int, modalities=None
 ):
-    """Helper for splitting a list of trajectories into a list of overlapping
-    subsequences.
-    For each trajectory, assuming a subsequence length of 10, this function
+    """
+    Helper for splitting a list of trajectories into a list of overlapping
+    subsequences. For each trajectory, assuming a subsequence length of 10, this function
     includes in its output overlapping subsequences corresponding to
     timesteps...
     ```
@@ -612,7 +627,7 @@ def split_trajectories(
                 else:
                     mods = []
                     for m in modalities:
-                        if m == 'gripper_pos':
+                        if m == 'gripper_pos': 
                             mods.append(o['gripper_pos'])
                         elif m == 'gripper_sensors':
                             mods.append(o['gripper_sensors'])
@@ -627,8 +642,8 @@ def split_trajectories(
 
 class SubsequenceDataset(Dataset):
     """A data preprocessor for producing training subsequences from
-    a list of trajectories.
-    Thin wrapper around `torchfilter.data.split_trajectories()`.
+    a list of trajectories. Thin wrapper around `torchfilter.data.split_trajectories()`.
+    
     Args:
         trajectories (list): list of trajectories, where each is a tuple of
             `(states, observations, controls)`. Each tuple member should be
@@ -639,6 +654,13 @@ class SubsequenceDataset(Dataset):
     def __init__(
         self, trajectories: List[TrajectoryNumpy], subsequence_length: int, modalities=None
     ):
+        """Initialize SubsequenceDataset object.
+
+        Args:
+            trajectories (List[TrajectoryNumpy]): List of trajectories
+            subsequence_length (int): Length to sample each subsequence
+            modalities (list, optional): List of strings of modalities to choose. Defaults to None. Choose from ['gripper_pos', 'gripper_sensors', 'image', 'control'].
+        """
         # Split trajectory into overlapping subsequences
         self.subsequences = split_trajectories(
             trajectories, subsequence_length, modalities

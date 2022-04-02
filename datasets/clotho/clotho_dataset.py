@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+"""Implements the CLOTHO dataset as a torch dataset."""
 from typing import Tuple, List, AnyStr, Union
 from pathlib import Path
 
@@ -14,7 +14,7 @@ __all__ = ['ClothoDataset']
 
 
 class ClothoDataset(Dataset):
-
+    """Implements the CLOTHO dataset as a torch dataset."""
     def __init__(self, data_dir: Path,
                  split: AnyStr,
                  input_field_name: AnyStr,

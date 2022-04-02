@@ -1,3 +1,4 @@
+"""Implements dataloaders for generic MIMIC tasks."""
 from tqdm import tqdm
 from robustness.tabular_robust import add_tabular_noise
 from robustness.timeseries_robust import add_timeseries_noise
@@ -11,8 +12,23 @@ import copy
 sys.path.append(os.path.dirname(os.path.dirname(os.getcwd())))
 
 
-# task: integer between -1 and 19 inclusive, -1 means mortality task, 0-19 means icd9 task
+
 def get_dataloader(task, batch_size=40, num_workers=1, train_shuffle=True, imputed_path='im.pk', flatten_time_series=False, tabular_robust=True, timeseries_robust=True):
+    """Get dataloaders for MIMIC dataset.
+
+    Args:
+        task (int): Integer between -1 and 19 inclusive, -1 means mortality task, 0-19 means icd9 task.
+        batch_size (int, optional): Batch size. Defaults to 40.
+        num_workers (int, optional): Number of workers to load data in. Defaults to 1.
+        train_shuffle (bool, optional): Whether to shuffle training data or not. Defaults to True.
+        imputed_path (str, optional): Datafile location. Defaults to 'im.pk'.
+        flatten_time_series (bool, optional): Whether to flatten time series data or not. Defaults to False.
+        tabular_robust (bool, optional): Whether to apply tabular robustness as dataset augmentation or not. Defaults to True.
+        timeseries_robust (bool, optional): Whether to apply timeseries robustness noises as dataset augmentation or not. Defaults to True.
+
+    Returns:
+        tuple: Tuple of training dataloader, validation dataloader, and test dataloader
+    """
     f = open(imputed_path, 'rb')
     datafile = pickle.load(f)
     f.close()

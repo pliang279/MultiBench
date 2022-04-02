@@ -1,3 +1,4 @@
+"""Implements the MultimodalTransformer Model. See https://github.com/yaohungt/Multimodal-Transformer for more."""
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -6,9 +7,14 @@ from .modules.transformer import TransformerEncoder
 
 class MULTModel(nn.Module):
     """
-    https://github.com/yaohungt/Multimodal-Transformer
+    Implements the MultimodalTransformer Model.
+    
+    See https://github.com/yaohungt/Multimodal-Transformer for more.
     """
+    
     class DefaultHyperParams():
+        """Set default hyperparameters for the model."""
+        
         num_heads = 3
         layers = 3
         attn_dropout = 0.1
@@ -23,9 +29,7 @@ class MULTModel(nn.Module):
         all_steps = False
 
     def __init__(self, n_modalities, n_features, hyp_params=DefaultHyperParams):
-        """
-        Construct a MulT model.
-        """
+        """Construct a MulT model."""
         super().__init__()
         self.n_modalities = n_modalities
         self.embed_dim = hyp_params.embed_dim
@@ -66,6 +70,7 @@ class MULTModel(nn.Module):
         self.out_layer = nn.Linear(combined_dim, output_dim)
 
     def get_network(self, mod1, mod2, mem, layers=-1):
+        """Create TransformerEncoder network from layer information."""
         if not mem:
             embed_dim = self.embed_dim
             attn_dropout = self.attn_dropout_modalities[mod2]
@@ -84,7 +89,10 @@ class MULTModel(nn.Module):
 
     def forward(self, x):
         """
-        x: n_modalities * [batch_size, seq_len, n_features]
+        Apply MultModel Module to Layer Input.
+        
+        Args:
+            x: layer input. Has size n_modalities * [batch_size, seq_len, n_features]
         """
         x = [v.permute(0, 2, 1)
              for v in x]  # n_modalities * [batch_size, n_features, seq_len]

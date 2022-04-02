@@ -1,9 +1,19 @@
+"""Implements losses for CCA."""
 import torch
 from torch import nn
 
 
 class CCALoss(nn.Module):
+    """Implements Loss for CCA."""
+    
     def __init__(self, outdim_size, use_all_singular_values, device):
+        """Initialize CCALoss Object.
+
+        Args:
+            outdim_size (int): Output Dimension for TopK
+            use_all_singular_values (bool): Whether to include all singular values in the loss.
+            device (torch.device): What device to place this module on. Must agree with model.
+        """
         super(CCALoss, self).__init__()
         self.outdim_size = outdim_size
         self.use_all_singular_values = use_all_singular_values
@@ -11,10 +21,15 @@ class CCALoss(nn.Module):
         
 
     def forward(self, H1, H2):
-        """
-        It is the loss function of CCA as introduced in the original paper. There can be other formulations.
-        """
+        """Apply the CCALoss as described in the paper to inputs H1 and H2.
 
+        Args:
+            H1 (torch.Tensor): Tensor corresponding to the first random variable in CCA.
+            H2 (torch.Tensor): Tensor corresponding to the second random variable in CCA.
+
+        Returns:
+            torch.Tensor: CCALoss for this pair.
+        """
         r1 = 1e-3
         r2 = 1e-3
         eps = 1e-9

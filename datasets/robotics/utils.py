@@ -1,3 +1,4 @@
+"""Extraneous methods for robotics dataset work."""
 import torch
 import torch.nn as nn
 import numpy as np
@@ -8,7 +9,7 @@ from tqdm import tqdm
 
 
 def augment_val(val_filename_list, filename_list):
-
+    """Augment lists of filenames so that they match the current directory."""
     filename_list1 = copy.deepcopy(filename_list)
     val_filename_list1 = []
 

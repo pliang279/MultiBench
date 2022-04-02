@@ -5,8 +5,8 @@ from torch.utils.data import DataLoader
 
 sys.path.append(os.getcwd())
 #r3d = torchvision.models.video.r3d_18(pretrained=True)
-# model=torch.nn.Sequential(r3d,torch.load('best1.pt')).cuda()
-model = torch.load('best2.pt').cuda()
+# model=torch.nn.Sequential(r3d,torch.load('best1.pt')).to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+model = torch.load('best2.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 optim = torch.optim.Adam(model.parameters(), lr=0.0001)
 datas = torch.load('/home/pliang/yiwei/kinetics_small/valid/batch0.pdt')
 criterion = torch.nn.CrossEntropyLoss()
@@ -25,9 +25,9 @@ for ep in range(epochs):
         train_dataloader = DataLoader(datas, shuffle=True, batch_size=45)
         for j in train_dataloader:
             optim.zero_grad()
-            out = model(j[0].cuda())
+            out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             
-            loss = criterion(out, j[1].cuda())
+            loss = criterion(out, j[1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             loss.backward()
             optim.step()
             totalloss += loss*len(j[0])
@@ -38,8 +38,8 @@ for ep in range(epochs):
         correct = 0
         totalloss = 0.0
         for j in valid_dataloader:
-            out = model(j[0].cuda())
-            loss = criterion(out, j[1].cuda())
+            out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
+            loss = criterion(out, j[1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
             totalloss += loss
             for ii in range(len(out)):
                 total += 1
@@ -62,8 +62,8 @@ with torch.no_grad():
     correct = 0
     totalloss = 0.0
     for j in test_dataloader:
-        out = model(j[0].cuda())
-        loss = criterion(out, j[1].cuda())
+        out = model(j[0].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
+        loss = criterion(out, j[1].to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
         totalloss += loss
         for ii in range(len(out)):
             total += 1

@@ -17,13 +17,13 @@ traindata, validdata, testdata = get_dataloader(
 
 def trpr():
     train(['pretrained/avmnist/image_encoder.pt', 'pretrained/avmnist/audio_encoder.pt'], 16, 10, [(6, 12, 24), (6, 12, 24, 48, 96)],
-          traindata, validdata, surr.SimpleRecurrentSurrogate().cuda(), (3, 5, 2), epochs=6)
+          traindata, validdata, surr.SimpleRecurrentSurrogate().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), (3, 5, 2), epochs=6)
 
 
 all_in_one_train(trpr, [torch.load('pretrained/avmnist/image_encoder.pt'), torch.load(
     'pretrained/avmnist/audio_encoder.pt'), surr.SimpleRecurrentSurrogate()])
 """
 print("Testing:")
-model=torch.load('best.pt').cuda()
+model=torch.load('best.pt').to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
 test(model,testdata)
 """

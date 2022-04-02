@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""Implements the creation of the dataloader for CLOTHO."""
 
 from typing import Callable, Union, Tuple, AnyStr, Optional
 from functools import partial
