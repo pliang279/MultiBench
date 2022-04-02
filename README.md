@@ -15,6 +15,7 @@ Correspondence to:
   - [Xiang Fan](https://github.com/sfanxiang) (xiangfan@cmu.edu)
   - [Zetian Wu](http://neal-ztwu.github.io) (zwu49@jhu.edu)
   - Yun Cheng (yuncheng@andrew.cmu.edu)
+  - [Arav Agarwal](https://www.linkedin.com/in/arav-agarwal-941b44109/) (arava@andrew.cmu.edu)
   - [Jason Wu](https://jasonwunix.com/) (jsonwu@cmu.edu)
   - Leslie Chen (lesliechen1998@gmail.com)
   - [Peter Wu](https://peter.onrender.com/) (peterw1@cs.cmu.edu)
