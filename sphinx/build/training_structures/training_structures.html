@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>training_structures package &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Unimodal Encoders" href="../unimodals/modules.html" />
+    <link rel="prev" title="Training Structures" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/generalguide.html">General Usage Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Training Structures</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">training_structures package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#training-structures-mctn-level2-module">training_structures.MCTN_Level2 module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-training_structures.Supervised_Learning">training_structures.Supervised_Learning module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-training_structures.architecture_search">training_structures.architecture_search module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-training_structures.gradient_blend">training_structures.gradient_blend module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-training_structures.unimodal">training_structures.unimodal module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-training_structures">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Training Structures</a> &raquo;</li>
+      <li>training_structures package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/training_structures/training_structures.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="training-structures-package">
+<h1>training_structures package<a class="headerlink" href="#training-structures-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="training-structures-mctn-level2-module">
+<h2>training_structures.MCTN_Level2 module<a class="headerlink" href="#training-structures-mctn-level2-module" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-training_structures.Supervised_Learning">
+<span id="training-structures-supervised-learning-module"></span><h2>training_structures.Supervised_Learning module<a class="headerlink" href="#module-training_structures.Supervised_Learning" title="Permalink to this headline"></a></h2>
+<p>Implements supervised learning training procedures.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="training_structures.Supervised_Learning.MMDL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">training_structures.Supervised_Learning.</span></span><span class="sig-name descname"><span class="pre">MMDL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.Supervised_Learning.MMDL" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements MMDL classifier.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="training_structures.Supervised_Learning.MMDL.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoders</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.Supervised_Learning.MMDL.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate MMDL Module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoders</strong> (<em>List</em>) – List of nn.Module encoders, one per modality.</p></li>
+<li><p><strong>fusion</strong> (<em>nn.Module</em>) – Fusion module</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Classifier module</p></li>
+<li><p><strong>has_padding</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether input has padding or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="training_structures.Supervised_Learning.MMDL.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.Supervised_Learning.MMDL.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply MMDL to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.Supervised_Learning.deal_with_objective">
+<span class="sig-prename descclassname"><span class="pre">training_structures.Supervised_Learning.</span></span><span class="sig-name descname"><span class="pre">deal_with_objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.Supervised_Learning.deal_with_objective" title="Permalink to this definition"></a></dt>
+<dd><p>Alter inputs depending on objective function, to deal with different objective arguments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.Supervised_Learning.single_test">
+<span class="sig-prename descclassname"><span class="pre">training_structures.Supervised_Learning.</span></span><span class="sig-name descname"><span class="pre">single_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_packed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.CrossEntropyLoss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_to_float</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.Supervised_Learning.single_test" title="Permalink to this definition"></a></dt>
+<dd><p>Run single test for model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – Model to test</p></li>
+<li><p><strong>test_dataloader</strong> (<em>torch.utils.data.Dataloader</em>) – Test dataloader</p></li>
+<li><p><strong>is_packed</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the input data is packed or not. Defaults to False.</p></li>
+<li><p><strong>criterion</strong> (<em>_type_</em><em>, </em><em>optional</em>) – Loss function. Defaults to nn.CrossEntropyLoss().</p></li>
+<li><p><strong>task</strong> (<em>str</em><em>, </em><em>optional</em>) – Task to evaluate. Choose between “classification”, “multiclass”, “regression”, “posneg-classification”. Defaults to “classification”.</p></li>
+<li><p><strong>auprc</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to get AUPRC scores or not. Defaults to False.</p></li>
+<li><p><strong>input_to_float</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to convert inputs to float before processing. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.Supervised_Learning.test">
+<span class="sig-prename descclassname"><span class="pre">training_structures.Supervised_Learning.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloaders_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'My</span> <span class="pre">method'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_packed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.CrossEntropyLoss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_to_float</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.Supervised_Learning.test" title="Permalink to this definition"></a></dt>
+<dd><p>Handle getting test results for a simple supervised training loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> – saved checkpoint filename from train</p></li>
+<li><p><strong>test_dataloaders_all</strong> – test data</p></li>
+<li><p><strong>dataset</strong> – the name of dataset, need to be set for testing effective robustness</p></li>
+<li><p><strong>criterion</strong> – only needed for regression, put MSELoss there</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.Supervised_Learning.train">
+<span class="sig-prename descclassname"><span class="pre">training_structures.Supervised_Learning.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoders</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fusion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_optimizing_modules</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_packed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.optim.RMSprop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.CrossEntropyLoss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best.pt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validtime</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective_args_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_to_float</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_val</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_complexity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.Supervised_Learning.train" title="Permalink to this definition"></a></dt>
+<dd><p>Handle running a simple supervised training loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoders</strong> – list of modules, unimodal encoders for each input modality in the order of the modality input data.</p></li>
+<li><p><strong>fusion</strong> – fusion module, takes in outputs of encoders in a list and outputs fused representation</p></li>
+<li><p><strong>head</strong> – classification or prediction head, takes in output of fusion module and outputs the classification or prediction results that will be sent to the objective function for loss calculation</p></li>
+<li><p><strong>total_epochs</strong> – maximum number of epochs to train</p></li>
+<li><p><strong>additional_optimizing_modules</strong> – list of modules, include all modules that you want to be optimized by the optimizer other than those in encoders, fusion, head (for example, decoders in MVAE)</p></li>
+<li><p><strong>is_packed</strong> – whether the input modalities are packed in one list or not (default is False, which means we expect input of [tensor(20xmodal1_size),(20xmodal2_size),(20xlabel_size)] for batch size 20 and 2 input modalities)</p></li>
+<li><p><strong>early_stop</strong> – whether to stop early if valid performance does not improve over 7 epochs</p></li>
+<li><p><strong>task</strong> – type of task, currently support “classification”,”regression”,”multilabel”</p></li>
+<li><p><strong>optimtype</strong> – type of optimizer to use</p></li>
+<li><p><strong>lr</strong> – learning rate</p></li>
+<li><p><strong>weight_decay</strong> – weight decay of optimizer</p></li>
+<li><p><strong>objective</strong> – objective function, which is either one of CrossEntropyLoss, MSELoss or BCEWithLogitsLoss or a custom objective function that takes in three arguments: prediction, ground truth, and an argument dictionary.</p></li>
+<li><p><strong>auprc</strong> – whether to compute auprc score or not</p></li>
+<li><p><strong>save</strong> – the name of the saved file for the model with current best validation performance</p></li>
+<li><p><strong>validtime</strong> – whether to show valid time in seconds or not</p></li>
+<li><p><strong>objective_args_dict</strong> – the argument dictionary to be passed into objective function. If not None, at every batch the dict’s “reps”, “fused”, “inputs”, “training” fields will be updated to the batch’s encoder outputs, fusion module output, input tensors, and boolean of whether this is training or validation, respectively.</p></li>
+<li><p><strong>input_to_float</strong> – whether to convert input to float type or not</p></li>
+<li><p><strong>clip_val</strong> – grad clipping limit</p></li>
+<li><p><strong>track_complexity</strong> – whether to track training complexity or not</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-training_structures.architecture_search">
+<span id="training-structures-architecture-search-module"></span><h2>training_structures.architecture_search module<a class="headerlink" href="#module-training_structures.architecture_search" title="Permalink to this headline"></a></h2>
+<p>Implements training procedure for MFAS.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="training_structures.architecture_search.ModelSearcher">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">training_structures.architecture_search.</span></span><span class="sig-name descname"><span class="pre">ModelSearcher</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch_surrogate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_decay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_progression_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_surrogate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.architecture_search.ModelSearcher" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements MFAS Procedure.</p>
+<p>See <a class="reference external" href="https://github.com/slyviacassell/_MFAS/blob/master/models/searchable.py">https://github.com/slyviacassell/_MFAS/blob/master/models/searchable.py</a> for more details.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="training_structures.architecture_search.ModelSearcher.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_iter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch_surrogate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_decay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_progression_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_surrogate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'cuda'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.architecture_search.ModelSearcher.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize ModelSearcher Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train_data</strong> (<em>torch.utils.data.DataLoader</em>) – Training Data Dataloader</p></li>
+<li><p><strong>valid_data</strong> (<em>torch.utils.data.DataLoader</em>) – Validation Data Dataloader</p></li>
+<li><p><strong>search_iter</strong> (<em>int</em>) – Number of search iterations</p></li>
+<li><p><strong>num_samples</strong> (<em>int</em>) – Number of samples</p></li>
+<li><p><strong>epoch_surrogate</strong> (<em>int</em>) – Number of epochs per surrogate</p></li>
+<li><p><strong>temperature_init</strong> (<em>float</em>) – Initial softmax temperature</p></li>
+<li><p><strong>temperature_final</strong> (<em>float</em>) – Final softmax temperature</p></li>
+<li><p><strong>temperature_decay</strong> (<em>float</em>) – Softmax temperature decay rate</p></li>
+<li><p><strong>max_progression_levels</strong> (<em>int</em>) – Maximum number of progression levels.</p></li>
+<li><p><strong>lr_surrogate</strong> (<em>float</em>) – Surrogate learning rate.</p></li>
+<li><p><strong>device</strong> (<em>str</em><em>, </em><em>optional</em>) – Device to place computation on. Defaults to “cuda”.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="training_structures.architecture_search.ModelSearcher.search">
+<span class="sig-name descname"><span class="pre">search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weightsharing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unimodal_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rep_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ti</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.MSELoss</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.architecture_search.ModelSearcher.search" title="Permalink to this definition"></a></dt>
+<dd><p>Search for the best model using MFAS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>nn.Module</em>) – Surrogate cost function module.</p></li>
+<li><p><strong>use_weightsharing</strong> (<em>bool</em>) – Whether to use weight sharing or not.</p></li>
+<li><p><strong>unimodal_files</strong> (<em>list</em>) – List of unimodal encoders, pre-trained.</p></li>
+<li><p><strong>rep_size</strong> (<em>int</em>) – Dimensionality of unimodal encoder output</p></li>
+<li><p><strong>classes</strong> (<em>int</em>) – Number of classes</p></li>
+<li><p><strong>sub_sizes</strong> (<em>int</em>) – Sub sizes</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size</p></li>
+<li><p><strong>epochs</strong> (<em>int</em>) – Number of epochs</p></li>
+<li><p><strong>max_labels</strong> (<em>int</em>) – Maximum number of labels</p></li>
+<li><p><strong>eta_max</strong> (<em>float</em>) – eta_max for LRCosineAnnealing Scheduler</p></li>
+<li><p><strong>eta_min</strong> (<em>float</em>) – eta_min for LRCosineAnnealingScheduler</p></li>
+<li><p><strong>Ti</strong> (<em>float</em>) – Ti for LRCosineAnnealingScheduler</p></li>
+<li><p><strong>Tm</strong> (<em>float</em>) – Tm for LRCosineAnnealingScheduler</p></li>
+<li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – Loss function. Defaults to torch.nn.MSELoss().</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Surrogate function training data ( i.e. model configs and their performances )</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.architecture_search.single_test">
+<span class="sig-prename descclassname"><span class="pre">training_structures.architecture_search.</span></span><span class="sig-name descname"><span class="pre">single_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.architecture_search.single_test" title="Permalink to this definition"></a></dt>
+<dd><p>Get accuracy for a single dataloader for MFAS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – MFAS Model</p></li>
+<li><p><strong>test_dataloader</strong> (<em>torch.utils.data.DataLoader</em>) – Test dataloader to sample from</p></li>
+<li><p><strong>auprc</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to get AUPRC scores or not. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary of (metric, value) pairs.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.architecture_search.test">
+<span class="sig-prename descclassname"><span class="pre">training_structures.architecture_search.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloaders_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'My</span> <span class="pre">method'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.architecture_search.test" title="Permalink to this definition"></a></dt>
+<dd><p>Test MFAS Model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – Module to test.</p></li>
+<li><p><strong>test_dataloaders_all</strong> (<em>list</em>) – List of dataloaders</p></li>
+<li><p><strong>dataset</strong> (<em>str</em>) – Name of dataset.</p></li>
+<li><p><strong>method_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Method name. Defaults to ‘My method’.</p></li>
+<li><p><strong>auprc</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to output AUPRC scores or not. Defaults to False.</p></li>
+<li><p><strong>no_robust</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to not apply robustness transformations or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.architecture_search.train">
+<span class="sig-prename descclassname"><span class="pre">training_structures.architecture_search.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unimodal_files</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rep_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sub_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surrogate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">search_iter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_samples</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch_surrogate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_max</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_min</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ti</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_final</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_progression_levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr_surrogate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_weightsharing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.architecture_search.train" title="Permalink to this definition"></a></dt>
+<dd><p>Train MFAS Model.</p>
+<p>See <a class="reference external" href="https://github.com/slyviacassell/_MFAS/blob/master/models/searchable.py">https://github.com/slyviacassell/_MFAS/blob/master/models/searchable.py</a> for more details.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unimodal_files</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – Dictionary of names of files containing pretrained unimodal encoders</p></li>
+<li><p><strong>rep_size</strong> (<em>int</em>) – Size of Representation</p></li>
+<li><p><strong>classes</strong> (<em>int</em>) – Output Size</p></li>
+<li><p><strong>sub_sizes</strong> (<em>list of tuples</em>) – The output size of each layer within the unimodal encoders</p></li>
+<li><p><strong>train_data</strong> (<em>torch.utils.data.DataLoader</em>) – Training data loader</p></li>
+<li><p><strong>valid_data</strong> (<em>torch.utils.data.DataLoader</em>) – Validation data loader</p></li>
+<li><p><strong>surrogate</strong> (<em>nn.Module</em>) – Surrogate Instance</p></li>
+<li><p><strong>max_labels</strong> (<em>tuple</em>) – Search space of input architecture</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size Defaults to 32.</p></li>
+<li><p><strong>epochs</strong> (<em>int</em><em>, </em><em>optional</em>) – Epoch count. Defaults to 3.</p></li>
+<li><p><strong>search_iter</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of iterations to search with MFAS. Defaults to 3.</p></li>
+<li><p><strong>num_samples</strong> (<em>int</em><em>, </em><em>optional</em>) – Sample number. Defaults to 15.</p></li>
+<li><p><strong>epoch_surrogate</strong> (<em>int</em><em>, </em><em>optional</em>) – Surrogate epoch. Defaults to 50.</p></li>
+<li><p><strong>eta_max</strong> (<em>float</em><em>, </em><em>optional</em>) – See MFAS github for more details. Defaults to 0.001.</p></li>
+<li><p><strong>eta_min</strong> (<em>float</em><em>, </em><em>optional</em>) – See MFAS github for more details. Defaults to 0.000001.</p></li>
+<li><p><strong>Ti</strong> (<em>int</em><em>, </em><em>optional</em>) – See MFAS github for more details. Defaults to 1.</p></li>
+<li><p><strong>Tm</strong> (<em>int</em><em>, </em><em>optional</em>) – See MFAS github for more details. Defaults to 2.</p></li>
+<li><p><strong>temperature_init</strong> (<em>float</em><em>, </em><em>optional</em>) – See MFAS github for more details. Defaults to 10.0.</p></li>
+<li><p><strong>temperature_final</strong> (<em>float</em><em>, </em><em>optional</em>) – See MFAS github for more details. Defaults to 0.2.</p></li>
+<li><p><strong>temperature_decay</strong> (<em>float</em><em>, </em><em>optional</em>) – See MFAS github for more details. Defaults to 4.0.</p></li>
+<li><p><strong>max_progression_levels</strong> (<em>int</em><em>, </em><em>optional</em>) – See MFAS github for more details. Defaults to 4.</p></li>
+<li><p><strong>lr_surrogate</strong> (<em>float</em><em>, </em><em>optional</em>) – Surrogate learning rate. Defaults to 0.001.</p></li>
+<li><p><strong>use_weightsharing</strong> (<em>bool</em><em>, </em><em>optional</em>) – Use weight-sharing when training architectures for evaluation. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-training_structures.gradient_blend">
+<span id="training-structures-gradient-blend-module"></span><h2>training_structures.gradient_blend module<a class="headerlink" href="#module-training_structures.gradient_blend" title="Permalink to this headline"></a></h2>
+<p>Implements training structures for gradient blending.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.calcAUPRC">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">calcAUPRC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.calcAUPRC" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate AUPRC score given true labels and predicted probabilities.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pts</strong> (<em>list</em>) – List of (true, predicted prob) for each sample in batch.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>AUPRC score</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.completeModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">completeModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.completeModule" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements and combines sub-modules into a full classifier.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.completeModule.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoders</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.completeModule.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate completeModule instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoders</strong> (<em>list</em>) – List of nn.Module encoders</p></li>
+<li><p><strong>fuse</strong> (<em>nn.Module</em>) – Fusion module</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Classifier module</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.completeModule.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.completeModule.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply classifier to output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>list</em><em>[</em><em>torch.Tensor</em><em>]</em>) – List of input tensors</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Classifier output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.gb_estimate">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">gb_estimate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unimodal_models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multimodal_classification_head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unimodal_classification_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gb_epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.optim.SGD</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.gb_estimate" title="Permalink to this definition"></a></dt>
+<dd><p>Compute estimate of gradient-blending score.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unimodal_models</strong> (<em>list</em>) – List of encoder modules</p></li>
+<li><p><strong>multimodal_classification_head</strong> (<em>nn.Module</em>) – Classifier given fusion instance</p></li>
+<li><p><strong>fuse</strong> (<em>nn.Module</em>) – Fusion module</p></li>
+<li><p><strong>unimodal_classification_heads</strong> (<em>list</em>) – List of unimodal classifiers</p></li>
+<li><p><strong>train_dataloader</strong> (<em>torch.utils.data.Dataloader</em>) – Training data loader</p></li>
+<li><p><strong>gb_epoch</strong> (<em>int</em>) – Number of epochs for gradient-blending</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size</p></li>
+<li><p><strong>v_dataloader</strong> (<em>torch.utils.data.Dataloader</em>) – Validation dataloader</p></li>
+<li><p><strong>lr</strong> (<em>float</em>) – Learning Rate</p></li>
+<li><p><strong>weight_decay</strong> (<em>float</em><em>, </em><em>optional</em>) – Weight decay parameter. Defaults to 0.0.</p></li>
+<li><p><strong>optimtype</strong> (<em>torch.optim.Optimizer</em><em>, </em><em>optional</em>) – Optimizer instance. Defaults to torch.optim.SGD.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normalized weights between unimodal and multimodal models</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.getloss">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">getloss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.getloss" title="Permalink to this definition"></a></dt>
+<dd><p>Get loss for model given classification head.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – Module to evaluate</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Classification head.</p></li>
+<li><p><strong>data</strong> (<em>torch.utils.data.Dataloader</em>) – Dataloader to evaluate on.</p></li>
+<li><p><strong>monum</strong> (<em>int</em>) – Unimodal model index.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – (unused) Batch Size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Average loss per sample.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.getmloss">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">getmloss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.getmloss" title="Permalink to this definition"></a></dt>
+<dd><p>Calculate multimodal loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>models</strong> (<em>list</em>) – List of encoder models</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Classifier module</p></li>
+<li><p><strong>fuse</strong> (<em>nn.Module</em>) – Fusion module</p></li>
+<li><p><strong>data</strong> (<em>torch.utils.data.Dataloader</em>) – Data loader to calculate loss on.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size of dataloader</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Average loss</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.multimodalcompute">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">multimodalcompute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.multimodalcompute" title="Permalink to this definition"></a></dt>
+<dd><p>Compute encoded representation for each modality in train_x using encoders in models.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>models</strong> (<em>list</em>) – List of encoder instances</p></li>
+<li><p><strong>train_x</strong> (<em>List</em>) – List of Input Tensors</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of encoded tensors</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>List</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.multimodalcondense">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">multimodalcondense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.multimodalcondense" title="Permalink to this definition"></a></dt>
+<dd><p>Compute fusion encoded output.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>models</strong> (<em>List</em>) – List of nn.Modules for each encoder</p></li>
+<li><p><strong>fuse</strong> (<em>nn.Module</em>) – Fusion instance</p></li>
+<li><p><strong>train_x</strong> (<em>List</em>) – List of Input Tensors</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Fused output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.single_test">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">single_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.single_test" title="Permalink to this definition"></a></dt>
+<dd><p>Run single test with model and test data loader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – Model to evaluate.</p></li>
+<li><p><strong>test_dataloader</strong> (<em>torch.utils.data.DataLoader</em>) – Test data loader</p></li>
+<li><p><strong>auprc</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return AUPRC scores or not. Defaults to False.</p></li>
+<li><p><strong>classification</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return classification accuracy or not. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary of (metric, value) pairs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.test">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloaders_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'My</span> <span class="pre">method'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.test" title="Permalink to this definition"></a></dt>
+<dd><p>Test module, reporting results to stdout.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – Model to test</p></li>
+<li><p><strong>test_dataloaders_all</strong> (<em>list</em><em>[</em><em>torch.utils.data.Dataloader</em><em>]</em>) – List of data loaders to test on.</p></li>
+<li><p><strong>dataset</strong> (<em>string</em>) – Dataset name</p></li>
+<li><p><strong>method_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Method name. Defaults to ‘My method’.</p></li>
+<li><p><strong>auprc</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use AUPRC scores or not. Defaults to False.</p></li>
+<li><p><strong>classification</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the task is classificaion or not. Defaults to True.</p></li>
+<li><p><strong>no_robust</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to not apply robustness variations to input. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.train">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unimodal_models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multimodal_classification_head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unimodal_classification_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gb_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.optim.SGD</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finetune_epoch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classification</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">AUPRC</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">savedir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'best.pt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_complexity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.train" title="Permalink to this definition"></a></dt>
+<dd><p>Train model using gradient_blending.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unimodal_models</strong> (<em>list</em>) – List of modules, unimodal encoders for each input modality in the order of the modality input data.</p></li>
+<li><p><strong>multimodal_classification_head</strong> (<em>nn.Module</em>) – Classification head that takes in fused output of unimodal models of all modalities</p></li>
+<li><p><strong>unimodal_classification_heads</strong> (<em>list</em><em>[</em><em>nn.Module</em><em>]</em>) – List of classification heads that each takes in output of one unimodal model (must be in the same modality order as unimodal_models)</p></li>
+<li><p><strong>fuse</strong> (<em>nn.Module</em>) – Fusion module that takes in a list of outputs from unimodal_models and generate a fused representation</p></li>
+<li><p><strong>train_dataloader</strong> (<em>torch.utils.data.DataLoader</em>) – Training data loader</p></li>
+<li><p><strong>valid_dataloader</strong> (<em>torch.utils.data.DataLoader</em>) – Validation data loader</p></li>
+<li><p><strong>num_epoch</strong> (<em>int</em>) – Number of epochs to train this model on.</p></li>
+<li><p><strong>lr</strong> (<em>float</em>) – Learning rate.</p></li>
+<li><p><strong>gb_epoch</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of epochs between re-evaluation of weights of gradient blend. Defaults to 20.</p></li>
+<li><p><strong>v_rate</strong> (<em>float</em><em>, </em><em>optional</em>) – Portion of training set used as validation for gradient blend weight estimation. Defaults to 0.08.</p></li>
+<li><p><strong>weight_decay</strong> (<em>float</em><em>, </em><em>optional</em>) – Weight decay of optimizer. Defaults to 0.0.</p></li>
+<li><p><strong>optimtype</strong> (<em>torch.optim.Optimizer</em><em>, </em><em>optional</em>) – Type of optimizer to use. Defaults to torch.optim.SGD.</p></li>
+<li><p><strong>finetune_epoch</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of epochs to finetune the classification head. Defaults to 25.</p></li>
+<li><p><strong>classification</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the task is a classification task. Defaults to True.</p></li>
+<li><p><strong>AUPRC</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to compute auprc score or not. Defaults to False.</p></li>
+<li><p><strong>savedir</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the saved file for the model with current best validation performance. Defaults to ‘best.pt’.</p></li>
+<li><p><strong>track_complexity</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to track complexity or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.train_multimodal">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">train_multimodal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fuse</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.train_multimodal" title="Permalink to this definition"></a></dt>
+<dd><p>Train multimodal gradient-blending model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>models</strong> (<em>list</em>) – List of nn.modules for the encoders</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Classifier, post fusion layer</p></li>
+<li><p><strong>fuse</strong> (<em>nn.Module</em>) – Fusion module</p></li>
+<li><p><strong>optim</strong> (<em>torch.optim.Optimizer</em>) – Optimizer instance.</p></li>
+<li><p><strong>trains</strong> (<em>torch.utils.data.Dataloader</em>) – Training data dataloader</p></li>
+<li><p><strong>valids</strong> (<em>torch.utils.data.Dataloader</em>) – Validation data dataloader</p></li>
+<li><p><strong>epoch</strong> (<em>int</em>) – Number of epochs to train on</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>metric</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.gradient_blend.train_unimodal">
+<span class="sig-prename descclassname"><span class="pre">training_structures.gradient_blend.</span></span><span class="sig-name descname"><span class="pre">train_unimodal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trains</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valids</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monum</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.gradient_blend.train_unimodal" title="Permalink to this definition"></a></dt>
+<dd><p>Train unimodal gradient blending module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – Unimodal encoder</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Classifier instance</p></li>
+<li><p><strong>optim</strong> (<em>torch.optim.Optimizer</em>) – Optimizer instance</p></li>
+<li><p><strong>trains</strong> (<em>torch.utils.data.DataLoader</em>) – Training Dataloader Instance</p></li>
+<li><p><strong>valids</strong> (<em>torch.utils.data.DataLoader</em>) – Validation DataLoader Instance</p></li>
+<li><p><strong>monum</strong> (<em>int</em>) – Modality index</p></li>
+<li><p><strong>epoch</strong> (<em>int</em>) – Number of epochs to train on</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em>) – Batch size of data loaders</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Metric</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-training_structures.unimodal">
+<span id="training-structures-unimodal-module"></span><h2>training_structures.unimodal module<a class="headerlink" href="#module-training_structures.unimodal" title="Permalink to this headline"></a></h2>
+<p>Implements training pipeline for unimodal comparison.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.unimodal.single_test">
+<span class="sig-prename descclassname"><span class="pre">training_structures.unimodal.</span></span><span class="sig-name descname"><span class="pre">single_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modalnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.unimodal.single_test" title="Permalink to this definition"></a></dt>
+<dd><p>Test unimodal model on one dataloader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoder</strong> (<em>nn.Module</em>) – Unimodal encoder module</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Module which takes in encoded unimodal input and predicts output.</p></li>
+<li><p><strong>test_dataloader</strong> (<em>torch.utils.data.DataLoader</em>) – Data Loader for test set.</p></li>
+<li><p><strong>auprc</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to output AUPRC or not. Defaults to False.</p></li>
+<li><p><strong>modalnum</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of modality to consider for the test with the given encoder. Defaults to 0.</p></li>
+<li><p><strong>task</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of task to try. Supports “classification”, “regression”, or “multilabel”. Defaults to ‘classification’.</p></li>
+<li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – Loss module. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Dictionary of (metric, value) relations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.unimodal.test">
+<span class="sig-prename descclassname"><span class="pre">training_structures.unimodal.</span></span><span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_dataloaders_all</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'My</span> <span class="pre">method'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modalnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.unimodal.test" title="Permalink to this definition"></a></dt>
+<dd><p>Test unimodal model on all provided dataloaders.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoder</strong> (<em>nn.Module</em>) – Encoder module</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Module which takes in encoded unimodal input and predicts output.</p></li>
+<li><p><strong>test_dataloaders_all</strong> (<em>dict</em>) – Dictionary of noisetype, dataloader to test.</p></li>
+<li><p><strong>dataset</strong> (<em>str</em><em>, </em><em>optional</em>) – Dataset to test on. Defaults to ‘default’.</p></li>
+<li><p><strong>method_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Method name. Defaults to ‘My method’.</p></li>
+<li><p><strong>auprc</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to output AUPRC scores or not. Defaults to False.</p></li>
+<li><p><strong>modalnum</strong> (<em>int</em><em>, </em><em>optional</em>) – Index of modality to test on. Defaults to 0.</p></li>
+<li><p><strong>task</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of task to try. Supports “classification”, “regression”, or “multilabel”. Defaults to ‘classification’.</p></li>
+<li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – Loss module. Defaults to None.</p></li>
+<li><p><strong>no_robust</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to not apply robustness methods or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="training_structures.unimodal.train">
+<span class="sig-prename descclassname"><span class="pre">training_structures.unimodal.</span></span><span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">encoder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">valid_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.optim.RMSprop</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">torch.nn.CrossEntropyLoss</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auprc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'encoder.pt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_head</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'head.pt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modalnum</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'classification'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">track_complexity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#training_structures.unimodal.train" title="Permalink to this definition"></a></dt>
+<dd><p>Train unimodal module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>encoder</strong> (<em>nn.Module</em>) – Unimodal encodder for the modality</p></li>
+<li><p><strong>head</strong> (<em>nn.Module</em>) – Takes in the unimodal encoder output and produces the final prediction.</p></li>
+<li><p><strong>train_dataloader</strong> (<em>torch.utils.data.DataLoader</em>) – Training data dataloader</p></li>
+<li><p><strong>valid_dataloader</strong> (<em>torch.utils.data.DataLoader</em>) – Validation set dataloader</p></li>
+<li><p><strong>total_epochs</strong> (<em>int</em>) – Total number of epochs</p></li>
+<li><p><strong>early_stop</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply early-stopping or not. Defaults to False.</p></li>
+<li><p><strong>optimtype</strong> (<em>torch.optim.Optimizer</em><em>, </em><em>optional</em>) – Type of optimizer to use. Defaults to torch.optim.RMSprop.</p></li>
+<li><p><strong>lr</strong> (<em>float</em><em>, </em><em>optional</em>) – Learning rate. Defaults to 0.001.</p></li>
+<li><p><strong>weight_decay</strong> (<em>float</em><em>, </em><em>optional</em>) – Weight decay of optimizer. Defaults to 0.0.</p></li>
+<li><p><strong>criterion</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – Loss module. Defaults to nn.CrossEntropyLoss().</p></li>
+<li><p><strong>auprc</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to compute AUPRC score or not. Defaults to False.</p></li>
+<li><p><strong>save_encoder</strong> (<em>str</em><em>, </em><em>optional</em>) – Path of file to save model with best validation performance. Defaults to ‘encoder.pt’.</p></li>
+<li><p><strong>save_head</strong> (<em>str</em><em>, </em><em>optional</em>) – Path fo file to save head with best validation performance. Defaults to ‘head.pt’.</p></li>
+<li><p><strong>modalnum</strong> (<em>int</em><em>, </em><em>optional</em>) – Which modality to apply encoder to. Defaults to 0.</p></li>
+<li><p><strong>task</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of task to try. Supports “classification”, “regression”, or “multilabel”. Defaults to ‘classification’.</p></li>
+<li><p><strong>track_complexity</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to track the model’s complexity or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-training_structures">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-training_structures" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Training Structures" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../unimodals/modules.html" class="btn btn-neutral float-right" title="Unimodal Encoders" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

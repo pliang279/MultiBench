@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>datasets.imdb package &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="datasets.mimic package" href="datasets.mimic.html" />
+    <link rel="prev" title="datasets.gentle_push package" href="datasets.gentle_push.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Datasets and DataLoaders</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="datasets.html">datasets package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="datasets.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="datasets.RTFM.html">datasets.RTFM package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.affect.html">datasets.affect package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.avmnist.html">datasets.avmnist package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.clotho.html">datasets.clotho package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.enrico.html">datasets.enrico package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.gentle_push.html">datasets.gentle_push package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">datasets.imdb package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.mimic.html">datasets.mimic package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html">datasets.robotics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.stocks.html">datasets.stocks package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#module-datasets">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Datasets and DataLoaders</a> &raquo;</li>
+          <li><a href="datasets.html">datasets package</a> &raquo;</li>
+      <li>datasets.imdb package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/datasets/datasets.imdb.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="datasets-imdb-package">
+<h1>datasets.imdb package<a class="headerlink" href="#datasets-imdb-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-datasets.imdb.get_data">
+<span id="datasets-imdb-get-data-module"></span><h2>datasets.imdb.get_data module<a class="headerlink" href="#module-datasets.imdb.get_data" title="Permalink to this headline"></a></h2>
+<p>Implements dataloaders for IMDB dataset.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.IMDBDataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.imdb.get_data.</span></span><span class="sig-name descname"><span class="pre">IMDBDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.get_data.IMDBDataset" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p>
+<p>Implements a torch Dataset class for the imdb dataset.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.IMDBDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">h5py.File</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vggfeature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#datasets.imdb.get_data.IMDBDataset.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize IMDBDataset object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>h5py.File</em>) – h5py file of data</p></li>
+<li><p><strong>start_ind</strong> (<em>int</em>) – Starting index for dataset</p></li>
+<li><p><strong>end_ind</strong> (<em>int</em>) – Ending index for dataset</p></li>
+<li><p><strong>vggfeature</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return pre-processed vgg_features or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.IMDBDataset_robust">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.imdb.get_data.</span></span><span class="sig-name descname"><span class="pre">IMDBDataset_robust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.get_data.IMDBDataset_robust" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p>
+<p>Implements a torch Dataset class for the imdb dataset that uses robustness measures as data augmentation.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.IMDBDataset_robust.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#datasets.imdb.get_data.IMDBDataset_robust.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize IMDBDataset_robust object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file</strong> (<em>h5py.File</em>) – h5py file of data</p></li>
+<li><p><strong>start_ind</strong> (<em>int</em>) – Starting index for dataset</p></li>
+<li><p><strong>end_ind</strong> (<em>int</em>) – Ending index for dataset</p></li>
+<li><p><strong>vggfeature</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return pre-processed vgg_features or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.imdb.get_data.get_dataloader">
+<span class="sig-prename descclassname"><span class="pre">datasets.imdb.get_data.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_shuffle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vgg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_process</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#datasets.imdb.get_data.get_dataloader" title="Permalink to this definition"></a></dt>
+<dd><p>Get dataloaders for IMDB dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to training datafile.</p></li>
+<li><p><strong>test_path</strong> (<em>str</em>) – Path to test datafile.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of workers to load data in. Defaults to 8.</p></li>
+<li><p><strong>train_shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to shuffle training data or not. Defaults to True.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size of data. Defaults to 40.</p></li>
+<li><p><strong>vgg</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return raw images or pre-processed vgg features. Defaults to False.</p></li>
+<li><p><strong>skip_process</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to pre-process data or not. Defaults to False.</p></li>
+<li><p><strong>no_robust</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to not use robustness measures as augmentation. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of Training dataloader, Validation dataloader, Test Dataloader</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Tuple[Dict]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-datasets.imdb.vgg">
+<span id="datasets-imdb-vgg-module"></span><h2>datasets.imdb.vgg module<a class="headerlink" href="#module-datasets.imdb.vgg" title="Permalink to this headline"></a></h2>
+<p>Implements VGG pre-processer for IMDB data.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.imdb.vgg.</span></span><span class="sig-name descname"><span class="pre">VGGClassifier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vgg.tar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">synset_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'synset_words.txt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements VGG classifier instance.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'vgg.tar'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">synset_words</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'synset_words.txt'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate VGG classifier instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_path</strong> (<em>str</em><em>, </em><em>optional</em>) – VGGNet weight file. Defaults to ‘vgg.tar’.</p></li>
+<li><p><strong>synset_words</strong> (<em>str</em><em>, </em><em>optional</em>) – Path to synset words. Defaults to ‘synset_words.txt’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier.classify">
+<span class="sig-name descname"><span class="pre">classify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier.classify" title="Permalink to this definition"></a></dt>
+<dd><p>Classify an image with the 1000 concepts of the ImageNet dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Image</dt>
+<dd class="field-odd"><p>numpy image or image path.</p>
+</dd>
+<dt class="field-even">Top</dt>
+<dd class="field-even"><p>Number of top classes for this image.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>list of strings with synsets predicted by the VGG model.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier.get_features">
+<span class="sig-name descname"><span class="pre">get_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier.get_features" title="Permalink to this definition"></a></dt>
+<dd><p>Return the activations of the last hidden layer for a given image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Image</dt>
+<dd class="field-odd"><p>numpy image or image path.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>numpy vector with 4096 activations.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGClassifier.resize_and_crop_image">
+<span class="sig-name descname"><span class="pre">resize_and_crop_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_box</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[224,</span> <span class="pre">224]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGClassifier.resize_and_crop_image" title="Permalink to this definition"></a></dt>
+<dd><p>Downsample the image.</p>
+<p>Sourced from <a class="reference external" href="https://github.com/BVLC/caffe/blob/master/tools/extra/resize_and_crop_images.py">https://github.com/BVLC/caffe/blob/master/tools/extra/resize_and_crop_images.py</a></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGNet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.imdb.vgg.</span></span><span class="sig-name descname"><span class="pre">VGGNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGNet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">blocks.bricks.FeedforwardSequence</span></code></p>
+<p>Implements VGG pre-processor.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datasets.imdb.vgg.VGGNet.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.imdb.vgg.VGGNet.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate VGG pre-processor instance.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-datasets.imdb">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datasets.imdb" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="datasets.gentle_push.html" class="btn btn-neutral float-left" title="datasets.gentle_push package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="datasets.mimic.html" class="btn btn-neutral float-right" title="datasets.mimic package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

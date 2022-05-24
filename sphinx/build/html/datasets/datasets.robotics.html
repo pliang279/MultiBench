@@ -101,6 +101,7 @@
 </section>
 <section id="module-datasets.robotics.MultimodalManipulationDataset">
 <span id="datasets-robotics-multimodalmanipulationdataset-module"></span><h2>datasets.robotics.MultimodalManipulationDataset module<a class="headerlink" href="#module-datasets.robotics.MultimodalManipulationDataset" title="Permalink to this headline"></a></h2>
+<p>Implements dataset for MultiModal Manipulation Task.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="datasets.robotics.MultimodalManipulationDataset.MultimodalManipulationDataset">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.robotics.MultimodalManipulationDataset.</span></span><span class="sig-name descname"><span class="pre">MultimodalManipulationDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.MultimodalManipulationDataset.MultimodalManipulationDataset" title="Permalink to this definition"></a></dt>
@@ -109,12 +110,18 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="datasets.robotics.MultimodalManipulationDataset.MultimodalManipulationDataset.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transform</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">episode_length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">50</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">training_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'selfsupervised'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_time_steps</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filedirprefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.MultimodalManipulationDataset.MultimodalManipulationDataset.__init__" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Initialize dataset.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>hdf5_file</strong> (<em>handle</em>) – h5py handle of the hdf5 file with annotations.</p></li>
-<li><p><strong>transform</strong> (<em>callable</em><em>, </em><em>optional</em>) – Optional transform to be applied
-on a sample.</p></li>
+<li><p><strong>filename_list</strong> (<em>str</em>) – List of files to get data from</p></li>
+<li><p><strong>transform</strong> (<em>fn</em><em>, </em><em>optional</em>) – Optional function to transform data. Defaults to None.</p></li>
+<li><p><strong>episode_length</strong> (<em>int</em><em>, </em><em>optional</em>) – Length of each episode. Defaults to 50.</p></li>
+<li><p><strong>training_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Type of training. Defaults to “selfsupervised”.</p></li>
+<li><p><strong>n_time_steps</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of time steps. Defaults to 1.</p></li>
+<li><p><strong>action_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Action dimension. Defaults to 4.</p></li>
+<li><p><strong>pairing_tolerance</strong> (<em>float</em><em>, </em><em>optional</em>) – Pairing tolerance. Defaults to 0.06.</p></li>
+<li><p><strong>filedirprefix</strong> (<em>str</em><em>, </em><em>optional</em>) – File directory prefix (unused). Defaults to “”.</p></li>
 </ul>
 </dd>
 </dl>
@@ -146,6 +153,7 @@ on a sample.</p></li>
 </section>
 <section id="module-datasets.robotics.MultimodalManipulationDataset_robust">
 <span id="datasets-robotics-multimodalmanipulationdataset-robust-module"></span><h2>datasets.robotics.MultimodalManipulationDataset_robust module<a class="headerlink" href="#module-datasets.robotics.MultimodalManipulationDataset_robust" title="Permalink to this headline"></a></h2>
+<p>Implements MultimodalManipulationDataset with robustness transforms.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="datasets.robotics.MultimodalManipulationDataset_robust.MultimodalManipulationDataset_robust">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.robotics.MultimodalManipulationDataset_robust.</span></span><span class="sig-name descname"><span class="pre">MultimodalManipulationDataset_robust</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.MultimodalManipulationDataset_robust.MultimodalManipulationDataset_robust" title="Permalink to this definition"></a></dt>
@@ -170,6 +178,7 @@ on a sample.</p></li>
 </section>
 <section id="module-datasets.robotics.ProcessForce">
 <span id="datasets-robotics-processforce-module"></span><h2>datasets.robotics.ProcessForce module<a class="headerlink" href="#module-datasets.robotics.ProcessForce" title="Permalink to this headline"></a></h2>
+<p>Implements processforce, which truncates force readings to a window size.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="datasets.robotics.ProcessForce.ProcessForce">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.robotics.ProcessForce.</span></span><span class="sig-name descname"><span class="pre">ProcessForce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'force'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tanh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.ProcessForce.ProcessForce" title="Permalink to this definition"></a></dt>
@@ -184,13 +193,24 @@ on a sample.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="datasets.robotics.ProcessForce.ProcessForce.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'force'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tanh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.ProcessForce.ProcessForce.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialize ProcessForce object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>window_size</strong> (<em>int</em>) – Windows size</p></li>
+<li><p><strong>key</strong> (<em>str</em><em>, </em><em>optional</em>) – Key where data is stored. Defaults to ‘force’.</p></li>
+<li><p><strong>tanh</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply tanh to output or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-datasets.robotics.ToTensor">
 <span id="datasets-robotics-totensor-module"></span><h2>datasets.robotics.ToTensor module<a class="headerlink" href="#module-datasets.robotics.ToTensor" title="Permalink to this headline"></a></h2>
+<p>Implements another utility for this dataset.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="datasets.robotics.ToTensor.ToTensor">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.robotics.ToTensor.</span></span><span class="sig-name descname"><span class="pre">ToTensor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.ToTensor.ToTensor" title="Permalink to this definition"></a></dt>
@@ -199,34 +219,66 @@ on a sample.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="datasets.robotics.ToTensor.ToTensor.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.ToTensor.ToTensor.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialize ToTensor object.</p>
+</dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-datasets.robotics.get_data">
 <span id="datasets-robotics-get-data-module"></span><h2>datasets.robotics.get_data module<a class="headerlink" href="#module-datasets.robotics.get_data" title="Permalink to this headline"></a></h2>
+<p>Implements dataloaders for robotics data.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="datasets.robotics.get_data.combine_modalitiesbuilder">
 <span class="sig-prename descclassname"><span class="pre">datasets.robotics.get_data.</span></span><span class="sig-name descname"><span class="pre">combine_modalitiesbuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unimodal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.get_data.combine_modalitiesbuilder" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create a function data combines modalities given the type of input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>unimodal</strong> (<em>str</em>) – Input type as a string. Can be ‘force’, ‘proprio’, ‘image’. Defaults to using all modalities otherwise</p></li>
+<li><p><strong>output</strong> (<em>int</em>) – Index of output modality.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="datasets.robotics.get_data.get_data">
 <span class="sig-prename descclassname"><span class="pre">datasets.robotics.get_data.</span></span><span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filedirprefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unimodal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'contact_next'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.get_data.get_data" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get dataloaders for robotics dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<em>torch.utils.device</em>) – Device to load data to.</p></li>
+<li><p><strong>configs</strong> (<em>dict</em>) – Configuration dictionary</p></li>
+<li><p><strong>filedirprefix</strong> (<em>str</em><em>, </em><em>optional</em>) – File directory prefix path. Defaults to “”.</p></li>
+<li><p><strong>unimodal</strong> (<em>str</em><em>, </em><em>optional</em>) – Input modality as a string. Defaults to None. Can be ‘force’, ‘proprio’, ‘image’. Defaults to using all modalities otherwise.</p></li>
+<li><p><strong>output</strong> (<em>str</em><em>, </em><em>optional</em>) – Output format. Defaults to ‘contact_next’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>_description_</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>_type_</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-datasets.robotics.utils">
 <span id="datasets-robotics-utils-module"></span><h2>datasets.robotics.utils module<a class="headerlink" href="#module-datasets.robotics.utils" title="Permalink to this headline"></a></h2>
+<p>Extraneous methods for robotics dataset work.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="datasets.robotics.utils.augment_val">
 <span class="sig-prename descclassname"><span class="pre">datasets.robotics.utils.</span></span><span class="sig-name descname"><span class="pre">augment_val</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val_filename_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.robotics.utils.augment_val" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Augment lists of filenames so that they match the current directory.</p>
+</dd></dl>
 
 </section>
 <section id="module-datasets.robotics">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datasets.robotics" title="Permalink to this headline"></a></h2>
+<p>Package that implements dataloaders for robotics data on Multibench.</p>
 </section>
 </section>
 

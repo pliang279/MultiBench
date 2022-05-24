@@ -101,20 +101,35 @@
 </section>
 <section id="module-datasets.avmnist.get_data">
 <span id="datasets-avmnist-get-data-module"></span><h2>datasets.avmnist.get_data module<a class="headerlink" href="#module-datasets.avmnist.get_data" title="Permalink to this headline"></a></h2>
+<p>Implements dataloaders for the AVMNIST dataset.</p>
+<p>Here, the data is assumed to be in a folder titled “avmnist”.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="datasets.avmnist.get_data.get_dataloader">
 <span class="sig-prename descclassname"><span class="pre">datasets.avmnist.get_data.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten_audio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten_image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unsqueeze_channel</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">generate_sample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_audio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.avmnist.get_data.get_dataloader" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="datasets.avmnist.get_data.saveaudio">
-<span class="sig-prename descclassname"><span class="pre">datasets.avmnist.get_data.</span></span><span class="sig-name descname"><span class="pre">saveaudio</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outa</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.avmnist.get_data.saveaudio" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="datasets.avmnist.get_data.saveimg">
-<span class="sig-prename descclassname"><span class="pre">datasets.avmnist.get_data.</span></span><span class="sig-name descname"><span class="pre">saveimg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">outa</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.avmnist.get_data.saveimg" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get dataloaders for AVMNIST.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – Directory of data.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size. Defaults to 40.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of workers. Defaults to 8.</p></li>
+<li><p><strong>train_shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to shuffle training data or not. Defaults to True.</p></li>
+<li><p><strong>flatten_audio</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to flatten audio data or not. Defaults to False.</p></li>
+<li><p><strong>flatten_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to flatten image data or not. Defaults to False.</p></li>
+<li><p><strong>unsqueeze_channel</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to unsqueeze any channels or not. Defaults to True.</p></li>
+<li><p><strong>generate_sample</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to generate a sample and save it to file or not. Defaults to False.</p></li>
+<li><p><strong>normalize_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to normalize the images before returning. Defaults to True.</p></li>
+<li><p><strong>normalize_audio</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to normalize the audio before returning. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of (training dataloader, validation dataloader, test dataloader)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-datasets.avmnist">

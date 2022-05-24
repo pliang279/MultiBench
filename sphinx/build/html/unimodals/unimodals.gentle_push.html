@@ -97,19 +97,43 @@
 </section>
 <section id="module-unimodals.gentle_push.head">
 <span id="unimodals-gentle-push-head-module"></span><h2>unimodals.gentle_push.head module<a class="headerlink" href="#module-unimodals.gentle_push.head" title="Permalink to this headline"></a></h2>
+<p>Implements gentle_push head module.</p>
+<p>Taken from <a class="reference external" href="https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/push_models/lstm.py">https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/push_models/lstm.py</a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="unimodals.gentle_push.head.GentlePushLateLSTM">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.head.</span></span><span class="sig-name descname"><span class="pre">GentlePushLateLSTM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.GentlePushLateLSTM" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Gentle Push’s Late LSTM model.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.gentle_push.head.GentlePushLateLSTM.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hidden_size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.GentlePushLateLSTM.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Instantiate GentlePushLateLSTM Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_size</strong> (<em>int</em>) – Input dimension</p></li>
+<li><p><strong>hidden_size</strong> (<em>int</em>) – Hidden dimension</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.gentle_push.head.GentlePushLateLSTM.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.GentlePushLateLSTM.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply GentlePushLateLSTM to Model Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Model Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Model Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -117,21 +141,42 @@
 <dt class="sig sig-object py" id="unimodals.gentle_push.head.Head">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.head.</span></span><span class="sig-name descname"><span class="pre">Head</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.Head" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Gentle Push’s Head module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.gentle_push.head.Head.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.Head.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Instantiates Head module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>units</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of layers in LSTM. Defaults to 64.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.gentle_push.head.Head.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fused_features</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.gentle_push.head.Head.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply Head module to Layer Inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fused_features</strong> (<em>torch.Tensor</em>) – Layer Inputs</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Outputs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-unimodals.gentle_push.layers">
 <span id="unimodals-gentle-push-layers-module"></span><h2>unimodals.gentle_push.layers module<a class="headerlink" href="#module-unimodals.gentle_push.layers" title="Permalink to this headline"></a></h2>
+<p>Implements sub-layers for gentle_push model.</p>
+<p>Taken from <a class="reference external" href="https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/push_models/layers.py">https://github.com/brentyi/multimodalfilter/blob/master/crossmodal/push_models/layers.py</a>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="unimodals.gentle_push.layers.control_layers">
 <span class="sig-prename descclassname"><span class="pre">unimodals.gentle_push.layers.</span></span><span class="sig-name descname"><span class="pre">control_layers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">torch.nn.Module</span></span></span><a class="headerlink" href="#unimodals.gentle_push.layers.control_layers" title="Permalink to this definition"></a></dt>

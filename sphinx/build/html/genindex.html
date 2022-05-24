@@ -34,16 +34,27 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="datasets/modules.html">datasets</a></li>
-<li class="toctree-l1"><a class="reference internal" href="eval_scripts/modules.html">eval_scripts</a></li>
-<li class="toctree-l1"><a class="reference internal" href="fusions/modules.html">fusions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="objective_functions/modules.html">objective_functions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="robustness/modules.html">robustness</a></li>
-<li class="toctree-l1"><a class="reference internal" href="training_structures/modules.html">training_structures</a></li>
-<li class="toctree-l1"><a class="reference internal" href="unimodals/modules.html">unimodals</a></li>
-<li class="toctree-l1"><a class="reference internal" href="utils/modules.html">utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="utils/modules.html">Utilities</a></li>
 </ul>
 
         </div>
@@ -367,8 +378,6 @@
 </li>
       <li><a href="utils/utils.html#utils.surrogate.SurrogateDataloader.add_datum">add_datum() (utils.surrogate.SurrogateDataloader method)</a>
 </li>
-      <li><a href="datasets/datasets.enrico.html#datasets.enrico.get_data.add_screen_elements">add_screen_elements() (in module datasets.enrico.get_data)</a>
-</li>
       <li><a href="robustness/robustness.html#robustness.tabular_robust.add_tabular_noise">add_tabular_noise() (in module robustness.tabular_robust)</a>
 </li>
       <li><a href="robustness/robustness.html#robustness.text_robust.add_text_noise">add_text_noise() (in module robustness.text_robust)</a>
@@ -385,10 +394,10 @@
 </li>
       <li><a href="eval_scripts/eval_scripts.html#eval_scripts.complexity.all_in_one_test">all_in_one_test() (in module eval_scripts.complexity)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="eval_scripts/eval_scripts.html#eval_scripts.complexity.all_in_one_train">all_in_one_train() (in module eval_scripts.complexity)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fusions/fusions.mult.html#fusions.mult.mult.MULTModel.DefaultHyperParams.all_steps">all_steps (fusions.mult.mult.MULTModel.DefaultHyperParams attribute)</a>
 </li>
       <li><a href="utils/utils.html#utils.aux_models.AlphaScalarMultiplication">AlphaScalarMultiplication (class in utils.aux_models)</a>
@@ -1273,10 +1282,10 @@
 </li>
       <li><a href="fusions/fusions.mult.modules.html#fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.get_embedding">get_embedding() (fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding static method)</a>
 </li>
-      <li><a href="datasets/datasets.gentle_push.html#datasets.gentle_push.data_loader.PushTask.get_eval_trajectories">get_eval_trajectories() (datasets.gentle_push.data_loader.PushTask class method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="datasets/datasets.gentle_push.html#datasets.gentle_push.data_loader.PushTask.get_eval_trajectories">get_eval_trajectories() (datasets.gentle_push.data_loader.PushTask class method)</a>
+</li>
       <li><a href="objective_functions/objective_functions.html#objective_functions.regularization.Perturbation.get_expanded_logits">get_expanded_logits() (objective_functions.regularization.Perturbation class method)</a>
 </li>
       <li><a href="datasets/datasets.imdb.html#datasets.imdb.vgg.VGGClassifier.get_features">get_features() (datasets.imdb.vgg.VGGClassifier method)</a>
@@ -1303,18 +1312,10 @@
 </li>
       <li><a href="datasets/datasets.gentle_push.html#datasets.gentle_push.data_loader.PushTask.get_train_trajectories">get_train_trajectories() (datasets.gentle_push.data_loader.PushTask class method)</a>
 </li>
-      <li><a href="datasets/datasets.affect.html#datasets.affect.get_data.get_word2id">get_word2id() (in module datasets.affect.get_data)</a>
-
-      <ul>
-        <li><a href="datasets/datasets.affect.html#datasets.affect.get_raw_data.get_word2id">(in module datasets.affect.get_raw_data)</a>
+      <li><a href="datasets/datasets.affect.html#datasets.affect.get_raw_data.get_word2id">get_word2id() (in module datasets.affect.get_raw_data)</a>
 </li>
-      </ul></li>
-      <li><a href="datasets/datasets.affect.html#datasets.affect.get_data.get_word_embeddings">get_word_embeddings() (in module datasets.affect.get_data)</a>
-
-      <ul>
-        <li><a href="datasets/datasets.affect.html#datasets.affect.get_raw_data.get_word_embeddings">(in module datasets.affect.get_raw_data)</a>
+      <li><a href="datasets/datasets.affect.html#datasets.affect.get_raw_data.get_word_embeddings">get_word_embeddings() (in module datasets.affect.get_raw_data)</a>
 </li>
-      </ul></li>
       <li><a href="eval_scripts/eval_scripts.html#eval_scripts.complexity.getallparams">getallparams() (in module eval_scripts.complexity)</a>
 </li>
       <li><a href="training_structures/training_structures.html#training_structures.gradient_blend.getloss">getloss() (in module training_structures.gradient_blend)</a>
@@ -1329,12 +1330,8 @@
         <li><a href="utils/utils.html#utils.aux_models.GlobalPooling2D">(class in utils.aux_models)</a>
 </li>
       </ul></li>
-      <li><a href="datasets/datasets.affect.html#datasets.affect.get_data.glove_embeddings">glove_embeddings() (in module datasets.affect.get_data)</a>
-
-      <ul>
-        <li><a href="datasets/datasets.affect.html#datasets.affect.get_raw_data.glove_embeddings">(in module datasets.affect.get_raw_data)</a>
+      <li><a href="datasets/datasets.affect.html#datasets.affect.get_raw_data.glove_embeddings">glove_embeddings() (in module datasets.affect.get_raw_data)</a>
 </li>
-      </ul></li>
       <li><a href="robustness/robustness.html#robustness.visual_robust.grayscale">grayscale() (in module robustness.visual_robust)</a>
 </li>
       <li><a href="datasets/datasets.stocks.html#datasets.stocks.get_data.Grouping">Grouping (class in datasets.stocks.get_data)</a>
@@ -1371,21 +1368,11 @@
 </li>
       <li><a href="unimodals/unimodals.robotics.html#unimodals.robotics.encoders.ImageEncoder">ImageEncoder (class in unimodals.robotics.encoders)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="datasets/datasets.imdb.html#datasets.imdb.get_data.IMDBDataset">IMDBDataset (class in datasets.imdb.get_data)</a>
 </li>
       <li><a href="datasets/datasets.imdb.html#datasets.imdb.get_data.IMDBDataset_robust">IMDBDataset_robust (class in datasets.imdb.get_data)</a>
-</li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="fusions/fusions.mult.modules.html#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_k">in_proj_k() (fusions.mult.modules.multihead_attention.MultiheadAttention method)</a>
-</li>
-      <li><a href="fusions/fusions.mult.modules.html#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_kv">in_proj_kv() (fusions.mult.modules.multihead_attention.MultiheadAttention method)</a>
-</li>
-      <li><a href="fusions/fusions.mult.modules.html#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_q">in_proj_q() (fusions.mult.modules.multihead_attention.MultiheadAttention method)</a>
-</li>
-      <li><a href="fusions/fusions.mult.modules.html#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_qkv">in_proj_qkv() (fusions.mult.modules.multihead_attention.MultiheadAttention method)</a>
-</li>
-      <li><a href="fusions/fusions.mult.modules.html#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_v">in_proj_v() (fusions.mult.modules.multihead_attention.MultiheadAttention method)</a>
 </li>
       <li><a href="unimodals/unimodals.robotics.html#unimodals.robotics.models_utils.init_weights">init_weights() (in module unimodals.robotics.models_utils)</a>
 </li>
@@ -1450,8 +1437,6 @@
 </li>
       </ul></li>
       <li><a href="unimodals/unimodals.html#unimodals.common_models.MaxOut_MLP">MaxOut_MLP (class in unimodals.common_models)</a>
-</li>
-      <li><a href="fusions/fusions.mult.modules.html#fusions.mult.modules.transformer.TransformerEncoderLayer.maybe_layer_norm">maybe_layer_norm() (fusions.mult.modules.transformer.TransformerEncoderLayer method)</a>
 </li>
       <li><a href="fusions/fusions.html#fusions.MCTN.MCTN">MCTN (class in fusions.MCTN)</a>
 </li>
@@ -1790,18 +1775,10 @@
 </li>
       <li><a href="unimodals/unimodals.robotics.html#unimodals.robotics.layers.predict_flow">predict_flow() (in module unimodals.robotics.layers)</a>
 </li>
-      <li><a href="datasets/datasets.affect.html#datasets.affect.get_data.process_1">process_1() (in module datasets.affect.get_data)</a>
-</li>
-      <li><a href="datasets/datasets.affect.html#datasets.affect.get_data.process_2">process_2() (in module datasets.affect.get_data)</a>
-</li>
-      <li><a href="datasets/datasets.imdb.html#datasets.imdb.get_data.process_data">process_data() (in module datasets.imdb.get_data)</a>
+      <li><a href="datasets/datasets.robotics.html#datasets.robotics.ProcessForce.ProcessForce">ProcessForce (class in datasets.robotics.ProcessForce)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="fusions/fusions.html#fusions.MCTN.process_input">process_input() (in module fusions.MCTN)</a>
-</li>
-      <li><a href="datasets/datasets.robotics.html#datasets.robotics.ProcessForce.ProcessForce">ProcessForce (class in datasets.robotics.ProcessForce)</a>
-</li>
       <li><a href="fusions/fusions.robotics.html#fusions.robotics.models_utils.product_of_experts">product_of_experts() (in module fusions.robotics.models_utils)</a>
 </li>
       <li><a href="fusions/fusions.html#fusions.MVAE.ProductOfExperts">ProductOfExperts (class in fusions.MVAE)</a>
@@ -1856,10 +1833,6 @@
 </li>
       <li><a href="fusions/fusions.mult.html#fusions.mult.mult.MULTModel.DefaultHyperParams.relu_dropout">relu_dropout (fusions.mult.mult.MULTModel.DefaultHyperParams attribute)</a>
 </li>
-      <li><a href="objective_functions/objective_functions.html#objective_functions.objectives_for_supervised_learning.reparameterize">reparameterize() (in module objective_functions.objectives_for_supervised_learning)</a>
-</li>
-      <li><a href="fusions/fusions.html#fusions.common_fusions.MultiplicativeInteractions2Modal.repeatHorizontally">repeatHorizontally() (fusions.common_fusions.MultiplicativeInteractions2Modal method)</a>
-</li>
       <li><a href="fusions/fusions.mult.html#fusions.mult.mult.MULTModel.DefaultHyperParams.res_dropout">res_dropout (fusions.mult.mult.MULTModel.DefaultHyperParams attribute)</a>
 </li>
       <li><a href="unimodals/unimodals.robotics.html#unimodals.robotics.models_utils.rescaleImage">rescaleImage() (in module unimodals.robotics.models_utils)</a>
@@ -1870,10 +1843,10 @@
 </li>
       <li><a href="unimodals/unimodals.robotics.html#unimodals.robotics.layers.ResidualBlock">ResidualBlock (class in unimodals.robotics.layers)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="datasets/datasets.imdb.html#datasets.imdb.vgg.VGGClassifier.resize_and_crop_image">resize_and_crop_image() (datasets.imdb.vgg.VGGClassifier method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="unimodals/unimodals.html#unimodals.res3d.ResNet">ResNet (class in unimodals.res3d)</a>
 </li>
       <li><a href="unimodals/unimodals.html#unimodals.common_models.ResNetLSTMEnc">ResNetLSTMEnc (class in unimodals.common_models)</a>
@@ -1949,10 +1922,6 @@
 </li>
       <li><a href="utils/utils.html#utils.search_tools.sample_k_configurations_uniform">sample_k_configurations_uniform() (in module utils.search_tools)</a>
 </li>
-      <li><a href="datasets/datasets.avmnist.html#datasets.avmnist.get_data.saveaudio">saveaudio() (in module datasets.avmnist.get_data)</a>
-</li>
-      <li><a href="datasets/datasets.avmnist.html#datasets.avmnist.get_data.saveimg">saveimg() (in module datasets.avmnist.get_data)</a>
-</li>
       <li><a href="training_structures/training_structures.html#training_structures.architecture_search.ModelSearcher.search">search() (training_structures.architecture_search.ModelSearcher method)</a>
 </li>
       <li><a href="fusions/fusions.html#fusions.searchable.Searchable">Searchable (class in fusions.searchable)</a>
@@ -1977,10 +1946,10 @@
 </li>
       <li><a href="utils/utils.html#utils.surrogate.SimpleRecurrentSurrogate">SimpleRecurrentSurrogate (class in utils.surrogate)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="eval_scripts/eval_scripts.html#eval_scripts.robustness.single_plot">single_plot() (in module eval_scripts.robustness)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="training_structures/training_structures.html#training_structures.architecture_search.single_test">single_test() (in module training_structures.architecture_search)</a>
 
       <ul>

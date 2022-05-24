@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>fusions.robotics package &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Objective Functions" href="../objective_functions/modules.html" />
+    <link rel="prev" title="fusions.mult.modules package" href="fusions.mult.modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Multimodal Fusion Techniques</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="fusions.html">fusions package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="fusions.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="fusions.finance.html">fusions.finance package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fusions.mult.html">fusions.mult package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">fusions.robotics package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="fusions.html#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fusions.html#module-fusions.MCTN">fusions.MCTN module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fusions.html#module-fusions.MVAE">fusions.MVAE module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fusions.html#module-fusions.common_fusions">fusions.common_fusions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fusions.html#module-fusions.searchable">fusions.searchable module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fusions.html#module-fusions">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Multimodal Fusion Techniques</a> &raquo;</li>
+          <li><a href="fusions.html">fusions package</a> &raquo;</li>
+      <li>fusions.robotics package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/fusions/fusions.robotics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="fusions-robotics-package">
+<h1>fusions.robotics package<a class="headerlink" href="#fusions-robotics-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-fusions.robotics.models_utils">
+<span id="fusions-robotics-models-utils-module"></span><h2>fusions.robotics.models_utils module<a class="headerlink" href="#module-fusions.robotics.models_utils" title="Permalink to this headline"></a></h2>
+<p>Implements various utility functions for robotics fusion.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="fusions.robotics.models_utils.depth_deconv">
+<span class="sig-prename descclassname"><span class="pre">fusions.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">depth_deconv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_planes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.models_utils.depth_deconv" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate depth deconvolution module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Number of input channels</p></li>
+<li><p><strong>out_planes</strong> (<em>int</em>) – Number of output channels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Depth Deconvolution Module</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fusions.robotics.models_utils.duplicate">
+<span class="sig-prename descclassname"><span class="pre">fusions.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">duplicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.models_utils.duplicate" title="Permalink to this definition"></a></dt>
+<dd><p>Duplicate x rep times.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – Tensor to replicate</p></li>
+<li><p><strong>rep</strong> (<em>int</em>) – Number of times to replicate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Replicated Tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fusions.robotics.models_utils.gaussian_parameters">
+<span class="sig-prename descclassname"><span class="pre">fusions.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">gaussian_parameters</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.models_utils.gaussian_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Return parameters for gaussian distribution given vector for robotics.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fusions.robotics.models_utils.product_of_experts">
+<span class="sig-prename descclassname"><span class="pre">fusions.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">product_of_experts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_vect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_vect</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.models_utils.product_of_experts" title="Permalink to this definition"></a></dt>
+<dd><p>Compute product of experts.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fusions.robotics.models_utils.sample_gaussian">
+<span class="sig-prename descclassname"><span class="pre">fusions.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">sample_gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.models_utils.sample_gaussian" title="Permalink to this definition"></a></dt>
+<dd><p>Sample from Gaussian Distribution with known mean and variance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>m</strong> (<em>float</em>) – Mean of sampled Gaussian</p></li>
+<li><p><strong>v</strong> (<em>float</em>) – Variance of sampled Gaussian</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device on which to create tensor.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sampled Gaussian Tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-fusions.robotics.sensor_fusion">
+<span id="fusions-robotics-sensor-fusion-module"></span><h2>fusions.robotics.sensor_fusion module<a class="headerlink" href="#module-fusions.robotics.sensor_fusion" title="Permalink to this headline"></a></h2>
+<p>Implements sensor fusion networks for supervised and self-supervised objectives.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusion">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.robotics.sensor_fusion.</span></span><span class="sig-name descname"><span class="pre">SensorFusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusion" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements traditional SensorFusionNetwork.</p>
+<dl>
+<dt>#</dt><dd><p>Regular SensorFusionNetwork Architecture
+Number of parameters:
+Inputs:</p>
+<blockquote>
+<div><p>image:   batch_size x 3 x 128 x 128
+force:   batch_size x 6 x 32
+proprio: batch_size x 8
+action:  batch_size x action_dim</p>
+</div></blockquote>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusion.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize SensorFusionNetwork.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to train/test model on.</p></li>
+<li><p><strong>z_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Z dimension size. Defaults to 128.</p></li>
+<li><p><strong>action_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Action dimension size. Defaults to 4.</p></li>
+<li><p><strong>encoder</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply action encoder or not. Defaults to False.</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the fusion networks is deterministic or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusion.bias_parameters">
+<span class="sig-name descname"><span class="pre">bias_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusion.bias_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get bias parameters.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusion.forward_encoder">
+<span class="sig-name descname"><span class="pre">forward_encoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img_encoded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frc_encoded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">proprio_encoded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth_encoded</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_encoded</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusion.forward_encoder" title="Permalink to this definition"></a></dt>
+<dd><p>Encode output using forward encoder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img_encoded</strong> (<em>torch.Tensor</em>) – Encoded image.</p></li>
+<li><p><strong>frc_encoded</strong> (<em>torch.Tesnor</em>) – Encoded force.</p></li>
+<li><p><strong>proprio_encoded</strong> (<em>torch.Tensor</em>) – Encoded proprioception</p></li>
+<li><p><strong>depth_encoded</strong> (<em>torch.Tensor</em>) – Encoded depth.</p></li>
+<li><p><strong>action_encoded</strong> (<em>torch.Tensor</em>) – Encoded action.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>tuple of outputs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusion.weight_parameters">
+<span class="sig-name descname"><span class="pre">weight_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusion.weight_parameters" title="Permalink to this definition"></a></dt>
+<dd><p>Get weight parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusionSelfSupervised">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.robotics.sensor_fusion.</span></span><span class="sig-name descname"><span class="pre">SensorFusionSelfSupervised</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusionSelfSupervised" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fusions.robotics.sensor_fusion.SensorFusion" title="fusions.robotics.sensor_fusion.SensorFusion"><code class="xref py py-class docutils literal notranslate"><span class="pre">fusions.robotics.sensor_fusion.SensorFusion</span></code></a></p>
+<p>Implements SensorFusionNetwork for Self-Supervision.</p>
+<blockquote>
+<div><p>Regular SensorFusionNetwork Architecture
+Inputs:</p>
+<blockquote>
+<div><p>image:   batch_size x 3 x 128 x 128
+force:   batch_size x 6 x 32
+proprio: batch_size x 8
+action:  batch_size x action_dim</p>
+</div></blockquote>
+</div></blockquote>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusionSelfSupervised.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusionSelfSupervised.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize SensorFusionSelfSupervised Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device</strong> (<em>torch.Device</em>) – Device to train/test on.</p></li>
+<li><p><strong>z_dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Z dimension size for encoders. Defaults to 128.</p></li>
+<li><p><strong>encoder</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply the encoders or not. Defaults to False.</p></li>
+<li><p><strong>deterministic</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the fusion network is deterministic or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.SensorFusionSelfSupervised.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.SensorFusionSelfSupervised.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply SensorFusionSelfSupervised Module to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.roboticsConcat">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.robotics.sensor_fusion.</span></span><span class="sig-name descname"><span class="pre">roboticsConcat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.roboticsConcat" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Concatenates tensors for robotics fusion.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.roboticsConcat.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.roboticsConcat.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize roboticsConcat module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em><em>, </em><em>optional</em>) – What kind of concatenation to do. Can be “noconcat”, “image” or “simple”. Defaults to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fusions.robotics.sensor_fusion.roboticsConcat.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.robotics.sensor_fusion.roboticsConcat.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply roboticsConcat module to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-fusions.robotics">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fusions.robotics" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="fusions.mult.modules.html" class="btn btn-neutral float-left" title="fusions.mult.modules package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../objective_functions/modules.html" class="btn btn-neutral float-right" title="Objective Functions" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -114,15 +114,18 @@
 </section>
 <section id="module-fusions.mult.mult">
 <span id="fusions-mult-mult-module"></span><h2>fusions.mult.mult module<a class="headerlink" href="#module-fusions.mult.mult" title="Permalink to this headline"></a></h2>
+<p>Implements the MultimodalTransformer Model. See <a class="reference external" href="https://github.com/yaohungt/Multimodal-Transformer">https://github.com/yaohungt/Multimodal-Transformer</a> for more.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fusions.mult.mult.MULTModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.mult.mult.</span></span><span class="sig-name descname"><span class="pre">MULTModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.mult.MULTModel" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
-<p><a class="reference external" href="https://github.com/yaohungt/Multimodal-Transformer">https://github.com/yaohungt/Multimodal-Transformer</a></p>
+<p>Implements the MultimodalTransformer Model.</p>
+<p>See <a class="reference external" href="https://github.com/yaohungt/Multimodal-Transformer">https://github.com/yaohungt/Multimodal-Transformer</a> for more.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fusions.mult.mult.MULTModel.DefaultHyperParams">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DefaultHyperParams</span></span><a class="headerlink" href="#fusions.mult.mult.MULTModel.DefaultHyperParams" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Set default hyperparameters for the model.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fusions.mult.mult.MULTModel.DefaultHyperParams.all_steps">
 <span class="sig-name descname"><span class="pre">all_steps</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#fusions.mult.mult.MULTModel.DefaultHyperParams.all_steps" title="Permalink to this definition"></a></dt>
@@ -194,19 +197,26 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.mult.MULTModel.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.mult.MULTModel.forward" title="Permalink to this definition"></a></dt>
-<dd><p>x: n_modalities * [batch_size, seq_len, n_features]</p>
+<dd><p>Apply MultModel Module to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> – layer input. Has size n_modalities * [batch_size, seq_len, n_features]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.mult.MULTModel.get_network">
 <span class="sig-name descname"><span class="pre">get_network</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mod1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mod2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.mult.MULTModel.get_network" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create TransformerEncoder network from layer information.</p>
+</dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-fusions.mult">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fusions.mult" title="Permalink to this headline"></a></h2>
+<p>Implements MULT.</p>
 </section>
 </section>
 

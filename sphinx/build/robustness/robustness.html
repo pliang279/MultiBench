@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>robustness package &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Training Structures" href="../training_structures/modules.html" />
+    <link rel="prev" title="Robustness" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Robustness</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">robustness package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-robustness.all_in_one">robustness.all_in_one module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-robustness.audio_robust">robustness.audio_robust module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-robustness.tabular_robust">robustness.tabular_robust module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-robustness.text_robust">robustness.text_robust module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-robustness.timeseries_robust">robustness.timeseries_robust module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-robustness.visual_robust">robustness.visual_robust module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-robustness">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Robustness</a> &raquo;</li>
+      <li>robustness package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/robustness/robustness.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="robustness-package">
+<h1>robustness package<a class="headerlink" href="#robustness-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-robustness.all_in_one">
+<span id="robustness-all-in-one-module"></span><h2>robustness.all_in_one module<a class="headerlink" href="#module-robustness.all_in_one" title="Permalink to this headline"></a></h2>
+<p>Implements generic modules to apply robustness functions to generic training processses.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.all_in_one.general_test">
+<span class="sig-prename descclassname"><span class="pre">robustness.all_in_one.</span></span><span class="sig-name descname"><span class="pre">general_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">testprocess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">robustdatasets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_measure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.all_in_one.general_test" title="Permalink to this definition"></a></dt>
+<dd><p>Test model on noisy data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>testprocess</strong> – Testing function.</p></li>
+<li><p><strong>filename</strong> – Filename of the saved model.</p></li>
+<li><p><strong>robustdatasets</strong> – A list of dataloaders of noisy test data.</p></li>
+<li><p><strong>encoder</strong> – True if the model has an encoder. ( default: False )</p></li>
+<li><p><strong>multi_measure</strong> – True if multiple evaluation metrics are used. ( default: False )</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.all_in_one.general_train">
+<span class="sig-prename descclassname"><span class="pre">robustness.all_in_one.</span></span><span class="sig-name descname"><span class="pre">general_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainprocess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.all_in_one.general_train" title="Permalink to this definition"></a></dt>
+<dd><p>Train model on data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>trainprocess</strong> – Training function.</p></li>
+<li><p><strong>algorithm</strong> – Algorithm name.</p></li>
+<li><p><strong>encoder</strong> – True if the model has an encoder. ( default: False )</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Filename of the best saved model trained on training data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.all_in_one.stocks_test">
+<span class="sig-prename descclassname"><span class="pre">robustness.all_in_one.</span></span><span class="sig-name descname"><span class="pre">stocks_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_training</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testprocess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.all_in_one.stocks_test" title="Permalink to this definition"></a></dt>
+<dd><p>Test model on noisy stocks data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_training</strong> – &gt;1 to enable multiple training to reduce model variance.</p></li>
+<li><p><strong>models</strong> – Models loaded with pre-trained weights.</p></li>
+<li><p><strong>noisy_range</strong> – A range of noise level, e.g. 0 (no noise) - 1 (completely noisy).</p></li>
+<li><p><strong>testprocess</strong> – Testing function.</p></li>
+<li><p><strong>encoder</strong> – True if the model has an encoder. ( default: False )</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.all_in_one.stocks_train">
+<span class="sig-prename descclassname"><span class="pre">robustness.all_in_one.</span></span><span class="sig-name descname"><span class="pre">stocks_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_training</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainprocess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">algorithm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">encoder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.all_in_one.stocks_train" title="Permalink to this definition"></a></dt>
+<dd><p>Train model on stocks data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_training</strong> – &gt;1 to enable multiple training to reduce model variance.</p></li>
+<li><p><strong>trainprocess</strong> – Training function.</p></li>
+<li><p><strong>algorithm</strong> – Algorithm name.</p></li>
+<li><p><strong>encoder</strong> – True if the model has an encoder. ( default: False )</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of filenames of the best saved models trained on stocks data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-robustness.audio_robust">
+<span id="robustness-audio-robust-module"></span><h2>robustness.audio_robust module<a class="headerlink" href="#module-robustness.audio_robust" title="Permalink to this headline"></a></h2>
+<p>Implements audio transformations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.audio_robust.add_audio_noise">
+<span class="sig-prename descclassname"><span class="pre">robustness.audio_robust.</span></span><span class="sig-name descname"><span class="pre">add_audio_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noises</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.audio_robust.add_audio_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to audio data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Probability of randomly applying noise to each audio signal, and standard deviation for gaussian noise, and structured dropout probability.</p></li>
+<li><p><strong>noises</strong> – list of noises to add. # TODO: Change this to use either a list of enums or if statements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.audio_robust.additive_white_gaussian_noise">
+<span class="sig-prename descclassname"><span class="pre">robustness.audio_robust.</span></span><span class="sig-name descname"><span class="pre">additive_white_gaussian_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.audio_robust.additive_white_gaussian_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add gaussian white noise to audio signal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> – Audio signal to permute.</p></li>
+<li><p><strong>noise_level</strong> – standard deviation of the gaussian noise.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.audio_robust.audio_random_dropout">
+<span class="sig-prename descclassname"><span class="pre">robustness.audio_robust.</span></span><span class="sig-name descname"><span class="pre">audio_random_dropout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sig</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.audio_robust.audio_random_dropout" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly drop the signal for a single time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> – Audio signal to transform.</p></li>
+<li><p><strong>p</strong> – Dropout probability.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.audio_robust.audio_structured_dropout">
+<span class="sig-prename descclassname"><span class="pre">robustness.audio_robust.</span></span><span class="sig-name descname"><span class="pre">audio_structured_dropout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.audio_robust.audio_structured_dropout" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly drop signal for <cite>step</cite> time steps.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signal</strong> – Audio signal to permute.</p></li>
+<li><p><strong>p</strong> – Dropout probability.</p></li>
+<li><p><strong>step</strong> – Number of time steps to drop the signal.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-robustness.tabular_robust">
+<span id="robustness-tabular-robust-module"></span><h2>robustness.tabular_robust module<a class="headerlink" href="#module-robustness.tabular_robust" title="Permalink to this headline"></a></h2>
+<p>Implements tabular data transformations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.tabular_robust.add_tabular_noise">
+<span class="sig-prename descclassname"><span class="pre">robustness.tabular_robust.</span></span><span class="sig-name descname"><span class="pre">add_tabular_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.tabular_robust.add_tabular_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to tabular data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Probability of randomly applying noise to each element.</p></li>
+<li><p><strong>drop</strong> – Drop elements with probability <cite>noise_level</cite></p></li>
+<li><p><strong>swap</strong> – Swap elements with probability <cite>noise_level</cite></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.tabular_robust.drop_entry">
+<span class="sig-prename descclassname"><span class="pre">robustness.tabular_robust.</span></span><span class="sig-name descname"><span class="pre">drop_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.tabular_robust.drop_entry" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly drop elements in <cite>data</cite> with probability <cite>p</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to drop elements from.</p></li>
+<li><p><strong>p</strong> – Probability of dropping elements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.tabular_robust.swap_entry">
+<span class="sig-prename descclassname"><span class="pre">robustness.tabular_robust.</span></span><span class="sig-name descname"><span class="pre">swap_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.tabular_robust.swap_entry" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly swap adjacent elements in <cite>data</cite> with probability <cite>p</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to swap elems.</p></li>
+<li><p><strong>p</strong> – Probability of swapping elements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-robustness.text_robust">
+<span id="robustness-text-robust-module"></span><h2>robustness.text_robust module<a class="headerlink" href="#module-robustness.text_robust" title="Permalink to this headline"></a></h2>
+<p>Implements text transformations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.text_robust.add_text_noise">
+<span class="sig-prename descclassname"><span class="pre">robustness.text_robust.</span></span><span class="sig-name descname"><span class="pre">add_text_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">swap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rand_mid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">typo</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sticky</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">omit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.text_robust.add_text_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to text data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Probability of randomly applying noise to a word. ( default: 0.1)</p></li>
+<li><p><strong>swap</strong> – Swap two adjacent letters. ( default: True )</p></li>
+<li><p><strong>rand_mid</strong> – Randomly permute the middle section of the word, except for the first and last letters. ( default: True )</p></li>
+<li><p><strong>typo</strong> – Simulate keyboard typos for the word. ( default: True )</p></li>
+<li><p><strong>sticky</strong> – Randomly repeat letters inside a word. ( default: True )</p></li>
+<li><p><strong>omit</strong> – Randomly omit some letters from a word ( default: True )</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.text_robust.omission">
+<span class="sig-prename descclassname"><span class="pre">robustness.text_robust.</span></span><span class="sig-name descname"><span class="pre">omission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_omit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.text_robust.omission" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly omit num_omit number of letters of a word.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word</strong> – word to apply transformations to.</p></li>
+<li><p><strong>num_sticky</strong> – Number of letters to randomly omit.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.text_robust.qwerty_typo">
+<span class="sig-prename descclassname"><span class="pre">robustness.text_robust.</span></span><span class="sig-name descname"><span class="pre">qwerty_typo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.text_robust.qwerty_typo" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly replace num_typo number of letters of a word to a one adjacent to it on qwerty keyboard.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>word</strong> – word to apply transformations to.:</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.text_robust.random_mid">
+<span class="sig-prename descclassname"><span class="pre">robustness.text_robust.</span></span><span class="sig-name descname"><span class="pre">random_mid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.text_robust.random_mid" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly permute the middle chunk of a word (all letters except the first and last letter).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>word</strong> – word to apply transformations to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.text_robust.sticky_keys">
+<span class="sig-prename descclassname"><span class="pre">robustness.text_robust.</span></span><span class="sig-name descname"><span class="pre">sticky_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_sticky</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.text_robust.sticky_keys" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly repeat letters of a word once.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>word</strong> – word to apply transformations to.</p></li>
+<li><p><strong>num_sticky</strong> – Number of letters to randomly repeat once.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.text_robust.swap_letter">
+<span class="sig-prename descclassname"><span class="pre">robustness.text_robust.</span></span><span class="sig-name descname"><span class="pre">swap_letter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.text_robust.swap_letter" title="Permalink to this definition"></a></dt>
+<dd><p>Swap two random adjacent letters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>word</strong> – word to apply transformations to.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-robustness.timeseries_robust">
+<span id="robustness-timeseries-robust-module"></span><h2>robustness.timeseries_robust module<a class="headerlink" href="#module-robustness.timeseries_robust" title="Permalink to this headline"></a></h2>
+<p>Implements timeseries transformations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.timeseries_robust.add_timeseries_noise">
+<span class="sig-prename descclassname"><span class="pre">robustness.timeseries_robust.</span></span><span class="sig-name descname"><span class="pre">add_timeseries_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaussian_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rand_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">struct_drop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.timeseries_robust.add_timeseries_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to timeseries data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Standard deviation of gaussian noise, and drop probability in random drop and structural drop</p></li>
+<li><p><strong>gauss_noise</strong> – Add Gaussian noise to the time series ( default: True )</p></li>
+<li><p><strong>rand_drop</strong> – Add randomized dropout to the time series ( default: True )</p></li>
+<li><p><strong>struct_drop</strong> – Add randomized structural dropout to the time series ( default: True )</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.timeseries_robust.random_drop">
+<span class="sig-prename descclassname"><span class="pre">robustness.timeseries_robust.</span></span><span class="sig-name descname"><span class="pre">random_drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.timeseries_robust.random_drop" title="Permalink to this definition"></a></dt>
+<dd><p>Drop each time series entry independently with probability p.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to process.</p></li>
+<li><p><strong>p</strong> – Probability to drop feature.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.timeseries_robust.structured_drop">
+<span class="sig-prename descclassname"><span class="pre">robustness.timeseries_robust.</span></span><span class="sig-name descname"><span class="pre">structured_drop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.timeseries_robust.structured_drop" title="Permalink to this definition"></a></dt>
+<dd><p>Drop each time series entry independently with probability p, but drop all modalities if you drop an element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to process.</p></li>
+<li><p><strong>p</strong> – Probability to drop entire element of time series.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.timeseries_robust.white_noise">
+<span class="sig-prename descclassname"><span class="pre">robustness.timeseries_robust.</span></span><span class="sig-name descname"><span class="pre">white_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.timeseries_robust.white_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add noise sampled from zero-mean Gaussian with standard deviation p at every time step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – Data to process.</p></li>
+<li><p><strong>p</strong> – Standard deviation of added Gaussian noise.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-robustness.visual_robust">
+<span id="robustness-visual-robust-module"></span><h2>robustness.visual_robust module<a class="headerlink" href="#module-robustness.visual_robust" title="Permalink to this headline"></a></h2>
+<p>Implements visual transformations.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.WB">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">WB</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.WB" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly change the white-black balance / temperature of an image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Input to add noise to.</p></li>
+<li><p><strong>p</strong> – Probability of applying transformation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.add_visual_noise">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">add_visual_noise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tests</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gray</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contrast</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_and_p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gaus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">crop</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.add_visual_noise" title="Permalink to this definition"></a></dt>
+<dd><p>Add various types of noise to visual data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>noise_level</strong> – Probability of randomly applying noise to each audio signal, and standard deviation for gaussian noise, and structured dropout probability.</p></li>
+<li><p><strong>gray</strong> – Boolean flag denoting if grayscale should be applied as a noise type.</p></li>
+<li><p><strong>contrast</strong> – Boolean flag denoting if lowering the contrast should be applied as a noise type.</p></li>
+<li><p><strong>inv</strong> – Boolean flag denoting if inverting the image should be applied as a noise type.</p></li>
+<li><p><strong>temp</strong> – Boolean flag denoting if randomly changing the image’s color balance should be applied as a noise type.</p></li>
+<li><p><strong>color</strong> – Boolean flag denoting if randomly tinting the image should be applied as a noise type.</p></li>
+<li><p><strong>s_and_p</strong> – Boolean flag denoting if applying salt and pepper noise should be applied as a noise type.</p></li>
+<li><p><strong>gaus</strong> – Boolean flag denoting if applying Gaussian noise should be applied as a noise type.</p></li>
+<li><p><strong>rot</strong> – Boolean flag denoting if randomly rotating the image should be applied as a noise type.</p></li>
+<li><p><strong>flip</strong> – Boolean flag denoting if randomly flipping the image should be applied as a noise type.</p></li>
+<li><p><strong>crop</strong> – Boolean flag denoting if randomly cropping the image should be applied as a noise type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.colorize">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">colorize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.colorize" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly tint the color of an image using an existing RGB channel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Input to add noise to.</p></li>
+<li><p><strong>p</strong> – Probability of applying transformation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.gaussian">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">gaussian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.gaussian" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly add salt-and-pepper noise to the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Input to add noise to.</p></li>
+<li><p><strong>p</strong> – Probability of applying transformation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.grayscale">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">grayscale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.grayscale" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly make an image grayscale.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Input to add noise to.</p></li>
+<li><p><strong>p</strong> – Probability of applying transformation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.horizontal_flip">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">horizontal_flip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.horizontal_flip" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly flip the image horizontally.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.inversion">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">inversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.inversion" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly invert an image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Input to add noise to.</p></li>
+<li><p><strong>p</strong> – Probability of applying transformation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.low_contrast">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">low_contrast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.low_contrast" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly reduce the contract of an image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Input to add noise to.</p></li>
+<li><p><strong>p</strong> – Probability of applying transformation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.periodic">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">periodic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">periodic_noise_filename</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'periodic_noise'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.periodic" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly expose the image to periodic pattern/noise.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.random_crop">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">random_crop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.random_crop" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly apply cropping changes.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.rotate">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">rotate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.rotate" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly rotate the image by a random angle in [20, 40].</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="robustness.visual_robust.salt_and_pepper">
+<span class="sig-prename descclassname"><span class="pre">robustness.visual_robust.</span></span><span class="sig-name descname"><span class="pre">salt_and_pepper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#robustness.visual_robust.salt_and_pepper" title="Permalink to this definition"></a></dt>
+<dd><p>Randomly add salt-and-pepper noise to the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img</strong> – Input to add noise to.</p></li>
+<li><p><strong>p</strong> – Probability of applying transformation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-robustness">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-robustness" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Robustness" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../training_structures/modules.html" class="btn btn-neutral float-right" title="Training Structures" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

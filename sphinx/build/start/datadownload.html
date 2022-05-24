@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Downloading Datasets &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Datasets and DataLoaders" href="../datasets/modules.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Downloading Datasets</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#affective-computing">Affective Computing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mustard">MUStARD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cmu-mosi">CMU-MOSI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ur-funny">UR-Funny</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cmu-mosei">CMU-MOSEI</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#healthcare">Healthcare</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mimic">MIMIC</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#robotics">Robotics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mujoco-push">MuJoCo Push</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vision-touch">Vision&amp;Touch</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#finance">Finance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hci">HCI</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#enrico">ENRiCO</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#multimedia">Multimedia</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#av-mnist">AV-MNIST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mm-imdb">MM-IMDb</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kinetics400">Kinetics400</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clotho">Clotho</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Downloading Datasets</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/start/datadownload.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="downloading-datasets">
+<h1>Downloading Datasets<a class="headerlink" href="#downloading-datasets" title="Permalink to this headline"></a></h1>
+<p>We support a variety of datasets in MultiBench out of the box,
+but downloading each of them requires separate steps to do so:</p>
+<section id="affective-computing">
+<h2>Affective Computing<a class="headerlink" href="#affective-computing" title="Permalink to this headline"></a></h2>
+<hr class="docutils" />
+<section id="mustard">
+<h3>MUStARD<a class="headerlink" href="#mustard" title="Permalink to this headline"></a></h3>
+<p>To grab the <a class="reference external" href="https://github.com/soujanyaporia/MUStARD">MUStARD/sarcasm</a> dataset,
+download the dataset from <a class="reference external" href="https://drive.google.com/drive/folders/1JFcX-NF97zu9ZOZGALGU9kp8dwkP7aJ7">here</a>.</p>
+<p>To load it, you can then use the following snippet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from datasets.affect.get_data import get_dataloader
+traindata, validdata, <span class="nv">test_robust</span> <span class="o">=</span> get_dataloader<span class="o">(</span><span class="s1">&#39;/path/to/raw/data/file&#39;</span>, <span class="nv">data_type</span><span class="o">=</span><span class="s1">&#39;sarcasm&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="cmu-mosi">
+<h3>CMU-MOSI<a class="headerlink" href="#cmu-mosi" title="Permalink to this headline"></a></h3>
+<p>To grab the <a class="reference external" href="https://github.com/A2Zadeh/CMU-MultimodalSDK">CMU-MOSI</a> dataset,
+download the dataset from <a class="reference external" href="https://drive.google.com/drive/folders/1uEK737LXB9jAlf9kyqRs6B9N6cDncodq">here</a>.</p>
+<p>To load it, you can then use the following snippet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from datasets.affect.get_data import get_dataloader
+traindata, validdata, <span class="nv">test_robust</span> <span class="o">=</span> get_dataloader<span class="o">(</span><span class="s1">&#39;/path/to/raw/data/file&#39;</span>, <span class="nv">data_type</span><span class="o">=</span><span class="s1">&#39;mosi&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="ur-funny">
+<h3>UR-Funny<a class="headerlink" href="#ur-funny" title="Permalink to this headline"></a></h3>
+<p>To grab the <a class="reference external" href="https://github.com/ROC-HCI/UR-FUNNY">UR-Funny/humor</a> dataset,
+download the dataset from <a class="reference external" href="https://drive.google.com/drive/folders/1Agzm157lciMONHOHemHRSySmjn1ahHX1?usp=sharing">here</a>.</p>
+<p>To load it, you can then use the following snippet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from datasets.affect.get_data import get_dataloader
+traindata, validdata, <span class="nv">test_robust</span> <span class="o">=</span> get_dataloader<span class="o">(</span><span class="s1">&#39;/path/to/raw/data/file&#39;</span>, <span class="nv">data_type</span><span class="o">=</span><span class="s1">&#39;humor&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="cmu-mosei">
+<h3>CMU-MOSEI<a class="headerlink" href="#cmu-mosei" title="Permalink to this headline"></a></h3>
+<p>To grab the <a class="reference external" href="https://github.com/A2Zadeh/CMU-MultimodalSDK">CMU-MOSEI</a> dataset,
+download the dataset from <a class="reference external" href="https://drive.google.com/drive/folders/1uEK737LXB9jAlf9kyqRs6B9N6cDncodq">here</a>.</p>
+<p>To load it, you can then use the following snippet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from datasets.affect.get_data import get_dataloader
+traindata, validdata, <span class="nv">test_robust</span> <span class="o">=</span> get_dataloader<span class="o">(</span><span class="s1">&#39;/path/to/raw/data/file&#39;</span>, <span class="nv">data_type</span><span class="o">=</span><span class="s1">&#39;mosei&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="healthcare">
+<h2>Healthcare<a class="headerlink" href="#healthcare" title="Permalink to this headline"></a></h2>
+<hr class="docutils" />
+<section id="mimic">
+<h3>MIMIC<a class="headerlink" href="#mimic" title="Permalink to this headline"></a></h3>
+<p>Access to the MIMIC dataset is restricted, and as a result you will need
+to follow the instructions <a class="reference external" href="https://mimic.mit.edu/iv/access/">here</a> to gain access.</p>
+<p>Once you do so, email <a class="reference external" href="mailto:ylyu1&#37;&#52;&#48;andrew&#46;cmu&#46;edu">ylyu1<span>&#64;</span>andrew<span>&#46;</span>cmu<span>&#46;</span>edu</a> with proof of those credentials
+to gain access to the preprocessed <cite>im.pk</cite> file we use in our dataloaders.</p>
+<p>To load it, you can then use the following snippet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from datasets.mimic.get_data import get_dataloader
+traindata, validdata, <span class="nv">test_robust</span> <span class="o">=</span> get_dataloader<span class="o">(</span>tasknum, <span class="nv">inputed_path</span><span class="o">=</span><span class="s1">&#39;/path/to/raw/data/file&#39;</span><span class="o">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="robotics">
+<h2>Robotics<a class="headerlink" href="#robotics" title="Permalink to this headline"></a></h2>
+<hr class="docutils" />
+<section id="mujoco-push">
+<h3>MuJoCo Push<a class="headerlink" href="#mujoco-push" title="Permalink to this headline"></a></h3>
+<p>To grab the MuJoCo Push dataset, you simply need to run any of the example experiments, like the
+following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python examples/gentle_push/LF.py
+</pre></div>
+</div>
+<p>This will download the dataset into the <code class="docutils literal notranslate"><span class="pre">datasets/gentle_push/cache</span></code> folder directly.</p>
+<p>As this uses <code class="docutils literal notranslate"><span class="pre">gdown</span></code> to download the files directly, sometimes this process fails.</p>
+<p>Should that happen, you can simply download the following files:</p>
+<ul class="simple">
+<li><p>Download <a class="reference external" href="https://drive.google.com/file/d/1qmBCfsAGu8eew-CQFmV1svodl9VJa6fX/view">this file</a> and place it under <code class="docutils literal notranslate"><span class="pre">datasets/gentle_push/cache/1qmBCfsAGu8eew-CQFmV1svodl9VJa6fX-gentle_push_10.hdf5</span></code>.</p></li>
+<li><p>Download <a class="reference external" href="https://drive.google.com/file/d/18dr1z0N__yFiP_DAKxy-Hs9Vy_AsaW6Q/view">this file</a> and place it under <code class="docutils literal notranslate"><span class="pre">datasets/gentle_push/cache/18dr1z0N__yFiP_DAKxy-Hs9Vy_AsaW6Q-gentle_push_300.hdf5</span></code>.</p></li>
+<li><p>Download <a class="reference external" href="https://drive.google.com/file/d/1JTgmq1KPRK9HYi8BgvljKg5MPqT_N4cR/view">this file</a> and place it under <code class="docutils literal notranslate"><span class="pre">datasets/gentle_push/cache/1JTgmq1KPRK9HYi8BgvljKg5MPqT_N4cR-gentle_push_1000.hdf5</span></code>.</p></li>
+</ul>
+<p>Then, you can follow this code block as an example to get the dataloaders:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datasets.gentle_push.data_loader</span> <span class="kn">import</span> <span class="n">PushTask</span>
+<span class="n">Task</span> <span class="o">=</span> <span class="n">PushTask</span>
+<span class="n">modalities</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;control&#39;</span><span class="p">]</span>
+
+<span class="c1"># Parse args</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+<span class="n">Task</span><span class="o">.</span><span class="n">add_dataset_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+<span class="n">dataset_args</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">get_dataset_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+<span class="n">fannypack</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">set_cache_path</span><span class="p">(</span><span class="s1">&#39;datasets/gentle_push/cache&#39;</span><span class="p">)</span>
+
+<span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">test_loader</span> <span class="o">=</span> <span class="n">Task</span><span class="o">.</span><span class="n">get_dataloader</span><span class="p">(</span>
+    <span class="mi">16</span><span class="p">,</span> <span class="n">modalities</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">drop_last</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="vision-touch">
+<h3>Vision&amp;Touch<a class="headerlink" href="#vision-touch" title="Permalink to this headline"></a></h3>
+<p>To grab the <a class="reference external" href="https://github.com/stanford-iprl-lab/multimodal_representation">Vision&amp;Touch</a> dataset, please run the <code class="docutils literal notranslate"><span class="pre">download_data.sh</span></code>
+file located under <code class="docutils literal notranslate"><span class="pre">dataset/robotics/download_data.sh</span></code>.</p>
+<p>This dataset, by default, only has the training and validation dataset,
+which you can access through the following call:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>from datasets.robotics.data_loader import get_data
+trainloader, <span class="nv">valloader</span> <span class="o">=</span> get_data<span class="o">(</span>device, config, <span class="s2">&quot;path/to/data/folder&quot;</span><span class="o">)</span>
+</pre></div>
+</div>
+<p>By default, the task is the <strong>Contact</strong> task, but passing in <code class="docutils literal notranslate"><span class="pre">output='ee_yaw_next'</span></code> into <code class="docutils literal notranslate"><span class="pre">get_data</span></code> will
+allow you to access the <strong>End Effector</strong> task</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="finance">
+<h2>Finance<a class="headerlink" href="#finance" title="Permalink to this headline"></a></h2>
+<hr class="docutils" />
+<p>All of the dataloaders, when created, will automatically download the stock data for you.</p>
+<p>As an example, this can be done through the following code block:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datasets.stocks.get_data</span> <span class="kn">import</span> <span class="n">get_dataloader</span>
+<span class="c1"># Here, the list of stocks is a list of strings of stock symbols in all CAPS.</span>
+<span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">test_loader</span> <span class="o">=</span> <span class="n">get_dataloader</span><span class="p">(</span><span class="n">stocks</span><span class="p">,</span> <span class="n">stocks</span><span class="p">,</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">target_stock</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>For the purposes of the MultiBench paper, we used the following lists per dataset:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>F<span class="p">&amp;</span>B <span class="o">(</span><span class="m">18</span><span class="o">)</span>: CAG CMG CPB DPZ DRI GIS HRL HSY K KHC LW MCD MDLZ MKC SBUX SJM TSN YUM
+Health <span class="o">(</span><span class="m">63</span><span class="o">)</span>: ABT ABBV ABMD A ALXN ALGN ABC AMGN ANTM BAX BDX BIO BIIB BSX BMY CAH CTLT CNC CERN CI COO CVS DHR DVA XRAY DXCM EW GILD HCA HSIC HOLX HUM IDXX ILMN INCY ISRG IQV JNJ LH LLY MCK MDT MRK MTD PKI PRGO PFE DGX REGN RMD STE SYK TFX TMO UNH UHS VAR VRTX VTRS WAT WST ZBH ZTS
+Tech <span class="o">(</span><span class="m">100</span><span class="o">)</span>: AAPL ACN ADBE ADI ADP ADSK AKAM AMAT AMD ANET ANSS APH ATVI AVGO BR CDNS CDW CHTR CMCSA CRM CSCO CTSH CTXS DIS DISCA DISCK DISH DXC EA ENPH FB FFIV FIS FISV FLIR FLT FOX FOXA FTNT GLW GOOG GOOGL GPN HPE HPQ IBM INTC INTU IPG IPGP IT JKHY JNPR KEYS KLAC LRCX LUMN LYV MA MCHP MPWR MSFT MSI MU MXIM NFLX NLOK NOW NTAP NVDA NWS NWSA NXPI OMC ORCL PAYC PAYX PYPL QCOM QRVO SNPS STX SWKS T TEL TER TMUS TRMB TTWO TWTR TXN TYL V VIAC VRSN VZ WDC WU XLNX ZBRA
+</pre></div>
+</div>
+</section>
+<section id="hci">
+<h2>HCI<a class="headerlink" href="#hci" title="Permalink to this headline"></a></h2>
+<hr class="docutils" />
+<section id="enrico">
+<h3>ENRiCO<a class="headerlink" href="#enrico" title="Permalink to this headline"></a></h3>
+<p>To grab the ENRiCO dataset, please use the <code class="docutils literal notranslate"><span class="pre">download_data.sh</span></code> shell script under the <code class="docutils literal notranslate"><span class="pre">datasets/enrico</span></code> dataset.</p>
+<p>Then, to load the data in, you can use something like the following code-block:</p>
+<p>As an example, this can be done through the following code block:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datasets.enrico.get_data</span> <span class="kn">import</span> <span class="n">get_dataloader</span>
+
+<span class="p">(</span><span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">test_loader</span><span class="p">),</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">get_dataloader</span><span class="p">(</span><span class="s2">&quot;datasets/enrico/dataset&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="multimedia">
+<h2>Multimedia<a class="headerlink" href="#multimedia" title="Permalink to this headline"></a></h2>
+<hr class="docutils" />
+<section id="av-mnist">
+<h3>AV-MNIST<a class="headerlink" href="#av-mnist" title="Permalink to this headline"></a></h3>
+<p>To grab the AV-MNIST dataset, please download the <code class="docutils literal notranslate"><span class="pre">avmnist.tar.gz</span></code> file from <a class="reference external" href="https://drive.google.com/file/d/1KvKynJJca5tDtI5Mmp6CoRh9pQywH8Xp/view?usp=sharing">here</a> .</p>
+<p>Once that is done, untar it your preferred location and do the following to get the dataloaders:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datasets.avmnist.get_data</span> <span class="kn">import</span> <span class="n">get_dataloader</span>
+
+<span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">test_loader</span> <span class="o">=</span> <span class="n">get_dataloader</span><span class="p">(</span><span class="s2">&quot;path/to/dataset&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="mm-imdb">
+<h3>MM-IMDb<a class="headerlink" href="#mm-imdb" title="Permalink to this headline"></a></h3>
+<p>To grab the MM-IMDb dataset, please download the <code class="docutils literal notranslate"><span class="pre">multimodal_imdb.hdf5</span></code> file from <a class="reference external" href="https://archive.org/download/mmimdb/multimodal_imdb.hdf5">here</a> .</p>
+<p>If you plan on testing the model’s robustness, you will <strong>also</strong> need to download the raw file from <a class="reference external" href="https://archive.org/download/mmimdb/mmimdb.tar.gz">here</a>.</p>
+<p>Once that is done, untar it your preferred location and do something the following to get the dataloaders:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">datasets.imdb.get_data</span> <span class="kn">import</span> <span class="n">get_dataloader</span>
+
+<span class="n">train_loader</span><span class="p">,</span> <span class="n">val_loader</span><span class="p">,</span> <span class="n">test_loader</span> <span class="o">=</span> <span class="n">get_dataloader</span><span class="p">(</span><span class="s2">&quot;path/to/processed_data&quot;</span><span class="p">,</span><span class="s2">&quot;path/to/raw/data/folder&quot;</span><span class="p">,</span><span class="n">vgg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="kinetics400">
+<h3>Kinetics400<a class="headerlink" href="#kinetics400" title="Permalink to this headline"></a></h3>
+<p>To download either of the Kinetics datasets, run the appropriate script under <code class="docutils literal notranslate"><span class="pre">special/kinetics_*.py</span></code>.</p>
+<p>Then pass the location of the data to the associated file to finish it.</p>
+</section>
+<section id="clotho">
+<h3>Clotho<a class="headerlink" href="#clotho" title="Permalink to this headline"></a></h3>
+<p>To download the Clotho dataset, clone <a class="reference external" href="https://github.com/audio-captioning/clotho-dataset">the repository</a> somewhere on your device and follow the given instructions to pre-process the data.</p>
+<p>To get the dataloaders, you will also need to add the path to the above repo to the get_dataloaders function under <cite>datasets/clotho/get_data.py</cite>.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../datasets/modules.html" class="btn btn-neutral float-right" title="Datasets and DataLoaders" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

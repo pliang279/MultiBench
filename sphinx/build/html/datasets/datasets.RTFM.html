@@ -101,10 +101,32 @@
 </section>
 <section id="module-datasets.RTFM.get_env">
 <span id="datasets-rtfm-get-env-module"></span><h2>datasets.RTFM.get_env module<a class="headerlink" href="#module-datasets.RTFM.get_env" title="Permalink to this headline"></a></h2>
+<p>Implements environment getter for RTFM.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="datasets.RTFM.get_env.create_env">
 <span class="sig-prename descclassname"><span class="pre">datasets.RTFM.get_env.</span></span><span class="sig-name descname"><span class="pre">create_env</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rtfm:groups_simple_stationary-v0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">partially_observable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_placement</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">featurizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shuffle_wiki</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time_penalty</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-</span> <span class="pre">0.02</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.RTFM.get_env.create_env" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create RTFM environment.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>env</strong> (<em>str</em><em>, </em><em>optional</em>) – RTFM environment name.. Defaults to “rtfm:groups_simple_stationary-v0”.</p></li>
+<li><p><strong>height</strong> (<em>int</em><em>, </em><em>optional</em>) – Height of environment. Defaults to 6.</p></li>
+<li><p><strong>width</strong> (<em>int</em><em>, </em><em>optional</em>) – Width of environment. Defaults to 6.</p></li>
+<li><p><strong>partially_observable</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to only give partial observations or priviledged observations. Defaults to False.</p></li>
+<li><p><strong>max_placement</strong> (<em>int</em><em>, </em><em>optional</em>) – Max placement. Defaults to 1.</p></li>
+<li><p><strong>featurizer</strong> (<em>_type_</em><em>, </em><em>optional</em>) – Function for featurizing inputs. Defaults to None.</p></li>
+<li><p><strong>shuffle_wiki</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to shuffle wiki. Defaults to False.</p></li>
+<li><p><strong>time_penalty</strong> (<em>float</em><em>, </em><em>optional</em>) – Time penalty. Defaults to -0.02.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>gym environment</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>env</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-datasets.RTFM">

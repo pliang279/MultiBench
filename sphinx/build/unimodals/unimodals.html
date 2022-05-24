@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>unimodals package &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="unimodals.gentle_push package" href="unimodals.gentle_push.html" />
+    <link rel="prev" title="Unimodal Encoders" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Unimodal Encoders</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">unimodals package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="unimodals.gentle_push.html">unimodals.gentle_push package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="unimodals.robotics.html">unimodals.robotics package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unimodals.MVAE">unimodals.MVAE module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unimodals.common_models">unimodals.common_models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unimodals.res3d">unimodals.res3d module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-unimodals">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Unimodal Encoders</a> &raquo;</li>
+      <li>unimodals package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/unimodals/unimodals.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="unimodals-package">
+<h1>unimodals package<a class="headerlink" href="#unimodals-package" title="Permalink to this headline"></a></h1>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="unimodals.gentle_push.html">unimodals.gentle_push package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.gentle_push.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.gentle_push.html#module-unimodals.gentle_push.head">unimodals.gentle_push.head module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.gentle_push.html#module-unimodals.gentle_push.layers">unimodals.gentle_push.layers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.gentle_push.html#module-unimodals.gentle_push">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="unimodals.robotics.html">unimodals.robotics package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.robotics.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.robotics.html#module-unimodals.robotics.decoders">unimodals.robotics.decoders module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.robotics.html#module-unimodals.robotics.encoders">unimodals.robotics.encoders module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.robotics.html#module-unimodals.robotics.layers">unimodals.robotics.layers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.robotics.html#module-unimodals.robotics.models_utils">unimodals.robotics.models_utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="unimodals.robotics.html#module-unimodals.robotics">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-unimodals.MVAE">
+<span id="unimodals-mvae-module"></span><h2>unimodals.MVAE module<a class="headerlink" href="#module-unimodals.MVAE" title="Permalink to this headline"></a></h2>
+<p>Implements various encoders and decoders for MVAE.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.MVAE.DeLeNet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.MVAE.</span></span><span class="sig-name descname"><span class="pre">DeLeNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.DeLeNet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements an image deconvolution decoder for MVAE.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.DeLeNet.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.DeLeNet.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate DeLeNet Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – Number of input channels</p></li>
+<li><p><strong>arg_channels</strong> (<em>int</em>) – Number of arg channels</p></li>
+<li><p><strong>additional_layers</strong> (<em>int</em>) – Number of additional layers.</p></li>
+<li><p><strong>latent</strong> (<em>int</em>) – Latent dimension size</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.DeLeNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.DeLeNet.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply DeLeNet to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.MVAE.LeNetEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.MVAE.</span></span><span class="sig-name descname"><span class="pre">LeNetEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.LeNetEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a LeNet Encoder for MVAE.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.LeNetEncoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">latent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">twooutput</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.LeNetEncoder.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate LeNetEncoder Module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – Input Dimensions</p></li>
+<li><p><strong>arg_channels</strong> (<em>int</em>) – Arg channels dimension size</p></li>
+<li><p><strong>additional_layers</strong> (<em>int</em>) – Number of additional layers</p></li>
+<li><p><strong>latent</strong> (<em>int</em>) – Latent dimension size</p></li>
+<li><p><strong>twooutput</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to output twice the size of the latent. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.LeNetEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.LeNetEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply LeNetEncoder to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.MVAE.MLPEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.MVAE.</span></span><span class="sig-name descname"><span class="pre">MLPEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.MLPEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements MLP Encoder for MVAE.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.MLPEncoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.MLPEncoder.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialzies MLPEncoder Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input Dimension</p></li>
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden Dimension</p></li>
+<li><p><strong>outdim</strong> (<em>int</em>) – Output Dimension</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.MLPEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.MLPEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply MLPEncoder to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.MVAE.TSDecoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.MVAE.</span></span><span class="sig-name descname"><span class="pre">TSDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.TSDecoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a time-series decoder for MVAE.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.TSDecoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finaldim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.TSDecoder.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate TSDecoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input dimension</p></li>
+<li><p><strong>outdim</strong> (<em>int</em>) – (unused) Output dimension</p></li>
+<li><p><strong>finaldim</strong> (<em>int</em>) – Hidden dimension</p></li>
+<li><p><strong>timestep</strong> (<em>int</em>) – Number of timesteps</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.TSDecoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.TSDecoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply TSDecoder to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.MVAE.TSEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.MVAE.</span></span><span class="sig-name descname"><span class="pre">TSEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.TSEncoder" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a time series encoder for MVAE.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.TSEncoder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">finaldim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">returnvar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.TSEncoder.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate TSEncoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input Dimension of GRU</p></li>
+<li><p><strong>outdim</strong> (<em>int</em>) – Output dimension of GRU</p></li>
+<li><p><strong>finaldim</strong> (<em>int</em>) – Output dimension of TSEncoder</p></li>
+<li><p><strong>timestep</strong> (<em>float</em>) – Number of timestamps</p></li>
+<li><p><strong>returnvar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return the output split with the first encoded portion and the next or not. Defaults to True.</p></li>
+<li><p><strong>batch_first</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the batching dimension is the first dimension of the input or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.MVAE.TSEncoder.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.MVAE.TSEncoder.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply TS Encoder to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-unimodals.common_models">
+<span id="unimodals-common-models-module"></span><h2>unimodals.common_models module<a class="headerlink" href="#module-unimodals.common_models" title="Permalink to this headline"></a></h2>
+<p>Implements common unimodal encoders.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Constant">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Constant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Constant" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a module that returns a constant no matter the input.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Constant.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_dim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Constant.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Constant Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>out_dim</strong> (<em>int</em>) – Output Dimension.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Constant.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Constant.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Constant to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.DAN">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">DAN</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.DAN" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Deep Averaging Network: <a class="reference external" href="https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf">https://people.cs.umass.edu/~miyyer/pubs/2015_acl_dan.pdf</a>
+Deep Sets: <a class="reference external" href="https://arxiv.org/abs/1703.06114">https://arxiv.org/abs/1703.06114</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.DAN.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlayers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.DAN.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize DAN Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input Dimension</p></li>
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden Dimension</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout to layer output. Defaults to False.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.25.</p></li>
+<li><p><strong>nlayers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of layers. Defaults to 3.</p></li>
+<li><p><strong>has_padding</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the input has padding. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.DAN.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.DAN.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply DAN to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.GRU">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">GRU</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GRU" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Gated Recurrent Unit (GRU).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.GRU.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">last_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GRU.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize GRU Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input dimension</p></li>
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden dimension</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout layer or not. Defaults to False.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.1.</p></li>
+<li><p><strong>flatten</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to flatten output before returning. Defaults to False.</p></li>
+<li><p><strong>has_padding</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether the input has padding or not. Defaults to False.</p></li>
+<li><p><strong>last_only</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return only the last output of the GRU. Defaults to False.</p></li>
+<li><p><strong>batch_first</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to batch before applying or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.GRU.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GRU.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply GRU to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.GRUWithLinear">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">GRUWithLinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GRUWithLinear" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a GRU with Linear Post-Processing.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.GRUWithLinear.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_each_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GRUWithLinear.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize GRUWithLinear Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input Dimension</p></li>
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden Dimension</p></li>
+<li><p><strong>outdim</strong> (<em>int</em>) – Output Dimension</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout or not. Defaults to False.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.1.</p></li>
+<li><p><strong>flatten</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to flatten output before returning. Defaults to False.</p></li>
+<li><p><strong>has_padding</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether input has padding. Defaults to False.</p></li>
+<li><p><strong>output_each_layer</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return the output of every intermediate layer. Defaults to False.</p></li>
+<li><p><strong>batch_first</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply batching before GRU. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.GRUWithLinear.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GRUWithLinear.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply GRUWithLinear to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.GlobalPooling2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">GlobalPooling2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GlobalPooling2D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements 2D Global Pooling.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.GlobalPooling2D.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GlobalPooling2D.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initializes GlobalPooling2D Module.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.GlobalPooling2D.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.GlobalPooling2D.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply 2D Global Pooling to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Identity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Identity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Identity" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Identity Module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Identity.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Identity.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Identity Module.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Identity.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Identity.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Identity to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.LSTM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">LSTM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.LSTM" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends nn.LSTM with dropout and other features.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.LSTM.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear_layer_outdim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.LSTM.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize LSTM Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input Dimension</p></li>
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden Layer Dimension</p></li>
+<li><p><strong>linear_layer_outdim</strong> (<em>int</em><em>, </em><em>optional</em>) – Linear Layer Output Dimension. Defaults to None.</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout to layer output. Defaults to False.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.1.</p></li>
+<li><p><strong>flatten</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to flatten out. Defaults to False.</p></li>
+<li><p><strong>has_padding</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether input has padding. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.LSTM.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.LSTM.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply LSTM to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.LeNet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">LeNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.LeNet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements LeNet.</p>
+<p>Adapted from centralnet code <a class="reference external" href="https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py">https://github.com/slyviacassell/_MFAS/blob/master/models/central/avmnist.py</a>.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.LeNet.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_each_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squeeze_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.LeNet.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize LeNet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – Input channel number.</p></li>
+<li><p><strong>args_channels</strong> (<em>int</em>) – Output channel number for block.</p></li>
+<li><p><strong>additional_layers</strong> (<em>int</em>) – Number of additional blocks for LeNet.</p></li>
+<li><p><strong>output_each_layer</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return the output of all layers. Defaults to False.</p></li>
+<li><p><strong>linear</strong> (<em>tuple</em><em>, </em><em>optional</em>) – Tuple of (input_dim, output_dim) for optional linear layer post-processing. Defaults to None.</p></li>
+<li><p><strong>squeeze_output</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to squeeze output before returning. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.LeNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.LeNet.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply LeNet to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Linear">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Linear" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Linear Layer with Xavier Initialization, and 0 Bias.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Linear.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xavier_init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Linear.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Linear Layer w/ Xavier Init.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input Dimension</p></li>
+<li><p><strong>outdim</strong> (<em>int</em>) – Output Dimension</p></li>
+<li><p><strong>xavier_init</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply Xavier Initialization to Layer. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Linear.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Linear.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Linear Layer to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input Tensor</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output Tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.MLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.MLP" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Two layered perceptron.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.MLP.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outdim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_each_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.MLP.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize two-layered perceptron.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input dimension</p></li>
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden layer dimension</p></li>
+<li><p><strong>outdim</strong> (<em>int</em>) – Output layer dimension</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout or not. Defaults to False.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.1.</p></li>
+<li><p><strong>output_each_layer</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return outputs of each layer as a list. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.MLP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.MLP.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply MLP to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.MaxOut_MLP">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">MaxOut_MLP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.MaxOut_MLP" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Maxout w/ MLP.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.MaxOut_MLP.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_input_feats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.MaxOut_MLP.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate MaxOut_MLP Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_outputs</strong> (<em>int</em>) – Output dimension</p></li>
+<li><p><strong>first_hidden</strong> (<em>int</em><em>, </em><em>optional</em>) – First hidden layer dimension. Defaults to 64.</p></li>
+<li><p><strong>number_input_feats</strong> (<em>int</em><em>, </em><em>optional</em>) – Input dimension. Defaults to 300.</p></li>
+<li><p><strong>second_hidden</strong> (<em>_type_</em><em>, </em><em>optional</em>) – Second hidden layer dimension. Defaults to None.</p></li>
+<li><p><strong>linear_layer</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include an output hidden layer or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.MaxOut_MLP.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.MaxOut_MLP.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply module to layer input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Maxout">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Maxout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Maxout" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Maxout module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Maxout.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Maxout.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Maxout object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d</strong> (<em>int</em>) – (Unused)</p></li>
+<li><p><strong>m</strong> (<em>int</em>) – Number of features remeaining after Maxout.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Pool Size</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Maxout.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Maxout.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Maxout to inputs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.ResNetLSTMEnc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">ResNetLSTMEnc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.ResNetLSTMEnc" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements an encoder which applies as ResNet first, and then an LSTM.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.ResNetLSTMEnc.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.ResNetLSTMEnc.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiates ResNetLSTMEnc Module</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden dimension size of LSTM.</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout or not.. Defaults to False.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.1.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.ResNetLSTMEnc.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.ResNetLSTMEnc.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply ResNetLSTMEnc Module to Input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Reshape">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Reshape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Reshape" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Custom reshape module for easier Sequential usage.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Reshape.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Reshape.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Reshape Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>shape</strong> (<em>tuple</em>) – Tuple to reshape input to</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Reshape.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Reshape.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Reshape Module to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Sequential">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Sequential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Sequential" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Sequential</span></code></p>
+<p>Custom Sequential module for easier usage.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Sequential.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Sequential.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Sequential Layer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Sequential.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Sequential.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply args to Sequential Layer.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Squeeze">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Squeeze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Squeeze" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Custom squeeze module for easier Sequential usage.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Squeeze.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Squeeze.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Squeeze Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dim</strong> (<em>int</em><em>, </em><em>optional</em>) – Dimension to Squeeze on. Defaults to None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Squeeze.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Squeeze.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Squeeze Layer to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Transformer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Transformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Transformer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends nn.Transformer.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Transformer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Transformer.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Transformer object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n_features</strong> (<em>int</em>) – Number of features in the input.</p></li>
+<li><p><strong>dim</strong> (<em>int</em>) – Dimension which to embed upon / Hidden dimension size.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Transformer.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Transformer.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Transformer to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.Transpose">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">Transpose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Transpose" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Custom transpose module for easier Sequential usage.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Transpose.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dim0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Transpose.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Transpose Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim0</strong> (<em>int</em>) – Dimension 1 of Torch.Transpose</p></li>
+<li><p><strong>dim1</strong> (<em>int</em>) – Dimension 2 of Torch.Transpose</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.Transpose.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.Transpose.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Transpose Module to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.TwoLayersLSTM">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">TwoLayersLSTM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.TwoLayersLSTM" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements and Extends nn.LSTM for 2-layer LSTMs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.TwoLayersLSTM.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">LayNorm</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isBidirectional</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.TwoLayersLSTM.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize TwoLayersLSTM Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indim</strong> (<em>int</em>) – Input dimension</p></li>
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden layer dimension</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout to layer output. Defaults to False.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.1.</p></li>
+<li><p><strong>flatten</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to flatten layer output before returning. Defaults to False.</p></li>
+<li><p><strong>has_padding</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether input has padding or not. Defaults to False.</p></li>
+<li><p><strong>isBidirectional</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether internal LSTMs are bidirectional. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.TwoLayersLSTM.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.TwoLayersLSTM.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply TwoLayersLSTM to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">VGG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends tmodels.vgg19 module with Global Pooling, BatchNorm, and a Linear Output.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize VGG Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>num_outputs</strong> (<em>int</em>) – Output Dimension</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply VGG Module to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input Tensor</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output Tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG11Pruned">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">VGG11Pruned</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG11Pruned" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends VGG11 and prunes layers to make it even smaller.</p>
+<p>Slimmer version of vgg11 model with fewer layers in classifier.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG11Pruned.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG11Pruned.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize VGG11Pruned Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden Layer Dimension</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout after ReLU. Defaults to True.</p></li>
+<li><p><strong>prune_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – Percentage of channels to prune. Defaults to 0.25.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.2.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG11Pruned.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG11Pruned.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply VGG11Pruned to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG11Slim">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">VGG11Slim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG11Slim" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends VGG11 with a fewer layers in the classifier.</p>
+<p>Slimmer version of vgg11 model with fewer layers in classifier.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG11Slim.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">freeze_features</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG11Slim.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize VGG11Slim Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden dimension size</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout to output of ReLU. Defaults to True.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.2.</p></li>
+<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to instantiate VGG11 from Pretrained. Defaults to True.</p></li>
+<li><p><strong>freeze_features</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to keep VGG11 features frozen. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG11Slim.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG11Slim.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply VGG11Slim to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">VGG16</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends VGG16 for encoding.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize VGG16 Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hiddim</strong> (<em>int</em>) – Size of post-processing layer</p></li>
+<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to instantiate VGG16 from pretrained. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply VGG16 to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16Pruned">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">VGG16Pruned</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16Pruned" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends VGG16 and prunes layers to make it even smaller.</p>
+<p>Slimmer version of vgg16 model with fewer layers in classifier.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16Pruned.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16Pruned.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize VGG16Pruned Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden Layer Dimension</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout after ReLU. Defaults to True.</p></li>
+<li><p><strong>prune_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – Percentage of channels to prune. Defaults to 0.25.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.2.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16Pruned.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16Pruned.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply VGG16Pruned to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16Slim">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.common_models.</span></span><span class="sig-name descname"><span class="pre">VGG16Slim</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16Slim" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends VGG16 with a fewer layers in the classifier.</p>
+<p>Slimmer version of vgg16 model with fewer layers in classifier.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16Slim.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hiddim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropoutp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pretrained</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16Slim.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize VGG16Slim object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hiddim</strong> (<em>int</em>) – Hidden dimension size</p></li>
+<li><p><strong>dropout</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply dropout to ReLU output. Defaults to True.</p></li>
+<li><p><strong>dropoutp</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability. Defaults to 0.2.</p></li>
+<li><p><strong>pretrained</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to initialize VGG16 from pretrained. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.common_models.VGG16Slim.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.common_models.VGG16Slim.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply VGG16Slim to model input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-unimodals.res3d">
+<span id="unimodals-res3d-module"></span><h2>unimodals.res3d module<a class="headerlink" href="#module-unimodals.res3d" title="Permalink to this headline"></a></h2>
+<p>Implements 3dResnet.</p>
+<p>Copied from <a class="reference external" href="https://github.com/kenshohara/3D-ResNets-PyTorch/blob/master/models/resnet2p1d.py">https://github.com/kenshohara/3D-ResNets-PyTorch/blob/master/models/resnet2p1d.py</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.res3d.BasicBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.res3d.</span></span><span class="sig-name descname"><span class="pre">BasicBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.BasicBlock" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements basic block of a resnet.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.res3d.BasicBlock.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.BasicBlock.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate BasicBlock Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Number of input channels</p></li>
+<li><p><strong>planes</strong> (<em>int</em>) – Number of output channels</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – Convolution Stride. Defaults to 1.</p></li>
+<li><p><strong>downsample</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – Optional Downsampling Layer. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unimodals.res3d.BasicBlock.expansion">
+<span class="sig-name descname"><span class="pre">expansion</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#unimodals.res3d.BasicBlock.expansion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.res3d.BasicBlock.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.BasicBlock.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Block to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.res3d.Bottleneck">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.res3d.</span></span><span class="sig-name descname"><span class="pre">Bottleneck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.Bottleneck" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements bottleneck block of a resnet.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.res3d.Bottleneck.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downsample</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.Bottleneck.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate Bottleneck Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Number of input channels</p></li>
+<li><p><strong>planes</strong> (<em>int</em>) – Number of output channels</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – Convolution Stride. Defaults to 1.</p></li>
+<li><p><strong>downsample</strong> (<em>nn.Module</em><em>, </em><em>optional</em>) – Optional Downsampling Layer. Defaults to None.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="unimodals.res3d.Bottleneck.expansion">
+<span class="sig-name descname"><span class="pre">expansion</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#unimodals.res3d.Bottleneck.expansion" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.res3d.Bottleneck.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.Bottleneck.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Bottleneck to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="unimodals.res3d.ResNet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.res3d.</span></span><span class="sig-name descname"><span class="pre">ResNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.ResNet" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a ResNet from scratch.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.res3d.ResNet.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">block</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_inplanes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_input_channels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv1_t_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv1_t_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_max_pool</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shortcut_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'B'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">widen_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">400</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.ResNet.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate 3DResNet</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>block</strong> (<em>nn.Module</em>) – Block definition</p></li>
+<li><p><strong>layers</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – List of number of blocks for 3d resnet</p></li>
+<li><p><strong>block_inplanes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – In-channel count per block</p></li>
+<li><p><strong>n_input_channels</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of input channels. Defaults to 3.</p></li>
+<li><p><strong>conv1_t_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Convolution input kernel size. Defaults to 7.</p></li>
+<li><p><strong>conv1_t_stride</strong> (<em>int</em><em>, </em><em>optional</em>) – Convolution input stride size. Defaults to 1.</p></li>
+<li><p><strong>no_max_pool</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to not apply max pooling or not. Defaults to False.</p></li>
+<li><p><strong>shortcut_type</strong> (<em>str</em><em>, </em><em>optional</em>) – Whether to apply downsampling or not. Defaults to ‘B’.</p></li>
+<li><p><strong>widen_factor</strong> (<em>float</em><em>, </em><em>optional</em>) – Widen factor. Defaults to 1.0.</p></li>
+<li><p><strong>n_classes</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of classes in output. Defaults to 400.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="unimodals.res3d.ResNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.ResNet.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply ResNet3D to Layer Input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="unimodals.res3d.generate_model">
+<span class="sig-prename descclassname"><span class="pre">unimodals.res3d.</span></span><span class="sig-name descname"><span class="pre">generate_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_depth</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.res3d.generate_model" title="Permalink to this definition"></a></dt>
+<dd><p>Generate model given different standard model depths.</p>
+</dd></dl>
+
+</section>
+<section id="module-unimodals">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-unimodals" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Unimodal Encoders" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="unimodals.gentle_push.html" class="btn btn-neutral float-right" title="unimodals.gentle_push package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

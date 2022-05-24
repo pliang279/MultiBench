@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>datasets.mimic package &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="datasets.robotics package" href="datasets.robotics.html" />
+    <link rel="prev" title="datasets.imdb package" href="datasets.imdb.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Datasets and DataLoaders</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="datasets.html">datasets package</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="datasets.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="datasets.RTFM.html">datasets.RTFM package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.affect.html">datasets.affect package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.avmnist.html">datasets.avmnist package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.clotho.html">datasets.clotho package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.enrico.html">datasets.enrico package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.gentle_push.html">datasets.gentle_push package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.imdb.html">datasets.imdb package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">datasets.mimic package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html">datasets.robotics package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.stocks.html">datasets.stocks package</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.html#module-datasets">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Datasets and DataLoaders</a> &raquo;</li>
+          <li><a href="datasets.html">datasets package</a> &raquo;</li>
+      <li>datasets.mimic package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/datasets/datasets.mimic.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="datasets-mimic-package">
+<h1>datasets.mimic package<a class="headerlink" href="#datasets-mimic-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-datasets.mimic.get_data">
+<span id="datasets-mimic-get-data-module"></span><h2>datasets.mimic.get_data module<a class="headerlink" href="#module-datasets.mimic.get_data" title="Permalink to this headline"></a></h2>
+<p>Implements dataloaders for generic MIMIC tasks.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.mimic.get_data.get_dataloader">
+<span class="sig-prename descclassname"><span class="pre">datasets.mimic.get_data.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imputed_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'im.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten_time_series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tabular_robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeseries_robust</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.mimic.get_data.get_dataloader" title="Permalink to this definition"></a></dt>
+<dd><p>Get dataloaders for MIMIC dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task</strong> (<em>int</em>) – Integer between -1 and 19 inclusive, -1 means mortality task, 0-19 means icd9 task.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size. Defaults to 40.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of workers to load data in. Defaults to 1.</p></li>
+<li><p><strong>train_shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to shuffle training data or not. Defaults to True.</p></li>
+<li><p><strong>imputed_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Datafile location. Defaults to ‘im.pk’.</p></li>
+<li><p><strong>flatten_time_series</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to flatten time series data or not. Defaults to False.</p></li>
+<li><p><strong>tabular_robust</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply tabular robustness as dataset augmentation or not. Defaults to True.</p></li>
+<li><p><strong>timeseries_robust</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply timeseries robustness noises as dataset augmentation or not. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of training dataloader, validation dataloader, and test dataloader</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-datasets.mimic.multitask">
+<span id="datasets-mimic-multitask-module"></span><h2>datasets.mimic.multitask module<a class="headerlink" href="#module-datasets.mimic.multitask" title="Permalink to this headline"></a></h2>
+<p>Implements data loaders for the multitask formulation of MIMIC.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="datasets.mimic.multitask.get_dataloader">
+<span class="sig-prename descclassname"><span class="pre">datasets.mimic.multitask.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">40</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imputed_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'im.pk'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flatten_time_series</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.mimic.multitask.get_dataloader" title="Permalink to this definition"></a></dt>
+<dd><p>Generate dataloader for multi-task setup, using only tasks -1 and 7.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size. Defaults to 40.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of workers to load data in. Defaults to 1.</p></li>
+<li><p><strong>train_shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to shuffle training data or not. Defaults to True.</p></li>
+<li><p><strong>imputed_path</strong> (<em>str</em><em>, </em><em>optional</em>) – Datafile location. Defaults to ‘im.pk’.</p></li>
+<li><p><strong>flatten_time_series</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to flatten time series data or not. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of training dataloader, validation dataloader, and test dataloader.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tupe</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-datasets.mimic">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-datasets.mimic" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="datasets.imdb.html" class="btn btn-neutral float-left" title="datasets.imdb package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="datasets.robotics.html" class="btn btn-neutral float-right" title="datasets.robotics package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

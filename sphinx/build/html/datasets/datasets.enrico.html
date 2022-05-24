@@ -101,31 +101,67 @@
 </section>
 <section id="module-datasets.enrico.get_data">
 <span id="datasets-enrico-get-data-module"></span><h2>datasets.enrico.get_data module<a class="headerlink" href="#module-datasets.enrico.get_data" title="Permalink to this headline"></a></h2>
+<p>Implements dataloaders for ENRICO dataset.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="datasets.enrico.get_data.EnricoDataset">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.enrico.get_data.</span></span><span class="sig-name descname"><span class="pre">EnricoDataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.enrico.get_data.EnricoDataset" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.utils.data.Dataset</span></code></p>
+<p>Implements torch dataset class for ENRICO dataset.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="datasets.enrico.get_data.EnricoDataset.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'train'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">noise_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wireframe_noise</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dim_x</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img_dim_y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">256</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">42</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.65</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize_image</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seq_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.enrico.get_data.EnricoDataset.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Instantiate ENRICO dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – Data directory.</p></li>
+<li><p><strong>mode</strong> (<em>str</em><em>, </em><em>optional</em>) – What data to extract. Defaults to “train”.</p></li>
+<li><p><strong>noise_level</strong> (<em>int</em><em>, </em><em>optional</em>) – Noise level, as defined in robustness. Defaults to 0.</p></li>
+<li><p><strong>img_noise</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply noise to images or not. Defaults to False.</p></li>
+<li><p><strong>wireframe_noise</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply noise to wireframes or not. Defaults to False.</p></li>
+<li><p><strong>img_dim_x</strong> (<em>int</em><em>, </em><em>optional</em>) – Image width. Defaults to 128.</p></li>
+<li><p><strong>img_dim_y</strong> (<em>int</em><em>, </em><em>optional</em>) – Image height. Defaults to 256.</p></li>
+<li><p><strong>random_seed</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed to split dataset on and shuffle data on. Defaults to 42.</p></li>
+<li><p><strong>train_split</strong> (<em>float</em><em>, </em><em>optional</em>) – Percentage of training data split. Defaults to 0.65.</p></li>
+<li><p><strong>val_split</strong> (<em>float</em><em>, </em><em>optional</em>) – Percentage of validation data split. Defaults to 0.15.</p></li>
+<li><p><strong>test_split</strong> (<em>float</em><em>, </em><em>optional</em>) – Percentage of test data split. Defaults to 0.2.</p></li>
+<li><p><strong>normalize_image</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to normalize image or not Defaults to False.</p></li>
+<li><p><strong>seq_len</strong> (<em>int</em><em>, </em><em>optional</em>) – Length of sequence. Defaults to 64.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="datasets.enrico.get_data.EnricoDataset.featurizeElement">
 <span class="sig-name descname"><span class="pre">featurizeElement</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.enrico.get_data.EnricoDataset.featurizeElement" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Convert element into tuple of (bounds, one-hot-label).</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="datasets.enrico.get_data.add_screen_elements">
-<span class="sig-prename descclassname"><span class="pre">datasets.enrico.get_data.</span></span><span class="sig-name descname"><span class="pre">add_screen_elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tree</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.enrico.get_data.add_screen_elements" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="datasets.enrico.get_data.get_dataloader">
 <span class="sig-prename descclassname"><span class="pre">datasets.enrico.get_data.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_dir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_workers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_class_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.enrico.get_data.get_dataloader" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get dataloaders for this dataset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data_dir</strong> (<em>str</em>) – Data directory.</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batch size. Defaults to 32.</p></li>
+<li><p><strong>num_workers</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of workers. Defaults to 0.</p></li>
+<li><p><strong>train_shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to shuffle training data or not. Defaults to True.</p></li>
+<li><p><strong>return_class_weights</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to return class weights or not. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of ((train dataloader, validation dataloader, test dataloader), class_weights) if return_class_weights, otherwise just the dataloaders</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-datasets.enrico">
