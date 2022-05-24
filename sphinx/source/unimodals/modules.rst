@@ -1,4 +1,4 @@
-unimodals
+Unimodal Encoders
 =========
 
 .. toctree::

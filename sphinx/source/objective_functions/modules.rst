@@ -1,4 +1,4 @@
-objective_functions
+Objective Functions
 ===================
 
 .. toctree::

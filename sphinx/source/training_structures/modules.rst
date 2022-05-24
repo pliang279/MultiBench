@@ -1,4 +1,4 @@
-training_structures
+Training Structures
 ===================
 
 .. toctree::

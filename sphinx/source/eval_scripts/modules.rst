@@ -1,4 +1,4 @@
-eval_scripts
+General Evaluation Scripts
 ============
 
 .. toctree::

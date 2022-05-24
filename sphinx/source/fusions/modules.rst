@@ -1,4 +1,4 @@
-fusions
+Multimodal Fusion Techniques
 =======
 
 .. toctree::
