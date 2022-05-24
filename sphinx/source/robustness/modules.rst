@@ -1,4 +1,4 @@
-robustness
+Robustness
 ==========
 
 .. toctree::
