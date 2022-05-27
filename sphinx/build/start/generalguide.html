@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>General Usage Guide &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Datasets and DataLoaders" href="../datasets/modules.html" />
+    <link rel="prev" title="Downloading Datasets" href="datadownload.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datadownload.html">Downloading Datasets</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">General Usage Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#general-repo-structure">General Repo Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#general-training-guide">General Training Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#general-contribution-guide">General Contribution Guide</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>General Usage Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/start/generalguide.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="general-usage-guide">
+<h1>General Usage Guide<a class="headerlink" href="#general-usage-guide" title="Permalink to this headline"></a></h1>
+<section id="general-repo-structure">
+<h2>General Repo Structure<a class="headerlink" href="#general-repo-structure" title="Permalink to this headline"></a></h2>
+<p>MultiBench is separated into several sub-packages, each of which handle separate functionality regarding either the set of reference implementations or the actual benchmarking process accordingly:</p>
+<ul class="simple">
+<li><p><strong>datasets</strong> - This package handles loading data, and creating the dataloaders for each multimodal dataset we look at. See the ‘Downloading Datasets’ guide for information on how to use this section of the package.</p></li>
+<li><p><strong>eval_scripts</strong> - This package contains the implementations of any and all complexity measures we use to measure a MultiModal model’s complexity, along with a few helper functions to get all metrics during training.</p></li>
+<li><p><strong>fusions</strong> - This package contains implementations of multiple multimodal fusion methods. These take in either raw or processed modalities, and combine them ahead of a final “classification head” layer.</p></li>
+<li><p><strong>unimodals</strong> -  This package contains implementations of several unimodal processing methods, which take in raw modality information and return dense vector representations for the fusion methods to use.</p></li>
+<li><p><strong>objective_functions</strong> - This package contains implementations of objective functions, which are used to train the associated models accordingly.</p></li>
+<li><p><strong>robustness</strong> - This package contains implementations of several unimodal noising methods, which take in raw modality information and add some noise to them.</p></li>
+<li><p><strong>training_structures</strong> - This package contains implementations of generic model training structures, which take in the above systems and train/test the model end to end.</p></li>
+<li><p><strong>utils</strong> - Lastly, this package contains assorted extranneous functions that are useful all around the package.</p></li>
+</ul>
+<p>In addition, the following folders are also in the repository, to provide additional functionality / testing to the repository:</p>
+<ul class="simple">
+<li><p><strong>deprecated</strong> - This contains older code not currently used in the current version of MultiBench.</p></li>
+<li><p><strong>images</strong> - This contains images for the README.</p></li>
+<li><p><strong>pretrained</strong> - This folder contains pre-trained encoders for some papers/modalities.</p></li>
+<li><p><strong>private_test_scripts</strong> - This folder contains additional but private test scripts for MultiBench.</p></li>
+<li><p><strong>tests</strong> - This folder contains the tests for our code-coverage report.</p></li>
+<li><p><strong>sphinx</strong> - This folder contains all of the build information and source files for our documentation.</p></li>
+</ul>
+</section>
+<section id="general-training-guide">
+<h2>General Training Guide<a class="headerlink" href="#general-training-guide" title="Permalink to this headline"></a></h2>
+<p>While the tutorials provided are complete, in that they walk you through sample uses of MultiBench, here’s a quick overview of how to run your experiments in MultiBench:</p>
+<ol class="arabic simple">
+<li><p><strong>Construct your dataloaders</strong> - If your dataset of interest has not been studied in MultiBench before, you’ll need to construct the associated dataloaders in the datasets package first. Keep in mind that, if you want to test robustness, you will need to add the associated robustness transformations to the associated test/validation dataloader.</p></li>
+<li><p><strong>Decide on your encoders, fusion model, and classification head</strong> - MultiBench separates models into the following three sections. You’ll need to choose your model’s structure ahead of any test:</p>
+<ol class="loweralpha simple">
+<li><p><strong>Encoders</strong> - These take in raw modalities and process them.</p></li>
+<li><p><strong>Fusion Model</strong> - These take in the processed modalities and combine them.</p></li>
+<li><p><strong>Classification Head</strong> - This takes in the processed modalities and predicts classification output.</p></li>
+</ol>
+</li>
+<li><p><strong>Pick the associated training structure for your model</strong> - For most purposes, this will be the training loop under <code class="docutils literal notranslate"><span class="pre">training_structures/Supervised_Learning.py</span></code>, but for some other architectures you’ll need to use the other training structures.</p></li>
+<li><p><strong>Pick the metrics and loss function</strong></p></li>
+</ol>
+<p>Once you’ve done this, you can plug the associated code into the training loop like the examples, and go from there.</p>
+</section>
+<section id="general-contribution-guide">
+<h2>General Contribution Guide<a class="headerlink" href="#general-contribution-guide" title="Permalink to this headline"></a></h2>
+<p>If you would like to contribute, we would love to have you on. If you have a proposed extension, feel free to make an issue so we can contact you and get the ball rolling.</p>
+<p>To add a new dataset:</p>
+<ol class="arabic simple">
+<li><p><strong>Create a new folder in the datasets/ package</strong></p></li>
+<li><p><strong>Write a python file with a get_dataloader function</strong></p></li>
+<li><p><strong>Go to examples/ and write an example to test that your code works with a simple training script</strong></p></li>
+</ol>
+<p>To add a new algorithm:</p>
+<ol class="arabic simple">
+<li><p><strong>Decide where in the four algorithm folders your code will go</strong></p></li>
+<li><p><strong>Write documentation for that algorithm, following the documentation process of the other modules</strong></p>
+<ol class="loweralpha simple">
+<li><p>This will include arguments, return data, and associated information.</p></li>
+<li><p>If you can link to the paper for this algorithm, that would also be appreciated.</p></li>
+</ol>
+</li>
+<li><p><strong>Write a test for that algorithm under tests</strong></p></li>
+<li><p><strong>Check that calling the added functions and running a simple training script works</strong></p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="datadownload.html" class="btn btn-neutral float-left" title="Downloading Datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../datasets/modules.html" class="btn btn-neutral float-right" title="Datasets and DataLoaders" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

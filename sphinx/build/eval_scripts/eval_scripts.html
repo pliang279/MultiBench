@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eval_scripts package &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Multimodal Fusion Techniques" href="../fusions/modules.html" />
+    <link rel="prev" title="General Evaluation Scripts" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">General Evaluation Scripts</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">eval_scripts package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-eval_scripts.complexity">eval_scripts.complexity module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-eval_scripts.performance">eval_scripts.performance module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-eval_scripts.robustness">eval_scripts.robustness module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-eval_scripts">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">General Evaluation Scripts</a> &raquo;</li>
+      <li>eval_scripts package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/eval_scripts/eval_scripts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="eval-scripts-package">
+<h1>eval_scripts package<a class="headerlink" href="#eval-scripts-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-eval_scripts.complexity">
+<span id="eval-scripts-complexity-module"></span><h2>eval_scripts.complexity module<a class="headerlink" href="#module-eval_scripts.complexity" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.complexity.all_in_one_test">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.complexity.</span></span><span class="sig-name descname"><span class="pre">all_in_one_test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">testprocess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">testmodules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.complexity.all_in_one_test" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.complexity.all_in_one_train">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.complexity.</span></span><span class="sig-name descname"><span class="pre">all_in_one_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainprocess</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trainmodules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.complexity.all_in_one_train" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.complexity.getallparams">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.complexity.</span></span><span class="sig-name descname"><span class="pre">getallparams</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">li</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.complexity.getallparams" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-eval_scripts.performance">
+<span id="eval-scripts-performance-module"></span><h2>eval_scripts.performance module<a class="headerlink" href="#module-eval_scripts.performance" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.performance.AUPRC">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.performance.</span></span><span class="sig-name descname"><span class="pre">AUPRC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.performance.AUPRC" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.performance.accuracy">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.performance.</span></span><span class="sig-name descname"><span class="pre">accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.performance.accuracy" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.performance.eval_affect">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.performance.</span></span><span class="sig-name descname"><span class="pre">eval_affect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">truths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_zero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.performance.eval_affect" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.performance.f1_score">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.performance.</span></span><span class="sig-name descname"><span class="pre">f1_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.performance.f1_score" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.performance.ptsort">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.performance.</span></span><span class="sig-name descname"><span class="pre">ptsort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.performance.ptsort" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-eval_scripts.robustness">
+<span id="eval-scripts-robustness-module"></span><h2>eval_scripts.robustness module<a class="headerlink" href="#module-eval_scripts.robustness" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.robustness.effective_robustness">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.robustness.</span></span><span class="sig-name descname"><span class="pre">effective_robustness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robustness_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.robustness.effective_robustness" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the effective robustenss metric given the performance of the method on the task.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.robustness.effective_robustness_helper">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.robustness.</span></span><span class="sig-name descname"><span class="pre">effective_robustness_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robustness_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.robustness.effective_robustness_helper" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function that computes the effective robustness metric as the performance difference compared to late fusion method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>robustness_result</strong> – Performance of the method on datasets applied with different level of noises.</p></li>
+<li><p><strong>task</strong> – Name of the task on which the method is evaluated.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.robustness.get_robustness_metric">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.robustness.</span></span><span class="sig-name descname"><span class="pre">get_robustness_metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robustness_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.robustness.get_robustness_metric" title="Permalink to this definition"></a></dt>
+<dd><p>Compute robustness metric given specific method performance and the task.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>robustness_result</strong> – Performance of the method on datasets applied with different level of noises.</p></li>
+<li><p><strong>task</strong> – Name of the task on which the method is evaluated.</p></li>
+<li><p><strong>metric</strong> – Type of robustness metric to be computed. ( “effective” / “relative” )</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.robustness.maxmin_normalize">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.robustness.</span></span><span class="sig-name descname"><span class="pre">maxmin_normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.robustness.maxmin_normalize" title="Permalink to this definition"></a></dt>
+<dd><p>Normalize the metric for robustness comparison across all methods.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>result</strong> – Un-normalized robustness metrics of all methods on the given task.</p></li>
+<li><p><strong>task</strong> – Name of the task.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.robustness.relative_robustness">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.robustness.</span></span><span class="sig-name descname"><span class="pre">relative_robustness</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robustness_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.robustness.relative_robustness" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the relative robustenss metric given the performance of the method on the task.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.robustness.relative_robustness_helper">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.robustness.</span></span><span class="sig-name descname"><span class="pre">relative_robustness_helper</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robustness_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.robustness.relative_robustness_helper" title="Permalink to this definition"></a></dt>
+<dd><p>Helper function that computes the relative robustness metric as the area under the performance curve.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>robustness_result</strong> – Performance of the method on datasets applied with different level of noises.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="eval_scripts.robustness.single_plot">
+<span class="sig-prename descclassname"><span class="pre">eval_scripts.robustness.</span></span><span class="sig-name descname"><span class="pre">single_plot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">robustness_result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">task</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xlabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ylabel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fig_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#eval_scripts.robustness.single_plot" title="Permalink to this definition"></a></dt>
+<dd><p>Produce performance vs. robustness plot of a single method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>robustness_result</strong> – Performance of the method on dataset applied with different level of noises.</p></li>
+<li><p><strong>task</strong> – Name of the task on which the method is evaluated.</p></li>
+<li><p><strong>xlabel</strong> – Label of x-axis to be appeared in the plot.</p></li>
+<li><p><strong>ylabel</strong> – Label of y-axis to be appeared in the plot.</p></li>
+<li><p><strong>fig_name</strong> – Name of plot to be saved.</p></li>
+<li><p><strong>method</strong> – Name of the method.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-eval_scripts">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-eval_scripts" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="General Evaluation Scripts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../fusions/modules.html" class="btn btn-neutral float-right" title="Multimodal Fusion Techniques" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

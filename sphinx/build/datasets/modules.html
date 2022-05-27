@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Datasets and DataLoaders &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="datasets package" href="datasets.html" />
+    <link rel="prev" title="Downloading Datasets" href="../start/datadownload.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Datasets and DataLoaders</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html">datasets package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils/modules.html">Utilities</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Datasets and DataLoaders</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/datasets/modules.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="datasets-and-dataloaders">
+<h1>Datasets and DataLoaders<a class="headerlink" href="#datasets-and-dataloaders" title="Permalink to this headline"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">datasets package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="datasets.RTFM.html">datasets.RTFM package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.RTFM.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.RTFM.html#module-datasets.RTFM.get_env">datasets.RTFM.get_env module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.RTFM.html#module-datasets.RTFM">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.affect.html">datasets.affect package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.affect.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.affect.html#module-datasets.affect.get_bert_embedding">datasets.affect.get_bert_embedding module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.affect.html#module-datasets.affect.get_data">datasets.affect.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.affect.html#module-datasets.affect.get_raw_data">datasets.affect.get_raw_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.affect.html#module-datasets.affect">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.avmnist.html">datasets.avmnist package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.avmnist.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.avmnist.html#module-datasets.avmnist.get_data">datasets.avmnist.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.avmnist.html#module-datasets.avmnist">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.clotho.html">datasets.clotho package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.clotho.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.clotho.html#module-datasets.clotho.clotho_data_loader">datasets.clotho.clotho_data_loader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.clotho.html#module-datasets.clotho.clotho_dataset">datasets.clotho.clotho_dataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.clotho.html#module-datasets.clotho.collate_fn">datasets.clotho.collate_fn module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.clotho.html#module-datasets.clotho.get_data">datasets.clotho.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.clotho.html#module-datasets.clotho">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.enrico.html">datasets.enrico package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.enrico.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.enrico.html#module-datasets.enrico.get_data">datasets.enrico.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.enrico.html#module-datasets.enrico">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.gentle_push.html">datasets.gentle_push package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.gentle_push.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.gentle_push.html#module-datasets.gentle_push.data_loader">datasets.gentle_push.data_loader module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.gentle_push.html#module-datasets.gentle_push">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.imdb.html">datasets.imdb package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.imdb.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.imdb.html#module-datasets.imdb.get_data">datasets.imdb.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.imdb.html#module-datasets.imdb.vgg">datasets.imdb.vgg module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.imdb.html#module-datasets.imdb">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.mimic.html">datasets.mimic package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.mimic.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.mimic.html#module-datasets.mimic.get_data">datasets.mimic.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.mimic.html#module-datasets.mimic.multitask">datasets.mimic.multitask module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.mimic.html#module-datasets.mimic">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.robotics.html">datasets.robotics package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html#module-datasets.robotics.MultimodalManipulationDataset">datasets.robotics.MultimodalManipulationDataset module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html#module-datasets.robotics.MultimodalManipulationDataset_robust">datasets.robotics.MultimodalManipulationDataset_robust module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html#module-datasets.robotics.ProcessForce">datasets.robotics.ProcessForce module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html#module-datasets.robotics.ToTensor">datasets.robotics.ToTensor module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html#module-datasets.robotics.get_data">datasets.robotics.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html#module-datasets.robotics.utils">datasets.robotics.utils module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.robotics.html#module-datasets.robotics">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="datasets.stocks.html">datasets.stocks package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="datasets.stocks.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.stocks.html#module-datasets.stocks.get_data">datasets.stocks.get_data module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="datasets.stocks.html#module-datasets.stocks">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="datasets.html#module-datasets">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../start/datadownload.html" class="btn btn-neutral float-left" title="Downloading Datasets" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="datasets.html" class="btn btn-neutral float-right" title="datasets package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

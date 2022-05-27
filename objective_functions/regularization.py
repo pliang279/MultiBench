@@ -45,7 +45,7 @@ class Perturbation:
         tens = tens.view(*tens_dim)
         try:
             tens.requires_grad_()
-        except:
+        except: #pragma: no cover
             pass
 
         return tens
@@ -122,7 +122,7 @@ class Regularization(object):
             batch_statistics = cls._get_differential_entropy(loss)
         else:
             raise NotImplementedError(
-                f'{estimation} is unknown regularization, please use "var" or "ent".')
+                f'{estimation} is unknown regularization, please use "var" or "ent".') #pragma: no cover
 
         return torch.mean(batch_statistics)
 
@@ -144,7 +144,7 @@ class Regularization(object):
         return torch.mean(batch_grad_norm)
 
     @classmethod
-    def _get_batch_norm(cls, grad: torch.Tensor, loss: torch.Tensor = None, estimation: str = 'ent') -> torch.Tensor:
+    def _get_batch_norm(cls, grad: torch.Tensor, loss: torch.Tensor = None, estimation: str = 'ent') -> torch.Tensor: #pragma: no cover
         """
         Calculate the expectation of the batch gradient
         :param loss:

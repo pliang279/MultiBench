@@ -101,26 +101,66 @@
 </section>
 <section id="module-datasets.stocks.get_data">
 <span id="datasets-stocks-get-data-module"></span><h2>datasets.stocks.get_data module<a class="headerlink" href="#module-datasets.stocks.get_data" title="Permalink to this headline"></a></h2>
+<p>Implements dataloaders for the robotics datasets.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="datasets.stocks.get_data.Grouping">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datasets.stocks.get_data.</span></span><span class="sig-name descname"><span class="pre">Grouping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.stocks.get_data.Grouping" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Module to collate stock data.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="datasets.stocks.get_data.Grouping.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_groups</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.stocks.get_data.Grouping.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Instantiate grouper. n_groups determines the number of groups.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="datasets.stocks.get_data.Grouping.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.stocks.get_data.Grouping.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply grouper to input data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of outputs</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="datasets.stocks.get_data.get_dataloader">
 <span class="sig-prename descclassname"><span class="pre">datasets.stocks.get_data.</span></span><span class="sig-name descname"><span class="pre">get_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_stocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_stocks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_shuffle</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">datetime.datetime(2000,</span> <span class="pre">6,</span> <span class="pre">1,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_date</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">datetime.datetime(2021,</span> <span class="pre">2,</span> <span class="pre">28,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3200</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_split</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3700</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modality_first</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cuda</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#datasets.stocks.get_data.get_dataloader" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Generate dataloader for stock data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stocks</strong> (<em>list</em>) – List of strings of stocks to grab data for.</p></li>
+<li><p><strong>input_stocks</strong> (<em>list</em>) – List of strings of input stocks</p></li>
+<li><p><strong>output_stocks</strong> (<em>list</em>) – List of strings of output stocks</p></li>
+<li><p><strong>batch_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Batchsize. Defaults to 16.</p></li>
+<li><p><strong>train_shuffle</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to shuffle training dataloader or not. Defaults to True.</p></li>
+<li><p><strong>start_date</strong> (<em>datetime</em><em>, </em><em>optional</em>) – Start-date to grab data from. Defaults to datetime.datetime(2000, 6, 1).</p></li>
+<li><p><strong>end_date</strong> (<em>datetime</em><em>, </em><em>optional</em>) – End-date to grab data from. Defaults to datetime.datetime(2021, 2, 28).</p></li>
+<li><p><strong>window_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Window size. Defaults to 500.</p></li>
+<li><p><strong>val_split</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples in validation split. Defaults to 3200.</p></li>
+<li><p><strong>test_split</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of samples in test split. Defaults to 3700.</p></li>
+<li><p><strong>modality_first</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to make modality the first index or not. Defaults to True.</p></li>
+<li><p><strong>cuda</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to load data to cuda objects or not. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of training data-loader, test data-loader, and validation data-loader.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-datasets.stocks">

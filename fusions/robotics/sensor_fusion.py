@@ -9,7 +9,7 @@ from .models_utils import (
 )
 
 
-class SensorFusion(nn.Module):
+class SensorFusion(nn.Module): #pragma: no cover
     """
     Implements traditional SensorFusionNetwork.
     

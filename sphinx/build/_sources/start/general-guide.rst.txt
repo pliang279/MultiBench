@@ -1,0 +1,14 @@
+General Usage Guide
+*******************
+
+MultiBench is separated into several sub-packages, each of which handle separate functionality and will allow you to different things:
+
+- **datasets** - This package handles loading data, and creating the dataloaders for each multimodal dataset we look at. See the 'Downloading Datasets' guide for information on how to use this section of the package.
+- **eval_scripts** - This package contains the implementations of any and all complexity measures we use to measure a MultiModal model's complexity, along with a few helper functions to get all metrics during training.
+- **fusions** - This package contains implementations of multiple multimodal fusion methods. These take in either raw or processed modalities, and combine them ahead of a final "classification head" layer.
+- **unimodals** -  This package contains implementations of several unimodal processing methods, which take in raw modality information and return dense vector representations for the fusion methods to use.
+- **objective_functions** - This package contains implementations of objective functions, which are used to train the associated models accordingly.
+- **robustness** - This package contains implementations of several unimodal noising methods, which take in raw modality information and add some noise to them.
+- **training_structures** - This package contains implementations of generic model training structures, which take in the above systems and train/test the model end to end.
+- **utils** - Lastly, this package contains assorted extranneous functions that are useful all around the package.
+

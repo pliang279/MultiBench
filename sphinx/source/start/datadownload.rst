@@ -57,7 +57,7 @@ CMU-MOSEI
 =========
 
 To grab the `CMU-MOSEI <https://github.com/A2Zadeh/CMU-MultimodalSDK>`_ dataset, 
-download the dataset from `here <https://drive.google.com/drive/folders/1uEK737LXB9jAlf9kyqRs6B9N6cDncodq>`_. 
+download the dataset from `here <https://drive.google.com/drive/folders/1A_hTmifi824gypelGobgl2M-5Rw9VWHv>`_. 
 
 To load it, you can then use the following snippet:
 

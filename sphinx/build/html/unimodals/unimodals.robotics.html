@@ -97,20 +97,43 @@
 </section>
 <section id="module-unimodals.robotics.decoders">
 <span id="unimodals-robotics-decoders-module"></span><h2>unimodals.robotics.decoders module<a class="headerlink" href="#module-unimodals.robotics.decoders" title="Permalink to this headline"></a></h2>
+<p>Implements decoders for robotics tasks.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="unimodals.robotics.decoders.ContactDecoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.decoders.</span></span><span class="sig-name descname"><span class="pre">ContactDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.ContactDecoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Decodes everything, given some input.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.decoders.ContactDecoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deterministic</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">head</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.ContactDecoder.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Decodes everything</p>
+<dd><p>Initialize ContactDecoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_dim</strong> (<em>float</em>) – Z dimension size</p></li>
+<li><p><strong>deterministic</strong> (<em>float</em>) – Whether input parameters are deterministic or sampled from some distribution given prior mu and var.</p></li>
+<li><p><strong>head</strong> (<em>int</em>) – Output dimension of head.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.decoders.ContactDecoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.ContactDecoder.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply ContactDecoder Module to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Decoded Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -118,16 +141,38 @@
 <dt class="sig sig-object py" id="unimodals.robotics.decoders.EeDeltaDecoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.decoders.</span></span><span class="sig-name descname"><span class="pre">EeDeltaDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.EeDeltaDecoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements an EE Delta Decoder.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.decoders.EeDeltaDecoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">action_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initailize_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.EeDeltaDecoder.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Decodes the EE Delta</p>
+<dd><p>Initialize EeDeltaDecoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_dim</strong> (<em>float</em>) – Z dimension size</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Alpha to multiply proprio input by.</p></li>
+<li><p><strong>initialize_weights</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to initialize weights or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.decoders.EeDeltaDecoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mm_act_feat</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.EeDeltaDecoder.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply EeDeltaDecoder Module to EE Delta.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>mm_act_feat</strong> (<em>torch.Tensor</em>) – EE Delta</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Decoded Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -135,10 +180,20 @@
 <dt class="sig sig-object py" id="unimodals.robotics.decoders.OpticalFlowDecoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.decoders.</span></span><span class="sig-name descname"><span class="pre">OpticalFlowDecoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.OpticalFlowDecoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements optical flow and optical flow mask decoder.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.decoders.OpticalFlowDecoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initailize_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.decoders.OpticalFlowDecoder.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Decodes the optical flow and optical flow mask.</p>
+<dd><p>Initialize OpticalFlowDecoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_dim</strong> (<em>float</em>) – Z dimension size</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Alpha to multiply proprio input by.</p></li>
+<li><p><strong>initialize_weights</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to initialize weights or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -160,20 +215,39 @@
 </section>
 <section id="module-unimodals.robotics.encoders">
 <span id="unimodals-robotics-encoders-module"></span><h2>unimodals.robotics.encoders module<a class="headerlink" href="#module-unimodals.robotics.encoders" title="Permalink to this headline"></a></h2>
+<p>Implements encoders for robotics tasks.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ActionEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">ActionEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ActionEncoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements an action-encoder module.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ActionEncoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_dim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ActionEncoder.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Action Encoder</p>
+<dd><p>Instantiate ActionEncoder module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action_dim</strong> (<em>int</em>) – Dimension of action.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ActionEncoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ActionEncoder.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply action encoder to action input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action</strong> (<em>torch.Tensor optional</em>) – Action input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Encoded output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -181,16 +255,39 @@
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.DepthEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">DepthEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.DepthEncoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a simplified depth-encoder module.</p>
+<p>Sourced from Making Sense of Vision and Touch.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.DepthEncoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.DepthEncoder.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Simplified Depth Encoder taken from Making Sense of Vision and Touch</p>
+<dd><p>Initialize DepthEncoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_dim</strong> (<em>float</em>) – Z dimension size</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Alpha to multiply input by.</p></li>
+<li><p><strong>initialize_weights</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to initialize weights or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.DepthEncoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth_in</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.DepthEncoder.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply encoder to depth input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>depth_in</strong> (<em>torch.Tensor</em>) – Depth input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output of encoder, Output of encoder after each convolution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(torch.Tensor, torch.Tensor)</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -198,16 +295,39 @@
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ForceEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">ForceEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ForceEncoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements force encoder module.</p>
+<p>Sourced from selfsupervised code.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ForceEncoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ForceEncoder.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Force encoder taken from selfsupervised code</p>
+<dd><p>Initialize ForceEncoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_dim</strong> (<em>float</em>) – Z dimension size</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Alpha to multiply proprio input by.</p></li>
+<li><p><strong>initialize_weights</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to initialize weights or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ForceEncoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ForceEncoder.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply ForceEncoder to Force Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>force</strong> (<em>torch.Tensor</em>) – Force Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Encoded Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -215,16 +335,39 @@
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ImageEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">ImageEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ImageEncoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements image encoder module.</p>
+<p>Sourced from Making Sense of Vision and Touch.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ImageEncoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ImageEncoder.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Image encoder taken from Making Sense of Vision and Touch</p>
+<dd><p>Initialize ImageEncoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_dim</strong> (<em>float</em>) – Z dimension size</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Alpha to multiply input by.</p></li>
+<li><p><strong>initialize_weights</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to initialize weights or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ImageEncoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vis_in</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ImageEncoder.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply encoder to image input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>vis_in</strong> (<em>torch.Tensor</em>) – Image input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output of encoder, Output of encoder after each convolution.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(torch.Tensor, torch.Tensor)</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -232,16 +375,39 @@
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ProprioEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.encoders.</span></span><span class="sig-name descname"><span class="pre">ProprioEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ProprioEncoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements image encoder module.</p>
+<p>Sourced from selfsupervised code.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ProprioEncoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">z_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initialize_weights</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ProprioEncoder.__init__" title="Permalink to this definition"></a></dt>
-<dd><p>Image encoder taken from selfsupervised code</p>
+<dd><p>Initialize ProprioEncoder Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_dim</strong> (<em>float</em>) – Z dimension size</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Alpha to multiply proprio input by.</p></li>
+<li><p><strong>initialize_weights</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to initialize weights or not. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.encoders.ProprioEncoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">proprio</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.encoders.ProprioEncoder.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply ProprioEncoder to Proprio Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>proprio</strong> (<em>torch.Tensor</em>) – Proprio Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Encoded Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -253,16 +419,41 @@
 <dt class="sig sig-object py" id="unimodals.robotics.layers.CausalConv1D">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">CausalConv1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.CausalConv1D" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Conv1d</span></code></p>
-<p>A causal 1D convolution.</p>
+<p>Implements a causal 1D convolution.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.CausalConv1D.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.CausalConv1D.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialize CausalConv1D Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – Input Dimension</p></li>
+<li><p><strong>out_channels</strong> (<em>int</em>) – Output Dimension</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em>) – Kernel Size</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – Stride Amount. Defaults to 1.</p></li>
+<li><p><strong>dilation</strong> (<em>int</em><em>, </em><em>optional</em>) – Dilation Amount. Defaults to 1.</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add a bias after convolving. Defaults to True.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.CausalConv1D.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.CausalConv1D.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply CasualConv1D layer to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -270,16 +461,29 @@
 <dt class="sig sig-object py" id="unimodals.robotics.layers.Flatten">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">Flatten</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.Flatten" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
-<p>Flattens convolutional feature maps for fc layers.</p>
+<p>Implements .reshape(<a href="#id1"><span class="problematic" id="id2">*</span></a>,-1) for nn.Sequential usage.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.Flatten.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.Flatten.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialize Flatten Object.</p>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.Flatten.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.Flatten.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply Flatten to Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -287,16 +491,34 @@
 <dt class="sig sig-object py" id="unimodals.robotics.layers.ResidualBlock">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">ResidualBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.ResidualBlock" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
-<p>A simple residual block.</p>
+<p>Implements a simple residual block.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.ResidualBlock.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">channels</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.ResidualBlock.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialize ResidualBlock object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>channels</strong> (<em>int</em>) – Number of input and hidden channels in block.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.ResidualBlock.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.ResidualBlock.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply ResidualBlock to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -304,73 +526,148 @@
 <dt class="sig sig-object py" id="unimodals.robotics.layers.View">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">View</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.View" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Extends .view() for nn.Sequential usage.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.View.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.View.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialize View Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>size</strong> (<em>int</em>) – Output Size</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.View.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.View.forward" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Apply View to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tensor</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.conv2d">
 <span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">conv2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.conv2d" title="Permalink to this definition"></a></dt>
-<dd><p><cite>same</cite> convolution with LeakyReLU, i.e. output shape equals input shape.
-:param in_planes: The number of input feature maps.
-:type in_planes: int
-:param out_planes: The number of output feature maps.
-:type out_planes: int
-:param kernel_size: The filter size.
-:type kernel_size: int
-:param dilation: The filter dilation factor.
-:type dilation: int
-:param stride: The filter stride.
-:type stride: int</p>
+<dd><p>Create nn.Module with <cite>same</cite> convolution with LeakyReLU, i.e. output shape equals input shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – The number of input feature maps.</p></li>
+<li><p><strong>out_planes</strong> (<em>int</em>) – The number of output feature maps.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em>) – The filter size.</p></li>
+<li><p><strong>dilation</strong> (<em>int</em>) – The filter dilation factor.</p></li>
+<li><p><strong>stride</strong> (<em>int</em>) – The filter stride.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.crop_like">
 <span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">crop_like</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.crop_like" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Crop Tensor based on Another’s Size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> (<em>torch.Tensor</em>) – Input Tensor</p></li>
+<li><p><strong>target</strong> (<em>torch.Tensor</em>) – Tensor to Compare and Crop To.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Cropped Tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.deconv">
 <span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">deconv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_planes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.deconv" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create Deconvolution Layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Number of Input Channels.</p></li>
+<li><p><strong>out_planes</strong> (<em>int</em>) – Number of Output Channels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Deconvolution Object with Given Input/Output Channels.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unimodals.robotics.layers.predict_flow">
 <span class="sig-prename descclassname"><span class="pre">unimodals.robotics.layers.</span></span><span class="sig-name descname"><span class="pre">predict_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.layers.predict_flow" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Create Optical Flow Prediction Layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>in_planes</strong> (<em>int</em>) – Number of Input Channels.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Convolution Object with Given Input/Output Channels.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-unimodals.robotics.models_utils">
 <span id="unimodals-robotics-models-utils-module"></span><h2>unimodals.robotics.models_utils module<a class="headerlink" href="#module-unimodals.robotics.models_utils" title="Permalink to this headline"></a></h2>
+<p>Utility functions for robotics unimodals.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="unimodals.robotics.models_utils.filter_depth">
 <span class="sig-prename descclassname"><span class="pre">unimodals.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">filter_depth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">depth_image</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.models_utils.filter_depth" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Get filter depth given a depth image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>depth_image</strong> (<em>torch.Tensor</em>) – Depth image.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unimodals.robotics.models_utils.init_weights">
 <span class="sig-prename descclassname"><span class="pre">unimodals.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">init_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.models_utils.init_weights" title="Permalink to this definition"></a></dt>
-<dd><p>Weight initialization from original SensorFusion Code</p>
+<dd><p>Weight initialization from original SensorFusion Code.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="unimodals.robotics.models_utils.rescaleImage">
 <span class="sig-prename descclassname"><span class="pre">unimodals.robotics.models_utils.</span></span><span class="sig-name descname"><span class="pre">rescaleImage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.00392156862745098</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#unimodals.robotics.models_utils.rescaleImage" title="Permalink to this definition"></a></dt>
-<dd><p>Rescale the image in a sample to a given size.
-:param output_size: Desired output size. If tuple, output is</p>
-<blockquote>
-<div><p>matched to output_size. If int, smaller of image edges is matched
-to output_size keeping aspect ratio the same.</p>
-</div></blockquote>
+<dd><p>Rescale the image in a sample to a given size.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>output_size</strong> (<em>tuple</em><em> or </em><em>int</em>) – Desired output size. If tuple, output is
+matched to output_size. If int, smaller of image edges is matched
+to output_size keeping aspect ratio the same.</p>
+</dd>
 </dl>
 </dd></dl>
 

@@ -260,7 +260,7 @@ def single_test(model, test_dataloader, auprc=False):
     return {'Accuracy': float(corrects)/total}
 
 
-def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, no_robust=False):
+def test(model, test_dataloaders_all, dataset, method_name='My method', auprc=False, no_robust=False): # pragma: no cover 
     """Test MFAS Model.
 
     Args:

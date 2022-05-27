@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils package &mdash; MultiBench 1.0.0 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Utilities" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> MultiBench
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Getting Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../start/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../start/datadownload.html">Downloading Datasets</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb">Simple Use Case</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb">Multimodal Fusion Architecture  Search</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb">MCTN</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../datasets/modules.html">Datasets and DataLoaders</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../eval_scripts/modules.html">General Evaluation Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fusions/modules.html">Multimodal Fusion Techniques</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../objective_functions/modules.html">Objective Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../robustness/modules.html">Robustness</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../training_structures/modules.html">Training Structures</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unimodals/modules.html">Unimodal Encoders</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Utilities</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">utils package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.AUPRC">utils.AUPRC module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.aux_models">utils.aux_models module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.evaluation_metric">utils.evaluation_metric module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.helper_modules">utils.helper_modules module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.scheduler">utils.scheduler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.search_tools">utils.search_tools module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.surrogate">utils.surrogate module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">MultiBench</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="modules.html">Utilities</a> &raquo;</li>
+      <li>utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/utils/utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="utils-package">
+<h1>utils package<a class="headerlink" href="#utils-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-utils.AUPRC">
+<span id="utils-auprc-module"></span><h2>utils.AUPRC module<a class="headerlink" href="#module-utils.AUPRC" title="Permalink to this headline"></a></h2>
+<p>Implements utils for getting AUPRC score given input and output pairs.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.AUPRC.AUPRC">
+<span class="sig-prename descclassname"><span class="pre">utils.AUPRC.</span></span><span class="sig-name descname"><span class="pre">AUPRC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pts</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.AUPRC.AUPRC" title="Permalink to this definition"></a></dt>
+<dd><p>Get average precision given a list of (true, predicted) pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pts</strong> (<em>List</em>) – List of true, predicted pairs</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Average Precision Score.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.AUPRC.ptsort">
+<span class="sig-prename descclassname"><span class="pre">utils.AUPRC.</span></span><span class="sig-name descname"><span class="pre">ptsort</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tu</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.AUPRC.ptsort" title="Permalink to this definition"></a></dt>
+<dd><p>Return first element of input.</p>
+</dd></dl>
+
+</section>
+<section id="module-utils.aux_models">
+<span id="utils-aux-models-module"></span><h2>utils.aux_models module<a class="headerlink" href="#module-utils.aux_models" title="Permalink to this headline"></a></h2>
+<p>Implements a variety of modules for path-based dropout.</p>
+<p>&#64;author: juanma</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.AlphaScalarMultiplication">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">AlphaScalarMultiplication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AlphaScalarMultiplication" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Multiplies output element-wise by a scalar.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.AlphaScalarMultiplication.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size_alpha_x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_alpha_y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AlphaScalarMultiplication.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize AlphaScalarMultiplication module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>size_alpha_x</strong> (<em>int</em>) – Feature size for x input.</p></li>
+<li><p><strong>size_alpha_y</strong> (<em>int</em>) – Feature size for y input.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.AlphaScalarMultiplication.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AlphaScalarMultiplication.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Alpha Scalar Multiplication to both inputs, followed by a sigmoid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer input</p></li>
+<li><p><strong>y</strong> (<em>torch.Tensor</em>) – Layer input</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.AlphaVectorMultiplication">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">AlphaVectorMultiplication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AlphaVectorMultiplication" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Multiplies output element-wise by a vector.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.AlphaVectorMultiplication.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size_alpha</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AlphaVectorMultiplication.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize AlphaVectorMultiplication module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>size_alpha</strong> (<em>int</em>) – Size of alpha module.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.AlphaVectorMultiplication.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AlphaVectorMultiplication.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Alpha Vector Multiplication to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.AuxiliaryHead">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">AuxiliaryHead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AuxiliaryHead" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Auxiliary Head Module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.AuxiliaryHead.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_classes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">96</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AuxiliaryHead.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate AuxiliaryHead Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_classes</strong> (<em>int</em>) – Number of classes in output</p></li>
+<li><p><strong>filters</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of hidden channels. Defaults to 96.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.AuxiliaryHead.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.AuxiliaryHead.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply AuxiliaryHead to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.Cell">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">Cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Cell" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a convnet classifier, using CellBlock instances and path-based dropout.</p>
+<p>Generally unused.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.Cell.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_indexes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Cell.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate Cell Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>operation_labels</strong> (<em>list</em>) – List of operation labels</p></li>
+<li><p><strong>configuration_indexes</strong> (<em>list</em>) – list of configuration indexes</p></li>
+<li><p><strong>connections</strong> (<em>list</em>) – list of connections</p></li>
+<li><p><strong>args</strong> (<em>list</em>) – list of args for Cell</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.Cell.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Cell.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply cell to layer input, and add residual connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>torch.Tensor</em>) – Input tensor 1</p></li>
+<li><p><strong>x2</strong> (<em>torch.Tensor</em>) – Input tensor 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output Tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.CellBlock">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">CellBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.CellBlock" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a block of convolution cells, with path-based dropout.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.CellBlock.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op1_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">op2_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.CellBlock.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instatiates CellBlock Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>op1_type</strong> (<em>int</em><em>|</em><em>str</em>) – First convolution type</p></li>
+<li><p><strong>op2_type</strong> (<em>int</em><em>|</em><em>str</em>) – Second convolution type</p></li>
+<li><p><strong>args</strong> (<em>obj</em>) – Arguments for path-dropping and input/output channel number.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.CellBlock.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.CellBlock.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply block to layer input, and add residual connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>torch.Tensor</em>) – Input tensor 1</p></li>
+<li><p><strong>x2</strong> (<em>torch.Tensor</em>) – Input tensor 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output Tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.ChannelPadding">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">ChannelPadding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.ChannelPadding" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Applies Channel Padding to input.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.ChannelPadding.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.ChannelPadding.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Tensor1DLateralPadding Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pad</strong> (<em>int</em>) – Padding amount</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.ChannelPadding.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.ChannelPadding.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Channel Padding to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.ConvBranch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">ConvBranch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.ConvBranch" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a convolution computational path for path-based dropout.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.ConvBranch.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separable</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.ConvBranch.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize ConvBranch Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Input channel count</p></li>
+<li><p><strong>out_planes</strong> (<em>int</em>) – Output channel count</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em>) – Kernel size</p></li>
+<li><p><strong>separable</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use Separable convolutions or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.ConvBranch.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.ConvBranch.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply ConvBranch to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.aux_models.CreateOp">
+<span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">CreateOp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conv_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_planes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_planes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">64</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.CreateOp" title="Permalink to this definition"></a></dt>
+<dd><p>Given a type of convolution, and the input/output channels, instatiate a convolution module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conv_type</strong> (<em>int</em><em>|</em><em>string</em>) – Type of convolution.</p></li>
+<li><p><strong>input_planes</strong> (<em>int</em><em>, </em><em>optional</em>) – Input channel number. Defaults to 64.</p></li>
+<li><p><strong>output_planes</strong> (<em>int</em><em>, </em><em>optional</em>) – Output channel number. Defaults to 64.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>NotImplementedError</strong> – Convolution not implemented.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Convolution instance</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.DropPath">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">DropPath</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.DropPath" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements path-based dropout.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.DropPath.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keep_prob</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.DropPath.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize DropPath module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>keep_prob</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability to keep this path in the training pass. Defaults to 0.9.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.DropPath.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_dropped</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.DropPath.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply path-dropping to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p></li>
+<li><p><strong>other_dropped</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to always drop or not. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of the tensor ( zeros if dropped ), and a boolean of if the tensor was dropped.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(tensor, was_dropped)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.FactorizedReduction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">FactorizedReduction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.FactorizedReduction" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Factozied Reduction.</p>
+<p>Reduce both spatial dimensions (width and height) by a factor of 2, and
+potentially to change the number of output filters
+<a class="reference external" href="https://github.com/melodyguan/enas/blob/master/src/cifar10/general_child.py#L129">https://github.com/melodyguan/enas/blob/master/src/cifar10/general_child.py#L129</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.FactorizedReduction.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.FactorizedReduction.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize FactorizedReduction Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Input channel count</p></li>
+<li><p><strong>out_planes</strong> (<em>int</em>) – Output channel count</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – Stride of convolutions. Defaults to 2.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.FactorizedReduction.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.FactorizedReduction.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply factorized reduction to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.FixedCell">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">FixedCell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.FixedCell" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements cell with fixed connections and no path-based dropout.</p>
+<p>Generally unused, and probably buggy.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.FixedCell.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">operation_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration_indexes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.FixedCell.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instantiate Cell Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>operation_labels</strong> (<em>list</em>) – List of operation labels</p></li>
+<li><p><strong>configuration_indexes</strong> (<em>list</em>) – list of configuration indexes</p></li>
+<li><p><strong>connections</strong> (<em>list</em>) – list of connections</p></li>
+<li><p><strong>args</strong> (<em>list</em>) – list of args for Cell</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.FixedCell.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.FixedCell.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply cell to layer input, and add residual connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>torch.Tensor</em>) – Input tensor 1</p></li>
+<li><p><strong>x2</strong> (<em>torch.Tensor</em>) – Input tensor 2</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Output Tensor</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.GlobalPooling1D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">GlobalPooling1D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.GlobalPooling1D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements 1D Global Average Pooling.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.GlobalPooling1D.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.GlobalPooling1D.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize GlobalPooling1D module.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.GlobalPooling1D.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.GlobalPooling1D.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply 1D Global Average Pooling to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.GlobalPooling2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">GlobalPooling2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.GlobalPooling2D" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements 2D Global Average Pooling.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.GlobalPooling2D.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.GlobalPooling2D.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize GlobalPooling2D module.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.GlobalPooling2D.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.GlobalPooling2D.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply 2D Global Average Pooling to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.Identity">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">Identity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Identity" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements an Identity Module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.Identity.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Identity.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Identity to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.IdentityModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">IdentityModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.IdentityModule" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements an Identity Module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.IdentityModule.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.IdentityModule.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Identity to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.Maxout">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">Maxout</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Maxout" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Maxout module.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.Maxout.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Maxout.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Maxout object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>d</strong> (<em>int</em>) – Input dimension.</p></li>
+<li><p><strong>m</strong> (<em>int</em>) – Number of features remeaining after Maxout.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Pool Size</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.Maxout.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Maxout.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Maxout to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.PoolBranch">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">PoolBranch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.PoolBranch" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements max pooling operations with 1x1 convolutions to fix output size.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.PoolBranch.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avg_or_max</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.PoolBranch.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize PoolBranch module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Input channel count</p></li>
+<li><p><strong>out_planes</strong> (<em>int</em>) – Output channel count</p></li>
+<li><p><strong>avg_or_max</strong> (<em>str</em>) – Whether to use average pooling (‘avg’) or max pooling ‘max’</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – Unknown Pooling Type.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.PoolBranch.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.PoolBranch.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply PoolBranch to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.SeparableConv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">SeparableConv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.SeparableConv" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements Separable Convolutions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.SeparableConv.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.SeparableConv.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize SeparableConv Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Number of input channels.</p></li>
+<li><p><strong>out_planes</strong> (<em>int</em>) – Number of output channels.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em>) – Size of kernel</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add a bias to each convolution or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.SeparableConv.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.SeparableConv.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Separable Convolution to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.SeparableConvOld">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">SeparableConvOld</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.SeparableConvOld" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>(deprecated) Implements 1D Separable Convolutions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.SeparableConvOld.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_planes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.SeparableConvOld.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize SeparableConvOld Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_planes</strong> (<em>int</em>) – Number of input channels.</p></li>
+<li><p><strong>out_planes</strong> (<em>int</em>) – Number of output channels.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em>) – Size of kernel</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – (unused) Whether to add a bias to each convolution or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.SeparableConvOld.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.SeparableConvOld.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply 1D Separable Convolution to Layer Input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.Tensor1DLateralPadding">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">Tensor1DLateralPadding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Tensor1DLateralPadding" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Applies 1DLateral Padding to input.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.Tensor1DLateralPadding.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Tensor1DLateralPadding.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize Tensor1DLateralPadding Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pad</strong> (<em>int</em>) – Padding amount</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.Tensor1DLateralPadding.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.Tensor1DLateralPadding.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Lateral Padding to input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>inputs</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.aux_models.WeightedCrossEntropyWithLogits">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">WeightedCrossEntropyWithLogits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.WeightedCrossEntropyWithLogits" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements cross entropy weighted by given weights.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.WeightedCrossEntropyWithLogits.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos_weight</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.WeightedCrossEntropyWithLogits.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize WeightedCrossEntropyWithLogits module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pos_weight</strong> (<em>np.array</em>) – Weight for each position in batch.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.aux_models.WeightedCrossEntropyWithLogits.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">logits</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.aux_models.WeightedCrossEntropyWithLogits.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Get WeightedCrossEntropy Loss.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>logits</strong> (<em>torch.Tensor</em>) – Logit Tensor</p></li>
+<li><p><strong>targets</strong> (<em>torch.Tensor</em>) – Target labels</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Weighted cross entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.aux_models.random">
+<span class="sig-prename descclassname"><span class="pre">utils.aux_models.</span></span><span class="sig-name descname"><span class="pre">random</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">x</span> <span class="pre">in</span> <span class="pre">the</span> <span class="pre">interval</span> <span class="pre">[0,</span> <span class="pre">1).</span></span></span><a class="headerlink" href="#utils.aux_models.random" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-utils.evaluation_metric">
+<span id="utils-evaluation-metric-module"></span><h2>utils.evaluation_metric module<a class="headerlink" href="#module-utils.evaluation_metric" title="Permalink to this headline"></a></h2>
+<p>Implements various evaluation metrics for accuracies and MOSI/MOSEI.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.evaluation_metric.eval_mosei_senti">
+<span class="sig-prename descclassname"><span class="pre">utils.evaluation_metric.</span></span><span class="sig-name descname"><span class="pre">eval_mosei_senti</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_zero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.evaluation_metric.eval_mosei_senti" title="Permalink to this definition"></a></dt>
+<dd><p>Print out MOSEI metrics given results and ground truth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>results</strong> (<em>list</em>) – List of predicted results</p></li>
+<li><p><strong>truths</strong> (<em>list</em>) – List of ground truth</p></li>
+<li><p><strong>exclude_zero</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include zero or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.evaluation_metric.eval_mosei_senti_return">
+<span class="sig-prename descclassname"><span class="pre">utils.evaluation_metric.</span></span><span class="sig-name descname"><span class="pre">eval_mosei_senti_return</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_zero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.evaluation_metric.eval_mosei_senti_return" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate MOSEI and return metric list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>results</strong> (<em>np.array</em>) – List of predicated values.</p></li>
+<li><p><strong>truths</strong> (<em>np.array</em>) – List of true values.</p></li>
+<li><p><strong>exclude_zero</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to exclute zero. Defaults to False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Return statistics for MOSEI.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(mae, corr, mult_a7, f_score, accuracy)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.evaluation_metric.eval_mosi">
+<span class="sig-prename descclassname"><span class="pre">utils.evaluation_metric.</span></span><span class="sig-name descname"><span class="pre">eval_mosi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude_zero</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.evaluation_metric.eval_mosi" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluate MOSI results given predictions and ground truth.</p>
+<p>Same as MOSEI evaluation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>results</strong> (<em>list</em>) – List of predicted results</p></li>
+<li><p><strong>truths</strong> (<em>list</em>) – List of ground truth</p></li>
+<li><p><strong>exclude_zero</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include zero or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.evaluation_metric.multiclass_acc">
+<span class="sig-prename descclassname"><span class="pre">utils.evaluation_metric.</span></span><span class="sig-name descname"><span class="pre">multiclass_acc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">truths</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.evaluation_metric.multiclass_acc" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the multiclass accuracy w.r.t. groundtruth.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preds</strong> – Float array representing the predictions, dimension (N,)</p></li>
+<li><p><strong>truths</strong> – Float/int array representing the groundtruth classes, dimension (N,)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Classification accuracy</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.evaluation_metric.weighted_accuracy">
+<span class="sig-prename descclassname"><span class="pre">utils.evaluation_metric.</span></span><span class="sig-name descname"><span class="pre">weighted_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">test_preds_emo</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_truth_emo</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.evaluation_metric.weighted_accuracy" title="Permalink to this definition"></a></dt>
+<dd><p>Compute multiclass accuracy weighted by class occurence.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>test_preds_emo</strong> (<em>np.array</em>) – List of predicted labels</p></li>
+<li><p><strong>test_truth_emo</strong> (<em>np.array</em>) – List of true labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Weighted classification accuracy.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-utils.helper_modules">
+<span id="utils-helper-modules-module"></span><h2>utils.helper_modules module<a class="headerlink" href="#module-utils.helper_modules" title="Permalink to this headline"></a></h2>
+<p>Defines some helper nn.module instances.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.helper_modules.Sequential2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.helper_modules.</span></span><span class="sig-name descname"><span class="pre">Sequential2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.helper_modules.Sequential2" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Implements a simpler version of sequential that handles inputs with 2 arguments.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.helper_modules.Sequential2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.helper_modules.Sequential2.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Instatiate Sequential2 object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>nn.Module</em>) – First module to sequence</p></li>
+<li><p><strong>b</strong> (<em>nn.Module</em>) – Second module</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.helper_modules.Sequential2.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.helper_modules.Sequential2.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply Sequential2 modules to layer input.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Layer Input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer Output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-utils.scheduler">
+<span id="utils-scheduler-module"></span><h2>utils.scheduler module<a class="headerlink" href="#module-utils.scheduler" title="Permalink to this headline"></a></h2>
+<p>Implements learning rate schedulers used in training loops.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.scheduler.FixedScheduler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.scheduler.</span></span><span class="sig-name descname"><span class="pre">FixedScheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.scheduler.FixedScheduler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements a fixed learning rate for each epoch.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.scheduler.FixedScheduler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lr</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.scheduler.FixedScheduler.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize a FixedScheduler Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>lr</strong> (<em>float</em>) – Learning rate</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.scheduler.FixedScheduler.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.scheduler.FixedScheduler.step" title="Permalink to this definition"></a></dt>
+<dd><p>Update learning rate for scheduler.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Updated learning rate</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.scheduler.FixedScheduler.update_optimizer">
+<span class="sig-name descname"><span class="pre">update_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.scheduler.FixedScheduler.update_optimizer" title="Permalink to this definition"></a></dt>
+<dd><p>Update optimizer instance with current learning rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>optimizer</strong> (<em>nn.optim.Optimizer</em>) – Optimizer instance to modify</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.scheduler.LRCosineAnnealingScheduler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.scheduler.</span></span><span class="sig-name descname"><span class="pre">LRCosineAnnealingScheduler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eta_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ti</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tmultiplier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_batches_per_epoch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.scheduler.LRCosineAnnealingScheduler" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements an LRCosineAnnealingScheduler for lr adjustment.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.scheduler.LRCosineAnnealingScheduler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eta_max</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eta_min</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ti</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tmultiplier</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_batches_per_epoch</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.scheduler.LRCosineAnnealingScheduler.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize LRCosineAnnealingScheduler Object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>eta_max</strong> (<em>float</em>) – Max eta.</p></li>
+<li><p><strong>eta_min</strong> (<em>float</em>) – Minimum eta.</p></li>
+<li><p><strong>Ti</strong> (<em>float</em>) – Initial temperature</p></li>
+<li><p><strong>Tmultiplier</strong> (<em>float</em>) – Temperature multiplier</p></li>
+<li><p><strong>num_batches_per_epoch</strong> (<em>int</em>) – Number of batches per epoch.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.scheduler.LRCosineAnnealingScheduler.step">
+<span class="sig-name descname"><span class="pre">step</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.scheduler.LRCosineAnnealingScheduler.step" title="Permalink to this definition"></a></dt>
+<dd><p>Apply scheduler one step, and adjust the learning rate accordingly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Adjusted learning rate</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.scheduler.LRCosineAnnealingScheduler.update_optimizer">
+<span class="sig-name descname"><span class="pre">update_optimizer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.scheduler.LRCosineAnnealingScheduler.update_optimizer" title="Permalink to this definition"></a></dt>
+<dd><p>Apply current scheduler learning rate to optimizer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>optimizer</strong> (<em>torch.optim.Optimizer</em>) – Torch optimizer instance.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-utils.search_tools">
+<span id="utils-search-tools-module"></span><h2>utils.search_tools module<a class="headerlink" href="#module-utils.search_tools" title="Permalink to this headline"></a></h2>
+<p>Created on Tue Sep 11 18:42:17 2018
+&#64;author: juanma</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.search_tools.compute_temperature">
+<span class="sig-prename descclassname"><span class="pre">utils.search_tools.</span></span><span class="sig-name descname"><span class="pre">compute_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iteration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">final</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.search_tools.compute_temperature" title="Permalink to this definition"></a></dt>
+<dd><p>Compute temperature for a given round of the MFAS procedure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iteration</strong> (<em>int</em>) – Iteration index</p></li>
+<li><p><strong>init</strong> (<em>float</em>) – Initial temperature</p></li>
+<li><p><strong>final</strong> (<em>float</em>) – Final temperature</p></li>
+<li><p><strong>decay</strong> (<em>float</em>) – Temperature decay rate</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Temperature for this round of MFAS.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.search_tools.merge_unfolded_with_sampled">
+<span class="sig-prename descclassname"><span class="pre">utils.search_tools.</span></span><span class="sig-name descname"><span class="pre">merge_unfolded_with_sampled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_top_k_configurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unfolded_configurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.search_tools.merge_unfolded_with_sampled" title="Permalink to this definition"></a></dt>
+<dd><p>Given a list of top k configurations, and an unfolded single layer configuration, merge them together at the given layer index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>previous_top_k_configurations</strong> (<em>list</em>) – List of configurations of size (seq_len, 3)</p></li>
+<li><p><strong>unfolded_configurations</strong> (<em>list</em>) – Configuration for a single layer (,3)</p></li>
+<li><p><strong>layer</strong> (<em>int</em>) – Index of layer to add unfolded configuration to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If there are no top k configurations, layer should be 0.</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Merged list of configurations.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.search_tools.predict_accuracies_with_surrogate">
+<span class="sig-prename descclassname"><span class="pre">utils.search_tools.</span></span><span class="sig-name descname"><span class="pre">predict_accuracies_with_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surrogate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.search_tools.predict_accuracies_with_surrogate" title="Permalink to this definition"></a></dt>
+<dd><p>Use surrogate to predict the effectiveness of different input configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configurations</strong> (<em>list</em><em>[</em><em>dict</em><em>]</em>) – List of configurations to search from.</p></li>
+<li><p><strong>surrogate</strong> (<em>nn.Module</em>) – Learned surrogate cost model for configuration space.</p></li>
+<li><p><strong>device</strong> (<em>string</em>) – Device to place computation on.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Accuracy per configuration.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.search_tools.sample_k_configurations">
+<span class="sig-prename descclassname"><span class="pre">utils.search_tools.</span></span><span class="sig-name descname"><span class="pre">sample_k_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accuracies_</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.search_tools.sample_k_configurations" title="Permalink to this definition"></a></dt>
+<dd><p>Sample k configurations from list of configurations and accuracies, based on past performance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configurations</strong> (<em>list</em>) – List of configurations.</p></li>
+<li><p><strong>accuracies</strong> (<em>list</em>) – List of accuracies for each config.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Number of configurations to sample on.</p></li>
+<li><p><strong>temperature</strong> (<em>float</em>) – Temperature for the sample distribution.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of sampled configurations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.search_tools.sample_k_configurations_directly">
+<span class="sig-prename descclassname"><span class="pre">utils.search_tools.</span></span><span class="sig-name descname"><span class="pre">sample_k_configurations_directly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_progression_levels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_possible_layer_configurations_fun</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.search_tools.sample_k_configurations_directly" title="Permalink to this definition"></a></dt>
+<dd><p>Sample k configurations given a set number of progression_levels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>int</em>) – Number of configurations to sampl.e</p></li>
+<li><p><strong>max_progression_levels</strong> (<em>int</em>) – Maximum number of sample configurations.</p></li>
+<li><p><strong>get_possible_layer_configurations_fun</strong> (<em>fn</em>) – Function to get layer configurations given some index input.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of sampled configurations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.search_tools.sample_k_configurations_uniform">
+<span class="sig-prename descclassname"><span class="pre">utils.search_tools.</span></span><span class="sig-name descname"><span class="pre">sample_k_configurations_uniform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">configurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.search_tools.sample_k_configurations_uniform" title="Permalink to this definition"></a></dt>
+<dd><p>Sample k configurations uniformly.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>configurations</strong> (<em>list</em>) – List of configurations to sample from.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Number of configurations to sample.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of sampled configurations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.search_tools.train_surrogate">
+<span class="sig-prename descclassname"><span class="pre">utils.search_tools.</span></span><span class="sig-name descname"><span class="pre">train_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surrogate_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surrogate_optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surrogate_criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.search_tools.train_surrogate" title="Permalink to this definition"></a></dt>
+<dd><p>Train surrogate model using surrogate dataloader.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate</strong> (<em>nn.Module</em>) – Surrogate cost model instance.</p></li>
+<li><p><strong>surrogate_dataloader</strong> (<em>torch.utils.data.DataLoader</em>) – Data loader for surrogate instance, mapping configurations to accuracies</p></li>
+<li><p><strong>surrogate_optimizer</strong> (<em>torch.optim.Optimizer</em>) – Optimizer for surrogate parameters</p></li>
+<li><p><strong>surrogate_criterion</strong> (<em>nn.Module</em>) – Loss function for surrogate instance.</p></li>
+<li><p><strong>ep</strong> (<em>int</em>) – Number of epochs.</p></li>
+<li><p><strong>device</strong> (<em>string</em>) – Device to train on.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Loss of surrogate with current training data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.search_tools.update_surrogate_dataloader">
+<span class="sig-prename descclassname"><span class="pre">utils.search_tools.</span></span><span class="sig-name descname"><span class="pre">update_surrogate_dataloader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surrogate_dataloader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configurations</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accuracies</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.search_tools.update_surrogate_dataloader" title="Permalink to this definition"></a></dt>
+<dd><p>Update surrogate dataloader with new configurations.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surrogate_dataloader</strong> (<a class="reference internal" href="#utils.surrogate.SurrogateDataloader" title="utils.surrogate.SurrogateDataloader"><em>SurrogateDataloader</em></a>) – Data Loader for Surrogate Cost Model.</p></li>
+<li><p><strong>configurations</strong> (<em>list</em>) – List of new configurations to add.</p></li>
+<li><p><strong>accuracies</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – List of accuracies to train cost model with.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-utils.surrogate">
+<span id="utils-surrogate-module"></span><h2>utils.surrogate module<a class="headerlink" href="#module-utils.surrogate" title="Permalink to this headline"></a></h2>
+<p>Created on Thu Jul 26 12:10:35 2018
+&#64;author: juanma</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.surrogate.SimpleRecurrentSurrogate">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.surrogate.</span></span><span class="sig-name descname"><span class="pre">SimpleRecurrentSurrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.SimpleRecurrentSurrogate" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
+<p>Defines simple surrogate for MFAS using a single LSTM layer.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.surrogate.SimpleRecurrentSurrogate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_hidden</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">number_input_feats</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size_ebedding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.SimpleRecurrentSurrogate.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize SimpleRecurrentSurrogate Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>num_hidden</strong> (<em>int</em><em>, </em><em>optional</em>) – Hidden dimension size of LSTM. Defaults to 100.</p></li>
+<li><p><strong>number_input_feats</strong> (<em>int</em><em>, </em><em>optional</em>) – Input dimension size. Defaults to 3.</p></li>
+<li><p><strong>size_ebedding</strong> (<em>int</em><em>, </em><em>optional</em>) – Hidden dimension size before LSTM portion. Defaults to 100.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.surrogate.SimpleRecurrentSurrogate.eval_model">
+<span class="sig-name descname"><span class="pre">eval_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence_of_operations_np</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.SimpleRecurrentSurrogate.eval_model" title="Permalink to this definition"></a></dt>
+<dd><p>Apply SimpleRecurrentSurrogate to a list of operations ( a configuration ) to get accuracy predictions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sequence_of_operations_np</strong> (<em>np.array</em><em>[</em><em>int</em><em>]</em>) – List of operations for this configuration. Size len_seq x input_size.</p></li>
+<li><p><strong>device</strong> (<em>torch.utils.data.device</em>) – Device to train on.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Array of predicted accuracies.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.surrogate.SimpleRecurrentSurrogate.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sequence_of_operations</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.SimpleRecurrentSurrogate.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Apply SimpleRecurrentSurrogate to list of configurations, to get accuracy predictions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sequence_of_operations</strong> (<em>list</em>) – List of configurations to predict accuracies.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Predicted accuracies.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.surrogate.SurrogateDataloader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.surrogate.</span></span><span class="sig-name descname"><span class="pre">SurrogateDataloader</span></span><a class="headerlink" href="#utils.surrogate.SurrogateDataloader" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Implements a data loader for the surrogate instance, predicting accuracies from configurations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.surrogate.SurrogateDataloader.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.SurrogateDataloader.__init__" title="Permalink to this definition"></a></dt>
+<dd><p>Initialize SurrogateDataloader Instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.surrogate.SurrogateDataloader.add_datum">
+<span class="sig-name descname"><span class="pre">add_datum</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datum_conf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datum_acc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.SurrogateDataloader.add_datum" title="Permalink to this definition"></a></dt>
+<dd><p>Add data to surrogate data loader</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>datum_conf</strong> (<em>list</em>) – List of operations for a configuration.</p></li>
+<li><p><strong>datum_acc</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – Accuracies for this configuration.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.surrogate.SurrogateDataloader.get_data">
+<span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to_torch</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.SurrogateDataloader.get_data" title="Permalink to this definition"></a></dt>
+<dd><p>Get data for training</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>to_torch</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to turn output to torch tensors. Defaults to False.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Data for surrogate instance to train on.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list[np.array|torch.tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.surrogate.SurrogateDataloader.get_k_best">
+<span class="sig-name descname"><span class="pre">get_k_best</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.SurrogateDataloader.get_k_best" title="Permalink to this definition"></a></dt>
+<dd><p>Get K best configurations, given all that has been sampled so far.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>k</strong> (<em>int</em>) – Number of top configurations to get.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of the list of configurations, their accuracies, and their position in the dataloader.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>tuple(configs, accuracies, index)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.surrogate.train_simple_surrogate">
+<span class="sig-prename descclassname"><span class="pre">utils.surrogate.</span></span><span class="sig-name descname"><span class="pre">train_simple_surrogate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_tensors</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_epochs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.surrogate.train_simple_surrogate" title="Permalink to this definition"></a></dt>
+<dd><p>Train simple surrogate for MFAS procedure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>nn.Module</em>) – Model to train on.</p></li>
+<li><p><strong>criterion</strong> (<em>nn.Module</em>) – Loss function to train on.</p></li>
+<li><p><strong>optimizer</strong> (<em>nn.optim.Optimizer</em>) – Optimizer to apply.</p></li>
+<li><p><strong>data_tensors</strong> (<em>torch.Tensor</em>) – Dataset to train on.</p></li>
+<li><p><strong>num_epochs</strong> (<em>int</em>) – Number of epochs to train this surrogate on.</p></li>
+<li><p><strong>device</strong> (<em>torch.device</em>) – Device to train on.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Loss of this surrogate.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-utils">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-utils" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, -.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

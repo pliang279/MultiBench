@@ -100,93 +100,126 @@
 </section>
 <section id="module-fusions.mult.modules.multihead_attention">
 <span id="fusions-mult-modules-multihead-attention-module"></span><h2>fusions.mult.modules.multihead_attention module<a class="headerlink" href="#module-fusions.mult.modules.multihead_attention" title="Permalink to this headline"></a></h2>
+<p>Implements MultiHead Attention.</p>
+<p>Adapted from fairseq repo.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.mult.modules.multihead_attention.</span></span><span class="sig-name descname"><span class="pre">MultiheadAttention</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
-<p>Multi-headed attention.
-See “Attention Is All You Need” for more details.</p>
+<p>Implements Multi-headed attention.</p>
+<p>See “Attention Is All You Need” for more details.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attn_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_bias_kv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_zero_attn</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Instantiate MultiHeadAttention Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>embed_dim</strong> (<em>int</em>) – Embedding dimension</p></li>
+<li><p><strong>num_heads</strong> (<em>int</em>) – Number of heads</p></li>
+<li><p><strong>attn_dropout</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout probability for attention. Defaults to 0..</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add a bias term or not. Defaults to True.</p></li>
+<li><p><strong>add_bias_kv</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add a bias term to the key and value computation. Defaults to False.</p></li>
+<li><p><strong>add_zero_attn</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to add zero attention. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attn_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Input shape: Time x Batch x Channel
+<dd><p>Apply attention mechanism given Q,K,V matrices.</p>
+<p>Input shape: Time x Batch x Channel
 Self-attention can be implemented by passing in the same arguments for
 query, key and value. Timesteps can be masked by supplying a T x T mask in the
 <cite>attn_mask</cite> argument. Padding elements can be excluded from
 the key by passing a binary ByteTensor (<cite>key_padding_mask</cite>) with shape:
 batch x src_len, where padding elements are indicated by 1s.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query</strong> (<em>torch.Tensor</em>) – Query matrix</p></li>
+<li><p><strong>key</strong> (<em>torch.Tensor</em>) – Key matrix</p></li>
+<li><p><strong>value</strong> (<em>torch.Tensor</em>) – Value matrix</p></li>
+<li><p><strong>attn_mask</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – Optional attention mask for masked attention. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_k">
-<span class="sig-name descname"><span class="pre">in_proj_k</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_k" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_kv">
-<span class="sig-name descname"><span class="pre">in_proj_kv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_kv" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_q">
-<span class="sig-name descname"><span class="pre">in_proj_q</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_q" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_qkv">
-<span class="sig-name descname"><span class="pre">in_proj_qkv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_qkv" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_v">
-<span class="sig-name descname"><span class="pre">in_proj_v</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention.in_proj_v" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.multihead_attention.MultiheadAttention.reset_parameters">
 <span class="sig-name descname"><span class="pre">reset_parameters</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.multihead_attention.MultiheadAttention.reset_parameters" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Reset parameters to defaults.</p>
+</dd></dl>
 
 </dd></dl>
 
 </section>
 <section id="module-fusions.mult.modules.position_embedding">
 <span id="fusions-mult-modules-position-embedding-module"></span><h2>fusions.mult.modules.position_embedding module<a class="headerlink" href="#module-fusions.mult.modules.position_embedding" title="Permalink to this headline"></a></h2>
+<p>Implements Positional Encoding.</p>
+<p>Adapted from fairseq repo.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.mult.modules.position_embedding.</span></span><span class="sig-name descname"><span class="pre">SinusoidalPositionalEmbedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
-<p>This module produces sinusoidal positional embeddings of any length.
-Padding symbols are ignored, but it is necessary to specify whether padding
+<p>This module produces sinusoidal positional embeddings of any length.</p>
+<p>Padding symbols are ignored, but it is necessary to specify whether padding
 is added on the left side (left_pad=True) or right side (left_pad=False).</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">128</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Instantiate SinusoidalPositionalEmbedding Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>embedding_dim</strong> (<em>int</em>) – Embedding dimension</p></li>
+<li><p><strong>padding_idx</strong> (<em>int</em><em>, </em><em>optional</em>) – Padding index. Defaults to 0.</p></li>
+<li><p><strong>left_pad</strong> (<em>int</em><em>, </em><em>optional</em>) – Whether to pad from the left or not. Defaults to 0.</p></li>
+<li><p><strong>init_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Initial size. Defaults to 128.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.forward" title="Permalink to this definition"></a></dt>
-<dd><p>Input is expected to be of size [bsz x seqlen].</p>
+<dd><p>Apply PositionalEncodings to Input.</p>
+<p>Input is expected to be of size [bsz x seqlen].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>input</strong> (<em>torch.Tensor</em>) – Layer input</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Layer output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.get_embedding">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_embedding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_embeddings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_idx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.get_embedding" title="Permalink to this definition"></a></dt>
-<dd><p>Build sinusoidal embeddings.
-This matches the implementation in tensor2tensor, but differs slightly
+<dd><p>Build sinusoidal embeddings.</p>
+<p>This matches the implementation in tensor2tensor, but differs slightly
 from the description in Section 3.5 of “Attention Is All You Need”.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.max_positions">
 <span class="sig-name descname"><span class="pre">max_positions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.position_embedding.SinusoidalPositionalEmbedding.max_positions" title="Permalink to this definition"></a></dt>
-<dd><p>Maximum number of supported positions.</p>
+<dd><p>Get the maximum number of supported positions.</p>
 </dd></dl>
 
 </dd></dl>
@@ -194,54 +227,113 @@ from the description in Section 3.5 of “Attention Is All You Need”.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="fusions.mult.modules.position_embedding.make_positions">
 <span class="sig-prename descclassname"><span class="pre">fusions.mult.modules.position_embedding.</span></span><span class="sig-name descname"><span class="pre">make_positions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">left_pad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.position_embedding.make_positions" title="Permalink to this definition"></a></dt>
-<dd><p>Replace non-padding symbols with their position numbers.
-Position numbers begin at padding_idx+1.
+<dd><p>Replace non-padding symbols with their position numbers.</p>
+<p>Position numbers begin at padding_idx+1.
 Padding symbols are ignored, but it is necessary to specify whether padding
 is added on the left side (left_pad=True) or right side (left_pad=False).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor</strong> (<em>torch.Tensor</em>) – Tensor to generate padding on.</p></li>
+<li><p><strong>padding_idx</strong> (<em>int</em>) – Position numbers start at padding_idx + 1</p></li>
+<li><p><strong>left_pad</strong> (<em>bool</em>) – Whether to pad from the left or from the right.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Padded output</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
 <section id="module-fusions.mult.modules.transformer">
 <span id="fusions-mult-modules-transformer-module"></span><h2>fusions.mult.modules.transformer module<a class="headerlink" href="#module-fusions.mult.modules.transformer" title="Permalink to this headline"></a></h2>
+<p>Implements Trasnformer Encoder Layer.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.LayerNorm">
 <span class="sig-prename descclassname"><span class="pre">fusions.mult.modules.transformer.</span></span><span class="sig-name descname"><span class="pre">LayerNorm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embedding_dim</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.LayerNorm" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Generate LayerNorm Layer with given parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>embedding_dim</strong> (<em>int</em>) – Embedding dimension</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized LayerNorm Module</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.Linear">
 <span class="sig-prename descclassname"><span class="pre">fusions.mult.modules.transformer.</span></span><span class="sig-name descname"><span class="pre">Linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.Linear" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Generate Linear Layer with given parameters and Xavier initialization.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_features</strong> (<em>int</em>) – Number of input features</p></li>
+<li><p><strong>out_features</strong> (<em>int</em>) – Number of output features</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to include a bias term or not. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Initialized Linear Module.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>nn.Module</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.TransformerEncoder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.mult.modules.transformer.</span></span><span class="sig-name descname"><span class="pre">TransformerEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.TransformerEncoder" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
-<p>Transformer encoder consisting of <em>args.encoder_layers</em> layers. Each layer
-is a <a class="reference internal" href="#fusions.mult.modules.transformer.TransformerEncoderLayer" title="fusions.mult.modules.transformer.TransformerEncoderLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerEncoderLayer</span></code></a>.
-:param embed_tokens: input embedding
-:type embed_tokens: torch.nn.Embedding
-:param num_heads: number of heads
-:type num_heads: int
-:param layers: number of layers
-:type layers: int
-:param attn_dropout: dropout applied on the attention weights
-:type attn_dropout: float
-:param relu_dropout: dropout applied on the first layer of the residual block
-:type relu_dropout: float
-:param res_dropout: dropout applied on the residual block
-:type res_dropout: float
-:param attn_mask: whether to apply mask on the attention weights
-:type attn_mask: bool</p>
+<p>Transformer encoder consisting of <em>args.encoder_layers</em> layers.</p>
+<p>Each layer is a <a class="reference internal" href="#fusions.mult.modules.transformer.TransformerEncoderLayer" title="fusions.mult.modules.transformer.TransformerEncoderLayer"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransformerEncoderLayer</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>embed_tokens</strong> (<em>torch.nn.Embedding</em>) – input embedding</p></li>
+<li><p><strong>num_heads</strong> (<em>int</em>) – number of heads</p></li>
+<li><p><strong>layers</strong> (<em>int</em>) – number of layers</p></li>
+<li><p><strong>attn_dropout</strong> (<em>float</em>) – dropout applied on the attention weights</p></li>
+<li><p><strong>relu_dropout</strong> (<em>float</em>) – dropout applied on the first layer of the residual block</p></li>
+<li><p><strong>res_dropout</strong> (<em>float</em>) – dropout applied on the residual block</p></li>
+<li><p><strong>attn_mask</strong> (<em>bool</em>) – whether to apply mask on the attention weights</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.TransformerEncoder.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_heads</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">layers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attn_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relu_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">embed_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attn_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.TransformerEncoder.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Initialize Transformer Encoder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>embed_dim</strong> (<em>int</em>) – Embedding dimension</p></li>
+<li><p><strong>num_heads</strong> (<em>int</em>) – Number of heads</p></li>
+<li><p><strong>layers</strong> (<em>int</em>) – Number of layers</p></li>
+<li><p><strong>attn_dropout</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of dropout in attention mechanism. Defaults to 0.0.</p></li>
+<li><p><strong>relu_dropout</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of dropout after ReLU. Defaults to 0.0.</p></li>
+<li><p><strong>res_dropout</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of dropout in residual layer. Defaults to 0.0.</p></li>
+<li><p><strong>embed_dropout</strong> (<em>float</em><em>, </em><em>optional</em>) – Probability of dropout in embedding layer. Defaults to 0.0.</p></li>
+<li><p><strong>attn_mask</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply a mask to the attention or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.TransformerEncoder.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x_in</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_in_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_in_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.TransformerEncoder.forward" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Apply Transformer Encoder to layer input.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x_in</strong> (<em>FloatTensor</em>) – embedded input of shape <cite>(src_len, batch, embed_dim)</cite></p></li>
@@ -276,24 +368,37 @@ padding elements of shape <cite>(batch, src_len)</cite></p></li>
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.TransformerEncoderLayer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fusions.mult.modules.transformer.</span></span><span class="sig-name descname"><span class="pre">TransformerEncoderLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.TransformerEncoderLayer" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.Module</span></code></p>
-<p>Encoder layer block.
-In the original paper each operation (multi-head attention or FFN) is
+<p>Implements encoder layer block.</p>
+<p>In the original paper each operation (multi-head attention or FFN) is
 postprocessed with: <cite>dropout -&gt; add residual -&gt; layernorm</cite>. In the
 tensor2tensor code they suggest that learning is more robust when
 preprocessing each layer with layernorm and postprocessing with:
 <cite>dropout -&gt; add residual</cite>. We default to the approach in the paper, but the
 tensor2tensor approach can be enabled by setting
-<em>args.encoder_normalize_before</em> to <code class="docutils literal notranslate"><span class="pre">True</span></code>.
-:param embed_dim: Embedding dimension</p>
+<em>args.encoder_normalize_before</em> to <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.TransformerEncoderLayer.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">embed_dim</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_heads</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attn_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relu_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res_dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attn_mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.TransformerEncoderLayer.__init__" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Instantiate TransformerEncoderLayer Module.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>embed_dim</strong> (<em>int</em>) – Embedding dimension</p></li>
+<li><p><strong>num_heads</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of heads. Defaults to 4.</p></li>
+<li><p><strong>attn_dropout</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout for attention mechanism. Defaults to 0.1.</p></li>
+<li><p><strong>relu_dropout</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout after ReLU. Defaults to 0.1.</p></li>
+<li><p><strong>res_dropout</strong> (<em>float</em><em>, </em><em>optional</em>) – Dropout after residual layer. Defaults to 0.1.</p></li>
+<li><p><strong>attn_mask</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to apply an attention mask or not. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.TransformerEncoderLayer.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_v</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.TransformerEncoderLayer.forward" title="Permalink to this definition"></a></dt>
-<dd><dl class="field-list simple">
+<dd><p>Apply TransformerEncoderLayer to Layer Input.</p>
+<dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>Tensor</em>) – input to the layer of shape <cite>(seq_len, batch, embed_dim)</cite></p></li>
@@ -309,17 +414,27 @@ tensor2tensor approach can be enabled by setting
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="fusions.mult.modules.transformer.TransformerEncoderLayer.maybe_layer_norm">
-<span class="sig-name descname"><span class="pre">maybe_layer_norm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">before</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">after</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.TransformerEncoderLayer.maybe_layer_norm" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.buffered_future_mask">
 <span class="sig-prename descclassname"><span class="pre">fusions.mult.modules.transformer.</span></span><span class="sig-name descname"><span class="pre">buffered_future_mask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensor2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fusions.mult.modules.transformer.buffered_future_mask" title="Permalink to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>Generate buffered future mask.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tensor</strong> (<em>torch.Tensor</em>) – Tensor to initialize mask from.</p></li>
+<li><p><strong>tensor2</strong> (<em>torch.Tensor</em><em>, </em><em>optional</em>) – Tensor to initialize target mask from. Defaults to None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Buffered future mask.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fusions.mult.modules.transformer.fill_with_neg_inf">
