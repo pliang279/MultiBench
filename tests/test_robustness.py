@@ -45,5 +45,7 @@ def test_text():
 def test_ts():
     from robustness.timeseries_robust import add_timeseries_noise
     test = [[ np.array([1.0,2.0,3.0]),np.array([4.0,5.0,6.0])]]
-    idf = add_timeseries_noise(test)
+    idf = add_timeseries_noise(test, noise_level=1)
+    assert len(idf) in [1,2]
+    idf = add_timeseries_noise(test, noise_level=0)
     assert len(idf) in [1,2]
