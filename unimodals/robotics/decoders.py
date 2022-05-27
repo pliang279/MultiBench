@@ -57,7 +57,7 @@ class OpticalFlowDecoder(nn.Module):
         if initailize_weights:
             init_weights(self.modules())
 
-    def forward(self, tiled_feat, img_out_convs):
+    def forward(self, tiled_feat, img_out_convs): #pragma: no cover
         """
         Predicts the optical flow and optical flow mask.
 
