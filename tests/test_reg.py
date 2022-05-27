@@ -1,4 +1,5 @@
 from objective_functions.regularization import *
+import torch
 
 def test_perturbation():
     pt = Perturbation()
@@ -15,3 +16,6 @@ def test_regularization():
     assert rg.get_regularization_term(torch.ones(10,10)).shape == ()
     assert rg.get_regularization_term(torch.ones(10,10),optim_method='min_ent').shape == ()
     assert rg.get_regularization_term(torch.ones(10,10),optim_method='max_ent_minus').shape == ()
+    fc = torch.nn.Linear(10,2)
+    rgl = RegularizationLoss(torch.nn.CrossEntropyLoss,fc, is_pack=False)
+    assert callable(rgl)
