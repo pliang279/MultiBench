@@ -111,7 +111,7 @@ class NCEAverage(nn.Module):
         self.register_buffer('memory_ab', torch.rand(
             outputSize, inputSize).mul_(2 * stdv).add_(-stdv))
 
-    def forward(self, l, ab, y, idx=None):
+    def forward(self, l, ab, y, idx=None): #pragma: no cover
         """Apply NCEAverage Module.
 
         Args:
