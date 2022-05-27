@@ -199,7 +199,7 @@ def random_crop(img, p):
         return img
 
 
-def periodic(img, periodic_noise_filename="periodic_noise"):
+def periodic(img, periodic_noise_filename="periodic_noise"): # pragma: no cover 
     """Randomly expose the image to periodic pattern/noise."""
     height = img.height
     width = img.width

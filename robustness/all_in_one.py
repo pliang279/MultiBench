@@ -3,7 +3,7 @@ import numpy as np
 import torch
 
 
-def stocks_train(num_training, trainprocess, algorithm, encoder=False):
+def stocks_train(num_training, trainprocess, algorithm, encoder=False): # pragma: no cover 
     """Train model on stocks data.
     
     Args:
@@ -34,7 +34,7 @@ def stocks_train(num_training, trainprocess, algorithm, encoder=False):
         return filenames
 
 
-def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
+def stocks_test(num_training, models, noise_range, testprocess, encoder=False): # pragma: no cover 
     """Test model on noisy stocks data.
 
         Args:
@@ -70,7 +70,7 @@ def stocks_test(num_training, models, noise_range, testprocess, encoder=False):
           list(np.mean(np.array(loss), axis=0)))
 
 
-def general_train(trainprocess, algorithm, encoder=False):
+def general_train(trainprocess, algorithm, encoder=False): # pragma: no cover 
     """Train model on data.
 
         Args:
@@ -93,7 +93,7 @@ def general_train(trainprocess, algorithm, encoder=False):
         return filename
 
 
-def general_test(testprocess, filename, robustdatasets, encoder=False, multi_measure=False):
+def general_test(testprocess, filename, robustdatasets, encoder=False, multi_measure=False): # pragma: no cover 
     """Test model on noisy data.
 
         Args:
