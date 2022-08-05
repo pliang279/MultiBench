@@ -1,5 +1,5 @@
 Colab Links to the Tutorials:
 
-- [Tutorial 1](https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb)
-- [Tutorial 2](https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb)
-- [Tutorial 3](https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb)
+- [Tutorial 1](https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_Colab.ipynb): This example shows a very basic usage case of MultiBench. In particular, it demonstrates how to use MultiBench with the affective computing dataset MOSI, and how to use it with a very simple fusion model.
+- [Tutorial 2](https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_2_MFAS.ipynb): This example shows a slightly more complicated training paradigm in MultiBench - MFAS, or MultiModal Fusion Architecture Search, system on the AVMNIST system.
+- [Tutorial 3](https://colab.research.google.com/github/pliang279/MultiBench/blob/main/examples/Multibench_Example_Usage_On_Colab_Part_3_MCTN.ipynb): This example shows a slightly more complicated training paradigm in MultiBench. Namely, we'll run MCTN (learning representations by translating from one modality to another) on MOSI.
