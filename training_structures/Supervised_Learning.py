@@ -174,11 +174,9 @@ def train(
                 pts = []
                 for j in valid_dataloader:
                     if is_packed:
-                        model.train()
                         out = model([[_processinput(i).to(device)
                                     for i in j[0]], j[1]])
                     else:
-                        model.train()
                         out = model([_processinput(i).to(device)
                                     for i in j[:-1]])
 
