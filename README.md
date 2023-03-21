@@ -122,7 +122,7 @@ python3 examples/affect/affect_late_fusion.py
 
 ### Healthcare
 
-The MIMIC dataset has restricted access. To gain access to the preprocessed version of this dataset, please follow instructions [here](https://mimic.mit.edu/iv/access/) to gain the necessary credentials. Once you have the credentials, email ylyu1@andrew.cmu.edu with proof of your credentials and ask for the preprocessed 'im.pk' file. 
+The MIMIC dataset has restricted access. To gain access to the preprocessed version of this dataset, please follow instructions [here](https://mimic.mit.edu/iv/access/) to gain the necessary credentials. Once you have the credentials, email yiweilyu@umich.edu with proof of your credentials and ask for the preprocessed 'im.pk' file. 
 
 After you have the 'im.pk' file, you can get the dataloaders of this dataset by calling the get_dataloader function in examples/mimic/get_data.py. The get_dataloader function takes 2 inputs: the first specifies which task you want to do (-1 means mortality task, 1 means icd9 10-19 task, 7 means ic9 70-79 task). The input modalities will be static (vector of size 5) and time-series (24x30 shaped).
 
