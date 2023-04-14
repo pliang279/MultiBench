@@ -18,11 +18,11 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 def test_CCALoss(set_seeds):
     loss_singular = CCALoss(10, True, device)
-    assert loss_singular(torch.zeros((10,10)),torch.zeros((10,10))).shape == ()
-    assert np.isclose(loss_singular(torch.rand(10,10), torch.rand(10,10)).item(),-8.5639)
+    assert loss_singular(torch.zeros((10,10)).to(device),torch.zeros((10,10)).to(device)).shape == ()
+    assert np.isclose(loss_singular(torch.rand(10,10).to(device), torch.rand(10,10).to(device)).item(),-8.5639)
     loss = CCALoss(10, False, device)
-    assert loss(torch.zeros((10,10)),torch.zeros((10,10))).shape == ()
-    assert np.isclose(loss(torch.rand(10,10), torch.rand(10,10)).item(),-7.922261238)
+    assert loss(torch.zeros((10,10)).to(device),torch.zeros((10,10)).to(device)).shape == ()
+    assert np.isclose(loss(torch.rand(10,10).to(device), torch.rand(10,10).to(device)).item(),-7.922261238)
 
 def test_Alias(set_seeds):
     alias = AliasMethod(torch.tensor([3.0,1.0,2.0]).float())
@@ -38,11 +38,11 @@ def test_MutlSimLoss(set_seeds):
 
 def test_NCESoftmaxLoss(set_seeds):
     loss = NCESoftmaxLoss()
-    assert loss(torch.ones((10,10))).shape == ()
-    assert np.isclose(loss(torch.ones((10,10))).item(),2.3026)
+    assert loss(torch.ones((10,10)).to(device)).shape == ()
+    assert np.isclose(loss(torch.ones((10,10)).to(device)).item(),2.3026)
     loss = NCECriterion(10)
-    assert loss(torch.ones((10,10))).shape == (1,)
-    assert np.isclose(loss(torch.ones((10,10))).item(),7.3668)
+    assert loss(torch.ones((10,10)).to(device)).shape == (1,)
+    assert np.isclose(loss(torch.ones((10,10)).to(device)).item(),7.3668)
     NCEAverage(3,4,1)
 
 def test_MFM_objective(set_seeds):

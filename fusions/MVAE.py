@@ -4,6 +4,9 @@ from torch import nn
 from torch.autograd import Variable
 
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
 class ProductOfExperts(nn.Module):
     """
     Return parameters for product of independent experts.
@@ -99,4 +102,4 @@ def _prior_expert(size, batch_size):
     size = (size[0], batch_size, size[2])
     mu = Variable(torch.zeros(size))
     logvar = Variable(torch.log(torch.ones(size)))
-    return mu.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")), logvar.to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu"))
+    return mu.to(device), logvar.to(device)

@@ -1,10 +1,136 @@
-"""Implements Trasnformer Encoder Layer."""
-import torch
-from torch import nn
-import torch.nn.functional as F
-from .position_embedding import SinusoidalPositionalEmbedding
-from .multihead_attention import MultiheadAttention
+"""Implements the MultimodalTransformer Model. See https://github.com/yaohungt/Multimodal-Transformer for more."""
 import math
+import torch
+import torch.nn.functional as F
+from torch import nn
+
+
+class MULTModel(nn.Module):
+    """
+    Implements the MultimodalTransformer Model.
+    
+    See https://github.com/yaohungt/Multimodal-Transformer for more.
+    """
+    
+    class DefaultHyperParams():
+        """Set default hyperparameters for the model."""
+        
+        num_heads = 3
+        layers = 3
+        attn_dropout = 0.1
+        attn_dropout_modalities = [0.0] * 1000
+        relu_dropout = 0.1
+        res_dropout = 0.1
+        out_dropout = 0.0
+        embed_dropout = 0.25
+        embed_dim = 9
+        attn_mask = True
+        output_dim = 1
+        all_steps = False
+
+    def __init__(self, n_modalities, n_features, hyp_params=DefaultHyperParams):
+        """Construct a MulT model."""
+        super().__init__()
+        self.n_modalities = n_modalities
+        self.embed_dim = hyp_params.embed_dim
+        self.num_heads = hyp_params.num_heads
+        self.layers = hyp_params.layers
+        self.attn_dropout = hyp_params.attn_dropout
+        self.attn_dropout_modalities = hyp_params.attn_dropout_modalities
+        self.relu_dropout = hyp_params.relu_dropout
+        self.res_dropout = hyp_params.res_dropout
+        self.out_dropout = hyp_params.out_dropout
+        self.embed_dropout = hyp_params.embed_dropout
+        self.attn_mask = hyp_params.attn_mask
+        self.all_steps = hyp_params.all_steps
+
+        combined_dim = self.embed_dim * n_modalities * n_modalities
+
+        # This is actually not a hyperparameter :-)
+        output_dim = hyp_params.output_dim
+
+        # 1. Temporal convolutional layers
+        self.proj = [nn.Conv1d(n_features[i], self.embed_dim, kernel_size=1,
+                               padding=0, bias=False) for i in range(n_modalities)]
+        self.proj = nn.ModuleList(self.proj)
+
+        # 2. Crossmodal Attentions
+        self.trans = [nn.ModuleList([self.get_network(i, j, mem=False) for j in range(
+            n_modalities)]) for i in range(n_modalities)]
+        self.trans = nn.ModuleList(self.trans)
+
+        # 3. Self Attentions (Could be replaced by LSTMs, GRUs, etc.)
+        self.trans_mems = [self.get_network(
+            i, i, mem=True, layers=3) for i in range(n_modalities)]
+        self.trans_mems = nn.ModuleList(self.trans_mems)
+
+        # Projection layers
+        self.proj1 = nn.Linear(combined_dim, combined_dim)
+        self.proj2 = nn.Linear(combined_dim, combined_dim)
+        self.out_layer = nn.Linear(combined_dim, output_dim)
+
+    def get_network(self, mod1, mod2, mem, layers=-1):
+        """Create TransformerEncoder network from layer information."""
+        if not mem:
+            embed_dim = self.embed_dim
+            attn_dropout = self.attn_dropout_modalities[mod2]
+        else:
+            embed_dim = self.n_modalities * self.embed_dim
+            attn_dropout = self.attn_dropout
+
+        return TransformerEncoder(embed_dim=embed_dim,
+                                  num_heads=self.num_heads,
+                                  layers=max(self.layers, layers),
+                                  attn_dropout=attn_dropout,
+                                  relu_dropout=self.relu_dropout,
+                                  res_dropout=self.res_dropout,
+                                  embed_dropout=self.embed_dropout,
+                                  attn_mask=self.attn_mask)
+
+    def forward(self, x):
+        """
+        Apply MultModel Module to Layer Input.
+        
+        Args:
+            x: layer input. Has size n_modalities * [batch_size, seq_len, n_features]
+        """
+        x = [v.permute(0, 2, 1)
+             for v in x]  # n_modalities * [batch_size, n_features, seq_len]
+
+        # Project the textual/visual/audio features
+        proj_x = [self.proj[i](x[i]) for i in range(self.n_modalities)]
+        proj_x = torch.stack(proj_x)
+        # [n_modalities, seq_len, batch_size, proj]
+        proj_x = proj_x.permute(0, 3, 1, 2)
+
+        hs = []
+        last_hs = []
+        for i in range(self.n_modalities):
+            h = []
+            for j in range(self.n_modalities):
+                h.append(self.trans[i][j](proj_x[i], proj_x[j], proj_x[j]))
+            h = torch.cat(h, dim=2)
+            h = self.trans_mems[i](h)
+            # if type(h) == tuple:
+            #     h = h[0]
+            if self.all_steps:
+                hs.append(h)
+            else:
+                last_hs.append(h[-1])
+
+        if self.all_steps:
+            out = torch.cat(hs, dim=2)  # [seq_len, batch_size, out_features]
+            out = out.permute(1, 0, 2)  # [batch_size, seq_len, out_features]
+        else:
+            out = torch.cat(last_hs, dim=1)
+
+        # A residual block
+        out_proj = self.proj2(
+            F.dropout(F.relu(self.proj1(out)), p=self.out_dropout, training=self.training))
+        out_proj += out
+
+        out = self.out_layer(out_proj)
+        return out
 
 
 class TransformerEncoder(nn.Module):
@@ -47,7 +173,7 @@ class TransformerEncoder(nn.Module):
         self.attn_mask = attn_mask
 
         self.layers = nn.ModuleList([])
-        for layer in range(layers):
+        for _ in range(layers):
             new_layer = TransformerEncoderLayer(embed_dim,
                                                 num_heads=num_heads,
                                                 attn_dropout=attn_dropout,
@@ -112,12 +238,6 @@ class TransformerEncoder(nn.Module):
 
         return x
 
-    def max_positions(self):
-        """Maximum input length supported by the encoder."""
-        if self.embed_positions is None:
-            return self.max_source_positions
-        return min(self.max_source_positions, self.embed_positions.max_positions())
-
 
 class TransformerEncoderLayer(nn.Module):
     """Implements encoder layer block.
@@ -148,10 +268,10 @@ class TransformerEncoderLayer(nn.Module):
         self.embed_dim = embed_dim
         self.num_heads = num_heads
 
-        self.self_attn = MultiheadAttention(
+        self.self_attn = nn.MultiheadAttention(
             embed_dim=self.embed_dim,
             num_heads=self.num_heads,
-            attn_dropout=attn_dropout
+            dropout=attn_dropout
         )
         self.attn_mask = attn_mask
 
@@ -264,3 +384,112 @@ def LayerNorm(embedding_dim):
     m = nn.LayerNorm(embedding_dim)
     return m
 
+
+"""Implements Positional Encoding.
+
+Adapted from fairseq repo.
+"""
+def make_positions(tensor, padding_idx, left_pad):
+    """Replace non-padding symbols with their position numbers.
+    
+    Position numbers begin at padding_idx+1.
+    Padding symbols are ignored, but it is necessary to specify whether padding
+    is added on the left side (left_pad=True) or right side (left_pad=False).
+    
+    Args:
+        tensor (torch.Tensor): Tensor to generate padding on.   
+        padding_idx (int): Position numbers start at padding_idx + 1
+        left_pad (bool): Whether to pad from the left or from the right.
+
+    Returns:
+        torch.Tensor: Padded output
+    """
+    max_pos = padding_idx + 1 + tensor.size(1)
+    device = tensor.get_device()
+    buf_name = f'range_buf_{device}'
+    if not hasattr(make_positions, buf_name):
+        setattr(make_positions, buf_name, tensor.new())
+    setattr(make_positions, buf_name, getattr(
+        make_positions, buf_name).type_as(tensor))
+    if getattr(make_positions, buf_name).numel() < max_pos:
+        torch.arange(padding_idx + 1, max_pos,
+                     out=getattr(make_positions, buf_name))
+    mask = tensor.ne(padding_idx)
+    positions = getattr(make_positions, buf_name)[
+        :tensor.size(1)].expand_as(tensor)
+    if left_pad:
+        positions = positions - \
+            mask.size(1) + mask.long().sum(dim=1).unsqueeze(1)
+    new_tensor = tensor.clone()
+    return new_tensor.masked_scatter_(mask, positions[mask]).long()
+
+
+class SinusoidalPositionalEmbedding(nn.Module):
+    """
+    This module produces sinusoidal positional embeddings of any length.
+    
+    Padding symbols are ignored, but it is necessary to specify whether padding
+    is added on the left side (left_pad=True) or right side (left_pad=False).
+    """
+
+    def __init__(self, embedding_dim, padding_idx=0, left_pad=0):
+        """Instantiate SinusoidalPositionalEmbedding Module.
+
+        Args:
+            embedding_dim (int): Embedding dimension
+            padding_idx (int, optional): Padding index. Defaults to 0.
+            left_pad (int, optional): Whether to pad from the left or not. Defaults to 0.
+        """
+        super().__init__()
+        self.embedding_dim = embedding_dim
+        self.padding_idx = padding_idx
+        self.left_pad = left_pad
+        # device --> actual weight; due to nn.DataParallel :-(
+        self.weights = dict()
+        self.register_buffer('_float_tensor', torch.FloatTensor(1))
+
+    @staticmethod
+    def get_embedding(num_embeddings, embedding_dim, padding_idx=None):
+        """Build sinusoidal embeddings.
+        
+        This matches the implementation in tensor2tensor, but differs slightly
+        from the description in Section 3.5 of "Attention Is All You Need".
+        """
+        half_dim = embedding_dim // 2
+        emb = math.log(10000) / (half_dim - 1)
+        emb = torch.exp(torch.arange(half_dim, dtype=torch.float) * -emb)
+        emb = torch.arange(num_embeddings, dtype=torch.float).unsqueeze(
+            1) * emb.unsqueeze(0)
+        emb = torch.cat([torch.sin(emb), torch.cos(emb)],
+                        dim=1).view(num_embeddings, -1)
+        if embedding_dim % 2 == 1:
+            # zero pad
+            emb = torch.cat([emb, torch.zeros(num_embeddings, 1)], dim=1)
+        if padding_idx is not None:
+            emb[padding_idx, :] = 0
+        return emb
+
+    def forward(self, input):
+        """Apply PositionalEncodings to Input.
+        
+        Input is expected to be of size [bsz x seqlen].
+
+        Args:
+            input (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
+        bsz, seq_len = input.size()
+        max_pos = self.padding_idx + 1 + seq_len
+        device = input.get_device()
+        if device not in self.weights or max_pos > self.weights[device].size(0):
+            # recompute/expand embeddings if needed
+            self.weights[device] = SinusoidalPositionalEmbedding.get_embedding(
+                max_pos,
+                self.embedding_dim,
+                self.padding_idx,
+            )
+        self.weights[device] = self.weights[device].type_as(self._float_tensor)
+        positions = make_positions(input, self.padding_idx, self.left_pad)
+        return self.weights[device].index_select(0, positions.reshape(-1)).reshape((bsz, seq_len, -1)).detach()

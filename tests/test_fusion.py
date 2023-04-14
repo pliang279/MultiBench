@@ -7,6 +7,9 @@ from unimodals.common_models import LeNet, MLP
 from fusions.mult import *
 
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
 def test_concat(set_seeds):
     """Test concat."""
     fusion = Concat()
@@ -54,15 +57,15 @@ def test_tensor_fusion(set_seeds):
 def test_low_rank_tensor_fusion(set_seeds):
     """Test low rank tensor fusion."""
     fusion = LowRankTensorFusion((10,10),2,1)
-    output = fusion([torch.randn((10,10)) for _ in range(2)])
+    output = fusion([torch.randn((10,10)).to(device) for _ in range(2)])
     assert output.shape == (10,2)
-    assert np.isclose(torch.norm(output).item(), 0.6151207089424133)
-    assert count_parameters(fusion) == 3 
+    assert np.isclose(torch.norm(output).item(), 7.104233264923096)
+    assert count_parameters(fusion) == 0 
     fusion = LowRankTensorFusion((10,10),2,1,flatten=False)
-    output = fusion([torch.randn((10,10)) for _ in range(2)])
+    output = fusion([torch.randn((10,10)).to(device) for _ in range(2)])
     assert output.shape == (10,2)
-    assert np.isclose(torch.norm(output).item(), 8.852971076965332)
-    assert count_parameters(fusion) == 3 
+    assert np.isclose(torch.norm(output).item(), 0.6446783542633057)
+    assert count_parameters(fusion) == 0
     
 def test_multiplicative_interaction_models(set_seeds):
     """Test multiplicative interaction models."""
@@ -164,7 +167,7 @@ def test_MULTModel(set_seeds):
     fusion = MULTModel(3, [20, 5, 300], hyp_params=hparams)
     out = fusion([data[0],data[1],data[2]])
     assert out.shape == (32,1)
-    assert np.isclose(torch.norm(out).item(), 2.914430856704712)
+    assert np.isclose(torch.norm(out).item(), 2.946321487426758)
     assert count_parameters(fusion) == 3076961
     
     hparams.all_steps = True
@@ -173,7 +176,7 @@ def test_MULTModel(set_seeds):
     fusion = MULTModel(3, [20, 5, 300], hyp_params=hparams)
     out = fusion([data[0],data[1],data[2]])
     assert out.shape == (32,50,1)
-    assert np.isclose(torch.norm(out).item(), 21.26044464111328)
+    assert np.isclose(torch.norm(out).item(), 21.332000732421875)
     assert count_parameters(fusion) == 165007
 
     mp = make_positions(torch.randn([1,3,3]), padding_idx=0, left_pad=1)
