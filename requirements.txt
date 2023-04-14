@@ -2,6 +2,6 @@ torchvision
 torch
 memory-profiler
 torchtext
-sklearn
+scikit-learn
 matplotlib
 h5py
