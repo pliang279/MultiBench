@@ -61,5 +61,23 @@ To add a new algorithm:
    a. This will include arguments, return data, and associated information.
    b. If you can link to the paper for this algorithm, that would also be appreciated.
 
-3. **Write a test for that algorithm under tests**
-4. **Check that calling the added functions and running a simple training script works**
+3. **Write unit and integration tests for that algorithm under tests/**
+
+   a. Example unit tests and integration tests can be found under ``tests/``, such as ``tests/test_fusion.py`` and ``tests/test_Supervised_Learning.py``.
+   b. ``tests/common.py`` provides utility functions that allow deterministic tests of function correctness using pseudo-random inputs.
+   
+4. **Run the test build locally to make sure the new changes can be smoothly integrated to the GitHub Actions workflows using the following command**
+
+.. code-block:: bash
+
+   python -m pytest -s --cov-report html --cov=utils --cov=unimodals/ --cov=robustness --cov=fusions/ --cov=objective_functions tests/
+   
+**For debugging, the command to run a single test file is**
+   
+.. code-block:: bash
+
+   python -m pytest -s --cov-report html --cov=utils --cov=unimodals/ --cov=robustness --cov=fusions/ --cov=objective_functions tests/tests_TESTNAME.py
+   
+**We suggest running the entire test build at least once locally before pushing the changes**
+
+5. **Create a pull request and the authors will merge these changes into the main branch**
