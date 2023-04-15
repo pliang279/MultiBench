@@ -44,7 +44,7 @@ def test_Supervised_Learning_unimodal_classification():
     train_ds = UnimodalDataset(x, y)
     train_loader = DataLoader(train_ds)
 
-    train([model], Concat(), nn.Identity(), train_loader, train_loader, 10)
+    train([model], Concat(), nn.Identity(), train_loader, train_loader, 80)
 
     for i, o in zip(x, y):
         assert torch.allclose(torch.argmax(model(i[None]), dim=-1), o[None])
@@ -67,7 +67,7 @@ def test_Supervised_Learning_multimodal_classification():
     train_ds = MultimodalDataset([x1, x2], y)
     train_loader = DataLoader(train_ds)
 
-    train(encoders, fusion, nn.Identity(), train_loader, train_loader, 10)
+    train(encoders, fusion, nn.Identity(), train_loader, train_loader, 80)
 
     for i1, i2, o in zip(x1, x2, y):
         i = [i1, i2]
