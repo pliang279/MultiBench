@@ -93,7 +93,7 @@ def test_Supervised_Learning_unimodal_regression():
     train_ds = UnimodalDataset(x, y)
     train_loader = DataLoader(train_ds)
 
-    train([model], Concat(), nn.Identity(), train_loader, train_loader, 80, task='regression', objective=nn.MSELoss())
+    train([model], Concat(), nn.Identity(), train_loader, train_loader, 160, task='regression', objective=nn.MSELoss())
 
     for i, o in zip(x, y):
         assert torch.allclose(model(i), o, atol=0.1)
