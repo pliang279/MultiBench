@@ -1,7 +1,7 @@
-General Usage Guide
+Continuous Integration Guide
 *******************
 
-General Repo Structure
+Repo Structure
 =========================
 
 MultiBench is separated into several sub-packages, each of which handle separate functionality regarding either the set of reference implementations or the actual benchmarking process accordingly:
@@ -24,7 +24,7 @@ In addition, the following folders are also in the repository, to provide additi
 - **tests** - This folder contains the tests for our code-coverage report.
 - **sphinx** - This folder contains all of the build information and source files for our documentation.
 
-General Training Guide
+Dataloading, Training, and Evaluation
 ======================
 
 While the tutorials provided are complete, in that they walk you through sample uses of MultiBench, here's a quick overview of how to run your experiments in MultiBench:
@@ -42,7 +42,7 @@ While the tutorials provided are complete, in that they walk you through sample 
 Once you've done this, you can plug the associated code into the training loop like the examples, and go from there.
 
 
-General Contribution Guide
+Testing and Contributing
 ==========================
 
 If you would like to contribute, we would love to have you on. If you have a proposed extension, feel free to make an issue so we can contact you and get the ball rolling.
