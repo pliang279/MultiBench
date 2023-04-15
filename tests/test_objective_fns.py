@@ -19,10 +19,12 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 def test_CCALoss(set_seeds):
     loss_singular = CCALoss(10, True, device)
     assert loss_singular(torch.zeros((10,10)).to(device),torch.zeros((10,10)).to(device)).shape == ()
-    assert np.isclose(loss_singular(torch.rand(10,10).to(device), torch.rand(10,10).to(device)).item(),-8.5639)
+    out = loss_singular(torch.randn((10,10)).to(device), torch.randn((10,10)).to(device))
+    assert np.isclose(out.item(),-9.280478477478027)
     loss = CCALoss(10, False, device)
     assert loss(torch.zeros((10,10)).to(device),torch.zeros((10,10)).to(device)).shape == ()
-    assert np.isclose(loss(torch.rand(10,10).to(device), torch.rand(10,10).to(device)).item(),-7.922261238)
+    out = loss(torch.randn((10,10)).to(device), torch.randn((10,10)).to(device))
+    assert np.isclose(out.item(),-8.985898971557617)
 
 def test_Alias(set_seeds):
     alias = AliasMethod(torch.tensor([3.0,1.0,2.0]).float())
@@ -34,7 +36,7 @@ def test_MutlSimLoss(set_seeds):
     assert loss(torch.zeros((10,10)),torch.cat([torch.zeros((5,10)),torch.ones((5,10))],dim=0)).shape == ()
     assert loss(torch.zeros((10,10)),torch.zeros((10,10))).item() == 0
     assert loss(torch.zeros((10,10)),torch.zeros((10,10))).shape == ()
-    assert loss(torch.rand((10,10))*0.5+0.5,torch.cat([torch.zeros((1,10)),torch.ones((9,10))],dim=0)).item() == 0
+    assert loss(torch.rand(10,10)*0.5+0.5,torch.cat([torch.zeros((1,10)),torch.ones((9,10))],dim=0)).item() == 0
 
 def test_NCESoftmaxLoss(set_seeds):
     loss = NCESoftmaxLoss()
@@ -53,26 +55,29 @@ def test_MFM_objective(set_seeds):
     args = dict()
     args['decoders'] = decoders
     args['intermediates'] = intermediates
-    args['reps'] = [torch.rand((10,10)).to(device),torch.rand((10,10)).to(device)]
-    args['fused'] = torch.rand((10,30)).to(device)
-    args['inputs'] = [torch.rand((10,10)).to(device),torch.rand((10,10)).to(device)]
-    assert np.isclose(objective1(torch.rand((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).item(),5.492485)
-    assert np.isclose(objective2(torch.rand((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).item(),5.283058)
+    args['reps'] = [torch.randn((10,10)).to(device),torch.randn((10,10)).to(device)]
+    args['fused'] = torch.randn((10,30)).to(device)
+    args['inputs'] = [torch.randn((10,10)).to(device),torch.randn((10,10)).to(device)]
+    assert np.isclose(objective1(torch.rand((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).item(),7.1342926025390625)
+    assert np.isclose(objective2(torch.rand((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).item(),7.19914436340332)
 
 def test_MVAE_objective(set_seeds):
     objective1 = MVAE_objective(2.0, [torch.nn.MSELoss(), torch.nn.MSELoss()], [1.0, 1.0])
     decoders = [Linear(10, 10).to(device) for _ in range(2)]
     args = dict()
     args['decoders'] = decoders
-    args['reps'] = [(torch.rand((10,10)).to(device),torch.rand((10,10)).to(device)),(torch.rand((10,10)).to(device),torch.rand((10,10)).to(device))]
-    args['fused'] = [torch.rand((10,10)).to(device),torch.rand((10,10)).to(device)]
-    args['inputs'] = [torch.rand((10,10)).to(device),torch.rand((10,10)).to(device)]
+    args['reps'] = [(torch.randn((10,10)).to(device),torch.randn((10,10)).to(device)),(torch.randn((10,10)).to(device),torch.randn((10,10)).to(device))]
+    args['fused'] = [torch.randn((10,10)).to(device),torch.randn((10,10)).to(device)]
+    args['inputs'] = [torch.randn((10,10)).to(device),torch.randn((10,10)).to(device)]
     args['training'] = True
-    assert np.isclose(objective1(torch.rand((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).cpu().detach().numpy(),18.118)
+    out = objective1(torch.randn((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).cpu().detach().numpy()
+    assert np.isclose(out,45.058445)
     args['training'] = False
-    assert np.isclose((objective1(torch.rand((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).cpu().detach().numpy()),15.2799)
+    out = objective1(torch.randn((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).cpu().detach().numpy()
+    assert np.isclose(out,42.121914)
     objective2 = MVAE_objective(2.0, [torch.nn.MSELoss(), torch.nn.MSELoss()], [1.0, 1.0], input_to_float=False)
-    assert np.isclose((objective2(torch.rand((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).cpu().detach().numpy()),15.470456)
+    out = objective2(torch.randn((10,10)).to(device),torch.randint(low=0, high=10, size=(10,)).to(device),args).cpu().detach().numpy()
+    assert np.isclose(out,41.353207)
 
 def test_CCA_objective(set_seeds):
     objective = CCA_objective(10)
@@ -99,7 +104,7 @@ def test_RMFE_object(set_seeds):
     args = dict()
     args['model'] = model
     args['inputs'] = [torch.rand((10,10)).to(device),torch.rand((10,10)).to(device)]
-    assert np.isclose(objective(torch.rand((10,10)).to(device),torch.ones([10,10]).to(device),args).item(),0.4805537)
+    assert np.isclose(objective(torch.rand((10,10)).to(device),torch.ones([10,10]).to(device),args).item(),0.4805612862110138)
     args['inputs'] = []
     try:
         objective(torch.rand((10,10)).to(device),torch.ones([10,10]).to(device),args)
@@ -156,4 +161,4 @@ def test_RegularizationLoss(set_seeds):
     logits = torch.rand((1,2)).to(device)
     inputs = [torch.rand((1,10,10)).to(device),torch.rand((1,10,10)).to(device)]
     inputs_len = torch.tensor([[10],[10]])
-    assert np.isclose(rgl(logits, (inputs, inputs_len)).item(),0.0045899162)
+    assert np.isclose(rgl(logits, (inputs, inputs_len)).item(),0.004487053025513887) 

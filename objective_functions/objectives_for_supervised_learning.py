@@ -5,6 +5,9 @@ from objective_functions.cca import CCALoss
 from objective_functions.regularization import RegularizationLoss
 
 
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+
 def _criterioning(pred, truth, criterion):
     """Handle criterion ideosyncracies."""
     if isinstance(criterion, torch.nn.CrossEntropyLoss):
@@ -12,7 +15,6 @@ def _criterioning(pred, truth, criterion):
         return criterion(pred, truth.long().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
     if isinstance(criterion, (torch.nn.modules.loss.BCEWithLogitsLoss, torch.nn.MSELoss, torch.nn.L1Loss)):
         return criterion(pred, truth.float().to(torch.device("cuda:0" if torch.cuda.is_available() else "cpu")))
-
 
 
 def MFM_objective(ce_weight, modal_loss_funcs, recon_weights, input_to_float=True, criterion=torch.nn.CrossEntropyLoss()):
@@ -106,7 +108,7 @@ def CCA_objective(out_dim, cca_weight=0.001, criterion=torch.nn.CrossEntropyLoss
     :param cca_weight: weight of cca loss
     :param criterion: criterion for supervised loss
     """
-    lossfunc = CCALoss(out_dim, False, device=torch.device("cuda"))
+    lossfunc = CCALoss(out_dim, False, device=device)
 
     def _actualfunc(pred, truth, args):
         ce_loss = _criterioning(pred, truth, criterion)

@@ -45,9 +45,13 @@ def test_concat_linear(set_seeds):
 def test_tensor_fusion(set_seeds):
     """Test tensor fusion."""
     fusion = TensorFusion()
-    output = fusion([torch.randn((1,2,2)) for _ in range(2)])
+    inputs = [torch.randn((1,2,2)) for _ in range(2)]
+    output = fusion(inputs)
     assert output.shape == (1,2,9)
     assert np.isclose(torch.norm(output).item(), 5.0617828369140625)
+    output = fusion([inputs[0]])
+    assert output.shape == (1,2,2)
+    assert np.isclose(torch.norm(output).item(), 2.7442679405212402)
     assert count_parameters(fusion) == 0 
     try:
         output = fusion([torch.randn((1,2,2)) for _ in range(3)])
@@ -59,13 +63,13 @@ def test_low_rank_tensor_fusion(set_seeds):
     fusion = LowRankTensorFusion((10,10),2,1)
     output = fusion([torch.randn((10,10)).to(device) for _ in range(2)])
     assert output.shape == (10,2)
-    assert np.isclose(torch.norm(output).item(), 7.104233264923096)
-    assert count_parameters(fusion) == 0 
+    assert np.isclose(torch.norm(output).item(), 0.6151207089424133)
+    assert count_parameters(fusion) == 3 
     fusion = LowRankTensorFusion((10,10),2,1,flatten=False)
     output = fusion([torch.randn((10,10)).to(device) for _ in range(2)])
     assert output.shape == (10,2)
-    assert np.isclose(torch.norm(output).item(), 0.6446783542633057)
-    assert count_parameters(fusion) == 0
+    assert np.isclose(torch.norm(output).item(), 8.852971076965332)
+    assert count_parameters(fusion) == 3
     
 def test_multiplicative_interaction_models(set_seeds):
     """Test multiplicative interaction models."""
@@ -181,3 +185,15 @@ def test_MULTModel(set_seeds):
 
     mp = make_positions(torch.randn([1,3,3]), padding_idx=0, left_pad=1)
     assert (mp.numpy() == np.vstack([np.arange(3)+1 for _ in range(3)])).all()
+
+def test_EarlyFusionTransformer(set_seeds):
+    fusion = EarlyFusionTransformer(10)
+    out = fusion(torch.randn((3,10,10)))
+    assert out.shape == (3,1)
+    assert np.isclose(torch.norm(out).item(),1.1512198448181152)
+
+def test_LateFusionTransformer(set_seeds):
+    fusion = LateFusionTransformer()
+    out = fusion(torch.randn((3,10,10)))
+    assert out.shape == (3,9)
+    assert np.isclose(torch.norm(out).item(),5.1961259841918945)

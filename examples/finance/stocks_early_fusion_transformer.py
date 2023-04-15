@@ -12,8 +12,7 @@ from private_test_scripts.all_in_one import all_in_one_train, all_in_one_test # 
 from training_structures.Supervised_Learning import train, test # noqa
 from datasets.stocks.get_data import get_dataloader # noqa
 from unimodals.common_models import Identity # noqa
-from fusions.finance.early_fusion import EarlyFusionTransformer # noqa
-from fusions.common_fusions import Stack # noqa
+from fusions.common_fusions import Stack, EarlyFusionTransformer # noqa
 
 
 parser = argparse.ArgumentParser()
