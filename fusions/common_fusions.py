@@ -87,40 +87,6 @@ class ConcatWithLinear(nn.Module):
         return self.fc(torch.cat(modalities, dim=self.concat_dim))
 
 
-class FiLM(nn.Module):
-    """Implements FiLM - Feature-Wise Affine Transformations of the Input.
-    
-    See https://arxiv.org/pdf/1709.07871.pdf for more details.
-    """
-
-    def __init__(self, gamma_generation_network, beta_generation_network, base_modal=0, gamma_generate_modal=1, beta_generate_modal=1):
-        """Initialize FiLM layer.
-        
-        :param gamma_generation_network: Network which generates gamma_parameters from gamma_generation_modal data.
-        :param beta_generation_network: Network which generates beta_parameters from beta_generation_modal data.
-        :param base_modal: Modality to apply affine transformation to.
-        :param gamma_generate_modal: Modality to generate gamma portion of affine transformation from.
-        :param beta_generate_modal: Modality to generate beta portion of affine transformation from.
-        """
-        super(FiLM, self).__init__()
-        self.g_net = gamma_generation_network
-        self.b_net = beta_generation_network
-        self.base_modal = base_modal
-        self.ggen_modal = gamma_generate_modal
-        self.bgen_modal = beta_generate_modal
-
-    def forward(self, modalities):
-        """
-        Forward Pass of FiLM.
-        
-        :param modalities: An iterable of modalities to combine. 
-        """
-        gamma = self.g_net(modalities[self.ggen_modal])
-        beta = self.b_net(modalities[self.bgen_modal])
-        return gamma * modalities[self.base_modal] + beta
-
-
-
 class MultiplicativeInteractions3Modal(nn.Module):
     """Implements 3-Way Modal Multiplicative Interactions."""
     
@@ -438,3 +404,70 @@ class NLgate(torch.nn.Module):
         matmulled = torch.matmul(qin, kin)
         finalout = torch.matmul(self.softmax(matmulled), vin)
         return torch.flatten(qin + finalout, 1)
+
+
+class EarlyFusionTransformer(nn.Module):
+    """Implements a Transformer with Early Fusion."""
+    
+    embed_dim = 9
+
+    def __init__(self, n_features):
+        """Initialize EarlyFusionTransformer Object.
+
+        Args:
+            n_features (int): Number of features in input.
+        
+        """
+        super().__init__()
+
+        self.conv = nn.Conv1d(n_features, self.embed_dim,
+                              kernel_size=1, padding=0, bias=False)
+        layer = nn.TransformerEncoderLayer(d_model=self.embed_dim, nhead=3)
+        self.transformer = nn.TransformerEncoder(layer, num_layers=3)
+        self.linear = nn.Linear(self.embed_dim, 1)
+
+    def forward(self, x):
+        """Apply EarlyFusion with a Transformer Encoder to input.
+
+        Args:
+            x (torch.Tensor): Input Tensor
+
+        Returns:
+            torch.Tensor: Layer Output
+        """
+        x = self.conv(x.permute([0, 2, 1]))
+        x = x.permute([2, 0, 1])
+        x = self.transformer(x)[-1]
+        return self.linear(x)
+
+
+class LateFusionTransformer(nn.Module):
+    """Implements a Transformer with Late Fusion."""
+    
+    def __init__(self, embed_dim=9):
+        """Initialize LateFusionTransformer Layer.
+
+        Args:
+            embed_dim (int, optional): Size of embedding layer. Defaults to 9.
+        """
+        super().__init__()
+        self.embed_dim = embed_dim
+
+        self.conv = nn.Conv1d(
+            1, self.embed_dim, kernel_size=1, padding=0, bias=False)
+        layer = nn.TransformerEncoderLayer(d_model=self.embed_dim, nhead=3)
+        self.transformer = nn.TransformerEncoder(layer, num_layers=3)
+
+    def forward(self, x):
+        """Apply LateFusionTransformer Layer to input.
+
+        Args:
+            x (torch.Tensor): Layer input
+
+        Returns:
+            torch.Tensor: Layer output
+        """
+        x = self.conv(x.view(x.size(0), 1, -1))
+        x = x.permute(2, 0, 1)
+        x = self.transformer(x)[-1]
+        return x
