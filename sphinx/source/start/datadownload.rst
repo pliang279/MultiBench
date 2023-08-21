@@ -78,7 +78,7 @@ MIMIC
 Access to the MIMIC dataset is restricted, and as a result you will need 
 to follow the instructions `here <https://mimic.mit.edu/iv/access/>`_ to gain access.
 
-Once you do so, email ylyu1@andrew.cmu.edu with proof of those credentials
+Once you do so, email yiweilyu@umich.edu with proof of those credentials
 to gain access to the preprocessed `im.pk` file we use in our dataloaders.
 
 To load it, you can then use the following snippet:
