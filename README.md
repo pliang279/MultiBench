@@ -26,11 +26,25 @@ Correspondence to:
 
 ## Paper
 
+[**MultiZoo & MultiBench: A Standardized Toolkit for Multimodal Deep Learning**](https://www.jmlr.org/papers/volume24/22-1021/22-1021.pdf)<br>
+Paul Pu Liang, Yiwei Lyu, Xiang Fan, Arav Agarwal, Yun Cheng, Louis-Philippe Morency, Ruslan Salakhutdinov<br>
+JMLR 2022 Open Source Software.
+
 [**MultiBench: Multiscale Benchmarks for Multimodal Representation Learning**](https://arxiv.org/abs/2107.07502)<br>
 Paul Pu Liang, Yiwei Lyu, Xiang Fan, Zetian Wu, Yun Cheng, Jason Wu, Leslie Chen, Peter Wu, Michelle A. Lee, Yuke Zhu, Ruslan Salakhutdinov, Louis-Philippe Morency<br>
 NeurIPS 2021 Datasets and Benchmarks Track.
 
-If you find this repository useful, please cite our paper:
+If you find this repository useful, please cite our paper and corresponding software package:
+```
+@article{liang2023multizoo,
+  title={MULTIZOO \& MULTIBENCH: A Standardized Toolkit for Multimodal Deep Learning},
+  author={Liang, Paul Pu and Lyu, Yiwei and Fan, Xiang and Agarwal, Arav and Cheng, Yun and Morency, Louis-Philippe and Salakhutdinov, Ruslan},
+  journal={Journal of Machine Learning Research},
+  volume={24},
+  pages={1--7},
+  year={2023}
+}
+```
 ```
 @inproceedings{liang2021multibench,
   title={MultiBench: Multiscale Benchmarks for Multimodal Representation Learning},
